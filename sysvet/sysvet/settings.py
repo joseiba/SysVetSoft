@@ -75,7 +75,7 @@ WSGI_APPLICATION = 'sysvet.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'sysvetdb',
         'USER': 'postgres',
         'PASSWORD': 'postgres',
