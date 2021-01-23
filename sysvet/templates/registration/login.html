@@ -7,14 +7,26 @@
             Cuenta de Usuario
         </span>
         <form class="login100-form validate-form p-b-33 p-t-5" method="POST" action="{% url 'login'%}">
-            {% csrf_token %}          
+            {% csrf_token %}   
+
+            <div class="form-group">
+            {% if form.error_messages %}
+            <div class="alert alert-danger alert-dismissible" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>                    
+                </button>
+                <strong>Advertencia: </strong>{{ form.get_invalid_login_error }}
+            </div>       
+            {% endif%}
+            </div>
+            
             <div class="wrap-input100 validate-input" data-validate = "Ingrese su usuario">
-                <input class="input100" type="text" name="username" autocomplete="" placeholder="Nombre de usuario">
+                {{ form.username }}
                 <span class="focus-input100" data-placeholder="&#xe82a;"></span>
             </div>
 
             <div class="wrap-input100 validate-input" data-validate="Ingrese su contraseña">
-                <input class="input100" type="password" name="password" placeholder="Contraseña">
+                {{ form.password }}
                 <span class="focus-input100" data-placeholder="&#xe80f;"></span>
             </div>
 

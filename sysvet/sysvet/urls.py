@@ -19,14 +19,12 @@ from django.contrib.auth import views as auth_user
 from django.contrib.auth import views as auth_views
 from django.conf import settings
 
-from .views import home, logoutUser
-
-
+from apps.usuario.views  import Login, logoutUser,home_user
 
 urlpatterns = [
     # Login and logout   
     path('admin/', admin.site.urls),
-    path('', home, name="index"),
-    path('login/', auth_views.LoginView.as_view(), name='login'),
+    path('', home_user, name="index"),
+    path('accounts/login/', Login.as_view(), name='login'),
     path('logout/', logoutUser, name="logout"),
 ]
