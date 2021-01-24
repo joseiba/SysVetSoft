@@ -54,6 +54,9 @@ def logoutUser(request):
     return redirect('/accounts/login/')
 
 @login_required()
+'''
+    @login_required(): Decorador que permite que no se ingrese al home desde la url sin estar logeado
+'''
 def home_user(request):
     """[summary]
 
