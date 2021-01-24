@@ -9,24 +9,24 @@
         <form class="login100-form validate-form p-b-33 p-t-5" method="POST" action="{% url 'login'%}">
             {% csrf_token %}   
 
-            <div class="form-group">
-            {% if form.error_messages %}
-            <div class="alert alert-danger alert-dismissible" role="alert">
+            <div class="form-group mt-3 mb-0 ml-3 mr-3">
+                {%for message in messages %}
+            <div class="alert alert-danger alert-dismissible mb-0" role="alert">
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                     <span aria-hidden="true">&times;</span>                    
                 </button>
-                <strong>Advertencia: </strong>{{ form.get_invalid_login_error }}
+                <strong>Advertencia: </strong>{{ message }}
             </div>       
-            {% endif%}
+            {%endfor%}
             </div>
             
             <div class="wrap-input100 validate-input" data-validate = "Ingrese su usuario">
-                {{ form.username }}
+                <input class="input100" type="text" name="username" placeholder="Nombre de usuario">
                 <span class="focus-input100" data-placeholder="&#xe82a;"></span>
             </div>
 
             <div class="wrap-input100 validate-input" data-validate="Ingrese su contraseña">
-                {{ form.password }}
+                <input class="input100" type="password" name="password" placeholder="Contraseña">
                 <span class="focus-input100" data-placeholder="&#xe80f;"></span>
             </div>
 
