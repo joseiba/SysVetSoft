@@ -34,7 +34,7 @@ class Cliente (models.Model):
     ruc = models.CharField(max_length = 200, help_text = "Ingrese ruc del cliente")
     telefono = models.CharField(max_length = 200, help_text = "Ingrese telefono del cliente")
     email = models.CharField(max_length = 200, help_text = "Ingrese email del cliente")
-    id_ciudad = models.ForeignKey(Ciudad, on_delete=models.SET_NULL, null=True)
+    id_ciudad = models.ForeignKey('Ciudad', on_delete=models.SET_NULL, null=True)
 
     def __str__(self):
         """Formato del cliente"""
