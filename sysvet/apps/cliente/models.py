@@ -5,7 +5,6 @@ class Ciudad (models.Model):
     """
     Clase que define la estructura de una ciudad
     """
-    id_ciudad = models.IntegerField(primary_key=True, help_text="Código para la ciudad")
     nombre_ciudad = models.CharField(max_length = 200, help_text = "Ingrese nombre de la ciudad")
 
     class Meta:
@@ -18,7 +17,7 @@ class Ciudad (models.Model):
 
     def get_absolute_url(self):
         """Retorna el URL para acceder a una instancia de una ciudad en particular."""
-        return reverse('ciudad-detail', args=[str(self.id_ciudad)])
+        return reverse('ciudad-detail', args=[str(self.id)])
 
 
 
@@ -28,7 +27,6 @@ class Cliente (models.Model):
     Clase que define la estructura de un cliente
     """
 
-    id_cliente = models.IntegerField(primary_key=True, help_text="Código para el cliente")
     nombre_cliente = models.CharField(max_length = 200, help_text = "Ingrese nombre del cliente")
     apellido_cliente = models.CharField(max_length = 200, help_text = "Ingrese apellido del cliente")
     direccion = models.CharField(max_length = 200, help_text = "Ingrese apellido del cliente")
@@ -36,7 +34,7 @@ class Cliente (models.Model):
     ruc = models.CharField(max_length = 200, help_text = "Ingrese ruc del cliente")
     telefono = models.CharField(max_length = 200, help_text = "Ingrese telefono del cliente")
     email = models.CharField(max_length = 200, help_text = "Ingrese email del cliente")
-    id_ciudad = models.ForeignKey('Ciudad', on_delete=models.SET_NULL, null=True)
+    id_ciudad = models.ForeignKey(Ciudad, on_delete=models.SET_NULL, null=True)
 
     def __str__(self):
         """Formato del cliente"""
@@ -44,4 +42,4 @@ class Cliente (models.Model):
 
     def get_absolute_url(self):
         """Retorna el URL para acceder a una instancia de un cliente en particular."""
-        return reverse('cliente-detail', args=[str(self.id_cliente)])
+        return reverse('cliente-detail', args=[str(self.id)])
