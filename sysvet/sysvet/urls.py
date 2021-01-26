@@ -14,7 +14,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 from django.contrib.auth import views as auth_user
 from django.contrib.auth import views as auth_views
 from django.conf import settings
@@ -22,6 +22,11 @@ from django.conf import settings
 from apps.usuario.views  import Login, logoutUser,home_user
 
 urlpatterns = [
+    # app/ -> Genetelella UI and resources
+    path('app/', include('app.urls')),
+    path('', include('app.urls')),
+    
+
     # Login and logout   
     path('admin/', admin.site.urls),
     path('', home_user, name="index"),

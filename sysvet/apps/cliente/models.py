@@ -31,15 +31,9 @@ class Cliente (models.Model):
     apellido_cliente = models.CharField(max_length = 200, help_text = "Ingrese apellido del cliente")
     direccion = models.CharField(max_length = 200, help_text = "Ingrese apellido del cliente")
     cedula = models.CharField(max_length = 200, help_text = "Ingrese cedula del cliente")
-<<<<<<< HEAD
     ruc = models.CharField(max_length = 200, help_text = "Ingrese ruc del cliente", null=True)
     telefono = models.CharField(max_length = 200, help_text = "Ingrese telefono del cliente")
     email = models.EmailField(max_length = 200, help_text = "Ingrese email del cliente", null=True)
-=======
-    ruc = models.CharField(max_length = 200, help_text = "Ingrese ruc del cliente")
-    telefono = models.CharField(max_length = 200, help_text = "Ingrese telefono del cliente")
-    email = models.CharField(max_length = 200, help_text = "Ingrese email del cliente")
->>>>>>> 0349b8bd1df916fb7a40c0d4cbc884d675d0d84c
     id_ciudad = models.ForeignKey('Ciudad', on_delete=models.SET_NULL, null=True)
 
     def __str__(self):
