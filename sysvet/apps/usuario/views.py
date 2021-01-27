@@ -67,5 +67,5 @@ def home_user(request):
             de donde se encuentra el template            
         ]
     """    
-    return render(request, "app/index.html")    
+    return render(request, "home/index.html")    
 

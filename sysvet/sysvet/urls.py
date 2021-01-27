@@ -20,11 +20,12 @@ from django.contrib.auth import views as auth_views
 from django.conf import settings
 
 from apps.usuario.views  import Login, logoutUser,home_user
+from apps.cliente.views import add_cliente, list_clientes
 
 urlpatterns = [
     # app/ -> Genetelella UI and resources
-    path('app/', include('app.urls')),
-    path('', include('app.urls')),
+    #path('app/', include('app.urls')),
+    #path('', include('app.urls')),
     
 
     # Login and logout   
@@ -32,4 +33,9 @@ urlpatterns = [
     path('', home_user, name="index"),
     path('accounts/login/', Login.as_view(), name='login'),
     path('logout/', logoutUser, name="logout"),
+
+    #Urls clientes
+    path('cliente/add/',add_cliente , name="add_cliente"),
+    path('cliente/list/', list_clientes, name="list_cliente"),
+
 ]
