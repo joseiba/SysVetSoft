@@ -9,13 +9,13 @@ from .models import Cliente, Ciudad
 @login_required()
 def add_cliente(request):
     form = ClienteForm
-    cuidad = Ciudad.objects.all()
     if request.method == 'POST':
         form = ClienteForm(request.POST or None)
+        print(form.is_valid())
         if form.is_valid():
             form.save()
             return redirect('/')
-
+    cuidad = Ciudad.objects.all()   
     context = {'form' : form, 'cuidad' : cuidad}
     return render(request, 'cliente/add_cliente.html', context)
 
