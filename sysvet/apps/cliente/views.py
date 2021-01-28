@@ -14,7 +14,7 @@ def add_cliente(request):
         print(form.is_valid())
         if form.is_valid():
             form.save()
-            return redirect('/')
+            return redirect('/cliente/list')
     cuidad = Ciudad.objects.all()   
     context = {'form' : form, 'cuidad' : cuidad}
     return render(request, 'cliente/add_cliente.html', context)
