@@ -1,6 +1,6 @@
 {% extends "home/base_site.html" %}
 
-{% block title %} Form Validation {% endblock title %}
+{% block title %} Editar Cliente {% endblock title %}
 
 {% block content %}
 <div class="right_col" role="main">
@@ -26,22 +26,20 @@
             <div class="clearfix"></div>
           </div>
           <div class="x_content">
-            <form class="" action="{% url 'edit_cliente' %}" method="POST">
+            <form class="" method="POST">
               {% csrf_token %}
               <div class="field item form-group">
                 <label class="col-form-label col-md-3 col-sm-3  label-align">Nombre<span
                     class="required">*</span></label>
                 <div class="col-md-6 col-sm-6">
-                  <input class="form-control" data-validate-length-range="6" data-validate-words="1" name="nombre_cliente"
-                    placeholder="Nombre del Cliente" required="required" />
+                  {{ form.nombre_cliente }}                 
                 </div>
               </div>
               <div class="field item form-group">
                 <label class="col-form-label col-md-3 col-sm-3  label-align">Apellido<span
                     class="required">*</span></label>
                 <div class="col-md-6 col-sm-6">
-                  <input class="form-control" data-validate-length-range="6" data-validate-words="1" name="apellido_cliente"
-                    placeholder="Apellido" required="required" />
+                  {{ form.apellido_cliente }} 
                 </div>
               </div>
               <div class="field item form-group">
@@ -50,34 +48,33 @@
                     class="required">*</span>
                 </label>
                 <div class="col-md-6 col-sm-6">
-                  <input class="form-control" class='optional' name="direccion" placeholder="Dirección" type="text" required="required" />
+                  {{ form.direccion }} 
                 </div>
               </div>
               <div class="field item form-group">
                 <label class="col-form-label col-md-3 col-sm-3  label-align">Nro. Cédula<span
                     class="required">*</span></label>
                 <div class="col-md-6 col-sm-6">
-                  <input class="form-control" name="cedula" placeholder="Nro. Cédula" required="required" />
+                  {{ form.cedula }} 
                 </div>
               </div>
               <div class="field item form-group">
                 <label class="col-form-label col-md-3 col-sm-3  label-align">Nro. RUC</label>
                 <div class="col-md-6 col-sm-6">
-                  <input class="form-control" class='optional' name="ruc" placeholder="Nro. RUC" type="text"/>
+                  {{ form.ruc }} 
                 </div>
               </div>
               <div class="field item form-group">
                 <label class="col-form-label col-md-3 col-sm-3  label-align">Telefono<span
                     class="required">*</span></label>
                 <div class="col-md-6 col-sm-6">
-                  <input class="form-control" type="tel" class='tel' name="telefono" required='required'
-                    data-validate-length-range="9" />
+                  {{ form.telefono }}
                 </div>
               </div>
               <div class="field item form-group">
                 <label class="col-form-label col-md-3 col-sm-3  label-align">Email</label>
                 <div class="col-md-6 col-sm-6">
-                  <input class="form-control" name="email" class='optional' type="email"/>
+                  {{ form.email }}
                 </div>
               </div>
               <div class="form-group field item">
@@ -86,19 +83,18 @@
                     class="required">*</span>
                 </label>
                 <div class="col-md-6 col-sm-6">
-                  <select class="form-control" required='required' name="id_ciudad">
-                    <option>Seleccione una Cuidad</option>                    
-                    {% for cui in cuidad %}
-                    <option  required="required"  value={{ cui.id}} >{{ cui.nombre_ciudad }}</option>
-                    {% endfor %}                    
-                  </select>
+                    {{ form.id_ciudad}}
                 </div>
               </div>
               <div class="ln_solid">
                 <div class="form-group">
                   <div class="col-md-6 offset-md-3" style="margin-top: 1rem;">
                     <button type='submit' class="btn btn-primary">Actualizar</button>
-                    <button type='reset' class="btn btn-success" href="{% url  'list_cliente'%}">Cancelar</button>
+                    <button' class="btn btn-success">
+                      <a style="color: white; cursor: pointer;" href="{% url  'list_cliente'%}">    
+                        Cancelar                    
+                      </a>
+                    </button>
                   </div>
                 </div>
               </div>

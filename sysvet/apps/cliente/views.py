@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 
 from .forms import ClienteForm
 from .models import Cliente, Ciudad
@@ -23,21 +24,27 @@ def add_cliente(request):
 @login_required()
 def edit_cliente(request, id):
     cliente = Cliente.objects.get(id=id)
-    print(cliente)
     form = ClienteForm(instance=cliente)
     if request.method == 'POST':
         form = ClienteForm(request.POST, instance=cliente)
         if not form.has_changed():
-            return redirect('/cliente/list')
+            messages.info(request, "No ha hecho ningun cambio")
+            return redirect('/cliente/list/')
         if form.is_valid():
             cliente = form.save(commit=False)
-            cliente.sace()
-            return ('/cliente/list/')
-    cuidad = Ciudad.objects.all()   
-    context = {'form' : form, 'cuidad' : cuidad}
+            cliente.save()
+            messages.add_message(request, messages.SUCCESS, 'El Cliente se ha editado correctamente!')
+            return redirect('/cliente/list/')
+
+    context = {'form': form}
     return render(request, 'cliente/edit_cliente.html', context)
 
-
+#Metodo para eleminar cliente
+@login_required()
+def delete_cliente(request, id):
+    cliente = Cliente.objects.get(id=id)
+    cliente.delete()
+    return redirect('/cliente/list/')
 
 #Metodo para listar todos los clientes
 @login_required()

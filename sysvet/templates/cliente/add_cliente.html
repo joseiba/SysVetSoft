@@ -1,6 +1,6 @@
 {% extends "home/base_site.html" %}
 
-{% block title %} Form Validation {% endblock title %}
+{% block title %} Agregar Cliente{% endblock title %}
 
 {% block content %}
 <div class="right_col" role="main">
@@ -70,14 +70,14 @@
                 <label class="col-form-label col-md-3 col-sm-3  label-align">Telefono<span
                     class="required">*</span></label>
                 <div class="col-md-6 col-sm-6">
-                  <input class="form-control" type="tel" class='tel' name="telefono" required='required'
+                  <input class="form-control" type="tel" class='tel' name="telefono" placeholder="Telefono" required='required'
                     data-validate-length-range="9" />
                 </div>
               </div>
               <div class="field item form-group">
                 <label class="col-form-label col-md-3 col-sm-3  label-align">Email</label>
                 <div class="col-md-6 col-sm-6">
-                  <input class="form-control" name="email" class='optional' type="email"/>
+                  <input class="form-control" name="email" class='optional' placeholder="Email" type="email"/>
                 </div>
               </div>
               <div class="form-group field item">
