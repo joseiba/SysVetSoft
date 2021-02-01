@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.db.models import Q
 
 from .forms import ClienteForm
 from .models import Cliente, Ciudad
@@ -53,5 +54,15 @@ def list_clientes(request):
     context = {'clientes' : clientes}
     return render(request, "cliente/list_cliente.html", context)
 
+#Metodo para la busqueda de clientes
+@login_required()
+def search_cliente(request):
+    query = request.GET.get('q')
+    if query:
+        clientes = Cliente.objects.filter(Q(nombre_cliente__icontains=query) | Q(cedula__icontains=query))
+    else:
+        clientes = Cliente.objects.all()
+    context = { 'clientes': clientes}
+    return render(request, "cliente/list_cliente.html", context)
 
 

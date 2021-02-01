@@ -20,7 +20,7 @@ from django.contrib.auth import views as auth_views
 from django.conf import settings
 
 from apps.usuario.views  import Login, logoutUser,home_user
-from apps.cliente.views import add_cliente, list_clientes, edit_cliente, delete_cliente
+from apps.cliente.views import add_cliente, list_clientes, edit_cliente, delete_cliente, search_cliente
 
 urlpatterns = [
     # app/ -> Genetelella UI and resources
@@ -38,5 +38,7 @@ urlpatterns = [
     path('cliente/add/',add_cliente , name="add_cliente"),
     path('cliente/list/', list_clientes, name="list_cliente"),
     path('cliente/edit/<int:id>/', edit_cliente, name="edit_cliente"),
-    path('<int:id>', delete_cliente, name="delete_cliente")
+    path('<int:id>', delete_cliente, name="delete_cliente"),
+    path('search/', search_cliente, name="search_cliente"),
+
 ]

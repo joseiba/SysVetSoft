@@ -11,6 +11,40 @@
 <link href="/static/project_static/vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css"
     rel="stylesheet">
 <link href="/static/project_static/vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css" rel="stylesheet">
+<style>
+    .search {
+        width: 100%;
+        position: relative;
+        display: flex;
+    }
+
+    .searchTerm {
+        width: 100%;
+        border: 3px solid #00B4CC;
+        border-right: none;
+        padding: 5px;
+        height: 36px;
+        border-radius: 5px 0 0 5px;
+        outline: none;
+        color: #212529;
+    }
+
+    .searchTerm:focus {
+        color:#212529;
+    }
+
+    .searchButton {
+        width: 40px;
+        height: 36px;
+        border: 1px solid #00B4CC;
+        background: #00B4CC;
+        text-align: center;
+        color: #fff;
+        border-radius: 0 5px 5px 0;
+        cursor: pointer;
+        font-size: 20px;
+    }
+</style>
 {% endblock stylesheets %}
 
 {% block content %}
@@ -20,11 +54,8 @@
             <div class="col-md-12 col-sm-12 ">
                 <div class="x_panel">
                     <div class="x_title">
-                        <h2>Lista de Cliente</h2>
+                        <h2>Lista de Clientes</h2>
                         <ul class="nav navbar-right panel_toolbox">
-                            <button type="submit" class="btn btn-primary">
-                                <a style="color: white;" href="{% url 'add_cliente' %}">Agregar nuevo cliente</a>
-                            </button>
                             <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
                             </li>
                             <li><a class="close-link"><i class="fa fa-close"></i></a>
@@ -32,6 +63,25 @@
                         </ul>
                         <div class="clearfix"></div>
                     </div>
+                    <div>
+                        <button type="submit" class="btn btn-primary float-right">
+                            <a style="color: white;" href="{% url 'add_cliente' %}">Agregar nuevo cliente</a>
+                        </button>
+
+                        <div class="float-left">
+                            <div class="wrap">
+                                <div class="search">
+                                    <form action="{% url 'search_cliente' %}" method="GET" class="d-inline-flex">
+                                        <input type="search" class="searchTerm" name="q" value="{{ request.GET.q }}" placeholder="Buscá por cedula, nombre">
+                                        <button type="submit" class="searchButton">
+                                            <i class="fa fa-search"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="x_content">
                         <div class="row">
                             <div class="col-sm-12">
@@ -96,7 +146,7 @@
             </div>
             <div id="content-value-name">
 
-            </div>           
+            </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
                 <button type="button" id="confirmDeleteButtonModal" class="btn btn-danger">Eliminar</button>
@@ -131,7 +181,7 @@
             var id_cliente = $(this).data("id")
             var name_cliente = $(this).data("name-cliente")
             $("#content-value-name").html('<div class="modal-body" style="font-size: 16px; color: #383232c7;">\
-                                                Estás seguro/a que deseas eliminar a <strong>'+ name_cliente +'</strong> ?\
+                                                Estás seguro/a que deseas eliminar a <strong>'+ name_cliente + '</strong> ?\
                                             </div>');
             sessionStorage.setItem("id_cliente", id_cliente)
             sessionStorage.setItem("name_cliente", name_cliente)
