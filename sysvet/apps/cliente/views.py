@@ -2,6 +2,8 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.db.models import Q
+from django.core.paginator import Paginator
+
 
 from .forms import ClienteForm
 from .models import Cliente, Ciudad
@@ -51,7 +53,10 @@ def delete_cliente(request, id):
 @login_required()
 def list_clientes(request):
     clientes = Cliente.objects.all()
-    context = {'clientes' : clientes}
+    paginator = Paginator(clientes, 10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    context = {'page_obj' : page_obj}
     return render(request, "cliente/list_cliente.html", context)
 
 #Metodo para la busqueda de clientes
@@ -62,7 +67,13 @@ def search_cliente(request):
         clientes = Cliente.objects.filter(Q(nombre_cliente__icontains=query) | Q(cedula__icontains=query))
     else:
         clientes = Cliente.objects.all()
-    context = { 'clientes': clientes}
+    paginator = Paginator(clientes, 10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    context = { 'page_obj': page_obj}
     return render(request, "cliente/list_cliente.html", context)
+
+
+# def order_cliente(request):
 
 
