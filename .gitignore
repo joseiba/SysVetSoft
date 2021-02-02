@@ -166,8 +166,8 @@ dmypy.json
 # Translations
 
 # Django stuff:
-**/migrations/*
-
+_migrations/*
+!_migrations/__init__.py
 # Flask stuff:
 
 # Scrapy stuff:
