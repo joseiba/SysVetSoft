@@ -42,7 +42,7 @@ def edit_cliente(request, id):
     context = {'form': form}
     return render(request, 'cliente/edit_cliente.html', context)
 
-#Metodo para eleminar cliente
+#Metodo para eliminar cliente
 @login_required()
 def delete_cliente(request, id):
     cliente = Cliente.objects.get(id=id)
