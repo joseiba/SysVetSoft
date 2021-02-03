@@ -104,8 +104,8 @@
                                                 <th style="color: white;">Apellidos</th>
                                                 <th style="color: white;">Cédula</th>
                                                 <th style="color: white;">Telefono</th>
-                                                <th style="color: white;">Cuidad</th>
                                                 <th style="color: white;">Dirección</th>
+                                                <th style="color: white;">Cuidad</th>
                                                 <th style="color: white;">Acciones</th>
                                             </tr>
                                         </thead>
@@ -115,9 +115,9 @@
                                             <tr style="font-size: medium;">
                                                 <td>{{ cliente.nombre_cliente}}</td>
                                                 <td>{{ cliente.apellido_cliente}}</td>
-                                                <td>{{ cliente.direccion}}</td>
                                                 <td>{{ cliente.cedula}}</td>
                                                 <td>{{ cliente.telefono}}</td>
+                                                <td>{{ cliente.direccion}}</td>
                                                 <td>{{ cliente.id_ciudad}}</td>
                                                 <td>
                                                     <a href="{% url 'edit_cliente' cliente.id %}">
