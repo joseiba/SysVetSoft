@@ -21,6 +21,7 @@ from django.conf import settings
 
 from apps.usuario.views  import Login, logoutUser,home_user
 from apps.cliente.views import add_cliente, list_clientes, edit_cliente, delete_cliente, search_cliente
+from apps.producto.views import add_tipo_producto, list_tipo_producto, edit_tipo_producto, search_tipo_producto
 
 urlpatterns = [
     # app/ -> Genetelella UI and resources
@@ -39,6 +40,12 @@ urlpatterns = [
     path('cliente/list/', list_clientes, name="list_cliente"),
     path('cliente/edit/<int:id>/', edit_cliente, name="edit_cliente"),
     path('<int:id>', delete_cliente, name="delete_cliente"),
-    path('search/', search_cliente, name="search_cliente"),
+    path('cliente/search/', search_cliente, name="search_cliente"),
+
+    #Urls tipo producto
+    path('tipoProducto/add/',add_tipo_producto , name="add_tipo_producto"),
+    path('tipoProducto/list/', list_tipo_producto, name="list_tipo_producto"),
+    path('tipoProducto/edit/<int:id>/', edit_tipo_producto, name="edit_tipo_producto"),
+    path('tipoProducto/search/', search_tipo_producto, name="search_tipo_producto"),
 
 ]
