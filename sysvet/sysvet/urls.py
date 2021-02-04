@@ -21,6 +21,7 @@ from django.conf import settings
 
 from apps.usuario.views  import Login, logoutUser,home_user
 from apps.cliente.views import add_cliente, list_clientes, edit_cliente, delete_cliente, search_cliente
+from apps.mascota.views import list_mascotas
 
 urlpatterns = [
     # app/ -> Genetelella UI and resources
@@ -40,5 +41,9 @@ urlpatterns = [
     path('cliente/edit/<int:id>/', edit_cliente, name="edit_cliente"),
     path('<int:id>', delete_cliente, name="delete_cliente"),
     path('search/', search_cliente, name="search_cliente"),
+
+    #Urls mascotas
+    path('mascota/list/', list_mascotas , name="list_mascotas"),
+
 
 ]
