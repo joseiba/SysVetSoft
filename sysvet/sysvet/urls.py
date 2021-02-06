@@ -18,6 +18,7 @@ from django.urls import path, include
 from django.contrib.auth import views as auth_user
 from django.contrib.auth import views as auth_views
 from django.conf import settings
+from django.conf.urls.static import static
 
 from apps.usuario.views  import Login, logoutUser,home_user
 from apps.cliente.views import add_cliente, list_clientes, edit_cliente, delete_cliente, search_cliente
@@ -44,6 +45,6 @@ urlpatterns = [
 
     #Urls mascotas
     path('mascota/list/', list_mascotas , name="list_mascotas"),
-
-
 ]
+
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

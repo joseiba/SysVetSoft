@@ -44,6 +44,37 @@
         cursor: pointer;
         font-size: 20px;
     }
+
+    .text_align_center {
+        text-align-last: center;
+    }
+
+    .card-pets:hover {
+        box-shadow: 0px 0px 10px 5px #a6a6a6;
+        /* please set the shadow color conveniently */
+    }
+
+    .card-pets {
+        border-radius: 10px !important;
+    }
+
+    .card-img-div {
+        background-color: #278094eb;
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+    }
+
+    .rd-card-img {
+        height: 8rem;
+        width: 8rem;
+        border-radius: 4rem;
+        margin-top: 1rem;
+        margin-left: auto;
+        margin-right: auto;
+        border: 1px solid rgba(52, 73, 94, 0.44);
+        background: #fff;
+        padding: 4px;
+    }
 </style>
 {% endblock stylesheets %}
 
@@ -63,26 +94,32 @@
                         </ul>
                         <div class="clearfix"></div>
                     </div>
-
                     <div class="x_content">
                         <div class="row">
-                            {% for i in form %}
+                            {% for mascota in page_obj %}
                             <div class="col-12 col-md-6 col-lg-4 col-xl-3 mb-4">
-                                <div class="card">
-                                    <div>
-                                        <img class="card-img-top img-circle profile_img" src="/static/project_static/other/images/images.png" alt="candidate profile image">
+                                <div class="card card-pets">
+                                    <div class="card-img-div text_align_center">
+                                        <div>
+                                            <img class="card-img-top rd-card-img" src="{{ mascota.get_profile}} "
+                                                alt="pets profile image" style="margin-top: 8px;margin-bottom: 8px;">
+                                        </div>
+
                                     </div>
-                                    <h5>hola</h5>
-                                    <div class="card-body">
-                                        <div class="status">
-                                            <span class="text-uppercase">hola</span>
-                                            <img>
-                                            <span>Challenge</span>
+                                    <h5 class="text_align_center" style="margin-top: .5rem;">{{ mascota.nombre_mascota}}
+                                    </h5>
+                                    <div class="card-body card-body-pets p-0" style="margin-top: 6px;">
+                                        <div class="status m-0">
+                                            <p class="text-uppercase text_align_center  m-0">Jose Ibañez</p>
+                                        </div>
+                                        <div class="status m-0">
+                                            <p class="text-uppercase text_align_center m-0">Canino</p>
+                                        </div>
+                                        <div class="status m-0">
+                                            <p class="text-uppercase text_align_center m-0">Buldog</p>
                                         </div>
                                         <div class="status">
-                                            <span class="text-uppercase">hola</span>
-                                            <img>
-                                            <span>Interviews</span>
+                                            <p class="text-uppercase text_align_center">{{ mascota.peso}}kg</p>
                                         </div>
                                     </div>
                                 </div>

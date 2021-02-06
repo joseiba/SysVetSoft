@@ -32,25 +32,25 @@
                 <label class="col-form-label col-md-3 col-sm-3  label-align">Nombre<span
                     class="required">*</span></label>
                 <div class="col-md-6 col-sm-6">
-                  <input class="form-control" data-validate-length-range="6" data-validate-words="1" name="nombre_cliente"
-                    placeholder="Nombre del Cliente" required="required" />
+                  <input class="form-control" data-validate-length-range="6" data-validate-words="1"
+                    name="nombre_cliente" placeholder="Nombre del Cliente" required="required" />
                 </div>
               </div>
               <div class="field item form-group">
                 <label class="col-form-label col-md-3 col-sm-3  label-align">Apellido<span
                     class="required">*</span></label>
                 <div class="col-md-6 col-sm-6">
-                  <input class="form-control" data-validate-length-range="6" data-validate-words="1" name="apellido_cliente"
-                    placeholder="Apellido" required="required" />
+                  <input class="form-control" data-validate-length-range="6" data-validate-words="1"
+                    name="apellido_cliente" placeholder="Apellido" required="required" />
                 </div>
               </div>
               <div class="field item form-group">
                 <label class="col-form-label col-md-3 col-sm-3  label-align">Dirección
-                  <span
-                    class="required">*</span>
+                  <span class="required">*</span>
                 </label>
                 <div class="col-md-6 col-sm-6">
-                  <input class="form-control" class='optional' name="direccion" placeholder="Dirección" type="text" required="required" />
+                  <input class="form-control" class='optional' name="direccion" placeholder="Dirección" type="text"
+                    required="required" />
                 </div>
               </div>
               <div class="field item form-group">
@@ -63,34 +63,33 @@
               <div class="field item form-group">
                 <label class="col-form-label col-md-3 col-sm-3  label-align">Nro. RUC</label>
                 <div class="col-md-6 col-sm-6">
-                  <input class="form-control" class='optional' name="ruc" placeholder="Nro. RUC" type="text"/>
+                  <input class="form-control" class='optional' name="ruc" placeholder="Nro. RUC" type="text" />
                 </div>
               </div>
               <div class="field item form-group">
                 <label class="col-form-label col-md-3 col-sm-3  label-align">Telefono<span
                     class="required">*</span></label>
                 <div class="col-md-6 col-sm-6">
-                  <input class="form-control" type="tel" class='tel' name="telefono" placeholder="Telefono" required='required'
-                    data-validate-length-range="9" />
+                  <input class="form-control" type="tel" class='tel' name="telefono" placeholder="Telefono"
+                    required='required' data-validate-length-range="9" />
                 </div>
               </div>
               <div class="field item form-group">
                 <label class="col-form-label col-md-3 col-sm-3  label-align">Email</label>
                 <div class="col-md-6 col-sm-6">
-                  <input class="form-control" name="email" class='optional' placeholder="Email" type="email"/>
+                  <input class="form-control" name="email" class='optional' placeholder="Email" type="email" />
                 </div>
               </div>
               <div class="form-group field item">
                 <label class="col-form-label col-md-3 col-sm-3  label-align">Cuidad
-                  <span
-                    class="required">*</span>
+                  <span class="required">*</span>
                 </label>
                 <div class="col-md-6 col-sm-6">
                   <select class="form-control" required='required' name="id_ciudad">
-                    <option>Seleccione una Cuidad</option>                    
+                    <option>Seleccione una Cuidad</option>
                     {% for cui in cuidad %}
-                    <option  required="required"  value={{ cui.id}} >{{ cui.nombre_ciudad }}</option>
-                    {% endfor %}                    
+                    <option required="required" value={{ cui.id}}>{{ cui.nombre_ciudad }}</option>
+                    {% endfor %}
                   </select>
                 </div>
               </div>
