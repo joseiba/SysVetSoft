@@ -22,7 +22,7 @@ from django.conf.urls.static import static
 
 from apps.usuario.views  import Login, logoutUser,home_user
 from apps.cliente.views import add_cliente, list_clientes, edit_cliente, delete_cliente, search_cliente
-from apps.mascota.views import list_mascotas
+from apps.mascota.views import list_mascotas, add_mascota
 
 urlpatterns = [
     # app/ -> Genetelella UI and resources
@@ -45,6 +45,7 @@ urlpatterns = [
 
     #Urls mascotas
     path('mascota/list/', list_mascotas , name="list_mascotas"),
+    path('mascota/add/',  add_mascota, name="add_mascota"),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

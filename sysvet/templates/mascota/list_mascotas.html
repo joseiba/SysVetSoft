@@ -94,6 +94,10 @@
                         </ul>
                         <div class="clearfix"></div>
                     </div>
+                    <button type="submit" class="btn btn-primary float-right">
+                        <a style="color: white;" href="{% url 'add_mascota' %}">Agregar nueva mascota</a>
+                    </button>
+
                     <div class="x_content">
                         <div class="row">
                             {% for mascota in page_obj %}

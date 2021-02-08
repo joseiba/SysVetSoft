@@ -15,7 +15,6 @@ def add_cliente(request):
     form = ClienteForm
     if request.method == 'POST':
         form = ClienteForm(request.POST or None)
-        print(form.is_valid())
         if form.is_valid():
             form.save()
             return redirect('/cliente/list')

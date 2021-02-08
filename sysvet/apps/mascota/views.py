@@ -5,8 +5,21 @@ from django.db.models import Q
 from django.core.paginator import Paginator
 
 from .models import Mascota
+from .form import MascotaForm
 
 # Create your views here.
+@login_required()
+def add_mascota(request):
+    form = MascotaForm
+    if request.method == 'POST':
+        form = MascotaForm(request.POST or None)
+        if form.is_valid():
+            form.save()
+            return redirect('/mascota/list')
+    context = {'form' : form}
+    return render(request, 'mascota/add_mascota.html', context)
+
+
 @login_required()
 def list_mascotas(request):
     mascotas = Mascota.objects.all()

@@ -1,0 +1,63 @@
+.search {
+    width: 100%;
+    position: relative;
+    display: flex;
+}
+
+.searchTerm {
+    width: 100%;
+    border: 3px solid #00B4CC;
+    border-right: none;
+    padding: 5px;
+    height: 36px;
+    border-radius: 5px 0 0 5px;
+    outline: none;
+    color: #212529;
+}
+
+.searchTerm:focus {
+    color: #212529;
+}
+
+.searchButton {
+    width: 40px;
+    height: 36px;
+    border: 1px solid #00B4CC;
+    background: #00B4CC;
+    text-align: center;
+    color: #fff;
+    border-radius: 0 5px 5px 0;
+    cursor: pointer;
+    font-size: 20px;
+}
+
+.text_align_center {
+    text-align-last: center;
+}
+
+.card-pets:hover {
+    box-shadow: 0px 0px 10px 5px #a6a6a6;
+    /* please set the shadow color conveniently */
+}
+
+.card-pets {
+    border-radius: 10px !important;
+}
+
+.card-img-div {
+    background-color: #278094eb;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+.rd-card-img {
+    height: 8rem;
+    width: 8rem;
+    border-radius: 4rem;
+    margin-top: 1rem;
+    margin-left: auto;
+    margin-right: auto;
+    border: 1px solid rgba(52, 73, 94, 0.44);
+    background: #fff;
+    padding: 4px;
+}
