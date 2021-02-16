@@ -68,7 +68,6 @@
         height: 8rem;
         width: 8rem;
         border-radius: 4rem;
-        margin-top: 1rem;
         margin-left: auto;
         margin-right: auto;
         border: 1px solid rgba(52, 73, 94, 0.44);
@@ -76,9 +75,40 @@
         padding: 4px;
     }
 
-    .edit-property{
-        font-size: 10px;
+    .edit-property {
+        font-size: 18px;
+        margin-right: 7px;
+        position: relative;
+        margin-top: .5rem;
+        color: #ffff;
+    }
 
+    .dropdown-item {
+        padding: 0.25rem 0.5rem;
+        cursor: pointer;
+    }
+
+    a.dropdown-item {
+        color: #45474a;
+        padding: 0rem .5rem;
+    }
+
+    a.dropdown-item:hover {
+        background: rgba(0, 0, 0, .1);
+    }
+
+    .card-option {
+        background-color: #fff;
+        position: absolute;
+        right: 1rem;
+        top: 2.5rem;
+        width: 8.5rem;
+        height: auto;
+        background-color: #fff;
+        border-radius: 5px;
+        -webkit-box-shadow: -1px 3px 19px -2px rgba(0, 0, 0, 0.72);
+        -moz-box-shadow: -1px 3px 19px -2px rgba(0, 0, 0, 0.72);
+        box-shadow: -1px 3px 19px -2px rgba(0, 0, 0, 0.72);
     }
 </style>
 {% endblock stylesheets %}
@@ -109,9 +139,20 @@
                             <div class="col-12 col-md-6 col-lg-4 col-xl-3 mb-4">
                                 <div class="card card-pets">
                                     <div class="card-img-div text_align_center">
-                                        <div class="">                                            
+                                        <div>
+                                            <i class="fas fa-ellipsis-v edit-property float-right"></i>
+                                        </div>
+                                        <div class="card-list card-option float-right" id="option-pets"
+                                            style="display: none;">
+
+                                            <a class="dropdown-item py-2">Editar Mascota</a>
+                                            <a class="dropdown-item py-2">
+                                                Actualizar Ficha Médica</a>
+                                        </div>
+                                        <div class="">
                                             <img class="card-img-top rd-card-img" src="{{ mascota.get_profile}} "
-                                                alt="pets profile image" style="margin-top: 8px;margin-bottom: 8px;">                                               
+                                                alt="pets profile image"
+                                                style="margin-top: .5rem; margin-bottom: .5rem; margin-left: 7px;">
                                         </div>
 
                                     </div>
@@ -130,6 +171,11 @@
                                         <div class="status">
                                             <p class="text-uppercase text_align_center">{{ mascota.peso}}kg</p>
                                         </div>
+                                    </div>
+
+                                    <div class="d-contents" style="display: contents;">
+                                        <a class="btn btn-primary" href="{% url 'edit_mascota' mascota.id %}" style="color: #fff;">Editar Mascota</a>
+                                        <button class="btn btn-warning">Actualizar Ficha Médica</button>
                                     </div>
                                 </div>
                             </div>
@@ -171,7 +217,21 @@
 
 <script>
     $(function () {
+
     })
+
+    function showOption() {
+        var x = document.getElementById("option-pets")
+        x.style.display = "block";
+    }
+
+    function hideOption() {
+        var x = document.getElementById("option-pets")
+
+        x.style.display = "none";
+
+    }
+
 </script>
 
 

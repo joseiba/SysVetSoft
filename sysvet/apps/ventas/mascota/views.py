@@ -19,6 +19,25 @@ def add_mascota(request):
     context = {'form' : form}
     return render(request, 'mascota/add_mascota.html', context)
 
+# Metodo para editar Mascotas
+@login_required()
+def edit_mascota(request, id):
+    mascota = Mascota.objects.get(id=id)
+    form = MascotaForm(instance=mascota)
+    if request.method == 'POST':
+        form = MascotaForm(request.POST, instance=mascota)
+        if not form.has_changed():
+            messages.info(request, "No ha hecho ningun cambio")
+            return redirect('/mascota/list/')
+        if form.is_valid():
+            mascota = form.save(commit=False)
+            mascota.save()
+            messages.add_message(request, messages.SUCCESS, 'El Cliente se ha editado correctamente!')
+            return redirect('/mascota/list/')
+
+    context = {'form': form}
+    return render(request, 'mascota/edit_mascota.html', context)    
+
 
 @login_required()
 def list_mascotas(request):
