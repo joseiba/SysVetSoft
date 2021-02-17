@@ -4,10 +4,46 @@ from datetime import date
 from PIL import Image
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from io import StringIO, BytesIO
+
+from apps.ventas.cliente.models import Cliente
+
 import sys
 
 url_pets_image = 'project_static/other/images/test.jfif'
 # Create your models here.
+
+
+class Especie(models.Model):    
+    CANINO = 'CAN'
+    FELINO = 'FEL'    
+    tipo_especies =((CANINO, 'Canino/a'),
+                (FELINO, 'Felino/a'))
+    nombre_especie = models.CharField(max_length=200, choices=tipo_especies, default="-", help_text="Seleccione la especie")
+
+    class Meta:
+        verbose_name = "Especie"
+        verbose_name_plural = "Especies"
+
+    def __str__(self):
+        return self.name
+
+    def get_absolute_url(self):
+        return reverse("Especie_detail", kwargs={"pk": self.pk})
+
+class Raza(models.Model):
+    
+        nombre_raza = models.CharField(max_length=200)
+        id_especie = models.ForeignKey('Especie', on_delete=models.CASCADE, null=False)
+    
+        class Meta:
+            verbose_name = "Raza"
+            verbose_name_plural = "Razas"
+    
+        def __str__(self):
+            return self.name
+    
+        def get_absolute_url(self):
+            return reverse("Raza_detail", kwargs={"pk": self.pk})    
 
 class Mascota(models.Model):
     """[summary]
@@ -23,10 +59,13 @@ class Mascota(models.Model):
                 (HEMBRA, 'Hembra'))
 
     sexo = models.CharField(max_length=15, choices=tipo_sexo, default="-", help_text="Seleccione el sexo")
-    edad = models.IntegerField(null=True, blank=True, default=0, help_text="Ingrese la edad")
+    edad = models.PositiveIntegerField(null=True, blank=True, default=0, help_text="Ingrese la edad")
     imagen = models.ImageField(upload_to='mascotas/fotos', null=True, blank=True, help_text="Ingrese una foto")
     peso = models.IntegerField(help_text="Ingrese el peso" )
     fecha_nacimmiento = models.DateField(help_text="Ingrese la fecha de nacimiento", null=True, blank=True, default='11/11/1111')
+    id_raza = models.ForeignKey('Raza', on_delete=models.CASCADE, null=False)
+    id_cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE, null=False)
+
 
     class Meta:
         verbose_name = "Mascota"
@@ -61,4 +100,4 @@ class Mascota(models.Model):
         if self.imagen:
             return '{}{}'.format(MEDIA_URL, self.imagen)
         return '{}{}'.format(STATIC_URL, url_pets_image)
-
+    
