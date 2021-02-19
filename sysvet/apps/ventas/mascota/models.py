@@ -13,26 +13,21 @@ url_pets_image = 'project_static/other/images/test.jfif'
 # Create your models here.
 
 
-class Especie(models.Model):    
-    CANINO = 'CAN'
-    FELINO = 'FEL'    
-    tipo_especies =((CANINO, 'Canino/a'),
-                (FELINO, 'Felino/a'))
-    nombre_especie = models.CharField(max_length=200, choices=tipo_especies, default="-", help_text="Seleccione la especie")
+class Especie(models.Model):      
+    nombre_especie = models.CharField(max_length=200, default="-", help_text="Seleccione la especie")
 
     class Meta:
         verbose_name = "Especie"
         verbose_name_plural = "Especies"
 
     def __str__(self):
-        return self.name
+        return self.nombre_especie
 
     def get_absolute_url(self):
         return reverse("Especie_detail", kwargs={"pk": self.pk})
 
-class Raza(models.Model):
-    
-        nombre_raza = models.CharField(max_length=200)
+class Raza(models.Model):      
+        nombre_raza = models.CharField(max_length=200,default="-", help_text="Seleccione la raza")
         id_especie = models.ForeignKey('Especie', on_delete=models.CASCADE, null=False)
     
         class Meta:
@@ -40,7 +35,7 @@ class Raza(models.Model):
             verbose_name_plural = "Razas"
     
         def __str__(self):
-            return self.name
+            return self.nombre_raza
     
         def get_absolute_url(self):
             return reverse("Raza_detail", kwargs={"pk": self.pk})    

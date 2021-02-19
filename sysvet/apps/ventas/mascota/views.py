@@ -4,8 +4,8 @@ from django.contrib import messages
 from django.db.models import Q
 from django.core.paginator import Paginator
 
-from .models import Mascota
-from .form import MascotaForm
+from .models import Mascota, Especie, Raza
+from .form import MascotaForm, EspecieForm
 
 # Create your views here.
 @login_required()
@@ -47,3 +47,28 @@ def list_mascotas(request):
     page_obj = paginator.get_page(page_number)
     context = {'page_obj' : page_obj}
     return render(request, "mascota/list_mascotas.html", context)
+
+
+    """
+    Functions of Epecies 
+    """
+@login_required()
+def add_especie(request):
+    form = EspecieForm
+    if request.method == 'POST':
+        form = EspecieForm(request.POST or None)
+        if form.is_valid():
+            form.save()
+            return redirect('/mascota/list')
+    context = {'form' : form}
+    return render(request, 'mascota/list_especie.html', context)
+
+
+@login_required()
+def list_especie(request):
+    especie = Especie.objects.all()
+    paginator = Paginator(especie, 10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    context = {'page_obj' : page_obj}
+    return render(request, "mascota/list_especie.html", context)
