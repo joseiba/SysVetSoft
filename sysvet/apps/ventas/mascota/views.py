@@ -93,3 +93,16 @@ def list_especie(request):
     page_obj = paginator.get_page(page_number)
     context = {'page_obj' : page_obj}
     return render(request, "mascota/especie/list_especie.html", context)
+
+@login_required()
+def search_especie(request):
+    query = request.GET.get('q')
+    if query:
+        especie = Especie.objects.filter(Q(nombre_especie__icontains=query))
+    else:
+        especie = Especie.objects.all()
+    paginator = Paginator(especie, 10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    context = { 'page_obj': page_obj}
+    return render(request, "mascota/especie/list_especie.html", context)
