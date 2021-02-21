@@ -23,5 +23,10 @@ class EspecieForm(forms.ModelForm):
     Args:
         forms ([EspecieForm]): [Formulario de Especie]
     """    
-    model = Especie
-    fields = '__all__'   
+    class Meta:
+        model = Especie
+        fields = '__all__'       
+        widgets = {
+            'nombre_especie' : forms.TextInput(attrs={'class':'form-control','data-validate-length-range':'20', 
+                'data-validate-words':'1', 'name': 'nombre_especie', 'placeholder': 'Nombre de la Especie', 'required': 'required'}),
+		}

@@ -54,7 +54,7 @@
             <div class="col-md-12 col-sm-12 ">
                 <div class="x_panel">
                     <div class="x_title">
-                        <h2>Lista de Clientes</h2>
+                        <h2>Lista de Especies</h2>
                         <ul class="nav navbar-right panel_toolbox">
                             <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
                             </li>
@@ -64,7 +64,8 @@
                         <div class="clearfix"></div>
                     </div>
                     <div>
-                        <button type="submit" class="btn btn-primary float-right" data-toggle="modal" data-target="#confirmAddModal">
+                        <button type="submit" class="btn btn-primary float-right" data-toggle="modal"
+                            data-target="#confirmAddModal">
                             Agregar nueva especie
                         </button>
 
@@ -101,7 +102,7 @@
                                         <thead>
                                             <tr class="" style="background-color: #2a3f54; font-size: medium;">
                                                 <th style="color: white;">Nombre de Especie</th>
-                                                <th style="color: white;">Acciones</th>
+                                                <th style="color: white;">Acción</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -110,11 +111,9 @@
                                             <tr style="font-size: medium;">
                                                 <td>{{ especie.nombre_especie}}</td>
                                                 <td style="width: 26px !important;">
-                                                    <a class="confirm-update pointer" href="">
-                                                        <i class="fas fa-pencil-alt" data-toggle="modal"
-                                                            data-target="#confirmUpdateModal" style="color: #ffc107;">
-                                                        </i>
-                                                    </a>
+                                                    <button class="btn btn-warning" onclick="abrir_modal_edicion('/mascota/editEspecie/' + '{{ especie.id }}' + '/');">
+                                                        Editar
+                                                    </button>
                                                 </td>
                                             </tr>
                                             {% endfor %}
@@ -142,19 +141,20 @@
         <div class="modal-content">
             <div class="modal-header" style="background-color:#2a3f54;">
                 <h5 class="modal-title" id="exampleModalLabel" style="color: white;">Agregar Especie</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"  style="color: white;">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <form action="{% url 'add_especie' %}" method="post">
-                    <div class="field item form-group">
-                        <label class="col-form-label col-md-3 col-sm-3  label-align">Nombre Especie<span
-                                class="required">*</span></label>
-                        <div class="col-md-6 col-sm-6">
-                            <input class="form-control" data-validate-length-range="20" data-validate-words="1"
-                                name="nombre_especie" placeholder="Nombre de la especie" required="required" />
-                        </div>
+                {% csrf_token %}
+                <div class="field item form-group mt-3">
+                    <label class="col-form-label col-md-3 col-sm-3  label-align">Nombre Especie<span
+                            class="required">*</span></label>
+                    <div class="col-md-6 col-sm-6">
+                        <input class="form-control" data-validate-length-range="20" data-validate-words="1"
+                            name="nombre_especie" placeholder="Nombre de la especie" required="required" />
                     </div>
+                </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
                     <button type="submit" class="btn btn-primary">Agregar</button>
@@ -163,6 +163,11 @@
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="edicion" role="dialog">
+
+</div>
+
 {% endblock content %}
 
 {% block javascripts %}
@@ -186,6 +191,7 @@
 
 <script>
     $(function () {
+
     })
 </script>
 
