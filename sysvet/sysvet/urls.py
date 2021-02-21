@@ -25,11 +25,6 @@ from apps.ventas.cliente.views import add_cliente, list_clientes, edit_cliente, 
 from apps.ventas.mascota.views import list_mascotas, add_mascota, edit_mascota, list_especie, add_especie, edit_especie
 
 urlpatterns = [
-    # app/ -> Genetelella UI and resources
-    #path('app/', include('app.urls')),
-    #path('', include('app.urls')),
-    
-
     # Login and logout   
     path('admin/', admin.site.urls),
     path('', home_user, name="index"),
