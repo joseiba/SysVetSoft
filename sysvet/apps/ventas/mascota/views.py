@@ -4,8 +4,8 @@ from django.contrib import messages
 from django.db.models import Q
 from django.core.paginator import Paginator
 
-from .models import Mascota, Especie, Raza
-from .form import MascotaForm, EspecieForm
+from .models import Mascota, Especie, Raza, Raza
+from .form import MascotaForm, EspecieForm, RazaForm
 
 import json
 
@@ -71,7 +71,6 @@ def add_especie(request):
 def edit_especie(request, id):
     especies = Especie.objects.get(id=id)
     form = EspecieForm(instance=especies)
-    print(especies.id)
     if request.method == 'POST':
         form = EspecieForm(request.POST, instance=especies)
         if not form.has_changed():
@@ -106,3 +105,57 @@ def search_especie(request):
     page_obj = paginator.get_page(page_number)
     context = { 'page_obj': page_obj}
     return render(request, "mascota/especie/list_especie.html", context)
+
+    """
+    Functions of Razas
+    """
+@login_required()
+def add_raza(request):
+    form = RazaForm
+    if request.method == 'POST':
+        form = RazaForm(request.POST or None)
+        if form.is_valid():
+            form.save()
+            return redirect('/mascota/listRaza/')
+    context = {'form' : form}
+    return render(request, 'mascota/especie/list_raza.html', context)
+
+@login_required()
+def edit_raza(request, id):
+    raza = Raza.objects.get(id=id)
+    form = RazaForm(instance=raza)
+    if request.method == 'POST':
+        form = RazaForm(request.POST, instance=raza)
+        if not form.has_changed():
+            messages.info(request, "No has hecho ningun cambio")
+            return redirect('/mascota/listRaza/')
+        if form.is_valid():
+            raza = form.save(commit=False)
+            raza.save()
+            messages.add_message(request, messages.SUCCESS, 'Se ha editado correctamente!')
+            return redirect('/mascota/listRaza/')
+    context = {'form' : form, 'raza': raza}
+    return render(request, 'mascota/raza/edit_raza_modal.html', context)    
+
+@login_required()
+def list_raza(request):
+    raza = Raza.objects.all()
+    raza_especie = RazaForm
+    paginator = Paginator(raza, 10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    context = {'page_obj' : page_obj, 'form': raza_especie}
+    return render(request, "mascota/raza/list_raza.html", context)
+
+@login_required()
+def search_raza(request):
+    query = request.GET.get('q')
+    if query:
+        raza = Raza.objects.filter(Q(nombre_raza__icontains=query))
+    else:
+        raza = Raza.objects.all()
+    paginator = Paginator(raza, 10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    context = { 'page_obj': page_obj}
+    return render(request, "mascota/raza/list_raza.html", context)    
