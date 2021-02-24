@@ -22,6 +22,7 @@ def add_tipo_producto(request):
     context = {'form' : form}
     return render(request, 'producto/add_tipo_producto.html', context)
 
+
 # Metodo para editar tipo producto
 @login_required()
 def edit_tipo_producto(request, id):

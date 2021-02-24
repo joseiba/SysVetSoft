@@ -9,7 +9,7 @@ class TipoProducto (models.Model):
     """
     nombre_tipo = models.CharField(max_length = 200, help_text = "Ingrese nombre del tipo de producto")
     fecha_alta = models.DateTimeField(default = datetime.now, editable = False)
-    fecha_baja = models.DateTimeField(null = True, blank = True)
+    fecha_baja = models.DateTimeField(default = '1111-11-11 11:11:11', null = True, blank = True)
 
 
     def __str__(self):
