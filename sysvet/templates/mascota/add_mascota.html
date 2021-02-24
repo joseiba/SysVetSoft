@@ -95,7 +95,7 @@
                     </div>
                     <div class="x_content">
                         <div class="row">
-                            <form class="" action="{% url 'add_cliente' %}" method="POST">
+                            <form  enctype="multipart/form-data" action="{% url 'add_mascota' %}" method="POST">
                                 {% csrf_token %}
                                 <div class="col-lg-4 col-md-9 col-sm-9">
                                     <div class="card mb-4" style="border-radius: 10px;">
@@ -105,8 +105,8 @@
                                                     src="/static/project_static/other/images/test.jfif" alt="">
                                             </div>
                                             <label class="btn btn-primary">
-                                                <span>Agregar Foto</span>
-                                                <input id="imageInput" type="file" accept="image/*">
+                                                <span for="imageInput">Agregar Foto</span>
+                                                <input type="file" name="imagen" accept="image/*" id="imageInput">
                                             </label>
                                             <button type="button" class="btn btn-danger" id="delete-photo">Eliminar
                                                 Foto</button>
@@ -148,15 +148,20 @@
                                                 type="text" />
                                         </div>
                                     </div>
+                                    <div class="mb-3 row">
+                                        <button type='submit' class="btn btn-primary">Agregar</button>
+                                        <button type='reset' class="btn btn-success">Reset</button>
+                                    </div>
+
                                 </div>
                                 <div class="col-lg-4 col-md-9 col-sm-9">
                                     <div class="mb-3 row">
-                                        <label for="staticEmail" class="col-sm-8 col-form-label">Peso(Kg)
+                                        <label  class="col-sm-8 col-form-label">Peso(Kg)
                                             <span class="required">*</span>
                                         </label>
                                         <div class="col-sm-10">
-                                            <input class="form-control" data-validate-length-range="20"
-                                                data-validate-words="1" name="nombre_mascota" placeholder="Peso"
+                                            <input type="text" class="form-control" data-validate-length-range="20"
+                                                data-validate-words="1" name="peso" placeholder="Peso"
                                                 required="required" />
                                         </div>
                                     </div>
@@ -180,8 +185,8 @@
                                         </div>
                                     </div>
                                 </div>
+                            </form>
                         </div>
-                        </form>
                     </div>
                 </div>
             </div>
@@ -198,6 +203,7 @@
 <script src="/static/project_static/vendors/validator/validator.js"></script>
 <script>
     $(document).ready(function () {
+
         var readURL = function (input) {
             if (input.files && input.files[0]) {
                 var reader = new FileReader();
@@ -217,7 +223,7 @@
 
         $("#delete-photo").click(function () {
             $('.profile-pic').removeAttr('src');
-            $('.profile-pic').attr('src',"/static/project_static/other/images/test.jfif" )
+            $('.profile-pic').attr('src', "/static/project_static/other/images/test.jfif")
         })
     });
 </script>

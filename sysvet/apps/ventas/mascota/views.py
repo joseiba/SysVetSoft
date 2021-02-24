@@ -14,7 +14,8 @@ import json
 def add_mascota(request):
     form = MascotaForm
     if request.method == 'POST':
-        form = MascotaForm(request.POST or None)
+        form = MascotaForm(request.POST, request.FILES)
+        print(form)
         if form.is_valid():
             form.save()
             return redirect('/mascota/list')

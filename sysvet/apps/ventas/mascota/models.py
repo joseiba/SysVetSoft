@@ -57,7 +57,7 @@ class Mascota(models.Model):
     edad = models.PositiveIntegerField(null=True, blank=True, default=0, help_text="Ingrese la edad")
     imagen = models.ImageField(upload_to='mascotas/fotos', null=True, blank=True, help_text="Ingrese una foto")
     peso = models.IntegerField(help_text="Ingrese el peso" )
-    fecha_nacimmiento = models.DateField(help_text="Ingrese la fecha de nacimiento", null=True, blank=True, default='11/11/1111')
+    fecha_nacimiento = models.DateField(help_text="Ingrese la fecha de nacimiento", null=True, blank=True, default='11/11/1111')
     id_raza = models.ForeignKey('Raza', on_delete=models.CASCADE, null=False)
     id_cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE, null=False)
 
