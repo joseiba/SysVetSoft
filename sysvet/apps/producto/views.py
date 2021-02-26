@@ -4,7 +4,6 @@ from django.contrib import messages
 from django.db.models import Q
 from django.core.paginator import Paginator
 
-
 from .forms import TipoProductoForm
 from .models import TipoProducto
 
@@ -15,7 +14,6 @@ def add_tipo_producto(request):
     form = TipoProductoForm
     if request.method == 'POST':
         form = TipoProductoForm(request.POST or None)
-        print(form.is_valid())
         if form.is_valid():
             form.save()
             return redirect('/tipoProducto/list')
