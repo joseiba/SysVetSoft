@@ -20,7 +20,7 @@ def add_cliente(request):
             return redirect('/cliente/list')
     cuidad = Ciudad.objects.all()   
     context = {'form' : form, 'cuidad' : cuidad}
-    return render(request, 'cliente/add_cliente.html', context)
+    return render(request, 'ventas/cliente/add_cliente.html', context)
 
 # Metodo para editar Clientes
 @login_required()
@@ -39,7 +39,7 @@ def edit_cliente(request, id):
             return redirect('/cliente/list/')
 
     context = {'form': form}
-    return render(request, 'cliente/edit_cliente.html', context)
+    return render(request, 'ventas/cliente/edit_cliente.html', context)
 
 #Metodo para eliminar cliente
 @login_required()
@@ -56,7 +56,7 @@ def list_clientes(request):
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     context = {'page_obj' : page_obj}
-    return render(request, "cliente/list_cliente.html", context)
+    return render(request, "ventas/cliente/list_cliente.html", context)
 
 #Metodo para la busqueda de clientes
 @login_required()
@@ -70,7 +70,7 @@ def search_cliente(request):
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     context = { 'page_obj': page_obj}
-    return render(request, "cliente/list_cliente.html", context)
+    return render(request, "ventas/cliente/list_cliente.html", context)
 
 
 # def order_cliente(request):

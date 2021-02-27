@@ -12,7 +12,15 @@ class MascotaForm(forms.ModelForm):
         model = Mascota
         fields = '__all__'   
         widgets = {
+            'nombre_mascota': forms.TextInput(attrs={'class':'form-control','data-validate-length-range':'20', 
+                'data-validate-words':'1', 'name': 'nombre_mascota', 'placeholder': 'Nombre de la mascota', 'required': 'required'}),
+            'tatuaje': forms.TextInput(attrs={'class':'form-control optional', 'name': 'tatuaje', 'placeholder': 'Tatuaje'}),
+            'edad': forms.TextInput(attrs={'class':'form-control optional', 'name': 'edad', 'placeholder': 'Edad'}),
             'sexo' : forms.Select(attrs={'class':'form-control', 'id': 'sexo','required':'required' ,'name':'sexo'}),
+            'fecha_nacimiento' : forms.TextInput(attrs={'class':'form-control optional date', 'type': 'date','name':'fecha_nacimiento'}),
+            'peso': forms.TextInput(attrs={'class':'form-control','data-validate-length-range':'20', 
+                'data-validate-words':'1', 'name': 'peso', 'placeholder': 'Peso', 'required': 'required'}),
+            'imagen': forms.FileInput(attrs={'type': 'file', 'name':'imagen', 'id': 'imageInput', 'accept':'image/*'}),
             'id_raza' : forms.Select(attrs={'class':'form-control', 'id': 'id_raza','required':'required' ,'name':'id_raza'}),
             'id_cliente' : forms.Select(attrs={'class':'form-control', 'id': 'id_cliente','required':'required' ,'name':'id_cliente'})
 		}

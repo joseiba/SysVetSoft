@@ -95,18 +95,18 @@
                     </div>
                     <div class="x_content">
                         <div class="row">
-                            <form class="" action="{% url 'add_cliente' %}" method="POST">
+                            <form enctype="multipart/form-data" method="POST" action="{% url 'edit_mascota' mascota.id %}">
                                 {% csrf_token %}
                                 <div class="col-lg-4 col-md-9 col-sm-9">
                                     <div class="card mb-4" style="border-radius: 10px;">
                                         <div class="text-center mb-3">
                                             <div class="mb-3 mx-auto card-img-div">
                                                 <img class="card-img-top rd-card-img profile-pic"
-                                                    src="/static/project_static/other/images/test.jfif" alt="">
+                                                    src="{{ mascota.get_profile }}" >
                                             </div>
                                             <label class="btn btn-primary">
-                                                <span>Cambiar Foto</span>
-                                                <input id="imageInput" type="file" accept="image/*">
+                                                <span for="imageInput">Cambiar Foto</span>
+                                                {{ form.imagen }}
                                             </label>
                                             <button type="button" class="btn btn-danger" id="delete-photo">Eliminar
                                                 Foto</button>
@@ -119,16 +119,13 @@
                                             <span class="required">*</span>
                                         </label>
                                         <div class="col-sm-10">
-                                            <input class="form-control" data-validate-length-range="20"
-                                                data-validate-words="1" name="nombre_mascota"
-                                                placeholder="Nombre de la mascota" required="required" />
+                                            {{ form.nombre_mascota }}
                                         </div>
                                     </div>
                                     <div class="mb-3 row">
                                         <label class="col-sm-6 col-form-label">Tatuaje</label>
                                         <div class="col-sm-10">
-                                            <input class="form-control" class='optional' name="tatuaje"
-                                                placeholder="Tatuaje" type="text" />
+                                            {{ form.tatuaje }}
                                         </div>
                                     </div>
 
@@ -144,9 +141,12 @@
                                         <label class="col-sm-6 col-form-label">edad
                                         </label>
                                         <div class="col-sm-10">
-                                            <input class="form-control" name="edad" class='optional' placeholder="Edad"
-                                                type="text" />
+                                            {{ form.edad }}
                                         </div>
+                                    </div>
+                                    <div class="mb-3 row">
+                                        <button type='submit' class="btn btn-primary">Editar</button>
+                                        <button type='reset' class="btn btn-success">Reset</button>
                                     </div>
                                 </div>
                                 <div class="col-lg-4 col-md-9 col-sm-9">
@@ -155,16 +155,25 @@
                                             <span class="required">*</span>
                                         </label>
                                         <div class="col-sm-10">
-                                            <input class="form-control" data-validate-length-range="20"
-                                                data-validate-words="1" name="nombre_mascota" placeholder="Peso"
-                                                required="required" />
+                                            {{ form.peso }}
                                         </div>
                                     </div>
                                     <div class="mb-3 row">
                                         <label class="col-sm-6 col-form-label">Fecha Nacimiento</label>
                                         <div class="col-sm-10">
-                                            <input class="form-control" class='date' type="date"
-                                                name="fecha_nacimiento">
+                                            {{ form.fecha_nacimiento }}
+                                        </div>
+                                    </div>
+                                    <div class="mb-3 row">
+                                        <label class="col-sm-6 col-form-label">Raza</label>
+                                        <div class="col-sm-10">
+                                            {{ form.id_raza }}
+                                        </div>
+                                    </div>
+                                    <div class="mb-3 row">
+                                        <label class="col-sm-6 col-form-label">Dueño</label>
+                                        <div class="col-sm-10">
+                                            {{ form.id_cliente }}
                                         </div>
                                     </div>
                                 </div>
@@ -205,7 +214,7 @@
 
         $("#delete-photo").click(function () {
             $('.profile-pic').removeAttr('src');
-            $('.profile-pic').attr('src',"/static/project_static/other/images/test.jfif" )
+            $('.profile-pic').attr('src', "/static/project_static/other/images/test.jfif")
         })
     });
 </script>

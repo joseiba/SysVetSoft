@@ -20,7 +20,7 @@ def add_mascota(request):
             form.save()
             return redirect('/mascota/list')
     context = {'form' : form}
-    return render(request, 'mascota/add_mascota.html', context)
+    return render(request, 'ventas/mascota/add_mascota.html', context)
 
 # Metodo para editar Mascotas
 @login_required()
@@ -28,7 +28,7 @@ def edit_mascota(request, id):
     mascota = Mascota.objects.get(id=id)
     form = MascotaForm(instance=mascota)
     if request.method == 'POST':
-        form = MascotaForm(request.POST, instance=mascota)
+        form = MascotaForm(request.POST or None, request.FILES or None, instance=mascota)
         if not form.has_changed():
             messages.info(request, "No has hecho ningun cambio")
             return redirect('/mascota/list/')
@@ -36,11 +36,10 @@ def edit_mascota(request, id):
             mascota = form.save(commit=False)
             mascota.save()
             messages.add_message(request, messages.SUCCESS, 'Se ha editado correctamente!')
-            print(messages)
             return redirect('/mascota/list/')
 
-    context = {'form': form}
-    return render(request, 'mascota/edit_mascota.html', context)    
+    context = {'form': form, 'mascota': mascota}
+    return render(request, 'ventas/mascota/edit_mascota.html', context)    
 
 
 @login_required()
@@ -50,7 +49,23 @@ def list_mascotas(request):
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     context = {'page_obj' : page_obj}
-    return render(request, "mascota/list_mascotas.html", context)
+    return render(request, "ventas/mascota/list_mascotas.html", context)
+
+@login_required()
+def search_mascota(request):
+    query = request.GET.get('q')
+    if query:
+        mascota = Mascota.objects.filter(
+            Q(nombre_mascota__icontains=query) | 
+            Q(id_cliente__nombre_cliente__icontains=query) | 
+            Q(id_cliente__apellido_cliente__icontains=query))
+    else:
+        mascota = Mascota.objects.all()
+    paginator = Paginator(mascota, 8)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    context = { 'page_obj': page_obj}
+    return render(request, "ventas/mascota/list_mascotas.html", context)
 
 
     """
@@ -65,7 +80,7 @@ def add_especie(request):
             form.save()
             return redirect('/mascota/listEspecie/')
     context = {'form' : form}
-    return render(request, 'mascota/especie/list_especie.html', context)
+    return render(request, 'ventas/mascota/especie/list_especie.html', context)
 
 
 @login_required()
@@ -83,7 +98,7 @@ def edit_especie(request, id):
             messages.add_message(request, messages.SUCCESS, 'Se ha editado correctamente!')
             return redirect('/mascota/listEspecie/')
     context = {'form' : form, 'especie': especies}
-    return render(request, 'mascota/especie/edit_especie_modal.html', context)
+    return render(request, 'ventas/mascota/especie/edit_especie_modal.html', context)
 
 @login_required()
 def list_especie(request):
@@ -92,7 +107,7 @@ def list_especie(request):
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     context = {'page_obj' : page_obj}
-    return render(request, "mascota/especie/list_especie.html", context)
+    return render(request, "ventas/mascota/especie/list_especie.html", context)
 
 @login_required()
 def search_especie(request):
@@ -105,7 +120,7 @@ def search_especie(request):
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     context = { 'page_obj': page_obj}
-    return render(request, "mascota/especie/list_especie.html", context)
+    return render(request, "ventas/mascota/especie/list_especie.html", context)
 
     """
     Functions of Razas
@@ -119,7 +134,7 @@ def add_raza(request):
             form.save()
             return redirect('/mascota/listRaza/')
     context = {'form' : form}
-    return render(request, 'mascota/especie/list_raza.html', context)
+    return render(request, 'ventas/mascota/especie/list_raza.html', context)
 
 @login_required()
 def edit_raza(request, id):
@@ -136,7 +151,7 @@ def edit_raza(request, id):
             messages.add_message(request, messages.SUCCESS, 'Se ha editado correctamente!')
             return redirect('/mascota/listRaza/')
     context = {'form' : form, 'raza': raza}
-    return render(request, 'mascota/raza/edit_raza_modal.html', context)    
+    return render(request, 'ventas/mascota/raza/edit_raza_modal.html', context)    
 
 @login_required()
 def list_raza(request):
@@ -146,7 +161,7 @@ def list_raza(request):
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     context = {'page_obj' : page_obj, 'form': raza_especie}
-    return render(request, "mascota/raza/list_raza.html", context)
+    return render(request, "ventas/mascota/raza/list_raza.html", context)
 
 @login_required()
 def search_raza(request):
@@ -159,4 +174,4 @@ def search_raza(request):
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     context = { 'page_obj': page_obj}
-    return render(request, "mascota/raza/list_raza.html", context)    
+    return render(request, "ventas/mascota/raza/list_raza.html", context)    

@@ -22,8 +22,8 @@ from django.conf.urls.static import static
 
 from apps.usuario.views  import Login, logoutUser,home_user
 from apps.ventas.cliente.views import add_cliente, list_clientes, edit_cliente, delete_cliente, search_cliente
-from apps.ventas.mascota.views import (list_mascotas, add_mascota, edit_mascota,list_especie, add_especie, 
-edit_especie,search_especie, list_raza, add_raza, edit_raza, search_raza)
+from apps.ventas.mascota.views import (list_mascotas, add_mascota, edit_mascota, list_especie, add_especie, 
+edit_especie,search_especie, list_raza, add_raza, edit_raza, search_raza,search_mascota)
 
 urlpatterns = [
     # Login and logout   
@@ -43,6 +43,7 @@ urlpatterns = [
     path('mascota/list/', list_mascotas , name="list_mascotas"),
     path('mascota/add/',  add_mascota, name="add_mascota"),
     path('mascota/edit/<int:id>/',edit_mascota , name="edit_mascota"),
+    path('searchMascota/', search_mascota, name="search_mascota"),
     path('mascota/listEspecie/', list_especie , name="list_especie"),
     path('mascota/addEspecie/',  add_especie, name="add_especie"),
     path('mascota/editEspecie/<int:id>/',  edit_especie, name="edit_especie"),
