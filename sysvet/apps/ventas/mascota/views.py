@@ -15,8 +15,8 @@ def add_mascota(request):
     form = MascotaForm
     if request.method == 'POST':
         form = MascotaForm(request.POST, request.FILES)
-        print(form)
         if form.is_valid():
+            print("entro")
             form.save()
             return redirect('/mascota/list')
     context = {'form' : form}
@@ -44,7 +44,7 @@ def edit_mascota(request, id):
 
 @login_required()
 def list_mascotas(request):
-    mascotas = Mascota.objects.all()
+    mascotas = Mascota.objects.all().order_by('-last_modified')
     paginator = Paginator(mascotas, 8)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
@@ -60,13 +60,27 @@ def search_mascota(request):
             Q(id_cliente__nombre_cliente__icontains=query) | 
             Q(id_cliente__apellido_cliente__icontains=query))
     else:
-        mascota = Mascota.objects.all()
+        mascota = Mascota.objects.all().order_by('-last_modified')
     paginator = Paginator(mascota, 8)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     context = { 'page_obj': page_obj}
     return render(request, "ventas/mascota/list_mascotas.html", context)
 
+@login_required()
+def order_by_mascotas(request, id):
+    print(id)
+    if id == "1":
+        print("funciona")
+        mascota = Mascota.objects.all().order_by('nombre_mascota')
+    else:
+        mascota = Mascota.objects.all().order_by('peso')
+    paginator = Paginator(mascota, 8)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    print(page_obj)
+    context = { 'page_obj': page_obj}
+    return render(request, "ventas/mascota/list_mascotas.html", context)
 
     """
     Functions of Epecies 
@@ -80,7 +94,7 @@ def add_especie(request):
             form.save()
             return redirect('/mascota/listEspecie/')
     context = {'form' : form}
-    return render(request, 'ventas/mascota/especie/list_especie.html', context)
+    return render(request, 'ventas/mascota/especie/add_especie_modal.html', context)
 
 
 @login_required()
@@ -102,7 +116,7 @@ def edit_especie(request, id):
 
 @login_required()
 def list_especie(request):
-    especie = Especie.objects.all()
+    especie = Especie.objects.all().order_by('-last_modified')
     paginator = Paginator(especie, 10)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
@@ -115,7 +129,7 @@ def search_especie(request):
     if query:
         especie = Especie.objects.filter(Q(nombre_especie__icontains=query))
     else:
-        especie = Especie.objects.all()
+        especie = Especie.objects.all().order_by('-last_modified')
     paginator = Paginator(especie, 10)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
@@ -134,7 +148,7 @@ def add_raza(request):
             form.save()
             return redirect('/mascota/listRaza/')
     context = {'form' : form}
-    return render(request, 'ventas/mascota/especie/list_raza.html', context)
+    return render(request, 'ventas/mascota/raza/add_raza_modal.html', context)
 
 @login_required()
 def edit_raza(request, id):
@@ -155,7 +169,7 @@ def edit_raza(request, id):
 
 @login_required()
 def list_raza(request):
-    raza = Raza.objects.all()
+    raza = Raza.objects.all().order_by('-last_modified')
     raza_especie = RazaForm
     paginator = Paginator(raza, 10)
     page_number = request.GET.get('page')
@@ -169,7 +183,7 @@ def search_raza(request):
     if query:
         raza = Raza.objects.filter(Q(nombre_raza__icontains=query))
     else:
-        raza = Raza.objects.all()
+        raza = Raza.objects.all().order_by('-last_modified')
     paginator = Paginator(raza, 10)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)

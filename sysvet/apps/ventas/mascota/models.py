@@ -1,6 +1,6 @@
 from django.db import models
 from sysvet.settings import STATIC_URL, MEDIA_URL
-from datetime import date
+from datetime import date, datetime
 from PIL import Image
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from io import StringIO, BytesIO
@@ -15,6 +15,7 @@ url_pets_image = 'project_static/other/images/test.jfif'
 
 class Especie(models.Model):      
     nombre_especie = models.CharField(max_length=200, default="-", help_text="Seleccione la especie")
+    last_modified = models.DateTimeField(default=datetime.now(), blank=True)
 
     class Meta:
         verbose_name = "Especie"
@@ -28,6 +29,7 @@ class Especie(models.Model):
 
 class Raza(models.Model):      
         nombre_raza = models.CharField(max_length=200,default="-", help_text="Seleccione la raza")
+        last_modified = models.DateTimeField(default=datetime.now(), blank=True)
         id_especie = models.ForeignKey('Especie', on_delete=models.CASCADE, null=False)
     
         class Meta:
@@ -58,8 +60,10 @@ class Mascota(models.Model):
     imagen = models.ImageField(upload_to='mascotas/fotos', null=True, blank=True, help_text="Ingrese una foto")
     peso = models.IntegerField(help_text="Ingrese el peso" )
     fecha_nacimiento = models.DateField(help_text="Ingrese la fecha de nacimiento", null=True, blank=True, default='11/11/1111')
+    last_modified = models.DateTimeField(default=datetime.now(), blank=True)
     id_raza = models.ForeignKey('Raza', on_delete=models.CASCADE, null=False)
     id_cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE, null=False)
+
 
 
     class Meta:

@@ -23,7 +23,7 @@ from django.conf.urls.static import static
 from apps.usuario.views  import Login, logoutUser,home_user
 from apps.ventas.cliente.views import add_cliente, list_clientes, edit_cliente, delete_cliente, search_cliente
 from apps.ventas.mascota.views import (list_mascotas, add_mascota, edit_mascota, list_especie, add_especie, 
-edit_especie,search_especie, list_raza, add_raza, edit_raza, search_raza,search_mascota)
+edit_especie,search_especie, list_raza, add_raza, edit_raza, search_raza,search_mascota, order_by_mascotas)
 
 urlpatterns = [
     # Login and logout   
@@ -37,21 +37,22 @@ urlpatterns = [
     path('cliente/list/', list_clientes, name="list_cliente"),
     path('cliente/edit/<int:id>/', edit_cliente, name="edit_cliente"),
     path('<int:id>', delete_cliente, name="delete_cliente"),
-    path('search/', search_cliente, name="search_cliente"),
+    path('cliente/search/', search_cliente, name="search_cliente"),
 
     #Urls mascotas
     path('mascota/list/', list_mascotas , name="list_mascotas"),
     path('mascota/add/',  add_mascota, name="add_mascota"),
     path('mascota/edit/<int:id>/',edit_mascota , name="edit_mascota"),
-    path('searchMascota/', search_mascota, name="search_mascota"),
+    path('mascota/searchMascota/', search_mascota, name="search_mascota"),
+    path('mascota/order_mascota/<int:id>/',  order_by_mascotas, name="order_by_mascotas"),
     path('mascota/listEspecie/', list_especie , name="list_especie"),
     path('mascota/addEspecie/',  add_especie, name="add_especie"),
     path('mascota/editEspecie/<int:id>/',  edit_especie, name="edit_especie"),
-    path('searchEspecie/', search_especie, name="search_especie"),
+    path('mascota/searchEspecie/', search_especie, name="search_especie"),
     path('mascota/listRaza/', list_raza , name="list_raza"),
     path('mascota/addRaza/',  add_raza, name="add_raza"),
     path('mascota/editRaza/<int:id>/',  edit_raza, name="edit_raza"),
-    path('searchRaza/', search_raza, name="search_raza"),
+    path('mascota/searchRaza/', search_raza, name="search_raza"),
     #End Urls Mascotas
 ]
 

@@ -64,8 +64,7 @@
                         <div class="clearfix"></div>
                     </div>
                     <div>
-                        <button type="submit" class="btn btn-primary float-right" data-toggle="modal"
-                            data-target="#confirmAddModal">
+                        <button type="submit" class="btn btn-primary float-right" onclick="abrir_modal_creacion('/mascota/addRaza/')">
                             Agregar nueva raza
                         </button>
 
@@ -136,42 +135,8 @@
     </div>
 </div>
 
-<div class="modal fade" id="confirmAddModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-    aria-hidden="true">
-    <div></div>
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header" style="background-color:#2a3f54;">
-                <h5 class="modal-title" id="exampleModalLabel" style="color: white;">Agregar Raza</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <form action="{% url 'add_raza' %}" method="post">
-                {% csrf_token %}
-                <div class="field item form-group mt-3">
-                    <label class="col-form-label col-md-3 col-sm-3  label-align">Nombre Raza<span
-                            class="required">*</span></label>
-                    <div class="col-md-6 col-sm-6">
-                        <input class="form-control" data-validate-length-range="20" data-validate-words="1"
-                            name="nombre_raza" placeholder="Nombre de la raza" required="required" />
-                    </div>
-                </div>
-                <div class="field item form-group mt-3">
-                    <label class="col-form-label col-md-3 col-sm-3  label-align">Especie
-                        <span class="required">*</span>
-                    </label>
-                    <div class="col-md-6 col-sm-6">
-                        {{ form.id_especie }}                        
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                    <button type="submit" class="btn btn-primary">Agregar</button>
-                </div>
-            </form>
-        </div>
-    </div>
+<div class="modal fade" id="creacion"  role="dialog" >
+
 </div>
 
 <div class="modal fade" id="edicion" role="dialog">

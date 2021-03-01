@@ -133,12 +133,14 @@
                         <button type="submit" class="btn btn-primary float-right">
                             <a style="color: white;" href="{% url 'add_mascota' %}">Agregar nueva mascota</a>
                         </button>
-    
+
                         <div class="float-left">
                             <div class="wrap">
                                 <div class="search">
                                     <form action="{% url 'search_mascota' %}" method="GET" class="d-inline-flex">
-                                        <input type="search" class="searchTerm" name="q" value="{{ request.GET.q }}"
+                                        <input data-toggle="tooltip" data-placement="top"
+                                            title="Buscá por mascota, nombre o apellido cliente" type="search"
+                                            class="searchTerm" name="q" value="{{ request.GET.q }}"
                                             placeholder="Buscá por mascota, nombre o apellido cliente">
                                         <button type="submit" class="searchButton">
                                             <i class="fa fa-search"></i>
@@ -151,9 +153,13 @@
                         <!--<div>
                             <div class="d-flex">
                                 <p>Ordenar por:</p>
-                                <select class="form-select form-select-lg mb-3" aria-label="Default select example">
-                                    <option selected value="">Nombre de cliente</option>
-                                    <option value="">Cédula del cliente</option>
+                                <select class="form-select mb-3" id="order_by_mascota">
+                                    <option selected value="1">
+                                        Nombre mascota
+                                    </option>
+                                    <option value="2">
+                                        peso
+                                    </option>
                                 </select>
                             </div>
                         </div>-->
@@ -186,7 +192,8 @@
                                     </h5>
                                     <div class="card-body card-body-pets p-0" style="margin-top: 6px;">
                                         <div class="status m-0">
-                                            <p class="text-uppercase text_align_center  m-0">{{ mascota.id_cliente.nombre_cliente }} {{ mascota.id_cliente.apellido_cliente }} </p>
+                                            <p class="text-uppercase text_align_center  m-0">
+                                                {{ mascota.id_cliente.nombre_cliente }} {{ mascota.id_cliente.apellido_cliente }} </p>
                                         </div>
                                         <div class="status m-0">
                                             <p class="text-uppercase text_align_center m-0">{{ mascota.id_raza.id_especie.nombre_especie}}</p>
@@ -200,8 +207,10 @@
                                     </div>
 
                                     <div class="d-contents" style="display: contents;">
-                                        <a class="btn btn-outline-primary ml-3 mr-3" href="{% url 'edit_mascota' mascota.id %}" >Editar Mascota</a>
-                                        <button class="btn btn-outline-warning ml-3 mr-3">Actualizar Ficha Médica</button>
+                                        <a class="btn btn-outline-primary ml-3 mr-3"
+                                            href="{% url 'edit_mascota' mascota.id %}">Editar Mascota</a>
+                                        <button class="btn btn-outline-warning ml-3 mr-3">Actualizar Ficha
+                                            Médica</button>
                                     </div>
                                 </div>
                             </div>
@@ -242,7 +251,21 @@
 <script src="/static/project_static/vendors/pdfmake/build/vfs_fonts.js"></script>
 
 <script>
+    /*$(function () {
+        $("#order_by_mascota").change(function () {
+            var url = "{% url 'order_by_mascotas' 1 %}";
+            var fullUr = url.replace('1', '1');
+            $.ajax({
+                data: { 'id': 1 },
+                url: fullUr,
+                type: 'GET',
+                success: function (response) {
+                    console.log("anda")
+                }
+            })
+        })
 
+    })*/
 </script>
 
 
