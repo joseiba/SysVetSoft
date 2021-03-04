@@ -1,0 +1,272 @@
+{% extends "home/base_site.html" %}
+
+{% block title %} Lista Cliente {% endblock title %}
+
+{% block stylesheets %}
+{{ block.super }}
+<link href="/static/project_static/vendors/datatables.net-bs/css/dataTables.bootstrap.min.css" rel="stylesheet">
+<link href="/static/project_static/vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css" rel="stylesheet">
+<link href="/static/project_static/vendors/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.min.css"
+    rel="stylesheet">
+<link href="/static/project_static/vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css"
+    rel="stylesheet">
+<link href="/static/project_static/vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css" rel="stylesheet">
+<style>
+    .search {
+        width: 100%;
+        position: relative;
+        display: flex;
+    }
+
+    .searchTerm {
+        width: 100%;
+        border: 3px solid #00B4CC;
+        border-right: none;
+        padding: 5px;
+        height: 36px;
+        border-radius: 5px 0 0 5px;
+        outline: none;
+        color: #212529;
+    }
+
+    .searchTerm:focus {
+        color: #212529;
+    }
+
+    .searchButton {
+        width: 40px;
+        height: 36px;
+        border: 1px solid #00B4CC;
+        background: #00B4CC;
+        text-align: center;
+        color: #fff;
+        border-radius: 0 5px 5px 0;
+        cursor: pointer;
+        font-size: 20px;
+    }
+
+    .text_align_center {
+        text-align-last: center;
+    }
+
+    .card-pets:hover {
+        box-shadow: 0px 0px 10px 5px #a6a6a6;
+        /* please set the shadow color conveniently */
+    }
+
+    .card-pets {
+        border-radius: 10px !important;
+    }
+
+    .card-img-div {
+        background-color: #278094eb;
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+    }
+
+    .rd-card-img {
+        height: 8rem;
+        width: 8rem;
+        border-radius: 4rem;
+        margin-left: auto;
+        margin-right: auto;
+        border: 1px solid rgba(52, 73, 94, 0.44);
+        background: #fff;
+        padding: 4px;
+    }
+
+    .edit-property {
+        font-size: 18px;
+        margin-right: 7px;
+        position: relative;
+        margin-top: .5rem;
+        color: #ffff;
+    }
+
+    .dropdown-item {
+        padding: 0.25rem 0.5rem;
+        cursor: pointer;
+    }
+
+    a.dropdown-item {
+        color: #45474a;
+        padding: 0rem .5rem;
+    }
+
+    a.dropdown-item:hover {
+        background: rgba(0, 0, 0, .1);
+    }
+
+    .card-option {
+        background-color: #fff;
+        position: absolute;
+        right: 1rem;
+        top: 2.5rem;
+        width: 8.5rem;
+        height: auto;
+        background-color: #fff;
+        border-radius: 5px;
+        -webkit-box-shadow: -1px 3px 19px -2px rgba(0, 0, 0, 0.72);
+        -moz-box-shadow: -1px 3px 19px -2px rgba(0, 0, 0, 0.72);
+        box-shadow: -1px 3px 19px -2px rgba(0, 0, 0, 0.72);
+    }
+</style>
+{% endblock stylesheets %}
+
+{% block content %}
+<div class="right_col" role="main">
+    <div class="">
+        <div class="row">
+            <div class="col-md-12 col-sm-12 ">
+                <div class="x_panel">
+                    <div class="x_title">
+                        <h2>Lista de Mascotas</h2>
+                        <ul class="nav navbar-right panel_toolbox">
+                            <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                            </li>
+                            <li><a class="close-link"><i class="fa fa-close"></i></a>
+                            </li>
+                        </ul>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div>
+                        <button type="submit" class="btn btn-primary float-right">
+                            <a style="color: white;" href="{% url 'add_mascota' %}">Agregar nueva mascota</a>
+                        </button>
+
+                        <div class="float-left">
+                            <div class="wrap">
+                                <div class="search">
+                                    <form action="{% url 'search_mascota' %}" method="GET" class="d-inline-flex">
+                                        <input data-toggle="tooltip" data-placement="top"
+                                            title="Buscá por mascota, nombre o apellido cliente" type="search"
+                                            class="searchTerm" name="q" value="{{ request.GET.q }}"
+                                            placeholder="Buscá por mascota, nombre o apellido cliente">
+                                        <button type="submit" class="searchButton">
+                                            <i class="fa fa-search"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!--<div>
+                            <div class="d-flex">
+                                <p>Ordenar por:</p>
+                                <select class="form-select mb-3" id="order_by_mascota">
+                                    <option selected value="1">
+                                        Nombre mascota
+                                    </option>
+                                    <option value="2">
+                                        peso
+                                    </option>
+                                </select>
+                            </div>
+                        </div>-->
+                    </div>
+
+                    <div class="x_content">
+                        <div class="row">
+                            {% for mascota in page_obj %}
+                            <div class="col-12 col-md-6 col-lg-4 col-xl-3 mb-4">
+                                <div class="card card-pets">
+                                    <div class="card-img-div text_align_center">
+                                        <!--<div>
+                                            <i class="fas fa-ellipsis-v edit-property float-right" onclick="showHide()"></i>
+                                        </div>
+                                        <div class="card-list card-option float-right" id="option-pets"
+                                            style="display: none;">
+
+                                            <a class="dropdown-item py-2">Editar Mascota</a>
+                                            <a class="dropdown-item py-2">
+                                                Actualizar Ficha Médica</a>
+                                        </div>-->
+                                        <div class="">
+                                            <img class="card-img-top rd-card-img" src="{{ mascota.get_profile}} "
+                                                alt="pets profile image"
+                                                style="margin-top: .5rem; margin-bottom: .5rem; margin-left: 7px;">
+                                        </div>
+
+                                    </div>
+                                    <h5 class="text_align_center" style="margin-top: .5rem;">{{ mascota.nombre_mascota}}
+                                    </h5>
+                                    <div class="card-body card-body-pets p-0" style="margin-top: 6px;">
+                                        <div class="status m-0">
+                                            <p class="text-uppercase text_align_center  m-0">
+                                                {{ mascota.id_cliente.nombre_cliente }} {{ mascota.id_cliente.apellido_cliente }} </p>
+                                        </div>
+                                        <div class="status m-0">
+                                            <p class="text-uppercase text_align_center m-0">{{ mascota.id_raza.id_especie.nombre_especie}}</p>
+                                        </div>
+                                        <div class="status m-0">
+                                            <p class="text-uppercase text_align_center m-0">{{ mascota.id_raza.nombre_raza }}</p>
+                                        </div>
+                                        <div class="status">
+                                            <p class="text-uppercase text_align_center">{{ mascota.peso}}kg</p>
+                                        </div>
+                                    </div>
+
+                                    <div class="d-contents" style="display: contents;">
+                                        <a class="btn btn-outline-primary ml-3 mr-3"
+                                            href="{% url 'edit_mascota' mascota.id %}">Editar Mascota</a>
+                                        <button class="btn btn-outline-warning ml-3 mr-3">Actualizar Ficha
+                                            Médica</button>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                    {% block pagination %}
+                    {% include 'home/pagination.html' %}
+                    {% endblock pagination %}
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock content %}
+
+{% block javascripts %}
+{{ block.super }}
+<!-- Datatables -->
+<script src="/static/project_static/vendors/datatables.net/js/jquery.dataTables.min.js"></script>
+<script src="/static/project_static/vendors/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+<script src="/static/project_static/vendors/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
+<script src="/static/project_static/vendors/datatables.net-buttons-bs/js/buttons.bootstrap.min.js"></script>
+<script src="/static/project_static/vendors/datatables.net-buttons/js/buttons.flash.min.js"></script>
+<script src="/static/project_static/vendors/datatables.net-buttons/js/buttons.html5.min.js"></script>
+<script src="/static/project_static/vendors/datatables.net-buttons/js/buttons.print.min.js"></script>
+<script src="/static/project_static/vendors/datatables.net-fixedheader/js/dataTables.fixedHeader.min.js"></script>
+<script src="/static/project_static/vendors/datatables.net-keytable/js/dataTables.keyTable.min.js"></script>
+<script src="/static/project_static/vendors/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
+<script src="/static/project_static/vendors/datatables.net-responsive-bs/js/responsive.bootstrap.js"></script>
+<script src="/static/project_static/vendors/datatables.net-scroller/js/dataTables.scroller.min.js"></script>
+<script src="/static/project_static/vendors/jszip/dist/jszip.min.js"></script>
+<script src="/static/project_static/vendors/pdfmake/build/pdfmake.min.js"></script>
+<script src="/static/project_static/vendors/pdfmake/build/vfs_fonts.js"></script>
+
+<script>
+    /*$(function () {
+        $("#order_by_mascota").change(function () {
+            var url = "{% url 'order_by_mascotas' 1 %}";
+            var fullUr = url.replace('1', '1');
+            $.ajax({
+                data: { 'id': 1 },
+                url: fullUr,
+                type: 'GET',
+                success: function (response) {
+                    console.log("anda")
+                }
+            })
+        })
+
+    })*/
+</script>
+
+
+{% endblock javascripts %}

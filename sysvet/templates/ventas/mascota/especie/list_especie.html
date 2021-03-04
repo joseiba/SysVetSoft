@@ -1,0 +1,172 @@
+{% extends "home/base_site.html" %}
+
+{% block title %} Lista Especies {% endblock title %}
+
+{% block stylesheets %}
+{{ block.super }}
+<link href="/static/project_static/vendors/datatables.net-bs/css/dataTables.bootstrap.min.css" rel="stylesheet">
+<link href="/static/project_static/vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css" rel="stylesheet">
+<link href="/static/project_static/vendors/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.min.css"
+    rel="stylesheet">
+<link href="/static/project_static/vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css"
+    rel="stylesheet">
+<link href="/static/project_static/vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css" rel="stylesheet">
+<style>
+    .search {
+        width: 100%;
+        position: relative;
+        display: flex;
+    }
+
+    .searchTerm {
+        width: 100%;
+        border: 3px solid #00B4CC;
+        border-right: none;
+        padding: 5px;
+        height: 36px;
+        border-radius: 5px 0 0 5px;
+        outline: none;
+        color: #212529;
+    }
+
+    .searchTerm:focus {
+        color: #212529;
+    }
+
+    .searchButton {
+        width: 40px;
+        height: 36px;
+        border: 1px solid #00B4CC;
+        background: #00B4CC;
+        text-align: center;
+        color: #fff;
+        border-radius: 0 5px 5px 0;
+        cursor: pointer;
+        font-size: 20px;
+    }
+</style>
+{% endblock stylesheets %}
+
+{% block content %}
+<div class="right_col" role="main">
+    <div class="">
+        <div class="row">
+            <div class="col-md-12 col-sm-12 ">
+                <div class="x_panel">
+                    <div class="x_title">
+                        <h2>Lista de Especies</h2>
+                        <ul class="nav navbar-right panel_toolbox">
+                            <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                            </li>
+                            <li><a class="close-link"><i class="fa fa-close"></i></a>
+                            </li>
+                        </ul>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div>
+                        <button type="submit" class="btn btn-primary float-right" onclick="abrir_modal_creacion('/mascota/addEspecie/')">
+                            Agregar nueva especie
+                        </button>
+
+                        <div class="float-left">
+                            <div class="wrap">
+                                <div class="search">
+                                    <form action="{% url 'search_especie' %}" method="GET" class="d-inline-flex">
+                                        <input type="search" class="searchTerm" name="q" value="{{ request.GET.q }}"
+                                            placeholder="Buscar nombre de especie">
+                                        <button type="submit" class="searchButton">
+                                            <i class="fa fa-search"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!--<div>
+                            <div class="d-flex">
+                                <p>Ordenar por:</p>
+                                <select class="form-select form-select-lg mb-3" aria-label="Default select example">
+                                    <option selected value="">Nombre de cliente</option>
+                                    <option value="">Cédula del cliente</option>
+                                </select>
+                            </div>
+                        </div>-->
+                    </div>
+
+                    <div class="x_content">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="card-box table-responsive">
+                                    <table id="" class="table table-striped table-bordered" style="width:100%">
+                                        <thead>
+                                            <tr class="" style="background-color: #2a3f54; font-size: medium;">
+                                                <th style="color: white;">Nombre de Especie</th>
+                                                <th style="color: white;">Acción</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+
+                                            {% for especie in page_obj %}
+                                            <tr style="font-size: medium;">
+                                                <td>{{ especie.nombre_especie}}</td>
+                                                <td style="width: 26px !important;">
+                                                    <button class="btn btn-warning" onclick="abrir_modal_edicion('/mascota/editEspecie/' + '{{ especie.id }}' + '/');">
+                                                        Editar
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                    {% block pagination %}
+                    {% include 'home/pagination.html' %}
+                    {% endblock pagination %}
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="creacion" role="dialog">
+
+</div>
+
+<div class="modal fade" id="edicion" role="dialog">
+
+</div>
+
+{% endblock content %}
+
+{% block javascripts %}
+{{ block.super }}
+<!-- Datatables -->
+<script src="/static/project_static/vendors/datatables.net/js/jquery.dataTables.min.js"></script>
+<script src="/static/project_static/vendors/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+<script src="/static/project_static/vendors/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
+<script src="/static/project_static/vendors/datatables.net-buttons-bs/js/buttons.bootstrap.min.js"></script>
+<script src="/static/project_static/vendors/datatables.net-buttons/js/buttons.flash.min.js"></script>
+<script src="/static/project_static/vendors/datatables.net-buttons/js/buttons.html5.min.js"></script>
+<script src="/static/project_static/vendors/datatables.net-buttons/js/buttons.print.min.js"></script>
+<script src="/static/project_static/vendors/datatables.net-fixedheader/js/dataTables.fixedHeader.min.js"></script>
+<script src="/static/project_static/vendors/datatables.net-keytable/js/dataTables.keyTable.min.js"></script>
+<script src="/static/project_static/vendors/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
+<script src="/static/project_static/vendors/datatables.net-responsive-bs/js/responsive.bootstrap.js"></script>
+<script src="/static/project_static/vendors/datatables.net-scroller/js/dataTables.scroller.min.js"></script>
+<script src="/static/project_static/vendors/jszip/dist/jszip.min.js"></script>
+<script src="/static/project_static/vendors/pdfmake/build/pdfmake.min.js"></script>
+<script src="/static/project_static/vendors/pdfmake/build/vfs_fonts.js"></script>
+
+<script>
+    $(function () {
+
+    })
+</script>
+
+
+{% endblock javascripts %}
