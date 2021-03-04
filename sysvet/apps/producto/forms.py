@@ -12,8 +12,8 @@ class TipoProductoForm(forms.ModelForm):
         model = TipoProducto
         fields = '__all__'
         widgets = {
-			'nombre_tipo' : forms.TextInput(attrs={'class':'form-control','data-validate-length-range':'200', 'name': 'nombre_tipo', 'placeholder': 'Nombre Tipo Producto', 'required': 'required'}),
-			'fecha_alta' : forms.TextInput(attrs={'class':'form-control','type':'date',
+			'nombre_tipo' : forms.TextInput(attrs={'class':'form-control', 'name': 'nombre_tipo', 'placeholder': 'Nombre Tipo Producto', 'required': 'required'}),
+			'fecha_alta' : forms.TextInput(attrs={'class':'form-control','type':'datetime',
                 'name': 'fecha_alta', 'placeholder': 'Fecha de Alta', 'readonly': 'readonly'}),
 			'fecha_baja' : forms.TextInput(attrs={'class':'form-control','type':'datetime', 'name': 'fecha_baja', 
                 'placeholder': 'Fecha de Baja', 'readonly': 'readonly'}),
