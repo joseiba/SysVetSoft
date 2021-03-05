@@ -120,15 +120,19 @@
                                                 <td>{{ cliente.direccion}}</td>
                                                 <td>{{ cliente.id_ciudad}}</td>
                                                 <td>
-                                                    <a href="{% url 'edit_cliente' cliente.id %}">
-                                                        <i class="fas fa-pencil-alt" style="color: #ffc107;"></i>
-                                                    </a>
-                                                    <a class="confirm-delete pointer" data-id="{{ cliente.id }}"
-                                                        data-name-cliente="{{ cliente.nombre_cliente }}">
-                                                        <i class="fas fa-trash" data-toggle="modal"
-                                                            data-target="#confirmDeleteModal" style="color: #dc3545;">
-                                                        </i>
-                                                    </a>
+                                                    <button class="btn btn-warning">
+                                                        <a href="{% url 'edit_cliente' cliente.id %}" style="color: #444;">
+                                                            Editar
+                                                        </a>
+                                                    </button>
+
+                                                    <button class="btn btn-danger">
+                                                        <a class="confirm-delete pointer" data-id="{{ cliente.id }}"
+                                                            data-name-cliente="{{ cliente.nombre_cliente }}"
+                                                            data-toggle="modal" data-target="#confirmDeleteModal">
+                                                            Eliminar
+                                                        </a>
+                                                    </button>
                                                 </td>
                                             </tr>
                                             {% endfor %}
@@ -140,7 +144,7 @@
                     </div>
                     <div class="clearfix"></div>
                     {% block pagination %}
-                        {% include 'home/pagination.html' %}
+                    {% include 'home/pagination.html' %}
                     {% endblock pagination %}
                 </div>
 
@@ -211,6 +215,8 @@
             var url = "{% url 'delete_cliente' 1 %}"
             window.location = url.replace('1', id_cliente);
         })
+
+        $('#id_cliente').selectpicker()
     })
 </script>
 

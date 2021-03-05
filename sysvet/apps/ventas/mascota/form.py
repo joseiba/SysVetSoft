@@ -22,7 +22,7 @@ class MascotaForm(forms.ModelForm):
                 'data-validate-words':'1', 'name': 'peso', 'placeholder': 'Peso', 'required': 'required'}),
             'imagen': forms.FileInput(attrs={'type': 'file', 'name':'imagen', 'id': 'imageInput', 'accept':'image/*'}),
             'id_raza' : forms.Select(attrs={'class':'form-control', 'id': 'id_raza','required':'required' ,'name':'id_raza'}),
-            'id_cliente' : forms.Select(attrs={'class':'form-control', 'id': 'id_cliente','required':'required' ,'name':'id_cliente'})
+            'id_cliente' : forms.Select(attrs={'class':'form-control selectpicker', 'id': 'id_cliente','data-live-search':'true','required':'required' ,'name':'id_cliente'})
 		}
 
 class EspecieForm(forms.ModelForm):
