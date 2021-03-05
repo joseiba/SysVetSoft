@@ -70,9 +70,9 @@ class ProductoStock (models.Model):
     id_producto = models.ForeignKey('Producto', on_delete=models.CASCADE, null=False)
 
 
-    def __str__(self):
-        """Formato de la ciudad"""
-        return '{0}'.format(self.descripcion)
+    def _str_(self):
+        """Formato del Stock"""
+        return '{0}'.format(self.id_producto.nombre_producto)
 
     def get_absolute_url(self):
         """Retorna el URL para acceder a una instancia de un deposito en particular."""
