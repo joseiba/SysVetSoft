@@ -50,8 +50,6 @@ class Producto (models.Model):
     fecha_compra = models.DateField(help_text = "Ingrese fecha de compra")
     precio_compra = models.IntegerField(help_text = 'Ingrese precio de compra')
     precio_venta = models.IntegerField( help_text = 'Ingrese precio de venta')
-    ubicacion = models.CharField(max_length = 200, help_text = "Ingrese ubicacion del producto")
-    stock = models.IntegerField(help_text = 'Ingrese stock')
     stock_minimo = models.IntegerField(help_text = 'Ingrese stock minimo')
 
     def __str__(self):
