@@ -28,12 +28,14 @@ def edit_mascota(request, id):
     mascota = Mascota.objects.get(id=id)
     form = MascotaForm(instance=mascota)
     if request.method == 'POST':
-        form = MascotaForm(request.POST or None, request.FILES or None, instance=mascota)
+        form = MascotaForm(request.POST, request.FILES, instance=mascota)
         if not form.has_changed():
             messages.info(request, "No has hecho ningun cambio")
             return redirect('/mascota/list/')
         if form.is_valid():
             mascota = form.save(commit=False)
+            if not request.FILES:
+                mascota.imagen = ''
             mascota.save()
             messages.add_message(request, messages.SUCCESS, 'Se ha editado correctamente!')
             return redirect('/mascota/list/')

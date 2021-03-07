@@ -38,7 +38,7 @@ class Cliente (models.Model):
 
     def __str__(self):
         """Formato del cliente"""
-        return '{0}'.format(self.nombre_cliente)
+        return '{0}  {1}  {2}'.format(self.nombre_cliente, self.apellido_cliente, self.cedula)
 
     def get_absolute_url(self):
         """Retorna el URL para acceder a una instancia de un cliente en particular."""
