@@ -92,7 +92,7 @@
                     <button type='submit' class="btn btn-primary">Actualizar</button>
                     <button' class="btn btn-success">
                       <a style="color: white; cursor: pointer;" href="{% url  'list_cliente'%}">    
-                        Cancelar                    
+                        Volver                    
                       </a>
                     </button>
                   </div>
@@ -113,7 +113,7 @@
 <script src="/static/project_static/vendors/validator/multifield.js"></script>
 <script src="/static/project_static/vendors/validator/validator.js"></script>
 <script>
-  function hideshow() {
+  /*function hideshow() {
     var password = document.getElementById("password1");
     var slash = document.getElementById("slash");
     var eye = document.getElementById("eye");
@@ -129,10 +129,10 @@
       eye.style.display = "block";
     }
 
-  }
+  }*/
 </script>
 <script>
-  // initialize a validator instance from the "FormValidator" constructor.
+  /*// initialize a validator instance from the "FormValidator" constructor.
   // A "<form>" element is optionally passed as an argument, but is not a must
   var validator = new FormValidator({
     "events": ['blur', 'input', 'change']
@@ -153,7 +153,7 @@
     validator.settings.alerts = !this.checked;
     if (this.checked)
       $('form .alert').remove();
-  }).prop('checked', false);
+  }).prop('checked', false);*/
 
 </script>
 {% endblock javascripts %}

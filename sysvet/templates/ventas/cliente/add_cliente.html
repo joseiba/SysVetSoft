@@ -89,7 +89,7 @@
                                 </label>
                                 <div class="col-md-6 col-sm-6">
                                     <select class="form-control" required='required' name="id_ciudad">
-                                        <option>Seleccione una Cuidad</option>
+                                        <option required='required'>Seleccione una Cuidad</option>
                                         {% for cui in cuidad %}
                                         <option required="required" value={{ cui.id}}>{{ cui.nombre_ciudad }}</option>
                                         {% endfor %}

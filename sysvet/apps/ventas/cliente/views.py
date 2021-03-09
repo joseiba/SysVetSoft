@@ -51,7 +51,7 @@ def delete_cliente(request, id):
 #Metodo para listar todos los clientes
 @login_required()
 def list_clientes(request):
-    clientes = Cliente.objects.all()
+    clientes = Cliente.objects.all().order_by('-last_modified')
     paginator = Paginator(clientes, 10)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
@@ -65,7 +65,7 @@ def search_cliente(request):
     if query:
         clientes = Cliente.objects.filter(Q(nombre_cliente__icontains=query) | Q(cedula__icontains=query))
     else:
-        clientes = Cliente.objects.all()
+        clientes = Cliente.objects.all().order_by('-last_modified')
     paginator = Paginator(clientes, 10)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
