@@ -104,11 +104,11 @@
                                                 <img class="card-img-top rd-card-img profile-pic"
                                                     src="/static/project_static/other/images/test.jfif" alt="">
                                             </div>
-                                            <label class="btn btn-primary">
+                                            <label class="btn btn-outline-primary">
                                                 <span for="imageInput">Agregar Foto</span>
                                                 <input type="file" name="imagen" accept="image/*" id="imageInput">
                                             </label>
-                                            <button type="button" class="btn btn-danger" id="delete-photo">Eliminar
+                                            <button type="button" class="btn btn-outline-danger" id="delete-photo">Eliminar
                                                 Foto</button>
                                         </div>
                                     </div>
@@ -147,11 +147,7 @@
                                             <input class="form-control" name="edad" class='optional' placeholder="Edad"
                                                 type="text" />
                                         </div>
-                                    </div>
-                                    <div class="mb-3 row">
-                                        <button type='submit' class="btn btn-primary">Agregar</button>
-                                        <button type='reset' class="btn btn-success">Reset</button>
-                                    </div>
+                                    </div>                                   
 
                                 </div>
                                 <div class="col-lg-4 col-md-9 col-sm-9">
@@ -185,6 +181,12 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="col-lg-4 col-md-9 col-sm-9">
+                                </div>
+                                <div class="col-lg-4 col-md-9 col-sm-9">
+                                        <button type='submit' class="btn btn-primary">Agregar</button>
+                                        <button type='reset' class="btn btn-success">Reset</button>
+                                </div>                            
                             </form>
                         </div>
                     </div>
@@ -201,6 +203,7 @@
 <!-- validator -->
 <script src="/static/project_static/vendors/validator/multifield.js"></script>
 <script src="/static/project_static/vendors/validator/validator.js"></script>
+
 <script>
     $(document).ready(function () {
 
@@ -225,12 +228,13 @@
             $('.profile-pic').removeAttr('src');
             $('.profile-pic').attr('src', "/static/project_static/other/images/test.jfif")
         })
+
     });
 </script>
 <script>
     // initialize a validator instance from the "FormValidator" constructor.
     // A "<form>" element is optionally passed as an argument, but is not a must
-    var validator = new FormValidator({
+   /* var validator = new FormValidator({
         "events": ['blur', 'input', 'change']
     }, document.forms[0]);
     // on form "submit" event
@@ -249,7 +253,7 @@
         validator.settings.alerts = !this.checked;
         if (this.checked)
             $('form .alert').remove();
-    }).prop('checked', false);
+    }).prop('checked', false);*/
 
 </script>
 {% endblock javascripts %}

@@ -6,6 +6,8 @@ class Ciudad (models.Model):
     Clase que define la estructura de una ciudad
     """
     nombre_ciudad = models.CharField(max_length = 200, help_text = "Ingrese nombre de la ciudad")
+    last_modified = models.DateTimeField(auto_now=True, blank=True)
+
 
     class Meta:
         verbose_name = "Ciudad"
@@ -34,11 +36,13 @@ class Cliente (models.Model):
     ruc = models.CharField(max_length = 200, help_text = "Ingrese ruc del cliente", null=True, blank=True, default=cedula)
     telefono = models.CharField(max_length = 200, help_text = "Ingrese telefono del cliente")
     email = models.EmailField(max_length = 200, help_text = "Ingrese email del cliente", null=True, blank=True, default="-")
+    last_modified = models.DateTimeField(auto_now=True, blank=True)
     id_ciudad = models.ForeignKey('Ciudad', on_delete=models.SET_NULL, null=True)
+
 
     def __str__(self):
         """Formato del cliente"""
-        return '{0}'.format(self.nombre_cliente)
+        return '{0}  {1}  {2}'.format(self.nombre_cliente, self.apellido_cliente, self.cedula)
 
     def get_absolute_url(self):
         """Retorna el URL para acceder a una instancia de un cliente en particular."""
