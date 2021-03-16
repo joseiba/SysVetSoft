@@ -7,6 +7,9 @@ from django.core.paginator import Paginator
 from .forms import TipoProductoForm
 from .models import TipoProducto
 
+from .forms import DepositoForm
+from .models import Deposito
+
 
 #Metodo para agregar tipo producto
 @login_required()
@@ -67,3 +70,59 @@ def search_tipo_producto(request):
 
 
 # def order_cliente(request):
+
+
+#Metodo para agregar deposito
+@login_required()
+def add_deposito(request):
+    form = DepositoForm
+    if request.method == 'POST':
+        form = DepositoForm(request.POST or None)
+        if form.is_valid():
+            form.save()
+            return redirect('/deposito/list')   
+    context = {'form' : form}
+    return render(request, 'ventas/producto/add_deposito.html', context)
+
+# Metodo para editar deposito
+@login_required()
+def edit_deposito(request, id):
+    deposito = Deposito.objects.get(id=id)
+    form = DepositoForm(instance=deposito)
+    if request.method == 'POST':
+        form = DepositoForm(request.POST, instance=deposito)
+        if not form.has_changed():
+            messages.info(request, "No ha hecho ningun cambio")
+            return redirect('/deposito/list/')
+        if form.is_valid():
+            deposito = form.save(commit=False)
+            deposito.save()
+            messages.add_message(request, messages.SUCCESS, 'El depósito se ha editado correctamente!')
+            return redirect('/deposito/list/')
+
+    context = {'form': form}
+    return render(request, 'ventas/producto/edit_deposito.html', context)
+
+    #Metodo para listar todos los depositos
+@login_required()
+def list_deposito(request):
+    depositos = Deposito.objects.all()
+    paginator = Paginator(depositos, 10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    context = {'page_obj' : page_obj}
+    return render(request, "ventas/producto/list_deposito.html", context)
+
+#Metodo para la busqueda de clientes
+@login_required()
+def search_deposito(request):
+    query = request.GET.get('q')
+    if query:
+        depositos = Deposito.objects.filter(Q(descripcion__icontains=query))
+    else:
+        depositos = Deposito.objects.all()
+    paginator = Paginator(depositos, 10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    context = { 'page_obj': page_obj}
+    return render(request, "ventas/producto/list_deposito.html", context)

@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import TipoProducto
+from .models import TipoProducto, Deposito
 
 class TipoProductoForm(forms.ModelForm):
     """[summary]
@@ -17,5 +17,20 @@ class TipoProductoForm(forms.ModelForm):
                 'name': 'fecha_alta', 'placeholder': 'Fecha de Alta', 'readonly': 'readonly'}),
 			'fecha_baja' : forms.TextInput(attrs={'class':'form-control','type':'datetime', 'name': 'fecha_baja', 
                 'placeholder': 'Fecha de Baja', 'readonly': 'readonly'}),
+			
+		}
+
+
+class DepositoForm(forms.ModelForm):
+    """[summary]
+
+    Args:
+        forms ([DepositoForm]): [Formulario de deposito]
+    """    
+    class Meta:
+        model = Deposito
+        fields = '__all__'
+        widgets = {
+			'descripcion' : forms.TextInput(attrs={'class':'form-control', 'name': 'descripcion', 'placeholder': 'Descripcion', 'required': 'required'}),
 			
 		}
