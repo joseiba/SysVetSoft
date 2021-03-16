@@ -192,3 +192,8 @@ def search_raza(request):
     page_obj = paginator.get_page(page_number)
     context = { 'page_obj': page_obj}
     return render(request, "ventas/mascota/raza/list_raza.html", context)    
+
+#Funciones de Ficha Medicas
+@login_required()
+def edit_ficha_medica(request):
+    return render(request, "ventas/mascota/ficha_medica/edit_ficha_medica.html")

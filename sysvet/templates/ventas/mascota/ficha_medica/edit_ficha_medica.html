@@ -1,0 +1,67 @@
+{% extends "home/base_site.html" %}
+
+{% block title %} Editar Ficha Médica{% endblock title %}
+
+{% block stylesheets %}
+{{ block.super }}
+<link href="/static/project_static/vendors/datatables.net-bs/css/dataTables.bootstrap.min.css" rel="stylesheet">
+<link href="/static/project_static/vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css" rel="stylesheet">
+<link href="/static/project_static/vendors/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.min.css"
+    rel="stylesheet">
+<link href="/static/project_static/vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css"
+    rel="stylesheet">
+<link href="/static/project_static/vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css" rel="stylesheet">
+<style>
+    .text_align_center {
+        text-align-last: center;
+    }
+
+    .card-pets:hover {
+        box-shadow: 0px 0px 10px 5px #a6a6a6;
+        /* please set the shadow color conveniently */
+    }
+
+    .card-pets {
+        border-radius: 10px !important;
+    }
+
+    .card-img-div {
+        background-color: #278094eb;
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+    }
+
+    .rd-card-img {
+        height: 8rem;
+        width: 8rem;
+        border-radius: 4rem;
+        margin-top: .5rem;
+        margin-bottom: .5rem;
+        margin-left: 2rem;
+        margin-right: 2rem;
+        border: 1px solid rgba(52, 73, 94, 0.44);
+        background: #fff;
+        padding: 4px;
+    }
+</style>
+{% endblock stylesheets%}
+
+{% block content %}
+<div class="right_col" role="main">
+    <div class="page-title">
+        <div class="title_left">
+            <h3>Actualizar Ficha Médica</h3>
+        </div>
+    </div>
+    <div class="clearfix"></div></div>
+
+{% endblock content %}
+
+{% block javascripts %}
+{{ block.super }}
+<!-- validator -->
+<script src="/static/project_static/vendors/validator/multifield.js"></script>
+<script src="/static/project_static/vendors/validator/validator.js"></script>
+<script>   
+</script>
+{% endblock javascripts %}

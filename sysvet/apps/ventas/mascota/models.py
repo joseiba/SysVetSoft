@@ -11,7 +11,7 @@ import sys
 
 url_pets_image = 'project_static/other/images/test.jfif'
 # Create your models here.
-
+date = datetime.now()
 
 class Especie(models.Model):      
     nombre_especie = models.CharField(max_length=200, default="-", help_text="Seleccione la especie")
@@ -24,9 +24,6 @@ class Especie(models.Model):
     def __str__(self):
         return self.nombre_especie
 
-    def get_absolute_url(self):
-        return reverse("Especie_detail", kwargs={"pk": self.pk})
-
 class Raza(models.Model):      
         nombre_raza = models.CharField(max_length=200,default="-", help_text="Seleccione la raza")
         last_modified = models.DateTimeField(auto_now=True, blank=True)
@@ -37,10 +34,7 @@ class Raza(models.Model):
             verbose_name_plural = "Razas"
     
         def __str__(self):
-            return self.nombre_raza
-    
-        def get_absolute_url(self):
-            return reverse("Raza_detail", kwargs={"pk": self.pk})    
+            return self.nombre_raza  
 
 class Mascota(models.Model):
     """[summary]
@@ -100,3 +94,70 @@ class Mascota(models.Model):
             return '{}{}'.format(MEDIA_URL, self.imagen)
         return '{}{}'.format(STATIC_URL, url_pets_image)
     
+
+#Modelos de ficha medica
+
+class FichaMedica(models.Model):
+    """[summary]
+
+    Args:
+        models ([FichaMedica]): [Contiene la informacion de la fichas medicas]                
+    """    
+    fecha_create = models.DateTimeField(auto_now=True, blank=True)
+    proxima_fecha_consulta = models.CharField(max_length = 200, default = '-', null = True, blank = True)
+    id_mascota = models.ForeignKey('Mascota', on_delete=models.CASCADE, null=False)
+    class Meta:
+        verbose_name = "Ficha Medica"
+        verbose_name_plural = "Fichas Medicas"
+
+    def __str__(self):
+            return self.id_mascota.nombre_mascota
+
+class Vacuna(models.Model):
+    """[summary]
+
+    Args:
+        models ([Vacuna]): [Contiene la informacion de la Vacuna]                
+    """ 
+    vacuna = models.CharField(max_length = 200, default = '-', null = True, blank = True)
+    tipo_vacuna = models.CharField(max_length = 200, default = '-', null = True, blank = True)
+    id_ficha_medica = models.ForeignKey('FichaMedica', on_delete=models.CASCADE, null=False)
+
+    class Meta:
+        verbose_name = "Ficha Medica"
+        verbose_name_plural = "Fichas Medicas"
+
+    def __str__(self):
+            return self.vacuna
+
+
+class Consulta(models.Model):
+    """[summary]
+
+    Args:
+        models ([Consulta]): [Contiene la informacion de la Consulta]                        
+    """ 
+    diagnostico = models.CharField(max_length = 500, default = '-', null = True, blank = True)
+    procedimiento = models.CharField(max_length = 500, default = '-', null = True, blank = True)
+    tratamiento = models.CharField(max_length = 500, default = '-', null = True, blank = True)
+    medicamento = models.CharField(max_length = 500, default = '-', null = True, blank = True)
+    id_ficha_medica = models.ForeignKey('FichaMedica', on_delete=models.CASCADE, null=False)
+    
+    class Meta:
+        verbose_name = "Consulta"
+        verbose_name_plural = "Consultas"
+
+    def __str__(self):
+            return self.id_ficha_medica.id_mascota.nombre_mascota
+
+
+class Antiparasitario(models.Model):
+    """[summary]
+
+    Args:
+        models ([Antiparasitario]): [Contiene la informacion de los antiparasitarios]                        
+    """ 
+    antiparasitario = models.CharField(max_length = 500, default = '-', null = True, blank = True)
+    id_ficha_medica = models.ForeignKey('FichaMedica', on_delete=models.CASCADE, null=False)
+
+
