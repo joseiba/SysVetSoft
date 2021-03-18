@@ -26,7 +26,7 @@
                         <div class="clearfix"></div>
                     </div>
                     <div class="x_content">
-                        <form class="" action="{% url 'add_cliente' %}" method="POST">
+                        <form class="" action="{% url 'add_cliente' %}" method="POST"  >
                             {% csrf_token %}
                             <div class="field item form-group">
                                 <label class="col-form-label col-md-3 col-sm-3  label-align">Nombre<span
@@ -89,7 +89,7 @@
                                 </label>
                                 <div class="col-md-6 col-sm-6">
                                     <select class="form-control" required='required' name="id_ciudad">
-                                        <option>Seleccione una Cuidad</option>
+                                        <option required='required'>Seleccione una Cuidad</option>
                                         {% for cui in cuidad %}
                                         <option required="required" value={{ cui.id}}>{{ cui.nombre_ciudad }}</option>
                                         {% endfor %}
@@ -125,7 +125,7 @@
 <script>
     // initialize a validator instance from the "FormValidator" constructor.
     // A "<form>" element is optionally passed as an argument, but is not a must
-    var validator = new FormValidator({
+   /* var validator = new FormValidator({
         "events": ['blur', 'input', 'change']
     }, document.forms[0]);
     // on form "submit" event
@@ -144,7 +144,7 @@
         validator.settings.alerts = !this.checked;
         if (this.checked)
             $('form .alert').remove();
-    }).prop('checked', false);
+    }).prop('checked', false);*/
 
 </script>
 {% endblock javascripts %}

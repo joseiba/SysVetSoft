@@ -95,7 +95,7 @@
                     </div>
                     <div class="x_content">
                         <div class="row">
-                            <form enctype="multipart/form-data" method="POST" action="{% url 'edit_mascota' mascota.id %}">
+                            <form  action="{% url 'edit_mascota' mascota.id %}" method="POST"  enctype="multipart/form-data">
                                 {% csrf_token %}
                                 <div class="col-lg-4 col-md-9 col-sm-9">
                                     <div class="card mb-4" style="border-radius: 10px;">
@@ -104,12 +104,12 @@
                                                 <img class="card-img-top rd-card-img profile-pic"
                                                     src="{{ mascota.get_profile }}" >
                                             </div>
-                                            <label class="btn btn-primary">
+                                            <label class="btn btn-outline-warning" id="change_picture">
                                                 <span for="imageInput">Cambiar Foto</span>
                                                 {{ form.imagen }}
-                                            </label>
-                                            <button type="button" class="btn btn-danger" id="delete-photo">Eliminar
-                                                Foto</button>
+                                            </label>                                           
+                                            <!--<button type="button" class="btn btn-danger" id="delete-photo">Eliminar
+                                                Foto</button>-->
                                         </div>
                                     </div>
                                 </div>
@@ -143,11 +143,7 @@
                                         <div class="col-sm-10">
                                             {{ form.edad }}
                                         </div>
-                                    </div>
-                                    <div class="mb-3 row">
-                                        <button type='submit' class="btn btn-primary">Editar</button>
-                                        <button type='reset' class="btn btn-success">Reset</button>
-                                    </div>
+                                    </div>                                   
                                 </div>
                                 <div class="col-lg-4 col-md-9 col-sm-9">
                                     <div class="mb-3 row">
@@ -177,6 +173,16 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="col-lg-4 col-md-9 col-sm-9">
+                                </div>
+                                <div class="col-lg-4 col-md-9 col-sm-9">
+                                        <button type='submit' class="btn btn-primary">Editar</button>
+                                        <button type='button' class="btn btn-success">
+                                            <a href="{% url 'list_mascotas' %}" style="color: #fff;">
+                                                Volver
+                                            </a>
+                                        </button>
+                                </div>    
                         </div>
                         </form>
                     </div>
@@ -214,33 +220,8 @@
 
         $("#delete-photo").click(function () {
             $('.profile-pic').removeAttr('src');
-            $('.profile-pic').attr('src', "/static/project_static/other/images/test.jfif")
+            $('.profile-pic').attr('src', "/static/project_static/other/images/test.jfif");
         })
     });
-</script>
-<script>
-    // initialize a validator instance from the "FormValidator" constructor.
-    // A "<form>" element is optionally passed as an argument, but is not a must
-    var validator = new FormValidator({
-        "events": ['blur', 'input', 'change']
-    }, document.forms[0]);
-    // on form "submit" event
-    document.forms[0].onsubmit = function (e) {
-        var submit = true,
-            validatorResult = validator.checkAll(this);
-        console.log(validatorResult);
-        return !!validatorResult.valid;
-    };
-    // on form "reset" event
-    document.forms[0].onreset = function (e) {
-        validator.reset();
-    };
-    // stuff related ONLY for this demo page:
-    $('.toggleValidationTooltips').change(function () {
-        validator.settings.alerts = !this.checked;
-        if (this.checked)
-            $('form .alert').remove();
-    }).prop('checked', false);
-
 </script>
 {% endblock javascripts %}
