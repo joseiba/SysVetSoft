@@ -100,7 +100,7 @@ def edit_deposito(request, id):
             messages.add_message(request, messages.SUCCESS, 'El depósito se ha editado correctamente!')
             return redirect('/deposito/list/')
 
-    context = {'form': form}
+    context = {'form': form, 'deposito': deposito}
     return render(request, 'ventas/producto/edit_deposito.html', context)
 
     #Metodo para listar todos los depositos

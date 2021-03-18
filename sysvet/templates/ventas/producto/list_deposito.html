@@ -64,7 +64,7 @@
                         <div class="clearfix"></div>
                     </div>
                     <div>
-                        <button data-toggle="modal" data-target="#addModal" class="btn btn-primary float-right">
+                        <button type="submit" class="btn btn-primary float-right" onclick="abrir_modal_creacion('/deposito/add/')">
                             Agregar nuevo deposito
                         </button>
 
@@ -100,18 +100,19 @@
                                         <thead>
                                             <tr class="" style="background-color: #2a3f54; font-size: medium;">
                                                 <th style="color: white;">Descripcion</th>
+                                                <th style="color: white;">Accion</th>
+                                            </tr>
                                         </thead>
                                         <tbody>
 
                                             {% for deposito in page_obj %}
                                             <tr style="font-size: medium;">
                                                 <td>{{ deposito.descripcion}}</td>
-                                                    <a class="edit pointer" href="{% url 'edit_deposito' deposito.id %}">
-                                                        <i class="fas fa-pencil-alt" data-toggle="modal"
-                                                            data-target="#editModal" style="color: #ffc107;">
-                                                        </i>
-                                                    </a>
-
+                                                <td style="width: 26px !important;">
+                                                    <button class="btn btn-warning"
+                                                        onclick="abrir_modal_edicion('/deposito/edit/' + '{{ deposito.id }}' + '/');">
+                                                        Editar
+                                                    </button>
                                                 </td>
                                             </tr>
                                             {% endfor %}
@@ -132,38 +133,13 @@
     </div>
 </div>
 
-<div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-    aria-hidden="true">
-    <div></div>
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header" style="background-color:#1abb9c ;">
-                <h5 class="modal-title" id="exampleModalLabel" style="color: white;">Agregar Deposito</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div>
-                <form action="{% url 'add_deposito' %}" method="post">
-                    {% csrf_token %}
-                    <div class="field item form-group">
-                        <label class="col-form-label col-md-3 col-sm-3  label-align">Descripcion<span
-                                class="required">*</span></label>
-                        <div class="col-md-6 col-sm-6">
-                            <input class="form-control" data-validate-length-range="6" data-validate-words="1"
-                                name="descripcion" placeholder="Descripcion" required="required" />
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                        <button type="submit" class="btn btn-primary">Agregar</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
+<div class="modal fade" id="creacion" role="dialog">
+
 </div>
 
+<div class="modal fade" id="edicion" role="dialog">
+
+</div>
 
 
 {% endblock content %}
