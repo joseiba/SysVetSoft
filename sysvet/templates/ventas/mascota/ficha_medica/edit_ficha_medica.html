@@ -43,17 +43,98 @@
         background: #fff;
         padding: 4px;
     }
+
+    .rd_line_medical_lila{
+        border-bottom: 1px solid #6d9af1;
+    }
+
+    .rd_line_medical_red{
+        border-bottom: 1px solid #e52121;
+    }
+    .rd_line_medical_gren{
+        border-bottom: 1px solid #588057;
+    }
 </style>
 {% endblock stylesheets%}
 
 {% block content %}
 <div class="right_col" role="main">
-    <div class="page-title">
-        <div class="title_left">
-            <h3>Actualizar Ficha Médica</h3>
+    <div class="row">
+        <div class="col-md-12 col-sm-12">
+            <div class="x_panel">
+                <div class="x_title">
+                    <h2>Actualizar Ficha Médica</h2>
+                    <ul class="nav navbar-right panel_toolbox">
+                        <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                        </li>
+                        <li><a class="close-link"><i class="fa fa-close"></i></a>
+                        </li>
+                    </ul>
+                    <div class="clearfix"></div>
+                </div>
+
+                <div class="x_content">
+                    <div class="row">
+                        <div class="col-lg-4 col-md-9 col-sm-9">
+                            <div class="card mb-4" style="border-radius: 10px;">
+                                <div class="text-center mb-3">
+                                    <div class="mb-3 mx-auto card-img-div">
+                                        <img class="card-img-top rd-card-img profile-pic"
+                                            src="/static/project_static/other/images/test.jfif" alt="">
+                                    </div>
+
+                                    <h5 class="text_align_center" style="margin-top: .5rem;"> LUNA</h5>
+                                    <div class="card-body card-body-pets p-0" style="margin-top: 6px;">
+                                        <div class="status m-0">
+                                            <p class="text-uppercase text_align_center m-0">CANINO</p>
+                                        </div>
+                                        <div class="status m-0">
+                                            <p class="text-uppercase text_align_center m-0">RAZA</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-10 col-md-8 col-sm-4">
+                            <div class="x_panel pt-0">
+                                <div class="row">
+                                    <div class="col rd_line_medical_lila">
+                                        One of three columns
+                                    </div>
+                                    <div class="col rd_line_medical_red">
+                                        One of three columns
+                                    </div>
+                                    <div class="col rd_line_medical_gren">
+                                        One of three columns
+                                    </div>
+                                </div>
+                                <div class="p-2">                                   
+                                    <div>HOLA</div>
+                                    <div>HOLA</div>
+                                    <div>HOLA</div>
+                                    <div>HOLA</div>
+                                    <div>HOLA</div>
+                                    <div>HOLA</div>
+                                    <div>HOLA</div>
+                                    <div>HOLA</div>
+                                    <div>HOLA</div>
+                                    <div>HOLA</div>
+                                    <div>HOLA</div>
+                                    <div>HOLA</div>
+                                    <div>HOLA</div>
+    
+                                </div>
+                                
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-    <div class="clearfix"></div></div>
+</div>
 
 {% endblock content %}
 
@@ -62,6 +143,6 @@
 <!-- validator -->
 <script src="/static/project_static/vendors/validator/multifield.js"></script>
 <script src="/static/project_static/vendors/validator/validator.js"></script>
-<script>   
+<script>
 </script>
 {% endblock javascripts %}
