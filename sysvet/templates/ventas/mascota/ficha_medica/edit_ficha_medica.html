@@ -44,15 +44,23 @@
         padding: 4px;
     }
 
-    .rd_line_medical_lila{
+    .rd_line_medical_lila {
         border-bottom: 1px solid #6d9af1;
     }
 
-    .rd_line_medical_red{
+    .rd_line_medical_red {
         border-bottom: 1px solid #e52121;
     }
-    .rd_line_medical_gren{
+
+    .rd_line_medical_gren {
         border-bottom: 1px solid #588057;
+    }
+
+    .rd_align_text_medical{
+        margin: auto;
+        padding: 10px;
+        text-align: center;  
+        font-size: 30px;      
     }
 </style>
 {% endblock stylesheets%}
@@ -96,20 +104,20 @@
                             </div>
                         </div>
 
-                        <div class="col-10 col-md-8 col-sm-4">
-                            <div class="x_panel pt-0">
+                        <div class="col-10 col-md-8 col-sm-4 p-0">
+                            <div class="x_panel pt-0" style="padding-left: 10px; padding-right: 10px;">
                                 <div class="row">
-                                    <div class="col rd_line_medical_lila">
-                                        One of three columns
+                                    <div class="col rd_line_medical_lila rd_align_text_medical">
+                                        <i data-toggle="tooltip" data-placement="top" title="Consultas" class="fas fa-folder-open"></i>
                                     </div>
-                                    <div class="col rd_line_medical_red">
-                                        One of three columns
+                                    <div class="col rd_line_medical_red rd_align_text_medical">
+                                        <i data-toggle="tooltip" data-placement="top" title="Vacunas" class="fas fa-syringe"></i>
                                     </div>
-                                    <div class="col rd_line_medical_gren">
-                                        One of three columns
+                                    <div class="col rd_line_medical_gren rd_align_text_medical">
+                                        <i data-toggle="tooltip" data-placement="top" title="Antiparasitarios" class="fas fa-bug"></i>
                                     </div>
                                 </div>
-                                <div class="p-2">                                   
+                                <div class="p-2">
                                     <div>HOLA</div>
                                     <div>HOLA</div>
                                     <div>HOLA</div>
@@ -123,9 +131,9 @@
                                     <div>HOLA</div>
                                     <div>HOLA</div>
                                     <div>HOLA</div>
-    
+
                                 </div>
-                                
+
                             </div>
                         </div>
 
