@@ -45,22 +45,38 @@
     }
 
     .rd_line_medical_lila {
-        border-bottom: 1px solid #6d9af1;
+        border-bottom: 1px solid #267fb3;
+    }
+
+    .rd_background_consultas {
+        background-color: #267fb3;
     }
 
     .rd_line_medical_red {
         border-bottom: 1px solid #e52121;
     }
 
+    .rd_background_vacunas {
+        background-color: #e52121;
+    }
+
     .rd_line_medical_gren {
         border-bottom: 1px solid #588057;
     }
 
-    .rd_align_text_medical{
+    .rd_background_antiparasitarios {
+        background-color: #588057;
+    }
+
+    .rd_align_text_medical {
         margin: auto;
         padding: 10px;
-        text-align: center;  
-        font-size: 30px;      
+        text-align: center;
+        font-size: 30px;
+    }
+
+    .rd_icon {
+        color: black;
     }
 </style>
 {% endblock stylesheets%}
@@ -83,7 +99,7 @@
 
                 <div class="x_content">
                     <div class="row">
-                        <div class="col-lg-4 col-md-9 col-sm-9">
+                        <div class="col-lg-4 col-md-9 col-sm-12">
                             <div class="card mb-4" style="border-radius: 10px;">
                                 <div class="text-center mb-3">
                                     <div class="mb-3 mx-auto card-img-div">
@@ -104,34 +120,84 @@
                             </div>
                         </div>
 
-                        <div class="col-10 col-md-8 col-sm-4 p-0">
+                        <div class="col-10 col-md-8 col-sm-12 p-0">
                             <div class="x_panel pt-0" style="padding-left: 10px; padding-right: 10px;">
-                                <div class="row">
-                                    <div class="col rd_line_medical_lila rd_align_text_medical">
-                                        <i data-toggle="tooltip" data-placement="top" title="Consultas" class="fas fa-folder-open"></i>
+                                <div class="row rd_option_medical" style="cursor: pointer;">
+                                    <div class="col rd_line_medical_lila rd_align_text_medical consultas"
+                                        id="consultas_medical">
+                                        <i data-toggle="tooltip" data-placement="top" title="Ficha"
+                                            class="fas fa-folder-open icon_consultas"></i>
                                     </div>
-                                    <div class="col rd_line_medical_red rd_align_text_medical">
-                                        <i data-toggle="tooltip" data-placement="top" title="Vacunas" class="fas fa-syringe"></i>
+                                    <div class="col rd_line_medical_red rd_align_text_medical vacunas"
+                                        id="vacunas_medical">
+                                        <i data-toggle="tooltip" data-placement="top" title="Vacunas"
+                                            class="fas fa-syringe icon_vacunas"></i>
                                     </div>
-                                    <div class="col rd_line_medical_gren rd_align_text_medical">
-                                        <i data-toggle="tooltip" data-placement="top" title="Antiparasitarios" class="fas fa-bug"></i>
+                                    <div class="col rd_line_medical_gren rd_align_text_medical antiparasitarios"
+                                        id="antiparasitarios_medical">
+                                        <i data-toggle="tooltip" data-placement="top" title="Antiparasitarios"
+                                            class="fas fa-bug icon_antiparasitario"></i>
                                     </div>
                                 </div>
                                 <div class="p-2">
-                                    <div>HOLA</div>
-                                    <div>HOLA</div>
-                                    <div>HOLA</div>
-                                    <div>HOLA</div>
-                                    <div>HOLA</div>
-                                    <div>HOLA</div>
-                                    <div>HOLA</div>
-                                    <div>HOLA</div>
-                                    <div>HOLA</div>
-                                    <div>HOLA</div>
-                                    <div>HOLA</div>
-                                    <div>HOLA</div>
-                                    <div>HOLA</div>
+                                    <h3>Ficha</h3>                    
+                                </div>
+                                
+                                <div class="col-lg-4 col-md-9 col-sm-9">
+                                    <div class="mb-3 row">
+                                        <label for="" class="col-sm-12 col-form-label" style="font-size: 16px;">Peso(Kg)
+                                        </label>
+                                        <div class="col-sm-12">
+                                            <p class="m-0">9</p>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3 row">
+                                        <label for="" class="col-sm-12 col-form-label" style="font-size: 16px;">Sexo
+                                        </label>
+                                        <div class="col-sm-12">
+                                            <p class="m-0">Macho</p>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3 row">
+                                        <label for="" class="col-sm-12 col-form-label" style="font-size: 16px;">Tatuaje
+                                        </label>
+                                        <div class="col-sm-12">
+                                            <p class="m-0">-</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4 col-md-9 col-sm-9">
+                                    <div class="mb-3 row">
+                                        <label for="" class="col-sm-12 col-form-label" style="font-size: 16px;">Peso(Kg)
+                                        </label>
+                                        <div class="col-sm-12">
+                                            <p class="m-0">9</p>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3 row">
+                                        <label for="" class="col-sm-12 col-form-label" style="font-size: 16px;">Sexo
+                                        </label>
+                                        <div class="col-sm-12">
+                                            <p class="m-0">Macho</p>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3 row">
+                                        <label for="" class="col-sm-12 col-form-label" style="font-size: 16px;">Tatuaje
+                                        </label>
+                                        <div class="col-sm-12">
+                                            <p class="m-0">-</p>
+                                        </div>
+                                    </div>
+                                </div>
 
+                                <div class="col-lg-4 col-md-9 col-sm-9">
+                                    <div class="mb-3 row">
+                                        <label for="" class="col-sm-12 col-form-label" style="font-size: 16px;">Diagnóstico
+                                        </label>
+                                        <div class="col-sm-12">
+                                            <p class="m-0">Hola esto es una prueba de como queda esta parte del maquetado</p>
+                                        </div>
+                                    </div>                                    
                                 </div>
 
                             </div>
@@ -152,5 +218,35 @@
 <script src="/static/project_static/vendors/validator/multifield.js"></script>
 <script src="/static/project_static/vendors/validator/validator.js"></script>
 <script>
+    $(function () {
+
+        $('#consultas_medical').click(function () {
+            $('.rd_option_medical').find('.consultas').addClass('rd_background_consultas');
+            $('.rd_option_medical').find('.vacunas').removeClass('rd_background_vacunas');
+            $('.rd_option_medical').find('.antiparasitarios').removeClass('rd_background_antiparasitarios');
+            $('.rd_option_medical').find('.icon_consultas').addClass('rd_icon');
+            $('.rd_option_medical').find('.icon_antiparasitario').removeClass('rd_icon');
+            $('.rd_option_medical').find('.icon_vacunas').removeClass('rd_icon');
+        })
+
+        $('#vacunas_medical').click(function () {
+            $('.rd_option_medical').find('.vacunas').addClass('rd_background_vacunas');
+            $('.rd_option_medical').find('.consultas').removeClass('rd_background_consultas');
+            $('.rd_option_medical').find('.antiparasitarios').removeClass('rd_background_antiparasitarios');
+            $('.rd_option_medical').find('.icon_vacunas').addClass('rd_icon');
+            $('.rd_option_medical').find('.icon_consultas').removeClass('rd_icon');
+            $('.rd_option_medical').find('.icon_antiparasitario').removeClass('rd_icon');
+        })
+
+        $('#antiparasitarios_medical').click(function () {
+            $('.rd_option_medical').find('.antiparasitarios').addClass('rd_background_antiparasitarios');
+            $('.rd_option_medical').find('.vacunas').removeClass('rd_background_vacunas');
+            $('.rd_option_medical').find('.consultas').removeClass('rd_background_consultas');
+            $('.rd_option_medical').find('.icon_antiparasitario').addClass('rd_icon');
+            $('.rd_option_medical').find('.icon_vacunas').removeClass('rd_icon');
+            $('.rd_option_medical').find('.icon_consultas').removeClass('rd_icon');
+
+        })
+    })
 </script>
 {% endblock javascripts %}
