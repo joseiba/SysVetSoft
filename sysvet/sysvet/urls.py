@@ -54,7 +54,7 @@ urlpatterns = [
     path('mascota/addRaza/',  add_raza, name="add_raza"),
     path('mascota/editRaza/<int:id>/',  edit_raza, name="edit_raza"),
     path('mascota/searchRaza/', search_raza, name="search_raza"),
-    path('mascota/editFichaMedica/', edit_ficha_medica, name="edit_ficha_medica"),
+    path('mascota/editFichaMedica/<int:id>/', edit_ficha_medica, name="edit_ficha_medica"),
 
 
     #End Urls Mascotas

@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import Mascota, Especie, Raza
+from .models import Mascota, Especie, Raza, FichaMedica, Vacuna, Consulta, Antiparasitario
 
 class MascotaForm(forms.ModelForm):
     """[summary]
@@ -54,3 +54,62 @@ class RazaForm(forms.ModelForm):
                 'data-validate-words':'1', 'name': 'nombre_raza', 'placeholder': 'Nombre de la Raza', 'required': 'required'}),
             'id_especie' : forms.Select(attrs={'class':'form-control', 'id': 'id_especie','required':'required' ,'name':'id_especie'}),
 		}        
+
+
+#Forms para las fichas medicas
+class FichaMedicaForm(forms.ModelForm):
+    """[summary]
+
+    Args:
+        forms ([FichaMedicaForm]): [Formulario de Ficha de Medica]
+    """ 
+    class Meta:
+        model = FichaMedica
+        fields = '__all__'   
+        widgets = {
+        'proxima_fecha_consulta' : forms.TextInput(attrs={'class':'form-control optional date', 'type': 'date','name':'proxima_fecha_consulta'}),
+        }
+
+class VacunaForm(forms.ModelForm):
+    """[summary]
+
+    Args:
+        forms ([VacunaForm]): [Formulario de Vacuna]
+    """ 
+    class Meta:
+        model = Vacuna
+        fields = '__all__'   
+        widgets = {
+        'tipo_vacuna': forms.TextInput(attrs={'class':'form-control optional', 'name': 'tipo_vacuna', 'placeholder': 'Tipo de Vacuna'}),
+        'vacuna': forms.TextInput(attrs={'class':'form-control optional', 'name': 'vacuna', 'placeholder': 'Vacuna'}),
+        }
+
+class ConsultaForm(forms.ModelForm):
+    """[summary]
+
+    Args:
+        forms ([ConsultaForm]): [Formulario de Consulta]
+    """ 
+    class Meta:
+        model = Consulta
+        fields = '__all__'   
+        widgets = {
+        'diagnostico': forms.TextInput(attrs={'class':'form-control optional', 'name': 'diagnostico', 'placeholder': 'Diagnostico'}),
+        'procedimiento': forms.TextInput(attrs={'class':'form-control optional', 'name': 'procedimiento', 'placeholder': 'Procedimiento'}),
+        'tratamiento': forms.TextInput(attrs={'class':'form-control optional', 'name': 'tratamiento', 'placeholder': 'Tratamiento'}),
+        'medicamento': forms.TextInput(attrs={'class':'form-control optional', 'name': 'medicamento', 'placeholder': 'Medicamento'}),
+        }
+
+class AntiparasitarioForm(forms.ModelForm):
+    """[summary]
+
+    Args:
+        forms ([AntiparasitarioForm]): [Formulario de Antiparasitario]
+    """ 
+    class Meta:
+        model = Antiparasitario
+        fields = '__all__'   
+        widgets = {
+        'antiparasitario': forms.TextInput(attrs={'class':'form-control optional', 'name': 'antiparasitario', 'placeholder': 'Antiparasitario'}),        
+        }
+

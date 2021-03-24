@@ -4,7 +4,7 @@ from django.contrib import messages
 from django.db.models import Q
 from django.core.paginator import Paginator
 
-from .models import Mascota, Especie, Raza, Raza
+from .models import Mascota, Especie, Raza, Raza, FichaMedica, Vacuna, Consulta, Antiparasitario
 from .form import MascotaForm, EspecieForm, RazaForm
 
 import json
@@ -12,10 +12,9 @@ import json
 # Create your views here.
 @login_required()
 def add_mascota(request):
-    form = MascotaForm
+    form = MascotaForm    
     if request.method == 'POST':
         form = MascotaForm(request.POST, request.FILES)
-        print(request.FILES)
         if form.is_valid():
             form.save()
             return redirect('/mascota/list')
@@ -29,14 +28,11 @@ def edit_mascota(request, id):
     form = MascotaForm(instance=mascota)
     if request.method == 'POST':
         form = MascotaForm(request.POST, request.FILES, instance=mascota)
-        print( request.FILES)
         if not form.has_changed():
-            print('no cambios')
             messages.info(request, "No has hecho ningun cambio")
             return redirect('/mascota/list/')
         if form.is_valid():
             mascota = form.save(commit=False)
-            print('cambios')
             mascota.save()
             messages.add_message(request, messages.SUCCESS, 'Se ha editado correctamente!')
             return redirect('/mascota/list/')
@@ -195,5 +191,25 @@ def search_raza(request):
 
 #Funciones de Ficha Medicas
 @login_required()
-def edit_ficha_medica(request):
+def edit_ficha_medica(request,id):
+    try:
+        fichaMedica =FichaMedica.objects.get(id_mascota=id)
+    except:
+        ficha = FichaMedica()
+        vacuna = Vacuna()
+        consulta = Consulta()
+        antiparasitario = Antiparasitario()
+        ficha.id_mascota = id
+        ficha.save()
+        vacuna.id_ficha_medica = ficha.id
+        consulta.id_ficha_medica = ficha.id
+        antiparasitario.id_ficha_medica = ficha.id
+        vacuna.save()
+        consulta.save()
+        antiparasitario.save()
+        print('no entro')
     return render(request, "ventas/mascota/ficha_medica/edit_ficha_medica.html")
+
+
+
+
