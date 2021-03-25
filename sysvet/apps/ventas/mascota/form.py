@@ -68,6 +68,7 @@ class FichaMedicaForm(forms.ModelForm):
         fields = '__all__'   
         widgets = {
         'proxima_fecha_consulta' : forms.TextInput(attrs={'class':'form-control optional date', 'type': 'date','name':'proxima_fecha_consulta'}),
+        'id_mascota' : forms.TextInput(attrs={'class':'form-control', 'name': 'id_mascota', 'id': 'id_mascota'}),
         }
 
 class VacunaForm(forms.ModelForm):
@@ -94,10 +95,10 @@ class ConsultaForm(forms.ModelForm):
         model = Consulta
         fields = '__all__'   
         widgets = {
-        'diagnostico': forms.TextInput(attrs={'class':'form-control optional', 'name': 'diagnostico', 'placeholder': 'Diagnostico'}),
-        'procedimiento': forms.TextInput(attrs={'class':'form-control optional', 'name': 'procedimiento', 'placeholder': 'Procedimiento'}),
-        'tratamiento': forms.TextInput(attrs={'class':'form-control optional', 'name': 'tratamiento', 'placeholder': 'Tratamiento'}),
-        'medicamento': forms.TextInput(attrs={'class':'form-control optional', 'name': 'medicamento', 'placeholder': 'Medicamento'}),
+        'diagnostico': forms.Textarea(attrs={'class':'form-control optional', 'rows': '2','name': 'diagnostico', 'placeholder': 'Diagnostico'}),
+        'procedimiento': forms.Textarea(attrs={'class':'form-control optional', 'rows': '2', 'name': 'procedimiento', 'placeholder': 'Procedimiento'}),
+        'tratamiento': forms.Textarea(attrs={'class':'form-control optional', 'rows': '2', 'name': 'tratamiento', 'placeholder': 'Tratamiento'}),
+        'medicamento': forms.Textarea(attrs={'class':'form-control optional', 'rows': '2', 'name': 'medicamento', 'placeholder': 'Medicamento'}),
         }
 
 class AntiparasitarioForm(forms.ModelForm):
@@ -110,6 +111,6 @@ class AntiparasitarioForm(forms.ModelForm):
         model = Antiparasitario
         fields = '__all__'   
         widgets = {
-        'antiparasitario': forms.TextInput(attrs={'class':'form-control optional', 'name': 'antiparasitario', 'placeholder': 'Antiparasitario'}),        
+        'antiparasitario': forms.Textarea(attrs={'class':'form-control optional', 'rows': '2', 'name': 'antiparasitario', 'placeholder': 'Antiparasitario'}),        
         }
 

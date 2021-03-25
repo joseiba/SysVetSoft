@@ -103,17 +103,23 @@
                             <div class="card mb-4" style="border-radius: 10px;">
                                 <div class="text-center mb-3">
                                     <div class="mb-3 mx-auto card-img-div">
-                                        <img class="card-img-top rd-card-img profile-pic"
-                                            src="/static/project_static/other/images/test.jfif" alt="">
+                                        <img class="card-img-top rd-card-img profile-pic" src="{{ mascota.get_profile}}"
+                                            alt="">
                                     </div>
 
-                                    <h5 class="text_align_center" style="margin-top: .5rem;"> LUNA</h5>
+                                    <h5 class="text_align_center text-uppercase" style="margin-top: .5rem;"> 
+                                        {{ mascota.nombre_mascota }}
+                                    </h5>
                                     <div class="card-body card-body-pets p-0" style="margin-top: 6px;">
                                         <div class="status m-0">
-                                            <p class="text-uppercase text_align_center m-0">CANINO</p>
+                                            <p class="text-uppercase text_align_center m-0">
+                                                {{ mascota.id_raza.id_especie.nombre_especie }}
+                                            </p>
                                         </div>
                                         <div class="status m-0">
-                                            <p class="text-uppercase text_align_center m-0">RAZA</p>
+                                            <p class="text-uppercase text_align_center m-0">
+                                                {{ mascota.id_raza.nombre_raza }}
+                                            </p>
                                         </div>
                                     </div>
                                 </div>
@@ -121,194 +127,221 @@
                         </div>
 
                         <div class="col-10 col-md-8 col-sm-12 p-0">
-                            <div class="x_panel pt-0" style="padding-left: 10px; padding-right: 10px;">
-                                <div class="row rd_option_medical" style="cursor: pointer;">
-                                    <div class="col rd_line_medical_lila rd_align_text_medical consultas"
-                                        id="consultas_medical">
-                                        <i data-toggle="tooltip" data-placement="top" title="Ficha"
-                                            class="fas fa-folder-open icon_consultas"></i>
+                            <form action="{% url 'edit_ficha_medica' mascota.id %}" method="post">
+                                {% csrf_token %}
+                                <div class="x_panel pt-0" style="padding-left: 10px; padding-right: 10px;">
+                                    <div class="row rd_option_medical" style="cursor: pointer;">
+                                        <div class="col rd_line_medical_lila rd_align_text_medical consultas"
+                                            id="consultas_medical">
+                                            <i data-toggle="tooltip" data-placement="top" title="Ficha"
+                                                class="fas fa-folder-open icon_consultas"></i>
+                                        </div>
+                                        <div class="col rd_line_medical_red rd_align_text_medical vacunas"
+                                            id="vacunas_medical">
+                                            <i data-toggle="tooltip" data-placement="top" title="Vacunas"
+                                                class="fas fa-syringe icon_vacunas"></i>
+                                        </div>
+                                        <div class="col rd_line_medical_gren rd_align_text_medical antiparasitarios"
+                                            id="antiparasitarios_medical">
+                                            <i data-toggle="tooltip" data-placement="top" title="Desparasitaciones"
+                                                class="fas fa-bug icon_antiparasitario"></i>
+                                        </div>
                                     </div>
-                                    <div class="col rd_line_medical_red rd_align_text_medical vacunas"
-                                        id="vacunas_medical">
-                                        <i data-toggle="tooltip" data-placement="top" title="Vacunas"
-                                            class="fas fa-syringe icon_vacunas"></i>
+                                    <div class="container_ficha" id="">
+                                        <div class="p-2">
+                                            <h3>Ficha</h3>
+                                        </div>
+
+                                        <div class="col-lg-4 col-md-9 col-sm-9">
+                                            <div class="mb-3 row">
+                                                <label for="" class="col-sm-12 col-form-label"
+                                                    style="font-size: 16px;">Peso(Kg)
+                                                </label>
+                                                <div class="col-sm-12">
+                                                    <p class="m-0">{{ mascota.peso }}</p>
+                                                </div>
+                                            </div>
+                                            <div class="mb-3 row">
+                                                <label for="" class="col-sm-12 col-form-label"
+                                                    style="font-size: 16px;">Sexo
+                                                </label>
+                                                <div class="col-sm-12">
+                                                    <p class="m-0">
+                                                        {% if "{{ mascota.sexo }}" == "HEB" %}
+                                                        Macho
+                                                        {% else %}
+                                                        Hembra
+                                                        {% endif %}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <div class="mb-3 row">
+                                                <label for="" class="col-sm-12 col-form-label"
+                                                    style="font-size: 16px;">Tatuaje
+                                                </label>
+                                                <div class="col-sm-12">
+                                                    <p class="m-0">{{ mascota.tatuaje}}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4 col-md-9 col-sm-9">
+                                            <div class="mb-3 row">
+                                                <label for="" class="col-sm-12 col-form-label"
+                                                    style="font-size: 16px;">Edad
+                                                </label>
+                                                <div class="col-sm-12">
+                                                    <p class="m-0">{{ mascota.edad }}</p>
+                                                </div>
+                                            </div>
+                                            <div class="mb-3 row">
+                                                <label for="" class="col-sm-12 col-form-label"
+                                                    style="font-size: 16px;">Fecha Nacimiento
+                                                </label>
+                                                <div class="col-sm-12">
+                                                    <p class="m-0">{{ mascota.fecha_nacimiento }}</p>
+                                                </div>
+                                            </div>
+                                            <div class="mb-3 row">
+                                                <label for="" class="col-sm-12 col-form-label"
+                                                    style="font-size: 16px;">Color Pelaje
+                                                </label>
+                                                <div class="col-sm-12">
+                                                    <p class="m-0">-</p>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-lg-4 col-md-9 col-sm-9">
+                                            <div class="mb-3 row">
+                                                <label for="" class="col-sm-12 col-form-label"
+                                                    style="font-size: 16px;">Diagnóstico
+                                                </label>
+                                                <div class="col-sm-12">
+                                                    <p class="m-0">
+                                                        {{ formConsulta.diagnostico }}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="col rd_line_medical_gren rd_align_text_medical antiparasitarios"
-                                        id="antiparasitarios_medical">
-                                        <i data-toggle="tooltip" data-placement="top" title="Desparasitaciones"
-                                            class="fas fa-bug icon_antiparasitario"></i>
+                                    <div class="container_vacunas d-none" id="">
+                                        <div class="p-2">
+                                            <h3>Vacunas</h3>
+                                        </div>
+
+                                        <div class="col-lg-4 col-md-9 col-sm-9">
+                                            <div class="mb-3 row">
+                                                <label for="" class="col-sm-12 col-form-label"
+                                                    style="font-size: 16px;">Tipo
+                                                    de Vacuna
+                                                </label>
+                                                <div class="col-sm-12">
+                                                    <p class="m-0">{{ formVacuna.tipo_vacuna }}</p>
+                                                </div>
+                                            </div>
+                                            <div class="mb-3 row">
+                                                <label for="" class="col-sm-12 col-form-label"
+                                                    style="font-size: 16px;">Fecha Procedimiento
+                                                </label>
+                                                <div class="col-sm-12">
+                                                    <p class="m-0">12/12/2021</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4 col-md-9 col-sm-9">
+                                            <div class="mb-3 row">
+                                                <label for="" class="col-sm-12 col-form-label"
+                                                    style="font-size: 16px;">Vacuna
+                                                </label>
+                                                <div class="col-sm-12">
+                                                    <p class="m-0">{{ formVacuna.vacuna }}</p>
+                                                </div>
+                                            </div>
+                                            <div class="mb-3 row">
+                                                <label for="" class="col-sm-12 col-form-label"
+                                                    style="font-size: 16px;">Fecha de Próxima </br> Vacunación
+                                                </label>
+                                                <div class="col-sm-12">
+                                                    <p class="m-0">12/01/2021</p>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-lg-4 col-md-9 col-sm-9">
+                                            <div class="mb-3 row">
+                                                <label for="" class="col-sm-12 col-form-label"
+                                                    style="font-size: 16px;">Tratamiento
+                                                </label>
+                                                <div class="col-sm-12">
+                                                    <p class="m-0">
+                                                        {{ formConsulta.tratamiento }}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="container_antiparasitarios d-none" id="">
+                                        <div class="p-2">
+                                            <h3>Desparasitaciones</h3>
+                                        </div>
+
+                                        <div class="col-lg-4 col-md-9 col-sm-9">
+                                            <div class="mb-3 row">
+                                                <label for="" class="col-sm-12 col-form-label"
+                                                    style="font-size: 16px;">Antiparasitario
+                                                </label>
+                                                <div class="col-sm-12">
+                                                    <p class="m-0">{{ formAntiparasitario.antiparasitario }}</p>
+                                                </div>
+                                            </div>
+                                            <div class="mb-3 row">
+                                                <label for="" class="col-sm-12 col-form-label"
+                                                    style="font-size: 16px;">Fecha Procedimiento
+                                                </label>
+                                                <div class="col-sm-12">
+                                                    <p class="m-0">12/12/2021</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4 col-md-9 col-sm-9">
+                                            <div class="mb-3 row">
+                                                <label for="" class="col-sm-12 col-form-label"
+                                                    style="font-size: 16px;">Fecha de Próxima </br>Antiparasitario
+                                                </label>
+                                                <div class="col-sm-12">
+                                                    <p class="m-0">12/01/2021</p>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-lg-4 col-md-9 col-sm-9">
+                                            <div class="mb-3 row">
+                                                <label for="" class="col-sm-12 col-form-label"
+                                                    style="font-size: 16px;">Medicamentos
+                                                </label>
+                                                <div class="col-sm-12">
+                                                    <p class="m-0">
+                                                        {{ formConsulta.medicamento }}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="container_ficha" id="">
-                                    <div class="p-2">
-                                        <h3>Ficha</h3>
-                                    </div>
-
-                                    <div class="col-lg-4 col-md-9 col-sm-9">
-                                        <div class="mb-3 row">
-                                            <label for="" class="col-sm-12 col-form-label"
-                                                style="font-size: 16px;">Peso(Kg)
-                                            </label>
-                                            <div class="col-sm-12">
-                                                <p class="m-0">9</p>
-                                            </div>
-                                        </div>
-                                        <div class="mb-3 row">
-                                            <label for="" class="col-sm-12 col-form-label" style="font-size: 16px;">Sexo
-                                            </label>
-                                            <div class="col-sm-12">
-                                                <p class="m-0">Macho</p>
-                                            </div>
-                                        </div>
-                                        <div class="mb-3 row">
-                                            <label for="" class="col-sm-12 col-form-label"
-                                                style="font-size: 16px;">Tatuaje
-                                            </label>
-                                            <div class="col-sm-12">
-                                                <p class="m-0">-</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-4 col-md-9 col-sm-9">
-                                        <div class="mb-3 row">
-                                            <label for="" class="col-sm-12 col-form-label"
-                                                style="font-size: 16px;">Peso(Kg)
-                                            </label>
-                                            <div class="col-sm-12">
-                                                <p class="m-0">9</p>
-                                            </div>
-                                        </div>
-                                        <div class="mb-3 row">
-                                            <label for="" class="col-sm-12 col-form-label" style="font-size: 16px;">Sexo
-                                            </label>
-                                            <div class="col-sm-12">
-                                                <p class="m-0">Macho</p>
-                                            </div>
-                                        </div>
-                                        <div class="mb-3 row">
-                                            <label for="" class="col-sm-12 col-form-label"
-                                                style="font-size: 16px;">Tatuaje
-                                            </label>
-                                            <div class="col-sm-12">
-                                                <p class="m-0">-</p>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-lg-4 col-md-9 col-sm-9">
-                                        <div class="mb-3 row">
-                                            <label for="" class="col-sm-12 col-form-label"
-                                                style="font-size: 16px;">Diagnóstico
-                                            </label>
-                                            <div class="col-sm-12">
-                                                <p class="m-0">Hola esto es una prueba de como queda esta parte del
-                                                    maquetado</p>
-                                            </div>
+                                <div class="ln_solid">
+                                    <div class="form-group">
+                                        <div class="col-md-6 offset-md-3" style="margin-top: 1rem;">
+                                            <button type='submit' class="btn btn-primary">Actualizar</button>
+                                            <button' class="btn btn-success">
+                                                <a style="color: white; cursor: pointer;"
+                                                    href="{% url  'list_mascotas'%}">
+                                                    Volver
+                                                </a>
+                                                </button>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="container_vacunas d-none" id="">
-                                    <div class="p-2">
-                                        <h3>Vacunas</h3>
-                                    </div>
-
-                                    <div class="col-lg-4 col-md-9 col-sm-9">
-                                        <div class="mb-3 row">
-                                            <label for="" class="col-sm-12 col-form-label" style="font-size: 16px;">Tipo
-                                                de Vacuna
-                                            </label>
-                                            <div class="col-sm-12">
-                                                <p class="m-0">Parainfluenza</p>
-                                            </div>
-                                        </div>
-                                        <div class="mb-3 row">
-                                            <label for="" class="col-sm-12 col-form-label"
-                                                style="font-size: 16px;">Fecha Procedimiento
-                                            </label>
-                                            <div class="col-sm-12">
-                                                <p class="m-0">12/12/2021</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-4 col-md-9 col-sm-9">
-                                        <div class="mb-3 row">
-                                            <label for="" class="col-sm-12 col-form-label"
-                                                style="font-size: 16px;">Vacuna
-                                            </label>
-                                            <div class="col-sm-12">
-                                                <p class="m-0">Sextuple 1</p>
-                                            </div>
-                                        </div>
-                                        <div class="mb-3 row">
-                                            <label for="" class="col-sm-12 col-form-label"
-                                                style="font-size: 16px;">Fecha de Próxima </br> Vacunación
-                                            </label>
-                                            <div class="col-sm-12">
-                                                <p class="m-0">12/01/2021</p>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-lg-4 col-md-9 col-sm-9">
-                                        <div class="mb-3 row">
-                                            <label for="" class="col-sm-12 col-form-label"
-                                                style="font-size: 16px;">Tratamiento
-                                            </label>
-                                            <div class="col-sm-12">
-                                                <p class="m-0">
-                                                    -
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="container_antiparasitarios d-none" id="">
-                                    <div class="p-2">
-                                        <h3>Desparasitaciones</h3>
-                                    </div>
-
-                                    <div class="col-lg-4 col-md-9 col-sm-9">
-                                        <div class="mb-3 row">
-                                            <label for="" class="col-sm-12 col-form-label"
-                                                style="font-size: 16px;">Antiparasitario
-                                            </label>
-                                            <div class="col-sm-12">
-                                                <p class="m-0">Vermisol</p>
-                                            </div>
-                                        </div>
-                                        <div class="mb-3 row">
-                                            <label for="" class="col-sm-12 col-form-label"
-                                                style="font-size: 16px;">Fecha Procedimiento
-                                            </label>
-                                            <div class="col-sm-12">
-                                                <p class="m-0">12/12/2021</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-4 col-md-9 col-sm-9">
-                                        <div class="mb-3 row">
-                                            <label for="" class="col-sm-12 col-form-label"
-                                                style="font-size: 16px;">Fecha de Próxima </br>Antiparasitario
-                                            </label>
-                                            <div class="col-sm-12">
-                                                <p class="m-0">12/01/2021</p>
-                                            </div>
-                                        </div>                                        
-                                    </div>
-
-                                    <div class="col-lg-4 col-md-9 col-sm-9">
-                                        <div class="mb-3 row">
-                                            <label for="" class="col-sm-12 col-form-label"
-                                                style="font-size: 16px;">Medicamentos
-                                            </label>
-                                            <div class="col-sm-12">
-                                                <p class="m-0">Hola esto es una prueba de como queda esta parte del
-                                                    maquetado</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                            </form>
                         </div>
 
                     </div>
