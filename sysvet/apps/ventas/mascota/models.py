@@ -94,6 +94,12 @@ class Mascota(models.Model):
             return '{}{}'.format(MEDIA_URL, self.imagen)
         return '{}{}'.format(STATIC_URL, url_pets_image)
     
+    ''' def save(self, *args, **kwargs):
+        is_new = not self.id
+        super().save(*args, **kwargs)
+        if is_new:
+            FichaMedica.objects.create(id_mascota=self.id)'''
+    
 
 #Modelos de ficha medica
 
@@ -105,14 +111,24 @@ class FichaMedica(models.Model):
     """    
     fecha_create = models.DateTimeField(auto_now=True, blank=True)
     proxima_fecha_consulta = models.CharField(max_length = 200, default = '-', null = True, blank = True)
-    id_mascota = models.IntegerField(blank=True)
+    id_mascota = models.ForeignKey('Mascota', on_delete=models.CASCADE, null=False)
     
     class Meta:
         verbose_name = "Ficha Medica"
         verbose_name_plural = "Fichas Medicas"
 
     def __str__(self):
-            return self.id_mascota.nombre_mascota
+        return self.id_mascota.nombre_mascota
+    
+    ''' def save(self, *args, **kwargs):
+        is_new = not self.id
+        super().save(*args, **kwargs)
+        if is_new:
+            Vacuna.objects.create(id_ficha_medica=self.id)
+            Consulta.objects.create(id_ficha_medica=self.id)
+            Antiparasitario.objects.create(id_ficha_medica=self.id)'''
+
+
 
 class Vacuna(models.Model):
     """[summary]
@@ -122,7 +138,7 @@ class Vacuna(models.Model):
     """ 
     vacuna = models.CharField(max_length = 200, default = '-', null = True, blank = True)
     tipo_vacuna = models.CharField(max_length = 200, default = '-', null = True, blank = True)
-    id_ficha_medica = models.IntegerField(blank=True)
+    id_ficha_medica = models.ForeignKey('FichaMedica', on_delete=models.CASCADE, null=False)
 
     class Meta:
         verbose_name = "Ficha Medica"
@@ -142,7 +158,7 @@ class Consulta(models.Model):
     procedimiento = models.CharField(max_length = 500, default = '-', null = True, blank = True)
     tratamiento = models.CharField(max_length = 500, default = '-', null = True, blank = True)
     medicamento = models.CharField(max_length = 500, default = '-', null = True, blank = True)
-    id_ficha_medica = models.IntegerField(blank=True)
+    id_ficha_medica = models.ForeignKey('FichaMedica', on_delete=models.CASCADE, null=False)
     
     class Meta:
         verbose_name = "Consulta"
@@ -159,6 +175,6 @@ class Antiparasitario(models.Model):
         models ([Antiparasitario]): [Contiene la informacion de los antiparasitarios]                        
     """ 
     antiparasitario = models.CharField(max_length = 500, default = '-', null = True, blank = True)
-    id_ficha_medica = models.IntegerField(blank=True)
+    id_ficha_medica = models.ForeignKey('FichaMedica', on_delete=models.CASCADE, null=False)
 
 

@@ -95,10 +95,10 @@ class ConsultaForm(forms.ModelForm):
         model = Consulta
         fields = '__all__'   
         widgets = {
-        'diagnostico': forms.Textarea(attrs={'class':'form-control optional', 'rows': '2','name': 'diagnostico', 'placeholder': 'Diagnostico'}),
-        'procedimiento': forms.Textarea(attrs={'class':'form-control optional', 'rows': '2', 'name': 'procedimiento', 'placeholder': 'Procedimiento'}),
-        'tratamiento': forms.Textarea(attrs={'class':'form-control optional', 'rows': '2', 'name': 'tratamiento', 'placeholder': 'Tratamiento'}),
-        'medicamento': forms.Textarea(attrs={'class':'form-control optional', 'rows': '2', 'name': 'medicamento', 'placeholder': 'Medicamento'}),
+        'diagnostico': forms.TextInput(attrs={'class':'form-control optional', 'rows': '2','name': 'diagnostico', 'placeholder': 'Diagnostico'}),
+        'procedimiento': forms.TextInput(attrs={'class':'form-control optional', 'rows': '2', 'name': 'procedimiento', 'placeholder': 'Procedimiento'}),
+        'tratamiento': forms.TextInput(attrs={'class':'form-control optional', 'rows': '2', 'name': 'tratamiento', 'placeholder': 'Tratamiento'}),
+        'medicamento': forms.TextInput(attrs={'class':'form-control optional', 'rows': '2', 'name': 'medicamento', 'placeholder': 'Medicamento'}),
         }
 
 class AntiparasitarioForm(forms.ModelForm):
@@ -111,6 +111,6 @@ class AntiparasitarioForm(forms.ModelForm):
         model = Antiparasitario
         fields = '__all__'   
         widgets = {
-        'antiparasitario': forms.Textarea(attrs={'class':'form-control optional', 'rows': '2', 'name': 'antiparasitario', 'placeholder': 'Antiparasitario'}),        
+        'antiparasitario': forms.TextInput(attrs={'class':'form-control optional', 'rows': '2', 'name': 'antiparasitario', 'placeholder': 'Antiparasitario'}),        
         }
 

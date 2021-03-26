@@ -127,7 +127,7 @@
                         </div>
 
                         <div class="col-10 col-md-8 col-sm-12 p-0">
-                            <form action="{% url 'edit_ficha_medica' mascota.id %}" method="post">
+                            <form action="{% url 'edit_ficha_medica' mascota.id %}" method="POST">
                                 {% csrf_token %}
                                 <div class="x_panel pt-0" style="padding-left: 10px; padding-right: 10px;">
                                     <div class="row rd_option_medical" style="cursor: pointer;">
