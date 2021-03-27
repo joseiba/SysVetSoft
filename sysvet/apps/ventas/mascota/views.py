@@ -193,7 +193,31 @@ def search_raza(request):
 @login_required()
 def edit_ficha_medica(request,id):
     mascota = Mascota.objects.get(id=id)
-    is_false = False
+    fichaMedicaGet = FichaMedica.objects.get(id_mascota=id)
+    vacunaGet = Vacuna.objects.get(id_ficha_medica=fichaMedicaGet.id)
+    consultaGet = Consulta.objects.get(id_ficha_medica=fichaMedicaGet.id)
+    antiparasitarioGet = Antiparasitario.objects.get(id_ficha_medica=fichaMedicaGet.id)
+
+    if request.method == 'POST':
+        print("post")
+        formFichaMedica = FichaMedicaForm(request.POST, instance=fichaMedicaGet, prefix='FichaMedica')
+        formVacuna = VacunaForm(request.POST, instance=vacunaGet, prefix='Vacuna')
+        formConsulta = ConsultaForm(request.POST, instance=consultaGet, prefix='Consulta')
+        formAntiparasitario = AntiparasitarioForm(request.POST, instance=antiparasitarioGet, prefix='Antiparasitario')
+        formConsulta.id_ficha_medica = fichaMedicaGet.id;      
+        print(formConsulta)
+        print(formConsulta.is_valid())
+        print(formConsulta.has_changed())
+        consulta = formConsulta.save(commit=False)
+        consulta.save()
+        return redirect('/mascota/list/')
+
+    formFichaMedica = FichaMedicaForm(instance=fichaMedicaGet)
+    formVacuna = VacunaForm(instance=vacunaGet)
+    formConsulta = ConsultaForm(instance=consultaGet)
+    formAntiparasitario = AntiparasitarioForm(instance=antiparasitarioGet)
+
+    '''is_false = False
     try:
         test = FichaMedica.objects.get(id_mascota=id)
     except:
@@ -229,14 +253,14 @@ def edit_ficha_medica(request,id):
         formConsulta = ConsultaForm(request.POST, instance=consultaGet)
         formAntiparasitario = AntiparasitarioForm(request.POST, instance=antiparasitarioGet)
 
-        '''if not (formFichaMedica.has_changed() or  formVacuna.has_changed() or formConsulta.has_changed() or formAntiparasitario.has_changed())
+        if not (formFichaMedica.has_changed() or  formVacuna.has_changed() or formConsulta.has_changed() or formAntiparasitario.has_changed())
             messages.info(request, "No has hecho ningun cambio")
-            return redirect('/mascota/listRaza/')'''
+            return redirect('/mascota/listRaza/')
         print(formFichaMedica.is_valid())
         print(formVacuna.is_valid())
         print(formConsulta.is_valid())
         print(formAntiparasitario.is_valid())
-        print(request.POST)
+        print(formConsulta.has_changed())
 
         if formFichaMedica.is_valid() or formVacuna.is_valid() or formConsulta.is_valid() or formAntiparasitario.is_valid():
             fichaMedica = formFichaMedica.save(commit=False)
@@ -247,7 +271,7 @@ def edit_ficha_medica(request,id):
             vacuna.save()
             consulta.save()
             antiparasitario.save()
-            return redirect('/mascota/listRaza/')
+            return redirect('/mascota/listRaza/')'''
     context = {
         'mascota': mascota,
         'formFichaMedica': formFichaMedica,
@@ -255,6 +279,9 @@ def edit_ficha_medica(request,id):
         'formConsulta': formConsulta,
         'formAntiparasitario': formAntiparasitario,
     }
+    '''context = {
+        'mascota': mascota,      
+    }'''
     return render(request, "ventas/mascota/ficha_medica/edit_ficha_medica.html", context)
 
 

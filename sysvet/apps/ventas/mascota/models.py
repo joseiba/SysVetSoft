@@ -94,11 +94,11 @@ class Mascota(models.Model):
             return '{}{}'.format(MEDIA_URL, self.imagen)
         return '{}{}'.format(STATIC_URL, url_pets_image)
     
-    ''' def save(self, *args, **kwargs):
+    def save(self, *args, **kwargs):
         is_new = not self.id
         super().save(*args, **kwargs)
         if is_new:
-            FichaMedica.objects.create(id_mascota=self.id)'''
+            FichaMedica.objects.create(id_mascota=self)
     
 
 #Modelos de ficha medica
@@ -120,13 +120,13 @@ class FichaMedica(models.Model):
     def __str__(self):
         return self.id_mascota.nombre_mascota
     
-    ''' def save(self, *args, **kwargs):
+    def save(self, *args, **kwargs):
         is_new = not self.id
         super().save(*args, **kwargs)
         if is_new:
-            Vacuna.objects.create(id_ficha_medica=self.id)
-            Consulta.objects.create(id_ficha_medica=self.id)
-            Antiparasitario.objects.create(id_ficha_medica=self.id)'''
+            Vacuna.objects.create(id_ficha_medica=self)
+            Consulta.objects.create(id_ficha_medica=self)
+            Antiparasitario.objects.create(id_ficha_medica=self)
 
 
 
@@ -145,7 +145,7 @@ class Vacuna(models.Model):
         verbose_name_plural = "Fichas Medicas"
 
     def __str__(self):
-            return self.vacuna
+            return self.id_ficha_medica.id_mascota.nombre_mascota
 
 
 class Consulta(models.Model):
@@ -176,5 +176,12 @@ class Antiparasitario(models.Model):
     """ 
     antiparasitario = models.CharField(max_length = 500, default = '-', null = True, blank = True)
     id_ficha_medica = models.ForeignKey('FichaMedica', on_delete=models.CASCADE, null=False)
+    
+    class Meta:
+        verbose_name = "Antiparasitario"
+        verbose_name_plural = "Antiparasitarios"
+
+    def __str__(self):
+            return self.id_ficha_medica.id_mascota.nombre_mascota
 
 
