@@ -202,90 +202,30 @@ def edit_ficha_medica(request,id):
     antiparasitarioGet = Antiparasitario.objects.get(id_ficha_medica=fichaMedicaGet.id)
 
     if request.method == 'POST':
-        print("post")
         formFichaMedica = FichaMedicaForm(request.POST, instance=fichaMedicaGet)
         formVacuna = VacunaForm(request.POST, instance=vacunaGet)
         formConsulta = ConsultaForm(request.POST, instance=consultaGet)
         formAntiparasitario = AntiparasitarioForm(request.POST, instance=antiparasitarioGet)
-        print(formFichaMedica.is_valid())
-        print(formConsulta.is_valid())
-        print(formVacuna.is_valid())
-        print(formAntiparasitario.is_valid())
-        print("*******************************")
-        print(formFichaMedica.has_changed())
-        print(formVacuna.has_changed())
-        print(formConsulta.has_changed())
-        print(formAntiparasitario.has_changed())
-        consulta = formConsulta.save(commit=False)
-        vacuna = formVacuna.save(commit=False)
-        antiparasitario = formAntiparasitario.save(commit=False)
-        fichaMedica = formFichaMedica.save(commit=False)
-        fichaMedica.save()
-        consulta.save()
-        vacuna.save()
-        antiparasitario.save()
-        return redirect('/mascota/list/')
+        if not formVacuna.has_changed() or  not formConsulta.has_changed() or not formAntiparasitario.has_changed():
+            messages.info(request, "No has hecho ningun cambio")
+            return redirect('/mascota/list/')   
+        if formVacuna.is_valid() or formConsulta.is_valid() or formAntiparasitario.is_valid():                    
+            consulta = formConsulta.save(commit=False)
+            vacuna = formVacuna.save(commit=False)
+            antiparasitario = formAntiparasitario.save(commit=False)
+            fichaMedica = formFichaMedica.save(commit=False)
+            fichaMedica.save()
+            consulta.save()
+            vacuna.save()
+            antiparasitario.save()
+            messages.add_message(request, messages.SUCCESS, 'Se ha editado correctamente!')
+            return redirect('/mascota/list/')
 
     formFichaMedica = FichaMedicaForm(instance=fichaMedicaGet)
     formVacuna = VacunaForm(instance=vacunaGet)
     formConsulta = ConsultaForm(instance=consultaGet)
     formAntiparasitario = AntiparasitarioForm(instance=antiparasitarioGet)
 
-    '''is_false = False
-    try:
-        test = FichaMedica.objects.get(id_mascota=id)
-    except:
-        is_false = True
-    if is_false:
-        ficha = FichaMedica.objects.create(id_mascota=mascota)
-        ficha.save()
-        fichaMedica = FichaMedica.objects.get(id_mascota=id)
-        vacuna = Vacuna.objects.create(id_ficha_medica=fichaMedica)
-        consulta = Consulta.objects.create(id_ficha_medica=fichaMedica)
-        antiparasitario = Antiparasitario.objects.create(id_ficha_medica=fichaMedica)
-        vacuna.save()
-        consulta.save()
-        antiparasitario.save()
-        vacunaGet = Vacuna.objects.get(id_ficha_medica=fichaMedica.id)
-        consultaGet = Consulta.objects.get(id_ficha_medica=fichaMedica.id)
-        antiparasitarioGet = Antiparasitario.objects.get(id_ficha_medica=fichaMedica.id)
-    else:
-        fichaMedica = FichaMedica.objects.get(id_mascota=id)
-        vacunaGet = Vacuna.objects.get(id_ficha_medica=fichaMedica.id)
-        consultaGet = Consulta.objects.get(id_ficha_medica=fichaMedica.id)
-        antiparasitarioGet = Antiparasitario.objects.get(id_ficha_medica=fichaMedica.id)
-    
-    formFichaMedica = FichaMedicaForm(instance=fichaMedica)
-    formVacuna = VacunaForm(instance=vacunaGet)
-    formConsulta = ConsultaForm(instance=consultaGet)
-    formAntiparasitario = AntiparasitarioForm(instance=antiparasitarioGet)
-
-    if request.method == 'POST':
-        print('entro post')
-        formFichaMedica = FichaMedicaForm(request.POST,instance=fichaMedica)
-        formVacuna = VacunaForm(request.POST, instance=vacunaGet)
-        formConsulta = ConsultaForm(request.POST, instance=consultaGet)
-        formAntiparasitario = AntiparasitarioForm(request.POST, instance=antiparasitarioGet)
-
-        if not (formFichaMedica.has_changed() or  formVacuna.has_changed() or formConsulta.has_changed() or formAntiparasitario.has_changed())
-            messages.info(request, "No has hecho ningun cambio")
-            return redirect('/mascota/listRaza/')
-        print(formFichaMedica.is_valid())
-        print(formVacuna.is_valid())
-        print(formConsulta.is_valid())
-        print(formAntiparasitario.is_valid())
-        print(formConsulta.has_changed())
-
-        if formFichaMedica.is_valid() or formVacuna.is_valid() or formConsulta.is_valid() or formAntiparasitario.is_valid():
-            fichaMedica = formFichaMedica.save(commit=False)
-            vacuna = formVacuna.save(commit=False)
-            consulta = formConsulta.save(commit=False)
-            antiparasitario = formAntiparasitario.save(commit=False)        
-            fichaMedica.save()
-            vacuna.save()
-            consulta.save()
-            antiparasitario.save()
-            return redirect('/mascota/listRaza/')'''
     context = {
         'mascota': mascota,
         'formFichaMedica': formFichaMedica,
@@ -294,9 +234,7 @@ def edit_ficha_medica(request,id):
         'formAntiparasitario': formAntiparasitario,
         'fichaMedicaGet': fichaMedicaGet,
     }
-    '''context = {
-        'mascota': mascota,      
-    }'''
+
     return render(request, "ventas/mascota/ficha_medica/edit_ficha_medica.html", context)
 
 

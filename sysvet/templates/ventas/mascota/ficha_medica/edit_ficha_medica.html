@@ -319,18 +319,6 @@
                                         <div class="col-lg-4 col-md-9 col-sm-9">
                                             <div class="mb-3 row">
                                                 <label for="" class="col-sm-12 col-form-label"
-                                                    style="font-size: 16px;">Fecha de Próxima </br>Desparasitación
-                                                </label>
-                                                <div class="col-sm-12">
-                                                    <p class="m-0">{{ formAntiparasitario.fecha_proxima_procedimiento }}
-                                                    </p>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-lg-4 col-md-9 col-sm-9">
-                                            <div class="mb-3 row">
-                                                <label for="" class="col-sm-12 col-form-label"
                                                     style="font-size: 16px;">Medicamentos
                                                 </label>
                                                 <div class="col-sm-12">
@@ -340,11 +328,23 @@
                                                 </div>
                                             </div>
                                         </div>
+
+                                        <div class="col-lg-4 col-md-9 col-sm-9">
+                                            <div class="mb-3 row">
+                                                <label for="" class="col-sm-12 col-form-label"
+                                                    style="font-size: 16px;">Fecha de Próxima </br>Desparasitación
+                                                </label>
+                                                <div class="col-sm-12">
+                                                    <p class="m-0">{{ formAntiparasitario.fecha_proxima_procedimiento }}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="ln_solid">
                                     <div class="form-group">
-                                        <div class="col-md-6 offset-md-3" style="margin-top: 1rem;">
+                                        <div class="col-md-6 offset-md-3" style="margin-top: 1rem; text-align: center;">
                                             <input type="hidden" name="id_mascota" id="id_mascota"
                                                 value="{{ mascota.id }}">
                                             <input type="hidden" name="id_ficha_medica" id="id_ficha_medica"
