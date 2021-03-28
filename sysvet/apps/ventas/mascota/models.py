@@ -43,17 +43,17 @@ class Mascota(models.Model):
         models ([Mascota]): [Contiene la informacion de las mascotas]
     """    
     nombre_mascota = models.CharField(max_length=200, help_text="Ingrese nombre de la mascota")
-    tatuaje = models.CharField(max_length=200, null=True, default="-", blank=True,  help_text="Ingrese el tatuaje")
+    tatuaje = models.CharField(max_length=200, default="-", null=True, blank=True,  help_text="Ingrese el tatuaje")
     MACHO = 'MAC'
     HEMBRA = 'HEB'    
     tipo_sexo =((MACHO, 'Macho'),
                 (HEMBRA, 'Hembra'))
 
     sexo = models.CharField(max_length=15, choices=tipo_sexo, default="-", help_text="Seleccione el sexo")
-    edad = models.PositiveIntegerField(null=True, blank=True, default=0, help_text="Ingrese la edad")
+    edad = models.CharField(max_length = 200, default = '-', null = True, blank = True)
     imagen = models.ImageField(upload_to='mascotas/fotos', null=True, blank=True, help_text="Ingrese una foto")
-    peso = models.IntegerField(help_text="Ingrese el peso" )
-    fecha_nacimiento = models.DateField(help_text="Ingrese la fecha de nacimiento", null=True, blank=True, default='11/11/1111')
+    peso = models.CharField(max_length = 200, help_text="Ingrese el peso de la mascota")
+    fecha_nacimiento =  models.CharField(max_length = 200, default = '-', null = True, blank = True)
     last_modified = models.DateTimeField(auto_now=True, blank=True)
     id_raza = models.ForeignKey('Raza', on_delete=models.CASCADE, null=False)
     id_cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE, null=False)
@@ -99,6 +99,10 @@ class Mascota(models.Model):
         super().save(*args, **kwargs)
         if is_new:
             FichaMedica.objects.create(id_mascota=self)
+
+    def clean(self):
+        if not self.fecha_nacimiento:
+            self.fecha_nacimiento = "-"
     
 
 #Modelos de ficha medica
@@ -110,7 +114,6 @@ class FichaMedica(models.Model):
         models ([FichaMedica]): [Contiene la informacion de la fichas medicas]                
     """    
     fecha_create = models.DateTimeField(auto_now=True, blank=True)
-    proxima_fecha_consulta = models.CharField(max_length = 200, default = '-', null = True, blank = True)
     id_mascota = models.ForeignKey('Mascota', on_delete=models.CASCADE, null=False)
     
     class Meta:
@@ -138,6 +141,8 @@ class Vacuna(models.Model):
     """ 
     vacuna = models.CharField(max_length = 200, default = '-', null = True, blank = True)
     tipo_vacuna = models.CharField(max_length = 200, default = '-', null = True, blank = True)
+    fecha_ultima_vacunacion = models.CharField(max_length = 200, default = '-', null = True, blank = True)
+    fecha_proxima_vacunacion = models.CharField(max_length = 200, default = '-', null = True, blank = True)
     id_ficha_medica = models.ForeignKey('FichaMedica', on_delete=models.CASCADE, null=False)
 
     class Meta:
@@ -145,7 +150,7 @@ class Vacuna(models.Model):
         verbose_name_plural = "Fichas Medicas"
 
     def __str__(self):
-            return self.id_ficha_medica.id_mascota.nombre_mascota
+        return self.id_ficha_medica.id_mascota.nombre_mascota
 
 
 class Consulta(models.Model):
@@ -155,7 +160,6 @@ class Consulta(models.Model):
         models ([Consulta]): [Contiene la informacion de la Consulta]                        
     """ 
     diagnostico = models.CharField(max_length = 500, default = '-', null = True, blank = True)
-    procedimiento = models.CharField(max_length = 500, default = '-', null = True, blank = True)
     tratamiento = models.CharField(max_length = 500, default = '-', null = True, blank = True)
     medicamento = models.CharField(max_length = 500, default = '-', null = True, blank = True)
     id_ficha_medica = models.ForeignKey('FichaMedica', on_delete=models.CASCADE, null=False)
@@ -165,7 +169,7 @@ class Consulta(models.Model):
         verbose_name_plural = "Consultas"
 
     def __str__(self):
-            return self.id_ficha_medica.id_mascota.nombre_mascota
+        return self.id_ficha_medica.id_mascota.nombre_mascota
 
 
 class Antiparasitario(models.Model):
@@ -175,6 +179,8 @@ class Antiparasitario(models.Model):
         models ([Antiparasitario]): [Contiene la informacion de los antiparasitarios]                        
     """ 
     antiparasitario = models.CharField(max_length = 500, default = '-', null = True, blank = True)
+    fecha_ultima_procedimiento = models.CharField(max_length = 200, default = '-', null = True, blank = True)
+    fecha_proxima_procedimiento = models.CharField(max_length = 200, default = '-', null = True, blank = True)
     id_ficha_medica = models.ForeignKey('FichaMedica', on_delete=models.CASCADE, null=False)
     
     class Meta:
@@ -182,6 +188,6 @@ class Antiparasitario(models.Model):
         verbose_name_plural = "Antiparasitarios"
 
     def __str__(self):
-            return self.id_ficha_medica.id_mascota.nombre_mascota
+        return self.id_ficha_medica.id_mascota.nombre_mascota
 
 

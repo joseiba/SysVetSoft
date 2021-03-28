@@ -14,8 +14,11 @@ import json
 def add_mascota(request):
     form = MascotaForm    
     if request.method == 'POST':
-        form = MascotaForm(request.POST, request.FILES)
+        form = MascotaForm(request.POST, request.FILES) 
         if form.is_valid():
+            fecha = request.POST.get('fecha_nacimiento')  
+            if fecha == '':
+                form.cleaned_data['fecha_nacimiento'] = '-'            
             form.save()
             return redirect('/mascota/list')
     context = {'form' : form}
@@ -200,16 +203,27 @@ def edit_ficha_medica(request,id):
 
     if request.method == 'POST':
         print("post")
-        formFichaMedica = FichaMedicaForm(request.POST, instance=fichaMedicaGet, prefix='FichaMedica')
-        formVacuna = VacunaForm(request.POST, instance=vacunaGet, prefix='Vacuna')
-        formConsulta = ConsultaForm(request.POST, instance=consultaGet, prefix='Consulta')
-        formAntiparasitario = AntiparasitarioForm(request.POST, instance=antiparasitarioGet, prefix='Antiparasitario')
-        formConsulta.id_ficha_medica = fichaMedicaGet.id;      
-        print(formConsulta)
+        formFichaMedica = FichaMedicaForm(request.POST, instance=fichaMedicaGet)
+        formVacuna = VacunaForm(request.POST, instance=vacunaGet)
+        formConsulta = ConsultaForm(request.POST, instance=consultaGet)
+        formAntiparasitario = AntiparasitarioForm(request.POST, instance=antiparasitarioGet)
+        print(formFichaMedica.is_valid())
         print(formConsulta.is_valid())
+        print(formVacuna.is_valid())
+        print(formAntiparasitario.is_valid())
+        print("*******************************")
+        print(formFichaMedica.has_changed())
+        print(formVacuna.has_changed())
         print(formConsulta.has_changed())
+        print(formAntiparasitario.has_changed())
         consulta = formConsulta.save(commit=False)
+        vacuna = formVacuna.save(commit=False)
+        antiparasitario = formAntiparasitario.save(commit=False)
+        fichaMedica = formFichaMedica.save(commit=False)
+        fichaMedica.save()
         consulta.save()
+        vacuna.save()
+        antiparasitario.save()
         return redirect('/mascota/list/')
 
     formFichaMedica = FichaMedicaForm(instance=fichaMedicaGet)
@@ -278,6 +292,7 @@ def edit_ficha_medica(request,id):
         'formVacuna': formVacuna,
         'formConsulta': formConsulta,
         'formAntiparasitario': formAntiparasitario,
+        'fichaMedicaGet': fichaMedicaGet,
     }
     '''context = {
         'mascota': mascota,      

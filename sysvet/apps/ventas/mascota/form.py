@@ -24,6 +24,11 @@ class MascotaForm(forms.ModelForm):
             'id_raza' : forms.Select(attrs={'class':'form-control', 'id': 'id_raza','required':'required' ,'name':'id_raza'}),
             'id_cliente' : forms.Select(attrs={'class':'form-control', 'id': 'id_cliente','required':'required' ,'name':'id_cliente'})
 		}
+    '''def clean_fecha_nacimiento(self):
+        data = self.cleaned_data.get('fecha_nacimiento')
+        if data == '':
+            data = '-'    
+    return value'''
 
 class EspecieForm(forms.ModelForm):
     """[summary]
@@ -65,9 +70,9 @@ class FichaMedicaForm(forms.ModelForm):
     """ 
     class Meta:
         model = FichaMedica
-        fields = '__all__'   
+        exclude = ['fecha_create']
         widgets = {
-        'proxima_fecha_consulta' : forms.TextInput(attrs={'class':'form-control optional date', 'type': 'date','name':'proxima_fecha_consulta'}),
+        'id_mascota' : forms.HiddenInput(),
         }
 
 class VacunaForm(forms.ModelForm):
@@ -82,6 +87,9 @@ class VacunaForm(forms.ModelForm):
         widgets = {
         'tipo_vacuna': forms.TextInput(attrs={'class':'form-control optional', 'name': 'tipo_vacuna', 'placeholder': 'Tipo de Vacuna'}),
         'vacuna': forms.TextInput(attrs={'class':'form-control optional', 'name': 'vacuna', 'placeholder': 'Vacuna'}),
+        'fecha_ultima_vacunacion' : forms.TextInput(attrs={'class':'form-control optional date', 'type': 'date','name':'fecha_ultima_vacunacion'}),
+        'fecha_proxima_vacunacion' : forms.TextInput(attrs={'class':'form-control optional date', 'type': 'date','name':'fecha_proxima_vacunacion'}),
+        'id_ficha_medica' : forms.HiddenInput(),        
         }
 
 class ConsultaForm(forms.ModelForm):
@@ -94,10 +102,10 @@ class ConsultaForm(forms.ModelForm):
         model = Consulta
         fields = '__all__'   
         widgets = {
-        'diagnostico': forms.TextInput(attrs={'class':'form-control optional','name': 'diagnostico', 'placeholder': 'Diagnostico'}),
-        'procedimiento': forms.TextInput(attrs={'class':'form-control optional',  'name': 'procedimiento', 'placeholder': 'Procedimiento'}),
-        'tratamiento': forms.TextInput(attrs={'class':'form-control optional', 'name': 'tratamiento', 'placeholder': 'Tratamiento'}),
-        'medicamento': forms.TextInput(attrs={'class':'form-control optional', 'name': 'medicamento', 'placeholder': 'Medicamento'}),
+        'diagnostico': forms.Textarea(attrs={'class':'form-control optional','name': 'diagnostico', 'rows': '2','placeholder': 'Diagnostico'}),
+        'tratamiento': forms.Textarea(attrs={'class':'form-control optional', 'rows': '2', 'name': 'tratamiento', 'placeholder': 'Tratamiento'}),
+        'medicamento': forms.Textarea(attrs={'class':'form-control optional', 'rows': '2', 'name': 'medicamento', 'placeholder': 'Medicamento'}),
+        'id_ficha_medica' : forms.HiddenInput(),
         }
 
 class AntiparasitarioForm(forms.ModelForm):
@@ -111,5 +119,8 @@ class AntiparasitarioForm(forms.ModelForm):
         fields = '__all__'   
         widgets = {
         'antiparasitario': forms.TextInput(attrs={'class':'form-control optional', 'name': 'antiparasitario', 'placeholder': 'Antiparasitario'}),        
+        'fecha_ultima_procedimiento' : forms.TextInput(attrs={'class':'form-control optional date', 'type': 'date','name':'fecha_ultima_procedimiento'}),
+        'fecha_proxima_procedimiento' : forms.TextInput(attrs={'class':'form-control optional date', 'type': 'date','name':'fecha_proxima_procedimiento'}),
+        'id_ficha_medica' : forms.HiddenInput(),
         }
 
