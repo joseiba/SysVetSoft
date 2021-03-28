@@ -24,11 +24,6 @@ class MascotaForm(forms.ModelForm):
             'id_raza' : forms.Select(attrs={'class':'form-control', 'id': 'id_raza','required':'required' ,'name':'id_raza'}),
             'id_cliente' : forms.Select(attrs={'class':'form-control', 'id': 'id_cliente','required':'required' ,'name':'id_cliente'})
 		}
-    '''def clean_fecha_nacimiento(self):
-        data = self.cleaned_data.get('fecha_nacimiento')
-        if data == '':
-            data = '-'    
-    return value'''
 
 class EspecieForm(forms.ModelForm):
     """[summary]
