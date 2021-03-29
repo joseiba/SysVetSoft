@@ -79,8 +79,11 @@
                             <div class="field item form-group">
                                 <label class="col-form-label col-md-3 col-sm-3  label-align">Email</label>
                                 <div class="col-md-6 col-sm-6">
-                                    <input class="form-control" name="email" class='optional' placeholder="Email"
-                                        type="email" />
+                                    <input class="form-control" id="email" name="email" placeholder="Email"
+                                        type="email"/>
+                                </div>
+                                <div id="alert_email">
+
                                 </div>
                             </div>
                             <div class="form-group field item">
@@ -99,7 +102,7 @@
                             <div class="ln_solid">
                                 <div class="form-group">
                                     <div class="col-md-6 offset-md-3" style="margin-top: 1rem;">
-                                        <button type='submit' class="btn btn-primary">Agregar</button>
+                                        <button type='submit' id="test" class="btn btn-primary">Agregar</button>
                                         <button type='reset' class="btn btn-success">Reset</button>
                                     </div>
                                 </div>
@@ -116,17 +119,12 @@
 {% block javascripts %}
 {{ block.super }}
 <!-- validator -->
-<script src="/static/project_static/vendors/validator/multifield.js"></script>
-<script src="/static/project_static/vendors/validator/validator.js"></script>
-<script>
-    function hideshow() {      
-    }
-</script>
+<script src="/static/project_static/other/js/validacion.js"></script>
 <script>
     // initialize a validator instance from the "FormValidator" constructor.
     // A "<form>" element is optionally passed as an argument, but is not a must
-   /* var validator = new FormValidator({
-        "events": ['blur', 'input', 'change']
+    var validator = new FormValidator({
+        "events": ['blur', 'input', 'change', 'select']
     }, document.forms[0]);
     // on form "submit" event
     document.forms[0].onsubmit = function (e) {
@@ -137,6 +135,7 @@
     };
     // on form "reset" event
     document.forms[0].onreset = function (e) {
+        $('#alert_email').empty()
         validator.reset();
     };
     // stuff related ONLY for this demo page:
@@ -144,7 +143,26 @@
         validator.settings.alerts = !this.checked;
         if (this.checked)
             $('form .alert').remove();
-    }).prop('checked', false);*/
+    }).prop('checked', false);
 
+
+    document.getElementById('email').addEventListener('input', function() {
+    campo = event.target;        
+    emailRegex =/^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+    //Se muestra un texto a modo de ejemplo, luego va a ser un icono
+    if (emailRegex.test(campo.value)) {
+        $('#alert_email').empty()
+    } else {
+        if(campo.value === ""){
+            $('#alert_email').empty()
+        }
+        else{
+            $("#alert_email").html('<div class="alert" style="opacity: 1; white-space: inherit; left: 0">\
+                                    Email no válido\
+                                </div>');
+        }
+        
+    }
+});
 </script>
 {% endblock javascripts %}
