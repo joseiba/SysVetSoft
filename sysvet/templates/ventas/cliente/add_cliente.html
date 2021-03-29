@@ -91,12 +91,15 @@
                                     <span class="required">*</span>
                                 </label>
                                 <div class="col-md-6 col-sm-6">
-                                    <select class="form-control" required='required' name="id_ciudad">
+                                    <select class="form-control" required='required' name="id_ciudad" id="id_cuidad">
                                         <option required='required'>Seleccione una Cuidad</option>
                                         {% for cui in cuidad %}
                                         <option required="required" value={{ cui.id}}>{{ cui.nombre_ciudad }}</option>
                                         {% endfor %}
-                                    </select>
+                                    </select>                                    
+                                </div>
+                                <div id="alert_cuidad">
+
                                 </div>
                             </div>
                             <div class="ln_solid">
@@ -144,8 +147,7 @@
         if (this.checked)
             $('form .alert').remove();
     }).prop('checked', false);
-
-
+    
     document.getElementById('email').addEventListener('input', function() {
     campo = event.target;        
     emailRegex =/^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
@@ -158,11 +160,25 @@
         }
         else{
             $("#alert_email").html('<div class="alert" style="opacity: 1; white-space: inherit; left: 0">\
-                                    Email no válido\
+                                    email no valido\
                                 </div>');
         }
         
     }
-});
+    });
+
+$(function(){
+    $("#id_cuidad").change(function(){
+        var cuidad = $("#id_cuidad").val()
+        var cuidad_empty = cuidad.replace("Seleccione una Cuidad", "")
+
+        if(cuidad_empty === ""){
+            $("#alert_cuidad").html('<div class="alert" style="opacity: 1; white-space: inherit; left: 0">\
+                                    Seleccione una opción\
+                                </div>');
+        }
+    })
+
+})
 </script>
 {% endblock javascripts %}
