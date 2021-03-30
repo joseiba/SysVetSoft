@@ -23,3 +23,7 @@ function cerrar_modal_edicion() {
 function cerrar_modal_eliminacion() {
 	$('#eliminacion').modal('hide');
 }
+
+function replaceCaratect(e){
+	e.value = e.value.replace(/[*<>&#=;+^${}()!~?123456789%@|[\]\\]/g, '')
+}

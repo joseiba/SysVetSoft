@@ -35,7 +35,7 @@ class EspecieForm(forms.ModelForm):
         model = Especie
         fields = '__all__'       
         widgets = {
-            'nombre_especie' : forms.TextInput(attrs={'class':'form-control','data-validate-length-range':'20', 
+            'nombre_especie' : forms.TextInput(attrs={'class':'form-control', 'id': 'nombre_especie','data-validate-length-range':'20', 
                 'data-validate-words':'1', 'name': 'nombre_especie', 'placeholder': 'Nombre de la Especie', 'required': 'required'}),
 		}
 
@@ -50,7 +50,7 @@ class RazaForm(forms.ModelForm):
         model = Raza
         fields = '__all__'       
         widgets = {
-            'nombre_raza' : forms.TextInput(attrs={'class':'form-control','data-validate-length-range':'20', 
+            'nombre_raza' : forms.TextInput(attrs={'class':'form-control', 'id': 'nombre_raza','data-validate-length-range':'20', 
                 'data-validate-words':'1', 'name': 'nombre_raza', 'placeholder': 'Nombre de la Raza', 'required': 'required'}),
             'id_especie' : forms.Select(attrs={'class':'form-control', 'id': 'id_especie','required':'required' ,'name':'id_especie'}),
 		}        

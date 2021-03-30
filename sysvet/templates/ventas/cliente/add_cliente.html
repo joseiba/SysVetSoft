@@ -33,7 +33,7 @@
                                         class="required">*</span></label>
                                 <div class="col-md-6 col-sm-6">
                                     <input class="form-control" data-validate-length-range="6" data-validate-words="1"
-                                        name="nombre_cliente" placeholder="Nombre del Cliente" required="required" />
+                                        name="nombre_cliente" placeholder="Nombre del Cliente" required="required" onkeyup="replaceCaratect(this)"/>
                                 </div>
                             </div>
                             <div class="field item form-group">
@@ -122,7 +122,9 @@
 {% block javascripts %}
 {{ block.super }}
 <!-- validator -->
+<script src="/static/project_static/vendors/validator/multifield.js"></script>
 <script src="/static/project_static/other/js/validacion.js"></script>
+
 <script>
     // initialize a validator instance from the "FormValidator" constructor.
     // A "<form>" element is optionally passed as an argument, but is not a must
@@ -168,7 +170,7 @@
     });
 
 $(function(){
-    $("#id_cuidad").change(function(){
+    $("#id_cuidad").change(function() {
         var cuidad = $("#id_cuidad").val()
         var cuidad_empty = cuidad.replace("Seleccione una Cuidad", "")
 
