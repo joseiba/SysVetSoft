@@ -41,7 +41,7 @@
                                         class="required">*</span></label>
                                 <div class="col-md-6 col-sm-6">
                                     <input class="form-control" data-validate-length-range="6" data-validate-words="1"
-                                        name="apellido_cliente" placeholder="Apellido" required="required" />
+                                        name="apellido_cliente" placeholder="Apellido" required="required" onkeyup="replaceCaratect(this)"/>
                                 </div>
                             </div>
                             <div class="field item form-group">
@@ -50,7 +50,7 @@
                                 </label>
                                 <div class="col-md-6 col-sm-6">
                                     <input class="form-control" class='optional' name="direccion"
-                                        placeholder="Dirección" type="text" required="required" />
+                                        placeholder="Dirección" type="text" required="required" onkeyup="replaceDirection(this)"/>
                                 </div>
                             </div>
                             <div class="field item form-group">
@@ -58,14 +58,14 @@
                                         class="required">*</span></label>
                                 <div class="col-md-6 col-sm-6">
                                     <input class="form-control" name="cedula" placeholder="Nro. Cédula"
-                                        required="required" />
+                                        required="required" onkeyup = "replaceABC(this)"/>
                                 </div>
                             </div>
                             <div class="field item form-group">
                                 <label class="col-form-label col-md-3 col-sm-3  label-align">Nro. RUC</label>
                                 <div class="col-md-6 col-sm-6">
                                     <input class="form-control" class='optional' name="ruc" placeholder="Nro. RUC"
-                                        type="text" />
+                                        type="text" onkeyup = "replaceABC(this)"/>
                                 </div>
                             </div>
                             <div class="field item form-group">
@@ -73,7 +73,7 @@
                                         class="required">*</span></label>
                                 <div class="col-md-6 col-sm-6">
                                     <input class="form-control" type="tel" class='tel' name="telefono"
-                                        placeholder="Telefono" required='required' data-validate-length-range="9" />
+                                        placeholder="Telefono" required='required' data-validate-length-range="9" onkeyup = "replaceABC(this)"/>
                                 </div>
                             </div>
                             <div class="field item form-group">

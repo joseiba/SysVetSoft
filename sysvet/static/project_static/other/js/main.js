@@ -13,7 +13,7 @@ function abrir_modal_eliminacion(url) {
 		$(this).modal('show');
 	});
 }
-function cerrar_modal_creacion(){
+function cerrar_modal_creacion() {
 	$('#creacion').modal('hide');
 }
 
@@ -24,6 +24,14 @@ function cerrar_modal_eliminacion() {
 	$('#eliminacion').modal('hide');
 }
 
-function replaceCaratect(e){
-	e.value = e.value.replace(/[*<>&#=;+^${}()!~?123456789%@|[\]\\]/g, '')
+function replaceCaratect(e) {
+	e.value = e.value.replace(/[^A-Za-zÀ-ÿ\u00f1\u00d1\s-]+$/g, '')
+}
+
+function replaceABC(e) {
+	e.value = e.value.replace(/[^0-9-]/g, '')
+}
+
+function replaceDirection(e) {
+	e.value = e.value.replace(/[^A-Za-zÀ-ÿ0-9\u00f1\u00d1\s-]+$/g, '')
 }
