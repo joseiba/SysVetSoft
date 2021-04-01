@@ -1,6 +1,6 @@
 {% extends "home/base_site.html" %}
 
-{% block title %} Lista Cliente {% endblock title %}
+{% block title %} Lista Mascotas {% endblock title %}
 
 {% block stylesheets %}
 {{ block.super }}
@@ -269,6 +269,10 @@
         })
 
     })*/
+
+    $('form input').on("cut copy paste",function(e) {
+            e.preventDefault();
+        });
 </script>
 
 

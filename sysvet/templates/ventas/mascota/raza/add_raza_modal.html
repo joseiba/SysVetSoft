@@ -14,7 +14,10 @@
                         class="required">*</span></label>
                 <div class="col-md-6 col-sm-6">
                     <input class="form-control" data-validate-length-range="20" data-validate-words="1"
-                        name="nombre_raza" placeholder="Nombre de la raza" required="required" />
+                        name="nombre_raza" placeholder="Nombre de la raza" required="required" id="nombre_raza" onkeyup="replaceCaratect(this)"/>
+                </div>
+                <div id="alert_nombre_raza">
+
                 </div>
             </div>
             <div class="field item form-group mt-3">
@@ -24,6 +27,9 @@
                 <div class="col-md-6 col-sm-6">
                     {{ form.id_especie }}                        
                 </div>
+                <div id="alert_id_especie">
+
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
@@ -32,3 +38,44 @@
         </form>
     </div>
 </div>
+
+<script>
+    $('#nombre_raza').change(function () {
+        var nombre = $("#nombre_raza").val()
+        if (nombre !== "") 
+        {
+            $('#alert_nombre_raza').empty()
+        } 
+        else {
+            if (nombre !== "") 
+            {
+                $('#alert_nombre_raza').empty()
+            }
+            else 
+            {
+                $("#alert_nombre_raza").html('<div class="alert" style="opacity: 1; white-space: inherit">\
+                                    Complete este campo\
+                                </div>');
+            }
+
+        }
+    })
+
+    $("#id_especie").change(function(){
+        var cuidad = $("#id_especie").val()
+        var cuidad_empty = cuidad.replace("---------", "")
+
+        if(cuidad_empty === ""){
+            $("#alert_id_especie").html('<div class="alert" style="opacity: 1; white-space: inherit;">\
+                                    Seleccione una opción\
+                                </div>');
+        }
+        else{
+            $("#alert_id_especie").empty()
+        }
+    })
+
+    $('form input').on("cut copy paste",function(e) {
+            e.preventDefault();
+        });
+</script>
