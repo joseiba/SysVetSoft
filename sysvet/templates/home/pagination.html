@@ -2,10 +2,11 @@
     <div class="clearfix"></div>
     <span class="step-links d-inline-flex">
         <span class="current">
-            Paginas {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}
+            Páginas {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}
         </span>
         <div class="clearfix"></div>
 
+        {% if page_obj.paginator.num_pages > 1 %}
         <div  style="align-items: center;">
             {% if page_obj.has_previous %}
             <a href="?page=1">&laquo; inicio</a>
@@ -28,5 +29,6 @@
             {% endif %}
 
         </div>
+        {% endif %}
     </span>
 </div>

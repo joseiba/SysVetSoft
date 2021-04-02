@@ -16,8 +16,9 @@ def add_cliente(request):
     if request.method == 'POST':
         form = ClienteForm(request.POST or None)
         if form.is_valid():
+            messages.success(request, 'Se ha agregado correctamente')
             form.save()
-            return redirect('/cliente/list')
+            return redirect('/cliente/add')
     cuidad = Ciudad.objects.all()   
     context = {'form' : form, 'cuidad' : cuidad}
     return render(request, 'ventas/cliente/add_cliente.html', context)
@@ -30,13 +31,15 @@ def edit_cliente(request, id):
     if request.method == 'POST':
         form = ClienteForm(request.POST, instance=cliente)
         if not form.has_changed():
-            messages.info(request, "No ha hecho ningun cambio")
-            return redirect('/cliente/list/')
+            messages.info(request, "No has hecho ningun cambio")
+            strId = str(id)
+            return redirect('/cliente/edit/'+ strId)
         if form.is_valid():
             cliente = form.save(commit=False)
             cliente.save()
-            messages.add_message(request, messages.SUCCESS, 'El Cliente se ha editado correctamente!')
-            return redirect('/cliente/list/')
+            strId = str(id)
+            messages.success(request, 'Se ha editado correctamente!')
+            return redirect('/cliente/edit/'+ strId)
 
     context = {'form': form}
     return render(request, 'ventas/cliente/edit_cliente.html', context)
@@ -45,13 +48,14 @@ def edit_cliente(request, id):
 @login_required()
 def delete_cliente(request, id):
     cliente = Cliente.objects.get(id=id)
-    cliente.delete()
+    cliente.is_active = "N"
+    cliente.save()
     return redirect('/cliente/list/')
 
 #Metodo para listar todos los clientes
 @login_required()
 def list_clientes(request):
-    clientes = Cliente.objects.all().order_by('-last_modified')
+    clientes = Cliente.objects.exclude(is_active="N").order_by('-last_modified')
     paginator = Paginator(clientes, 10)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
@@ -63,9 +67,9 @@ def list_clientes(request):
 def search_cliente(request):
     query = request.GET.get('q')
     if query:
-        clientes = Cliente.objects.filter(Q(nombre_cliente__icontains=query) | Q(cedula__icontains=query))
+        clientes = Cliente.objects.exclude(is_active="N").filter(Q(nombre_cliente__icontains=query) | Q(cedula__icontains=query))
     else:
-        clientes = Cliente.objects.all().order_by('-last_modified')
+        clientes = Cliente.objects.exclude(is_active="N").order_by('-last_modified')
     paginator = Paginator(clientes, 10)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)

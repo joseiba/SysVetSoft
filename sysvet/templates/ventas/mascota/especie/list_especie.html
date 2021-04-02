@@ -73,7 +73,9 @@
                                 <div class="search">
                                     <form action="{% url 'search_especie' %}" method="GET" class="d-inline-flex">
                                         <input type="search" class="searchTerm" name="q" value="{{ request.GET.q }}"
-                                            placeholder="Buscar nombre de especie">
+                                            placeholder="Buscar por nombre de especie"
+                                            data-toggle="tooltip" data-placement="top"
+                                            title="Buscar por nombre de especie">
                                         <button type="submit" class="searchButton">
                                             <i class="fa fa-search"></i>
                                         </button>

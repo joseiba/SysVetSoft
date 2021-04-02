@@ -53,7 +53,7 @@ class Mascota(models.Model):
     edad = models.CharField(max_length = 200, default = '-', null = True, blank = True)
     imagen = models.ImageField(upload_to='mascotas/fotos', null=True, blank=True, help_text="Ingrese una foto")
     peso = models.CharField(max_length = 200, help_text="Ingrese el peso de la mascota")
-    fecha_nacimiento =  models.CharField(max_length = 200, default = '-', null = True, blank = True)
+    fecha_nacimiento =  models.DateField(null = True, blank = True)
     last_modified = models.DateTimeField(auto_now=True, blank=True)
     id_raza = models.ForeignKey('Raza', on_delete=models.CASCADE, null=False)
     id_cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE, null=False)
@@ -99,10 +99,6 @@ class Mascota(models.Model):
         super().save(*args, **kwargs)
         if is_new:
             FichaMedica.objects.create(id_mascota=self)
-
-    def clean(self):
-        if not self.fecha_nacimiento:
-            self.fecha_nacimiento = "-"
     
 
 #Modelos de ficha medica

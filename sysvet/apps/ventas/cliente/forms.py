@@ -10,7 +10,7 @@ class ClienteForm(forms.ModelForm):
     """    
     class Meta:
         model = Cliente
-        fields = '__all__'
+        exclude = ['is_active']
         widgets = {
 			'nombre_cliente' : forms.TextInput(attrs={'class':'form-control','data-validate-length-range':'6', 
                 'data-validate-words':'1', 'name': 'nombre_cliente', 'placeholder': 'Nombre del Cliente', 'required': 'required','onkeyup':'replaceCaratect(this)'}),

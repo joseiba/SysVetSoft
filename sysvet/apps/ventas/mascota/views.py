@@ -15,12 +15,10 @@ def add_mascota(request):
     form = MascotaForm    
     if request.method == 'POST':
         form = MascotaForm(request.POST, request.FILES) 
-        if form.is_valid():
-            fecha = request.POST.get('fecha_nacimiento')  
-            if fecha == '':
-                form.cleaned_data['fecha_nacimiento'] = '-'            
+        if form.is_valid():           
             form.save()
-            return redirect('/mascota/list')
+            messages.success(request, 'Se ha agregado correctamente')
+            return redirect('/mascota/add')
     context = {'form' : form}
     return render(request, 'ventas/mascota/add_mascota.html', context)
 
@@ -33,12 +31,12 @@ def edit_mascota(request, id):
         form = MascotaForm(request.POST, request.FILES, instance=mascota)
         if not form.has_changed():
             messages.info(request, "No has hecho ningun cambio")
-            return redirect('/mascota/list/')
+            return redirect('/mascota/edit/' + str(id))
         if form.is_valid():
             mascota = form.save(commit=False)
             mascota.save()
-            messages.add_message(request, messages.SUCCESS, 'Se ha editado correctamente!')
-            return redirect('/mascota/list/')
+            messages.success(request, 'Se ha editado correctamente!')
+            return redirect('/mascota/edit/' + str(id))
 
     context = {'form': form, 'mascota': mascota}
     return render(request, 'ventas/mascota/edit_mascota.html', context)    
