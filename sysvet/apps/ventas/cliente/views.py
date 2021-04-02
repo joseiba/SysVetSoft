@@ -16,7 +16,7 @@ def add_cliente(request):
     if request.method == 'POST':
         form = ClienteForm(request.POST or None)
         if form.is_valid():
-            messages.success(request, 'Se ha agregado correctamente')
+            messages.success(request, 'Se ha agregado correctamente!')
             form.save()
             return redirect('/cliente/add')
     cuidad = Ciudad.objects.all()   
@@ -31,7 +31,7 @@ def edit_cliente(request, id):
     if request.method == 'POST':
         form = ClienteForm(request.POST, instance=cliente)
         if not form.has_changed():
-            messages.info(request, "No has hecho ningun cambio")
+            messages.info(request, "No has hecho ningun cambio!")
             strId = str(id)
             return redirect('/cliente/edit/'+ strId)
         if form.is_valid():
