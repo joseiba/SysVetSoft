@@ -37,6 +37,7 @@ class Cliente (models.Model):
     telefono = models.CharField(max_length = 200, help_text = "Ingrese telefono del cliente")
     email = models.EmailField(max_length = 200, help_text = "Ingrese email del cliente", null=True, blank=True, default="-")
     last_modified = models.DateTimeField(auto_now=True, blank=True)
+    is_active = models.CharField(max_length=2, default="S", blank=True, null=True)
     id_ciudad = models.ForeignKey('Ciudad', on_delete=models.SET_NULL, null=True)
 
 

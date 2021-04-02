@@ -210,7 +210,13 @@
                                                     style="font-size: 16px;">Fecha Nacimiento
                                                 </label>
                                                 <div class="col-sm-12">
-                                                    <p class="m-0">{{ mascota.fecha_nacimiento }}</p>
+                                                    <p class="m-0">
+                                                        {% if  mascota.fecha_nacimiento == None %}
+                                                            -
+                                                        {% else %}
+                                                            {{ mascota.fecha_nacimiento }}
+                                                        {% endif %}
+                                                    </p>
                                                 </div>
                                             </div>
                                             <div class="mb-3 row">
@@ -417,6 +423,15 @@
             $('.x_panel').find('.container_vacunas').addClass('d-none');
             $('.x_panel').find('.container_antiparasitarios').removeClass('d-none');
         })
+
+        $('form input').on("cut copy paste",function(e) {
+            e.preventDefault();
+        });
+        $('form textarea').on("cut copy paste",function(e) {
+            e.preventDefault();
+        });
     })
+
+
 </script>
 {% endblock javascripts %}

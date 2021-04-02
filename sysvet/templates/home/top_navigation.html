@@ -7,25 +7,19 @@
             <li class="nav-item dropdown open" style="padding-left: 15px;">
                 <a href="javascript:;" class="user-profile dropdown-toggle" aria-haspopup="true" id="navbarDropdown"
                     data-toggle="dropdown" aria-expanded="false">
-                    <img src="/static/project_static/other/images/img.jpg" alt=""> {{ user.username}}
+                    <img src="/static/project_static/other/images/ohana_perfil.jpeg" alt=""> {{ user.username}}
                 </a>
                 <div class="dropdown-menu dropdown-usermenu pull-right" aria-labelledby="navbarDropdown">
-                    <a class="dropdown-item" href="javascript:;"> Profile</a>
+                    <a class="dropdown-item" href="javascript:;">Perfil</a>
                     <a class="dropdown-item" href="javascript:;">
-                        <span class="badge bg-red pull-right">50%</span>
-                        <span>Settings</span>
+                        <span>Configuraciones</span>
                     </a>
                     <a class="dropdown-item" href="javascript:;">Help</a>
-                    <a class="dropdown-item" href="{% url 'logout' %}"><i class="fa fa-sign-out pull-right"></i> Log Out</a>
+                    <a class="dropdown-item" href="{% url 'logout' %}"><i class="fa fa-sign-out pull-right"></i> Cerrar Sesión</a>
                 </div>
             </li>
 
-            <li role="presentation" class="nav-item dropdown open">
-                <a href="javascript:;" class="dropdown-toggle info-number" id="navbarDropdown1" data-toggle="dropdown"
-                    aria-expanded="false">
-                    <i class="fa fa-envelope-o"></i>
-                    <span class="badge bg-green">6</span>
-                </a>
+            <li role="presentation" class="nav-item dropdown open">                
                 <ul class="dropdown-menu list-unstyled msg_list" role="menu" aria-labelledby="navbarDropdown1">
                     <li class="nav-item">
                         <a class="dropdown-item">

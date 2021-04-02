@@ -15,12 +15,10 @@ def add_mascota(request):
     form = MascotaForm    
     if request.method == 'POST':
         form = MascotaForm(request.POST, request.FILES) 
-        if form.is_valid():
-            fecha = request.POST.get('fecha_nacimiento')  
-            if fecha == '':
-                form.cleaned_data['fecha_nacimiento'] = '-'            
+        if form.is_valid():           
             form.save()
-            return redirect('/mascota/list')
+            messages.success(request, 'Se ha agregado correctamente!')
+            return redirect('/mascota/add')
     context = {'form' : form}
     return render(request, 'ventas/mascota/add_mascota.html', context)
 
@@ -32,13 +30,13 @@ def edit_mascota(request, id):
     if request.method == 'POST':
         form = MascotaForm(request.POST, request.FILES, instance=mascota)
         if not form.has_changed():
-            messages.info(request, "No has hecho ningun cambio")
-            return redirect('/mascota/list/')
+            messages.info(request, "No has hecho ningun cambio!")
+            return redirect('/mascota/edit/' + str(id))
         if form.is_valid():
             mascota = form.save(commit=False)
             mascota.save()
-            messages.add_message(request, messages.SUCCESS, 'Se ha editado correctamente!')
-            return redirect('/mascota/list/')
+            messages.success(request, 'Se ha editado correctamente!')
+            return redirect('/mascota/edit/' + str(id))
 
     context = {'form': form, 'mascota': mascota}
     return render(request, 'ventas/mascota/edit_mascota.html', context)    
@@ -93,6 +91,7 @@ def add_especie(request):
     if request.method == 'POST':
         form = EspecieForm(request.POST or None)
         if form.is_valid():
+            messages.success(request, 'Se ha agregado correctamente!')
             form.save()
             return redirect('/mascota/listEspecie/')
     context = {'form' : form}
@@ -106,12 +105,12 @@ def edit_especie(request, id):
     if request.method == 'POST':
         form = EspecieForm(request.POST, instance=especies)
         if not form.has_changed():
-            messages.info(request, "No has hecho ningun cambio")
+            messages.info(request, "No has hecho ningun cambio!")
             return redirect('/mascota/listEspecie/')
         if form.is_valid():
             especies = form.save(commit=False)
             especies.save()
-            messages.add_message(request, messages.SUCCESS, 'Se ha editado correctamente!')
+            messages.success(request, 'Se ha editado correctamente!')
             return redirect('/mascota/listEspecie/')
     context = {'form' : form, 'especie': especies}
     return render(request, 'ventas/mascota/especie/edit_especie_modal.html', context)
@@ -148,6 +147,7 @@ def add_raza(request):
         form = RazaForm(request.POST or None)
         if form.is_valid():
             form.save()
+            messages.success(request, 'Se ha agregado correctamente!')
             return redirect('/mascota/listRaza/')
     context = {'form' : form}
     return render(request, 'ventas/mascota/raza/add_raza_modal.html', context)
@@ -159,12 +159,12 @@ def edit_raza(request, id):
     if request.method == 'POST':
         form = RazaForm(request.POST, instance=raza)
         if not form.has_changed():
-            messages.info(request, "No has hecho ningun cambio")
+            messages.info(request, "No has hecho ningun cambio!")
             return redirect('/mascota/listRaza/')
         if form.is_valid():
             raza = form.save(commit=False)
             raza.save()
-            messages.add_message(request, messages.SUCCESS, 'Se ha editado correctamente!')
+            messages.success(request, 'Se ha editado correctamente!')
             return redirect('/mascota/listRaza/')
     context = {'form' : form, 'raza': raza}
     return render(request, 'ventas/mascota/raza/edit_raza_modal.html', context)    
@@ -207,7 +207,7 @@ def edit_ficha_medica(request,id):
         formConsulta = ConsultaForm(request.POST, instance=consultaGet)
         formAntiparasitario = AntiparasitarioForm(request.POST, instance=antiparasitarioGet)
         if not formVacuna.has_changed() or  not formConsulta.has_changed() or not formAntiparasitario.has_changed():
-            messages.info(request, "No has hecho ningun cambio")
+            messages.info(request, "No has hecho ningun cambio!")
             return redirect('/mascota/list/')   
         if formVacuna.is_valid() or formConsulta.is_valid() or formAntiparasitario.is_valid():                    
             consulta = formConsulta.save(commit=False)
@@ -218,7 +218,7 @@ def edit_ficha_medica(request,id):
             consulta.save()
             vacuna.save()
             antiparasitario.save()
-            messages.add_message(request, messages.SUCCESS, 'Se ha editado correctamente!')
+            messages.success(request, 'Se ha editado correctamente!')
             return redirect('/mascota/list/')
 
     formFichaMedica = FichaMedicaForm(instance=fichaMedicaGet)
