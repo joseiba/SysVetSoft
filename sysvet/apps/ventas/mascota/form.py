@@ -20,6 +20,7 @@ class MascotaForm(forms.ModelForm):
             'fecha_nacimiento' : forms.TextInput(attrs={'class':'form-control optional date', 'type': 'date','name':'fecha_nacimiento'}),
             'peso': forms.TextInput(attrs={'class':'form-control','data-validate-length-range':'20','onkeyup':'replaceABC(this)',
                 'data-validate-words':'1', 'name': 'peso', 'placeholder': 'Peso', 'required': 'required'}),
+            'color_pelaje' : forms.TextInput(attrs={'class':'demo1 form-control', 'type': 'text','name':'color_pelaje','placeholder': 'Color Pelaje'}),
             'imagen': forms.FileInput(attrs={'type': 'file', 'name':'imagen', 'id': 'imageInput', 'accept':'image/*'}),
             'id_raza' : forms.Select(attrs={'class':'form-control', 'id': 'id_raza','required':'required' ,'name':'id_raza'}),
             'id_cliente' : forms.Select(attrs={'class':'form-control', 'id': 'id_cliente','required':'required' ,'name':'id_cliente'})
