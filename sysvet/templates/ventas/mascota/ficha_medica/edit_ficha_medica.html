@@ -224,7 +224,13 @@
                                                     style="font-size: 16px;">Color Pelaje
                                                 </label>
                                                 <div class="col-sm-12">
-                                                    <p class="m-0">-</p>
+                                                    <p class="m-0">
+                                                        {% if  mascota.color_pelaje == None %}
+                                                            -
+                                                        {% else %}
+                                                            {{ mascota.color_pelaje }}
+                                                        {% endif %}
+                                                    </p>
                                                 </div>
                                             </div>
                                         </div>

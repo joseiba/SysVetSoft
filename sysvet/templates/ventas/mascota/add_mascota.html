@@ -11,6 +11,8 @@
 <link href="/static/project_static/vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css"
     rel="stylesheet">
 <link href="/static/project_static/vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="/static/project_static/vendors/mjolnic-bootstrap-colorpicker/dist/css/bootstrap-colorpicker.min.css">
+
 <style>
     .text_align_center {
         text-align-last: center;
@@ -156,7 +158,15 @@
                                             <input class="form-control" name="edad" class='optional' placeholder="Edad"
                                                 type="text" onkeyup="replaceDirection(this)"/>
                                         </div>
-                                    </div>                                   
+                                    </div>
+                                    <div class="mb-3 row">
+                                        <label class="col-sm-6 col-form-label">Color Pelaje
+                                        </label>
+                                        <div class="col-sm-10">
+                                            <input class="demo1 form-control optional" name="color_pelaje" placeholder="Color Pelaje"
+                                                type="text"/>
+                                        </div>
+                                    </div>                                    
 
                                 </div>
                                 <div class="col-lg-4 col-md-9 col-sm-9">
@@ -211,6 +221,7 @@
 <!-- validator -->
 <script src="/static/project_static/vendors/validator/multifield.js"></script>
 <script src="/static/project_static/vendors/validator/validator.js"></script>
+<script src="/static/project_static/vendors/mjolnic-bootstrap-colorpicker/dist/js/bootstrap-colorpicker.js"></script>
 
 <script>
     $(document).ready(function () {
@@ -247,7 +258,7 @@
 <script>
     // initialize a validator instance from the "FormValidator" constructor.
     // A "<form>" element is optionally passed as an argument, but is not a must
-   var validator = new FormValidator({
+    var validator = new FormValidator({
         "events": ['blur', 'input', 'change']
     }, document.forms[0]);
     // on form "submit" event
