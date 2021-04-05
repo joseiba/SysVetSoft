@@ -48,16 +48,16 @@ class Producto (models.Model):
     fecha_movimiento = models.DateField(help_text = "Ingrese fecha de movimiento", null=True, blank=True, default='11/11/1111')
     tipo_producto = models.ForeignKey('TipoProducto', on_delete=models.CASCADE, null=False)
     fecha_compra = models.DateField(help_text = "Ingrese fecha de compra")
-    precio_compra = models.IntegerField(help_text = 'Ingrese precio de compra')
-    precio_venta = models.IntegerField( help_text = 'Ingrese precio de venta')
-    stock_minimo = models.IntegerField(help_text = 'Ingrese stock minimo')
+    precio_compra = models.PositiveIntegerField(help_text = 'Ingrese precio de compra')
+    precio_venta = models.PositiveIntegerField( help_text = 'Ingrese precio de venta')
+    stock_minimo = models.PositiveIntegerField(help_text = 'Ingrese stock minimo')
 
     def __str__(self):
-        """Formato del cliente"""
+        """Formato del producto"""
         return '{0}'.format(self.nombre_producto)
 
     def get_absolute_url(self):
-        """Retorna el URL para acceder a una instancia de un cliente en particular."""
+        """Retorna el URL para acceder a una instancia de un producto en particular."""
         return reverse('producto-detail', args=[str(self.id)])
 
 
@@ -75,5 +75,5 @@ class ProductoStock (models.Model):
         return '{0}'.format(self.id_producto.nombre_producto)
 
     def get_absolute_url(self):
-        """Retorna el URL para acceder a una instancia de un deposito en particular."""
+        """Retorna el URL para acceder a una instancia de un  en particular."""
         return reverse('deposito-detail', args=[str(self.id)])

@@ -4,11 +4,8 @@ from django.contrib import messages
 from django.db.models import Q
 from django.core.paginator import Paginator
 
-from .forms import TipoProductoForm
-from .models import TipoProducto
-
-from .forms import DepositoForm
-from .models import Deposito
+from .forms import TipoProductoForm, DepositoForm, ProductoForm
+from .models import TipoProducto, Deposito, Producto
 
 
 #Metodo para agregar tipo producto
@@ -69,7 +66,7 @@ def search_tipo_producto(request):
     return render(request, "ventas/producto/list_tipo_producto.html", context)
 
 
-# def order_cliente(request):
+# def order_tipo_producto(request):
 
 
 #Metodo para agregar deposito
@@ -113,7 +110,7 @@ def list_deposito(request):
     context = {'page_obj' : page_obj}
     return render(request, "ventas/producto/list_deposito.html", context)
 
-#Metodo para la busqueda de clientes
+#Metodo para la busqueda de deposito
 @login_required()
 def search_deposito(request):
     query = request.GET.get('q')
@@ -126,3 +123,71 @@ def search_deposito(request):
     page_obj = paginator.get_page(page_number)
     context = { 'page_obj': page_obj}
     return render(request, "ventas/producto/list_deposito.html", context)
+
+
+    #Metodo para agregar producto
+@login_required()
+def add_producto(request):
+    form = ProductoForm
+    if request.method == 'POST':
+        form = ProductoForm(request.POST or None)
+        if form.is_valid():
+            print("entro")
+            form.save()
+            return redirect('/producto/list')
+    tipoproducto = TipoProducto.objects.all()   
+    context = {'form' : form, 'tipoproducto' : tipoproducto}
+    return render(request, 'ventas/producto/add_producto.html', context)
+
+# Metodo para editar Productos
+@login_required()
+def edit_producto(request, id):
+    producto = Producto.objects.get(id=id)
+    form = ProductoForm(instance=producto)
+    if request.method == 'POST':
+        form = ProductoForm(request.POST, instance=producto)
+        if not form.has_changed():
+            messages.info(request, "No ha hecho ningun cambio")
+            return redirect('/producto/list/')
+        if form.is_valid():
+            producto = form.save(commit=False)
+            producto.save()
+            messages.add_message(request, messages.SUCCESS, 'El producto se ha editado correctamente!')
+            return redirect('/producto/list/')
+
+    context = {'form': form}
+    return render(request, 'ventas/producto/edit_producto.html', context)
+
+#Metodo para eliminar producto
+@login_required()
+def delete_producto(request, id):
+    producto = Producto.objects.get(id=id)
+    producto.delete()
+    return redirect('/producto/list/')
+
+#Metodo para listar todos los productos
+@login_required()
+def list_producto(request):
+    productos = Producto.objects.all()
+    paginator = Paginator(productos, 10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    context = {'page_obj' : page_obj}
+    return render(request, "ventas/producto/list_producto.html", context)
+
+#Metodo para la busqueda de productos
+@login_required()
+def search_producto(request):
+    query = request.GET.get('q')
+    if query:
+        productos = Producto.objects.filter(Q(nombre_producto__icontains=query))
+    else:
+        productos = Producto.objects.all()
+    paginator = Paginator(productos, 10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    context = { 'page_obj': page_obj}
+    return render(request, "ventas/producto/list_producto.html", context)
+
+
+# def order_producto(request):

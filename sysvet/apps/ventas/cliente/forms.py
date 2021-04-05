@@ -22,5 +22,5 @@ class ClienteForm(forms.ModelForm):
 			'telefono' : forms.TextInput(attrs={'class':'form-control tel','placeholder': 'Telefono','type': 'tel', 'name':'telefono', 'required':'required',
                 'data-validate-length-range': '9'}),
             'email' : forms.TextInput(attrs={'class':'form-control optional', 'placeholder': 'Email','name':'email', 'type':'email'}),
-            'id_ciudad' : forms.Select(attrs={'class':'form-control', 'id': 'id_ciudad','required':'required' ,'name':'id_ciudad'})
+            'tipo_producto' : forms.Select(attrs={'class':'form-control', 'id': 'id_tipoproducto','required':'required' ,'name':'id_tipoproducto'})
 		}
