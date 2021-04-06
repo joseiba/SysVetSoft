@@ -1,15 +1,13 @@
 {% extends "home/base_site.html" %}
 
-{% block title %} Lista Cliente {% endblock title %}
+{% block title %} Lista Mascotas {% endblock title %}
 
 {% block stylesheets %}
 {{ block.super }}
 <link href="/static/project_static/vendors/datatables.net-bs/css/dataTables.bootstrap.min.css" rel="stylesheet">
 <link href="/static/project_static/vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css" rel="stylesheet">
-<link href="/static/project_static/vendors/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.min.css"
-    rel="stylesheet">
-<link href="/static/project_static/vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css"
-    rel="stylesheet">
+<link href="/static/project_static/vendors/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.min.css" rel="stylesheet">
+<link href="/static/project_static/vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css" rel="stylesheet">
 <link href="/static/project_static/vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css" rel="stylesheet">
 <style>
     .search {
@@ -83,7 +81,7 @@
         color: #ffff;
     }
 
-    .dropdown-item {
+   /*.dropdown-item {
         padding: 0.25rem 0.5rem;
         cursor: pointer;
     }
@@ -95,7 +93,7 @@
 
     a.dropdown-item:hover {
         background: rgba(0, 0, 0, .1);
-    }
+    }*/
 
     .card-option {
         background-color: #fff;
@@ -139,9 +137,9 @@
                                 <div class="search">
                                     <form action="{% url 'search_mascota' %}" method="GET" class="d-inline-flex">
                                         <input data-toggle="tooltip" data-placement="top"
-                                            title="Buscá por mascota, nombre o apellido cliente" type="search"
+                                            title="Buscar por nombre mascota, nombre o apellido cliente" type="search"
                                             class="searchTerm" name="q" value="{{ request.GET.q }}"
-                                            placeholder="Buscá por mascota, nombre o apellido cliente">
+                                            placeholder="Buscar por nombre de mascota, nombre o apellido cliente">
                                         <button type="submit" class="searchButton">
                                             <i class="fa fa-search"></i>
                                         </button>
@@ -208,9 +206,12 @@
 
                                     <div class="d-contents" style="display: contents;">
                                         <a class="btn btn-outline-primary ml-3 mr-3"
-                                            href="{% url 'edit_mascota' mascota.id %}">Editar Mascota</a>
-                                        <button class="btn btn-outline-warning ml-3 mr-3">Actualizar Ficha
-                                            Médica</button>
+                                            href="{% url 'edit_mascota' mascota.id %}">Editar Mascota
+                                        </a>
+                                        <a class="btn btn-outline-warning ml-3 mr-3"
+                                            href="{% url 'edit_ficha_medica' mascota.id %}">Actualizar Ficha
+                                            Médica
+                                        </a>
                                     </div>
                                 </div>
                             </div>
@@ -266,6 +267,10 @@
         })
 
     })*/
+
+    $('form input').on("cut copy paste",function(e) {
+            e.preventDefault();
+        });
 </script>
 
 

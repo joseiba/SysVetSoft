@@ -1,6 +1,6 @@
 {% extends "home/base_site.html" %}
 
-{% block title %} Agregar Mascota{% endblock title %}
+{% block title %} Editar Mascota{% endblock title %}
 
 {% block stylesheets %}
 {{ block.super }}
@@ -11,6 +11,8 @@
 <link href="/static/project_static/vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css"
     rel="stylesheet">
 <link href="/static/project_static/vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="/static/project_static/vendors/mjolnic-bootstrap-colorpicker/dist/css/bootstrap-colorpicker.min.css">
+
 <style>
     .text_align_center {
         text-align-last: center;
@@ -75,9 +77,18 @@
     <div class="">
         <div class="page-title">
             <div class="title_left">
-                <h3>Agregar Mascota</h3>
+                <h3>Editar Mascota</h3>
             </div>
         </div>
+        <div class="clearfix"></div>
+        {% if messages %}
+        <div class="alert alert-success alert-dismissible" role="alert">
+            {% for message in messages %}
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                {{ message }}
+            {% endfor %}
+        </div>
+        {% endif %}
         <div class="clearfix"></div>
 
         <div class="row">
@@ -118,7 +129,7 @@
                                         <label for="staticEmail" class="col-sm-8 col-form-label">Nombre de la mascota
                                             <span class="required">*</span>
                                         </label>
-                                        <div class="col-sm-10">
+                                        <div class="field item col-sm-10">
                                             {{ form.nombre_mascota }}
                                         </div>
                                     </div>
@@ -133,7 +144,7 @@
                                         <label class="col-sm-6 col-form-label">Sexo
                                             <span class="required">*</span>
                                         </label>
-                                        <div class="col-sm-10">
+                                        <div class="field item col-sm-10">
                                             {{ form.sexo}}
                                         </div>
                                     </div>
@@ -143,14 +154,21 @@
                                         <div class="col-sm-10">
                                             {{ form.edad }}
                                         </div>
-                                    </div>                                   
+                                    </div>  
+                                    <div class="mb-3 row">
+                                        <label class="col-sm-6 col-form-label">Color Pelaje
+                                        </label>
+                                        <div class="col-sm-10">
+                                            {{ form.color_pelaje }}
+                                        </div>
+                                    </div>                                 
                                 </div>
                                 <div class="col-lg-4 col-md-9 col-sm-9">
                                     <div class="mb-3 row">
                                         <label for="staticEmail" class="col-sm-8 col-form-label">Peso(Kg)
                                             <span class="required">*</span>
                                         </label>
-                                        <div class="col-sm-10">
+                                        <div class="field item col-sm-10">
                                             {{ form.peso }}
                                         </div>
                                     </div>
@@ -162,13 +180,13 @@
                                     </div>
                                     <div class="mb-3 row">
                                         <label class="col-sm-6 col-form-label">Raza</label>
-                                        <div class="col-sm-10">
+                                        <div class="field item col-sm-10">
                                             {{ form.id_raza }}
                                         </div>
                                     </div>
                                     <div class="mb-3 row">
                                         <label class="col-sm-6 col-form-label">Dueño</label>
-                                        <div class="col-sm-10">
+                                        <div class="field item col-sm-10">
                                             {{ form.id_cliente }}
                                         </div>
                                     </div>
@@ -191,7 +209,6 @@
         </div>
     </div>
 </div>
-</div>
 {% endblock content %}
 
 {% block javascripts %}
@@ -199,6 +216,8 @@
 <!-- validator -->
 <script src="/static/project_static/vendors/validator/multifield.js"></script>
 <script src="/static/project_static/vendors/validator/validator.js"></script>
+<script src="/static/project_static/vendors/mjolnic-bootstrap-colorpicker/dist/js/bootstrap-colorpicker.js"></script>
+
 <script>
     $(document).ready(function () {
         var readURL = function (input) {
@@ -222,6 +241,34 @@
             $('.profile-pic').removeAttr('src');
             $('.profile-pic').attr('src', "/static/project_static/other/images/test.jfif");
         })
+
+        $('form input').on("cut copy paste",function(e) {
+            e.preventDefault();
+        });
     });
+
+     // initialize a validator instance from the "FormValidator" constructor.
+    // A "<form>" element is optionally passed as an argument, but is not a must
+        var validator = new FormValidator({
+        "events": ['blur', 'input', 'change']
+    }, document.forms[0]);
+    // on form "submit" event
+    document.forms[0].onsubmit = function (e) {
+        var submit = true,
+            validatorResult = validator.checkAll(this);
+        console.log(validatorResult);
+        return !!validatorResult.valid;
+    };
+    // on form "reset" event
+    document.forms[0].onreset = function (e) {
+        $('#alert_email').empty()
+        validator.reset();
+    };
+    // stuff related ONLY for this demo page:
+    $('.toggleValidationTooltips').change(function () {
+        validator.settings.alerts = !this.checked;
+        if (this.checked)
+            $('form .alert').remove();
+    }).prop('checked', false);
 </script>
 {% endblock javascripts %}

@@ -61,3 +61,8 @@
     background: #fff;
     padding: 4px;
 }
+
+.no_borders{
+    border-top-left-radius: 0px !important;
+    border-top-right-radius: 0px  !important;
+}
