@@ -43,14 +43,14 @@ class Producto (models.Model):
 
     nombre_producto = models.CharField(max_length = 200, help_text = "Ingrese nombre del producto")
     descripcion = models.CharField(max_length = 200, help_text = "Ingrese descripcion del producto")
-    fecha_vencimiento = models.DateField(help_text = "Ingrese fecha de vencimiento", null=True, blank=True, default='11/11/1111')
-    fecha_baja = models.DateField(help_text = "Ingrese fecha de baja", null=True, blank=True, default='11/11/1111')
-    fecha_movimiento = models.DateField(help_text = "Ingrese fecha de movimiento", null=True, blank=True, default='11/11/1111')
+    fecha_vencimiento = models.DateField(help_text = "Ingrese fecha de vencimiento", null=True, blank=True)
+    fecha_baja = models.DateField(help_text = "Ingrese fecha de baja", null=True, blank=True)
+    fecha_movimiento = models.DateField(help_text = "Ingrese fecha de movimiento", null=True, blank=True)
     tipo_producto = models.ForeignKey('TipoProducto', on_delete=models.CASCADE, null=False)
     fecha_compra = models.DateField(help_text = "Ingrese fecha de compra")
-    precio_compra = models.PositiveIntegerField(help_text = 'Ingrese precio de compra')
-    precio_venta = models.PositiveIntegerField( help_text = 'Ingrese precio de venta')
-    stock_minimo = models.PositiveIntegerField(help_text = 'Ingrese stock minimo')
+    precio_compra = models.IntegerField(help_text = 'Ingrese precio de compra')
+    precio_venta = models.IntegerField( help_text = 'Ingrese precio de venta')
+    stock_minimo = models.IntegerField(help_text = 'Ingrese stock minimo')
 
     def __str__(self):
         """Formato del producto"""
