@@ -132,7 +132,6 @@ def add_producto(request):
     if request.method == 'POST':
         form = ProductoForm(request.POST or None)
         if form.is_valid():
-            print("entro")
             form.save()
             return redirect('/producto/list')
     tipoproducto = TipoProducto.objects.all()   

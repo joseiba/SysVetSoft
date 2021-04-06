@@ -49,12 +49,12 @@ class ProductoForm(forms.ModelForm):
 			'nombre_producto': forms.TextInput(attrs={'class':'form-control','data-validate-length-range':'20', 
                 'data-validate-words':'1', 'name': 'nombre_producto', 'placeholder': 'Nombre del producto', 'required': 'required'}),
             'descripcion' : forms.TextInput(attrs={'class':'form-control', 'name': 'descripcion', 'placeholder': 'Descripcion', 'required': 'required'}),
-            'fecha_vencimiento' : forms.TextInput(attrs={'class':'form-control optional date', 'type': 'date','name':'fecha_vencimiento'}),
-            'fecha_baja' : forms.TextInput(attrs={'class':'form-control optional date', 'type': 'date','name':'fecha_baja'}),
-            'fecha_movimiento' : forms.TextInput(attrs={'class':'form-control optional date', 'type': 'date','name':'fecha_movimiento'}),
-            'fecha_compra' : forms.TextInput(attrs={'class':'form-control optional date', 'type': 'date','name':'fecha_compra'}),
-			'precio_compra': forms.TextInput(attrs={'class':'form-control optional', 'name': 'precio_compra', 'placeholder': 'Precio de compra'}),
-            'precio_venta': forms.TextInput(attrs={'class':'form-control optional', 'name': 'precio_venta', 'placeholder': 'Precio de Venta'}),
-            'stock_minimo': forms.TextInput(attrs={'class':'form-control optional', 'name': 'stock_minimo', 'placeholder': 'Stock Minimo'}),
-            'tipo_producto' : forms.Select(attrs={'class':'form-control', 'id': 'id_tipoproducto','required':'required' ,'name':'id_tipoproducto'})
+            'fecha_vencimiento' : forms.TextInput(attrs={'class':'form-control date', 'type': 'date','name':'fecha_vencimiento'}),
+            'fecha_baja' : forms.TextInput(attrs={'class':'form-control date', 'type': 'date','name':'fecha_baja'}),
+            'fecha_movimiento' : forms.TextInput(attrs={'class':'form-control date', 'type': 'date','name':'fecha_movimiento'}),
+            'fecha_compra' : forms.TextInput(attrs={'class':'form-control date', 'type': 'date','name':'fecha_compra'}),
+			'precio_compra': forms.TextInput(attrs={'class':'form-control', 'name': 'precio_compra', 'placeholder': 'Precio de compra'}),
+            'precio_venta': forms.TextInput(attrs={'class':'form-control', 'name': 'precio_venta', 'placeholder': 'Precio de Venta'}),
+            'stock_minimo': forms.TextInput(attrs={'class':'form-control', 'name': 'stock_minimo', 'placeholder': 'Stock Minimo'}),
+            'tipo_producto' : forms.Select(attrs={'class':'form-control', 'id': 'tipo_producto','required':'required' ,'name':'tipo_producto'})
 		}
