@@ -1,7 +1,9 @@
+<link rel="stylesheet" href="/static/project_static/other/commons/shared.css">
+
 <div></div>
 <div class="modal-dialog" role="document">
     <div class="modal-content">
-        <div class="modal-header" style="background-color:#2a3f54;">
+        <div class="modal-header no_borders" style="background-color:#2a3f54;">
             <h5 class="modal-title" id="exampleModalLabel" style="color: white;">Agregar Especie</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
                 <span aria-hidden="true">&times;</span>
@@ -14,7 +16,11 @@
                         class="required">*</span></label>
                 <div class="col-md-6 col-sm-6">
                     <input class="form-control" data-validate-length-range="20" data-validate-words="1"
-                        name="nombre_especie" placeholder="Nombre de la especie" required="required" />
+                        name="nombre_especie" id="nombre_especie" placeholder="Nombre de la especie"
+                        required="required" onkeyup="replaceCaratect(this)"/>
+                </div>
+                <div id="alert_nombre_especie">
+
                 </div>
             </div>
             <div class="modal-footer">
@@ -24,3 +30,30 @@
         </form>
     </div>
 </div>
+
+<script>
+    $('#nombre_especie').change(function () {
+        var nombre = $("#nombre_especie").val()
+        if (nombre !== "") 
+        {
+            $('#alert_nombre_especie').empty()
+        } 
+        else {
+            if (nombre !== "") 
+            {
+                $('#alert_nombre_especie').empty()
+            }
+            else 
+            {
+                $("#alert_nombre_especie").html('<div class="alert" style="opacity: 1; white-space: inherit">\
+                                    Complete este campo\
+                                </div>');
+            }
+
+        }
+    })
+
+    $('form input').on("cut copy paste",function(e) {
+        e.preventDefault();
+    });
+</script>

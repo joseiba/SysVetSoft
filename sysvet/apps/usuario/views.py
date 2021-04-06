@@ -4,7 +4,7 @@ from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_protect
-from django.contrib.auth import login, logout
+from django.contrib.auth import login, logout, authenticate
 from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -32,8 +32,12 @@ class Login(FormView):
         if request.user.is_authenticated:
             return HttpResponseRedirect(self.get_success_url())
         else:
-            if request.method == 'POST':                
-                messages.error(request,'El nombre de usuario y/o contraseña son incorrectos')         
+            if request.method == 'POST':
+                username = request.POST['username']
+                password = request.POST['password']
+                usuario = authenticate(username=username, password=password)
+                if usuario is None: 
+                    messages.error(request,'El nombre de usuario y/o contraseña son incorrectos')         
             return super(Login, self).dispatch(request, *args, **kwargs)
 
     def form_valid(self,form):

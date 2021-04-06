@@ -1,0 +1,443 @@
+{% extends "home/base_site.html" %}
+
+{% block title %} Editar Ficha Médica{% endblock title %}
+
+{% block stylesheets %}
+{{ block.super }}
+<link href="/static/project_static/vendors/datatables.net-bs/css/dataTables.bootstrap.min.css" rel="stylesheet">
+<link href="/static/project_static/vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css" rel="stylesheet">
+<link href="/static/project_static/vendors/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.min.css"
+    rel="stylesheet">
+<link href="/static/project_static/vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css"
+    rel="stylesheet">
+<link href="/static/project_static/vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css" rel="stylesheet">
+<style>
+    .text_align_center {
+        text-align-last: center;
+    }
+
+    .card-pets:hover {
+        box-shadow: 0px 0px 10px 5px #a6a6a6;
+        /* please set the shadow color conveniently */
+    }
+
+    .card-pets {
+        border-radius: 10px !important;
+    }
+
+    .card-img-div {
+        background-color: #278094eb;
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+    }
+
+    .rd-card-img {
+        height: 8rem;
+        width: 8rem;
+        border-radius: 4rem;
+        margin-top: .5rem;
+        margin-bottom: .5rem;
+        margin-left: 2rem;
+        margin-right: 2rem;
+        border: 1px solid rgba(52, 73, 94, 0.44);
+        background: #fff;
+        padding: 4px;
+    }
+
+    .rd_line_medical_lila {
+        border-bottom: 1px solid #267fb3;
+    }
+
+    .rd_background_consultas {
+        background-color: #267fb3;
+    }
+
+    .rd_line_medical_red {
+        border-bottom: 1px solid #e52121;
+    }
+
+    .rd_background_vacunas {
+        background-color: #e52121;
+    }
+
+    .rd_line_medical_gren {
+        border-bottom: 1px solid #588057;
+    }
+
+    .rd_background_antiparasitarios {
+        background-color: #588057;
+    }
+
+    .rd_align_text_medical {
+        margin: auto;
+        padding: 10px;
+        text-align: center;
+        font-size: 30px;
+    }
+
+    .rd_icon {
+        color: black;
+    }
+</style>
+{% endblock stylesheets%}
+
+{% block content %}
+<div class="right_col" role="main">
+    <div class="row">
+        <div class="col-md-12 col-sm-12">
+            <div class="x_panel">
+                <div class="x_title">
+                    <h2>Actualizar Ficha Médica</h2>
+                    <ul class="nav navbar-right panel_toolbox">
+                        <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                        </li>
+                        <li><a class="close-link"><i class="fa fa-close"></i></a>
+                        </li>
+                    </ul>
+                    <div class="clearfix"></div>
+                </div>
+
+                <div class="x_content">
+                    <div class="row">
+                        <div class="col-lg-4 col-md-9 col-sm-12">
+                            <div class="card mb-4" style="border-radius: 10px;">
+                                <div class="text-center mb-3">
+                                    <div class="mb-3 mx-auto card-img-div">
+                                        <img class="card-img-top rd-card-img profile-pic" src="{{ mascota.get_profile}}"
+                                            alt="">
+                                    </div>
+
+                                    <h5 class="text_align_center text-uppercase" style="margin-top: .5rem;">
+                                        {{ mascota.nombre_mascota }}
+                                    </h5>
+                                    <div class="card-body card-body-pets p-0" style="margin-top: 6px;">
+                                        <div class="status m-0">
+                                            <p class="text-uppercase text_align_center m-0">
+                                                {{ mascota.id_raza.id_especie.nombre_especie }}
+                                            </p>
+                                        </div>
+                                        <div class="status m-0">
+                                            <p class="text-uppercase text_align_center m-0">
+                                                {{ mascota.id_raza.nombre_raza }}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-10 col-md-8 col-sm-12 p-0">
+                            <form action="{% url 'edit_ficha_medica' mascota.id %}" method="POST">
+                                {% csrf_token %}
+                                <div class="x_panel pt-0" style="padding-left: 10px; padding-right: 10px;">
+                                    <div class="row rd_option_medical" style="cursor: pointer;">
+                                        <div class="col rd_line_medical_lila rd_align_text_medical consultas"
+                                            id="consultas_medical">
+                                            <i data-toggle="tooltip" data-placement="top" title="Ficha"
+                                                class="fas fa-folder-open icon_consultas"></i>
+                                        </div>
+                                        <div class="col rd_line_medical_red rd_align_text_medical vacunas"
+                                            id="vacunas_medical">
+                                            <i data-toggle="tooltip" data-placement="top" title="Vacunas"
+                                                class="fas fa-syringe icon_vacunas"></i>
+                                        </div>
+                                        <div class="col rd_line_medical_gren rd_align_text_medical antiparasitarios"
+                                            id="antiparasitarios_medical">
+                                            <i data-toggle="tooltip" data-placement="top" title="Desparasitaciones"
+                                                class="fas fa-bug icon_antiparasitario"></i>
+                                        </div>
+                                    </div>
+                                    <div class="container_ficha" id="">
+                                        <div class="p-2">
+                                            <h3>Ficha</h3>
+                                        </div>
+
+                                        <div class="col-lg-4 col-md-9 col-sm-9">
+                                            <div class="mb-3 row">
+                                                <label for="" class="col-sm-12 col-form-label"
+                                                    style="font-size: 16px;">Peso(Kg)
+                                                </label>
+                                                <div class="col-sm-12">
+                                                    <p class="m-0">{{ mascota.peso }}</p>
+                                                </div>
+                                            </div>
+                                            <div class="mb-3 row">
+                                                <label for="" class="col-sm-12 col-form-label"
+                                                    style="font-size: 16px;">Sexo
+                                                </label>
+                                                <div class="col-sm-12">
+                                                    <p class="m-0">
+                                                        {% if mascota.sexo == HEB  %}
+                                                            Hembra
+                                                        {% else %}
+                                                            Macho
+                                                        {% endif %}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <div class="mb-3 row">
+                                                <label for="" class="col-sm-12 col-form-label"
+                                                    style="font-size: 16px;">Tatuaje
+                                                </label>
+                                                <div class="col-sm-12">
+                                                    <p class="m-0">
+                                                        {% if  mascota.tatuaje == None %}
+                                                            -
+                                                        {% else %}
+                                                            {{ mascota.tatuaje }}
+                                                        {% endif %}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4 col-md-9 col-sm-9">
+                                            <div class="mb-3 row">
+                                                <label for="" class="col-sm-12 col-form-label"
+                                                    style="font-size: 16px;">Edad
+                                                </label>
+                                                <div class="col-sm-12">
+                                                    <p class="m-0">
+                                                        {% if mascota.edad  == None %}
+                                                            -
+                                                        {% else %}
+                                                            {{ mascota.edad }}
+                                                        {% endif %}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <div class="mb-3 row">
+                                                <label for="" class="col-sm-12 col-form-label"
+                                                    style="font-size: 16px;">Fecha Nacimiento
+                                                </label>
+                                                <div class="col-sm-12">
+                                                    <p class="m-0">
+                                                        {% if  mascota.fecha_nacimiento == None %}
+                                                            -
+                                                        {% else %}
+                                                            {{ mascota.fecha_nacimiento }}
+                                                        {% endif %}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <div class="mb-3 row">
+                                                <label for="" class="col-sm-12 col-form-label"
+                                                    style="font-size: 16px;">Color Pelaje
+                                                </label>
+                                                <div class="col-sm-12">
+                                                    <p class="m-0">
+                                                        {% if  mascota.color_pelaje == None %}
+                                                            -
+                                                        {% else %}
+                                                            {{ mascota.color_pelaje }}
+                                                        {% endif %}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-lg-4 col-md-9 col-sm-9">
+                                            <div class="mb-3 row">
+                                                <label for="" class="col-sm-12 col-form-label"
+                                                    style="font-size: 16px;">Diagnóstico
+                                                </label>
+                                                <div class="col-sm-12">
+                                                    <p class="m-0">
+                                                        {{ formConsulta.diagnostico }}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="container_vacunas d-none" id="">
+                                        <div class="p-2">
+                                            <h3>Vacunas</h3>
+                                        </div>
+
+                                        <div class="col-lg-4 col-md-9 col-sm-9">
+                                            <div class="mb-3 row">
+                                                <label for="" class="col-sm-12 col-form-label"
+                                                    style="font-size: 16px;">Tipo
+                                                    de Vacuna
+                                                </label>
+                                                <div class="col-sm-12">
+                                                    <p class="m-0">{{ formVacuna.tipo_vacuna }}</p>
+                                                </div>
+                                            </div>
+                                            <div class="mb-3 row">
+                                                <label for="" class="col-sm-12 col-form-label"
+                                                    style="font-size: 16px;">Fecha Ultima </br>Vacunación
+                                                </label>
+                                                <div class="col-sm-12">
+                                                    <p class="m-0">{{ formVacuna.fecha_ultima_vacunacion }}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4 col-md-9 col-sm-9">
+                                            <div class="mb-3 row">
+                                                <label for="" class="col-sm-12 col-form-label"
+                                                    style="font-size: 16px;">Vacuna
+                                                </label>
+                                                <div class="col-sm-12">
+                                                    <p class="m-0">{{ formVacuna.vacuna }}</p>
+                                                </div>
+                                            </div>
+                                            <div class="mb-3 row">
+                                                <label for="" class="col-sm-12 col-form-label"
+                                                    style="font-size: 16px;">Fecha de Próxima </br> Vacunación
+                                                </label>
+                                                <div class="col-sm-12">
+                                                    <p class="m-0">{{ formVacuna.fecha_proxima_vacunacion }}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-lg-4 col-md-9 col-sm-9">
+                                            <div class="mb-3 row">
+                                                <label for="" class="col-sm-12 col-form-label"
+                                                    style="font-size: 16px;">Tratamiento
+                                                </label>
+                                                <div class="col-sm-12">
+                                                    <p class="m-0">
+                                                        {{ formConsulta.tratamiento }}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="container_antiparasitarios d-none" id="">
+                                        <div class="p-2">
+                                            <h3>Desparasitaciones</h3>
+                                        </div>
+
+                                        <div class="col-lg-4 col-md-9 col-sm-9">
+                                            <div class="mb-3 row">
+                                                <label for="" class="col-sm-12 col-form-label"
+                                                    style="font-size: 16px;">Antiparasitario
+                                                </label>
+                                                <div class="col-sm-12">
+                                                    <p class="m-0">{{ formAntiparasitario.antiparasitario }}</p>
+                                                </div>
+                                            </div>
+                                            <div class="mb-3 row">
+                                                <label for="" class="col-sm-12 col-form-label"
+                                                    style="font-size: 16px;">Fecha Ultima </br>Desparasitación
+                                                </label>
+                                                <div class="col-sm-12">
+                                                    <p class="m-0">{{ formAntiparasitario.fecha_ultima_procedimiento }}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4 col-md-9 col-sm-9">
+                                            <div class="mb-3 row">
+                                                <label for="" class="col-sm-12 col-form-label"
+                                                    style="font-size: 16px;">Medicamentos
+                                                </label>
+                                                <div class="col-sm-12">
+                                                    <p class="m-0">
+                                                        {{ formConsulta.medicamento }}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-lg-4 col-md-9 col-sm-9">
+                                            <div class="mb-3 row">
+                                                <label for="" class="col-sm-12 col-form-label"
+                                                    style="font-size: 16px;">Fecha de Próxima </br>Desparasitación
+                                                </label>
+                                                <div class="col-sm-12">
+                                                    <p class="m-0">{{ formAntiparasitario.fecha_proxima_procedimiento }}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="ln_solid">
+                                    <div class="form-group">
+                                        <div class="col-md-6 offset-md-3" style="margin-top: 1rem; text-align: center;">
+                                            <input type="hidden" name="id_mascota" id="id_mascota"
+                                                value="{{ mascota.id }}">
+                                            <input type="hidden" name="id_ficha_medica" id="id_ficha_medica"
+                                                value="{{ fichaMedicaGet.id }}">
+                                            <button type='submit' class="btn btn-primary">Actualizar</button>
+                                            <button' class="btn btn-success">
+                                                <a style="color: white; cursor: pointer;"
+                                                    href="{% url  'list_mascotas'%}">
+                                                    Volver
+                                                </a>
+                                                </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
+
+{% block javascripts %}
+{{ block.super }}
+<!-- validator -->
+<script src="/static/project_static/vendors/validator/multifield.js"></script>
+<script src="/static/project_static/vendors/validator/validator.js"></script>
+<script>
+    $(function () {
+
+        $('.rd_option_medical').find('.consultas').addClass('rd_background_consultas');
+        $('.rd_option_medical').find('.icon_consultas').addClass('rd_icon');
+        $('#consultas_medical').click(function () {
+            $('.rd_option_medical').find('.consultas').addClass('rd_background_consultas');
+            $('.rd_option_medical').find('.vacunas').removeClass('rd_background_vacunas');
+            $('.rd_option_medical').find('.antiparasitarios').removeClass('rd_background_antiparasitarios');
+            $('.rd_option_medical').find('.icon_consultas').addClass('rd_icon');
+            $('.rd_option_medical').find('.icon_antiparasitario').removeClass('rd_icon');
+            $('.rd_option_medical').find('.icon_vacunas').removeClass('rd_icon');
+            $('.x_panel').find('.container_ficha').removeClass('d-none');
+            $('.x_panel').find('.container_vacunas').addClass('d-none');
+            $('.x_panel').find('.container_antiparasitarios').addClass('d-none');
+
+        })
+
+        $('#vacunas_medical').click(function () {
+            $('.rd_option_medical').find('.vacunas').addClass('rd_background_vacunas');
+            $('.rd_option_medical').find('.consultas').removeClass('rd_background_consultas');
+            $('.rd_option_medical').find('.antiparasitarios').removeClass('rd_background_antiparasitarios');
+            $('.rd_option_medical').find('.icon_vacunas').addClass('rd_icon');
+            $('.rd_option_medical').find('.icon_consultas').removeClass('rd_icon');
+            $('.rd_option_medical').find('.icon_antiparasitario').removeClass('rd_icon');
+            $('.x_panel').find('.container_ficha').addClass('d-none');
+            $('.x_panel').find('.container_antiparasitarios').addClass('d-none');
+            $('.x_panel').find('.container_vacunas').removeClass('d-none');
+        })
+
+        $('#antiparasitarios_medical').click(function () {
+            $('.rd_option_medical').find('.antiparasitarios').addClass('rd_background_antiparasitarios');
+            $('.rd_option_medical').find('.vacunas').removeClass('rd_background_vacunas');
+            $('.rd_option_medical').find('.consultas').removeClass('rd_background_consultas');
+            $('.rd_option_medical').find('.icon_antiparasitario').addClass('rd_icon');
+            $('.rd_option_medical').find('.icon_vacunas').removeClass('rd_icon');
+            $('.rd_option_medical').find('.icon_consultas').removeClass('rd_icon');
+            $('.x_panel').find('.container_ficha').addClass('d-none');
+            $('.x_panel').find('.container_vacunas').addClass('d-none');
+            $('.x_panel').find('.container_antiparasitarios').removeClass('d-none');
+        })
+
+        $('form input').on("cut copy paste",function(e) {
+            e.preventDefault();
+        });
+        $('form textarea').on("cut copy paste",function(e) {
+            e.preventDefault();
+        });
+    })
+
+
+</script>
+{% endblock javascripts %}

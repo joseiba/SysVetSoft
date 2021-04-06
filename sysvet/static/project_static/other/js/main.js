@@ -54,3 +54,15 @@ function cerrar_modal_edicion() {
 function cerrar_modal_eliminacion() {
 	$('#eliminacion').modal('hide');
 }
+
+function replaceCaratect(e) {
+	e.value = e.value.replace(/[^A-Za-zÀ-ÿ\u00f1\u00d1\s-]+$/g, '')
+}
+
+function replaceABC(e) {
+	e.value = e.value.replace(/[^0-9-]/g, '')
+}
+
+function replaceDirection(e) {
+	e.value = e.value.replace(/[^A-Za-zÀ-ÿ0-9\u00f1\u00d1\s-]+$/g, '')
+}
