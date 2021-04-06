@@ -51,6 +51,8 @@ class Producto (models.Model):
     precio_compra = models.IntegerField(help_text = 'Ingrese precio de compra')
     precio_venta = models.IntegerField( help_text = 'Ingrese precio de venta')
     stock_minimo = models.IntegerField(help_text = 'Ingrese stock minimo')
+    stock = models.IntegerField(help_text = 'Ingrese stock minimo')
+    id_deposito = models.ForeignKey('Deposito', on_delete=models.CASCADE, null=False)
 
     def __str__(self):
         """Formato del producto"""

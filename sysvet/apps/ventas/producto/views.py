@@ -134,8 +134,9 @@ def add_producto(request):
         if form.is_valid():
             form.save()
             return redirect('/producto/list')
-    tipoproducto = TipoProducto.objects.all()   
-    context = {'form' : form, 'tipoproducto' : tipoproducto}
+    tipoproducto = TipoProducto.objects.all()
+    deposito = Deposito.objects.all()    
+    context = {'form' : form, 'tipoproducto' : tipoproducto, 'deposito' : deposito}
     return render(request, 'ventas/producto/add_producto.html', context)
 
 # Metodo para editar Productos
