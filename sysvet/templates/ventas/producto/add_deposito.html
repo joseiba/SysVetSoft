@@ -11,10 +11,10 @@
             {% csrf_token %}
             <div class="field item form-group mt-3">
                 <label class="col-form-label col-md-3 col-sm-3  label-align">Descripcion<span
-                        class="required">*</span></label>
+                        class="required" >*</span></label>
                 <div class="col-md-6 col-sm-6">
                     <input class="form-control" data-validate-length-range="20" data-validate-words="1"
-                        name="descripcion" placeholder="Descripcion" required="required" />
+                        name="descripcion" placeholder="Descripcion" required="required"  onkeyup="replaceCaratect(this)"/>
                 </div>
             </div>
             <div class="modal-footer">
