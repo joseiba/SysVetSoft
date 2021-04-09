@@ -1,6 +1,6 @@
 {% extends "home/base_site.html" %}
 
-{% block title %} Agregar Mascota{% endblock title %}
+{% block title %} Editar Mascota{% endblock title %}
 
 {% block stylesheets %}
 {{ block.super }}
@@ -11,6 +11,8 @@
 <link href="/static/project_static/vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css"
     rel="stylesheet">
 <link href="/static/project_static/vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="/static/project_static/vendors/mjolnic-bootstrap-colorpicker/dist/css/bootstrap-colorpicker.min.css">
+
 <style>
     .text_align_center {
         text-align-last: center;
@@ -75,7 +77,7 @@
     <div class="">
         <div class="page-title">
             <div class="title_left">
-                <h3>Agregar Mascota</h3>
+                <h3>Editar Mascota</h3>
             </div>
         </div>
         <div class="clearfix"></div>
@@ -152,7 +154,14 @@
                                         <div class="col-sm-10">
                                             {{ form.edad }}
                                         </div>
-                                    </div>                                   
+                                    </div>  
+                                    <div class="mb-3 row">
+                                        <label class="col-sm-6 col-form-label">Color Pelaje
+                                        </label>
+                                        <div class="col-sm-10">
+                                            {{ form.color_pelaje }}
+                                        </div>
+                                    </div>                                 
                                 </div>
                                 <div class="col-lg-4 col-md-9 col-sm-9">
                                     <div class="mb-3 row">
@@ -207,6 +216,8 @@
 <!-- validator -->
 <script src="/static/project_static/vendors/validator/multifield.js"></script>
 <script src="/static/project_static/vendors/validator/validator.js"></script>
+<script src="/static/project_static/vendors/mjolnic-bootstrap-colorpicker/dist/js/bootstrap-colorpicker.js"></script>
+
 <script>
     $(document).ready(function () {
         var readURL = function (input) {

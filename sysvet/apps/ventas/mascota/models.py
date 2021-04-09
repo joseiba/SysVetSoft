@@ -54,6 +54,7 @@ class Mascota(models.Model):
     imagen = models.ImageField(upload_to='mascotas/fotos', null=True, blank=True, help_text="Ingrese una foto")
     peso = models.CharField(max_length = 200, help_text="Ingrese el peso de la mascota")
     fecha_nacimiento =  models.DateField(null = True, blank = True)
+    color_pelaje = models.CharField(max_length=200, default = '-', null = True, blank = True, help_text="Ingrese el color de la mascota")
     last_modified = models.DateTimeField(auto_now=True, blank=True)
     id_raza = models.ForeignKey('Raza', on_delete=models.CASCADE, null=False)
     id_cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE, null=False)
