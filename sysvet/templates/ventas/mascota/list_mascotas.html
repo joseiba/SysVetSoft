@@ -139,7 +139,7 @@
                                         <input data-toggle="tooltip" data-placement="top"
                                             title="Buscar por nombre mascota, nombre o apellido cliente" type="search"
                                             class="searchTerm" name="q" value="{{ request.GET.q }}"
-                                            placeholder="Buscar por nombre de mascota, nombre o apellido cliente">
+                                            placeholder="Buscar por nombre de mascota, nombre o apellido cliente" onkeyup="replaceCaratect(this)">
                                         <button type="submit" class="searchButton">
                                             <i class="fa fa-search"></i>
                                         </button>
