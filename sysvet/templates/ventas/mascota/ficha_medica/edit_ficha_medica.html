@@ -96,6 +96,16 @@
                     </ul>
                     <div class="clearfix"></div>
                 </div>
+                <div class="clearfix"></div>
+                {% if messages %}
+                <div class="alert alert-success alert-dismissible" role="alert">
+                    {% for message in messages %}
+                        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                        {{ message }}
+                    {% endfor %}
+                </div>
+                {% endif %}
+                <div class="clearfix"></div>
 
                 <div class="x_content">
                     <div class="row">
@@ -263,14 +273,6 @@
                                                     <p class="m-0">{{ formVacuna.tipo_vacuna }}</p>
                                                 </div>
                                             </div>
-                                            <div class="mb-3 row">
-                                                <label for="" class="col-sm-12 col-form-label"
-                                                    style="font-size: 16px;">Fecha Ultima </br>Vacunación
-                                                </label>
-                                                <div class="col-sm-12">
-                                                    <p class="m-0">{{ formVacuna.fecha_ultima_vacunacion }}</p>
-                                                </div>
-                                            </div>
                                         </div>
                                         <div class="col-lg-4 col-md-9 col-sm-9">
                                             <div class="mb-3 row">
@@ -281,14 +283,17 @@
                                                     <p class="m-0">{{ formVacuna.vacuna }}</p>
                                                 </div>
                                             </div>
+                                        </div>
+
+                                        <div class="col-lg-4 col-md-9 col-sm-9">
                                             <div class="mb-3 row">
                                                 <label for="" class="col-sm-12 col-form-label"
-                                                    style="font-size: 16px;">Fecha de Próxima </br> Vacunación
+                                                    style="font-size: 16px;">Próxima Vacuna
                                                 </label>
                                                 <div class="col-sm-12">
-                                                    <p class="m-0">{{ formVacuna.fecha_proxima_vacunacion }}</p>
+                                                    <p class="m-0">{{ formVacuna.proxima_vacunacion }}</p>
                                                 </div>
-                                            </div>
+                                            </div> 
                                         </div>
 
                                         <div class="col-lg-4 col-md-9 col-sm-9">
@@ -299,6 +304,18 @@
                                                 <div class="col-sm-12">
                                                     <p class="m-0">
                                                         {{ formConsulta.tratamiento }}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4 col-md-9 col-sm-9">
+                                            <div class="mb-3 row">
+                                                <label for="" class="col-sm-12 col-form-label"
+                                                    style="font-size: 16px;">Próximo Tratamiento
+                                                </label>
+                                                <div class="col-sm-12">
+                                                    <p class="m-0">
+                                                        {{ formConsulta.proximo_tratamiento }}
                                                     </p>
                                                 </div>
                                             </div>
@@ -318,16 +335,18 @@
                                                     <p class="m-0">{{ formAntiparasitario.antiparasitario }}</p>
                                                 </div>
                                             </div>
+                                        </div>
+                                        <div class="col-lg-4 col-md-9 col-sm-9">
                                             <div class="mb-3 row">
                                                 <label for="" class="col-sm-12 col-form-label"
-                                                    style="font-size: 16px;">Fecha Ultima </br>Desparasitación
+                                                    style="font-size: 16px;">Próximo Antiparasitario
                                                 </label>
                                                 <div class="col-sm-12">
-                                                    <p class="m-0">{{ formAntiparasitario.fecha_ultima_procedimiento }}
+                                                    <p class="m-0">{{ formAntiparasitario.proxima_antiparasitario }}
                                                     </p>
                                                 </div>
                                             </div>
-                                        </div>
+                                        </div>  
                                         <div class="col-lg-4 col-md-9 col-sm-9">
                                             <div class="mb-3 row">
                                                 <label for="" class="col-sm-12 col-form-label"
@@ -340,14 +359,26 @@
                                                 </div>
                                             </div>
                                         </div>
-
                                         <div class="col-lg-4 col-md-9 col-sm-9">
                                             <div class="mb-3 row">
                                                 <label for="" class="col-sm-12 col-form-label"
-                                                    style="font-size: 16px;">Fecha de Próxima </br>Desparasitación
+                                                    style="font-size: 16px;">Fecha Ultima Consulta
                                                 </label>
                                                 <div class="col-sm-12">
-                                                    <p class="m-0">{{ formAntiparasitario.fecha_proxima_procedimiento }}
+                                                    <p class="m-0">
+                                                        {{ formConsulta.fecha_ultima_consulta }}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4 col-md-9 col-sm-9">
+                                            <div class="mb-3 row">
+                                                <label for="" class="col-sm-12 col-form-label"
+                                                    style="font-size: 16px;">Fecha Próxima Consulta
+                                                </label>
+                                                <div class="col-sm-12">
+                                                    <p class="m-0">
+                                                        {{ formConsulta.fecha_proxima_consulta }}
                                                     </p>
                                                 </div>
                                             </div>

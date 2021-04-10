@@ -20,7 +20,7 @@ class MascotaForm(forms.ModelForm):
             'fecha_nacimiento' : forms.TextInput(attrs={'class':'form-control optional date', 'type': 'date','name':'fecha_nacimiento'}),
             'peso': forms.TextInput(attrs={'class':'form-control','data-validate-length-range':'20','onkeyup':'replaceABC(this)',
                 'data-validate-words':'1', 'name': 'peso', 'placeholder': 'Peso', 'required': 'required'}),
-            'color_pelaje' : forms.TextInput(attrs={'class':'demo1 form-control', 'type': 'text','name':'color_pelaje','placeholder': 'Color Pelaje'}),
+            'color_pelaje' : forms.TextInput(attrs={'class':'form-control', 'type': 'color','name':'color_pelaje','placeholder': 'Color Pelaje'}),
             'imagen': forms.FileInput(attrs={'type': 'file', 'name':'imagen', 'id': 'imageInput', 'accept':'image/*'}),
             'id_raza' : forms.Select(attrs={'class':'form-control', 'id': 'id_raza','required':'required' ,'name':'id_raza'}),
             'id_cliente' : forms.Select(attrs={'class':'form-control', 'id': 'id_cliente','required':'required' ,'name':'id_cliente'})
@@ -83,8 +83,7 @@ class VacunaForm(forms.ModelForm):
         widgets = {
         'tipo_vacuna': forms.TextInput(attrs={'class':'form-control optional', 'name': 'tipo_vacuna', 'placeholder': 'Tipo de Vacuna','onkeyup':'replaceDirection(this)'}),
         'vacuna': forms.TextInput(attrs={'class':'form-control optional', 'name': 'vacuna', 'placeholder': 'Vacuna','onkeyup':'replaceDirection(this)'}),
-        'fecha_ultima_vacunacion' : forms.TextInput(attrs={'class':'form-control optional date', 'type': 'date','name':'fecha_ultima_vacunacion'}),
-        'fecha_proxima_vacunacion' : forms.TextInput(attrs={'class':'form-control optional date', 'type': 'date','name':'fecha_proxima_vacunacion'}),
+        'proxima_vacunacion' : forms.TextInput(attrs={'class':'form-control optional','name':'proxima_vacunacion', 'placeholder': 'Proxima Vacuna','onkeyup':'replaceDirection(this)'}),
         'id_ficha_medica' : forms.HiddenInput(),        
         }
 
@@ -101,6 +100,9 @@ class ConsultaForm(forms.ModelForm):
         'diagnostico': forms.Textarea(attrs={'class':'form-control optional','name': 'diagnostico', 'rows': '2','placeholder': 'Diagnostico','onkeyup':'replaceDirection(this)'}),
         'tratamiento': forms.Textarea(attrs={'class':'form-control optional', 'rows': '2', 'name': 'tratamiento', 'placeholder': 'Tratamiento','onkeyup':'replaceDirection(this)'}),
         'medicamento': forms.Textarea(attrs={'class':'form-control optional', 'rows': '2', 'name': 'medicamento', 'placeholder': 'Medicamento','onkeyup':'replaceDirection(this)'}),
+        'fecha_ultima_consulta' : forms.TextInput(attrs={'class':'form-control optional date', 'type': 'date','name':'fecha_ultima_consulta'}),
+        'fecha_proxima_consulta' : forms.TextInput(attrs={'class':'form-control optional date', 'type': 'date','name':'fecha_proxima_consulta'}),
+        'proximo_tratamiento' : forms.Textarea(attrs={'class':'form-control optional', 'rows': '2', 'type': 'text','name':'proximo_tratamiento'}),
         'id_ficha_medica' : forms.HiddenInput(),
         }
 
@@ -114,9 +116,8 @@ class AntiparasitarioForm(forms.ModelForm):
         model = Antiparasitario
         fields = '__all__'   
         widgets = {
-        'antiparasitario': forms.TextInput(attrs={'class':'form-control optional', 'name': 'antiparasitario', 'placeholder': 'Antiparasitario','onkeyup':'replaceDirection(this)'}),        
-        'fecha_ultima_procedimiento' : forms.TextInput(attrs={'class':'form-control optional date', 'type': 'date','name':'fecha_ultima_procedimiento'}),
-        'fecha_proxima_procedimiento' : forms.TextInput(attrs={'class':'form-control optional date', 'type': 'date','name':'fecha_proxima_procedimiento'}),
+        'antiparasitario': forms.TextInput(attrs={'class':'form-control optional', 'name': 'antiparasitario', 'placeholder': 'Antiparasitario','onkeyup':'replaceDirection(this)'}),
+        'proxima_antiparasitario' : forms.TextInput(attrs={'class':'form-control optional', 'type': 'text','name':'proxima_antiparasitario','onkeyup':'replaceDirection(this)'}),  
         'id_ficha_medica' : forms.HiddenInput(),
         }
 

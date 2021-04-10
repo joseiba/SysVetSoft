@@ -29,6 +29,7 @@ def edit_mascota(request, id):
     form = MascotaForm(instance=mascota)
     if request.method == 'POST':
         form = MascotaForm(request.POST, request.FILES, instance=mascota)
+        test = request.PO
         if not form.has_changed():
             messages.info(request, "No has hecho ningun cambio!")
             return redirect('/mascota/edit/' + str(id))
@@ -206,20 +207,23 @@ def edit_ficha_medica(request,id):
         formVacuna = VacunaForm(request.POST, instance=vacunaGet)
         formConsulta = ConsultaForm(request.POST, instance=consultaGet)
         formAntiparasitario = AntiparasitarioForm(request.POST, instance=antiparasitarioGet)
-        if not formVacuna.has_changed() or  not formConsulta.has_changed() or not formAntiparasitario.has_changed():
+        if not formVacuna.has_changed() and not formConsulta.has_changed() and not formAntiparasitario.has_changed():
+            print(formVacuna.has_changed())
+            print(formConsulta.has_changed())
+            print(formAntiparasitario.has_changed())
             messages.info(request, "No has hecho ningun cambio!")
-            return redirect('/mascota/list/')   
+            return redirect('/mascota/editFichaMedica/' + str(id))   
         if formVacuna.is_valid() or formConsulta.is_valid() or formAntiparasitario.is_valid():                    
             consulta = formConsulta.save(commit=False)
             vacuna = formVacuna.save(commit=False)
             antiparasitario = formAntiparasitario.save(commit=False)
             fichaMedica = formFichaMedica.save(commit=False)
             fichaMedica.save()
-            consulta.save()
             vacuna.save()
             antiparasitario.save()
+            consulta.save()
             messages.success(request, 'Se ha editado correctamente!')
-            return redirect('/mascota/list/')
+            return redirect('/mascota/editFichaMedica/' + str(id))
 
     formFichaMedica = FichaMedicaForm(instance=fichaMedicaGet)
     formVacuna = VacunaForm(instance=vacunaGet)
