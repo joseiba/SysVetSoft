@@ -84,7 +84,7 @@
                                         <input type="search" class="searchTerm" name="q" value="{{ request.GET.q }}"
                                             placeholder="Buscar por nombre de especie"
                                             data-toggle="tooltip" data-placement="top"
-                                            title="Buscar por nombre de especie">
+                                            title="Buscar por nombre de especie" onkeyup="replaceCaratect(this)">
                                         <button type="submit" class="searchButton">
                                             <i class="fa fa-search"></i>
                                         </button>

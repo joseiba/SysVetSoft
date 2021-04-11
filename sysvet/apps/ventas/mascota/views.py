@@ -4,7 +4,8 @@ from django.contrib import messages
 from django.db.models import Q
 from django.core.paginator import Paginator
 
-from .models import Mascota, Especie, Raza, Raza, FichaMedica, Vacuna, Consulta, Antiparasitario
+
+from .models import Mascota, Especie, Raza, Raza, FichaMedica, Vacuna, Consulta, Antiparasitario, HistoricoFichaMedica
 from .form import MascotaForm, EspecieForm, RazaForm, FichaMedicaForm, VacunaForm, ConsultaForm, AntiparasitarioForm
 
 import json
@@ -200,26 +201,32 @@ def edit_ficha_medica(request,id):
     vacunaGet = Vacuna.objects.get(id_ficha_medica=fichaMedicaGet.id)
     consultaGet = Consulta.objects.get(id_ficha_medica=fichaMedicaGet.id)
     antiparasitarioGet = Antiparasitario.objects.get(id_ficha_medica=fichaMedicaGet.id)
+    historicoFichaMedica = HistoricoFichaMedica
 
     if request.method == 'POST':
         formFichaMedica = FichaMedicaForm(request.POST, instance=fichaMedicaGet)
         formVacuna = VacunaForm(request.POST, instance=vacunaGet)
         formConsulta = ConsultaForm(request.POST, instance=consultaGet)
         formAntiparasitario = AntiparasitarioForm(request.POST, instance=antiparasitarioGet)
-        if not formVacuna.has_changed() or  not formConsulta.has_changed() or not formAntiparasitario.has_changed():
+        if not formVacuna.has_changed() and not formConsulta.has_changed() and not formAntiparasitario.has_changed():
+            print(formVacuna.has_changed())
+            print(formConsulta.has_changed())
+            print(formAntiparasitario.has_changed())
             messages.info(request, "No has hecho ningun cambio!")
-            return redirect('/mascota/list/')   
+            return redirect('/mascota/editFichaMedica/' + str(id))   
         if formVacuna.is_valid() or formConsulta.is_valid() or formAntiparasitario.is_valid():                    
             consulta = formConsulta.save(commit=False)
             vacuna = formVacuna.save(commit=False)
             antiparasitario = formAntiparasitario.save(commit=False)
             fichaMedica = formFichaMedica.save(commit=False)
             fichaMedica.save()
-            consulta.save()
             vacuna.save()
             antiparasitario.save()
+            consulta.save()
+            historicoFichaMedica = create_historico_ficha_medica(id)
+
             messages.success(request, 'Se ha editado correctamente!')
-            return redirect('/mascota/list/')
+            return redirect('/mascota/editFichaMedica/' + str(id))
 
     formFichaMedica = FichaMedicaForm(instance=fichaMedicaGet)
     formVacuna = VacunaForm(instance=vacunaGet)
@@ -236,6 +243,68 @@ def edit_ficha_medica(request,id):
     }
 
     return render(request, "ventas/mascota/ficha_medica/edit_ficha_medica.html", context)
+
+#Historico de Ficha Medica
+def list_historial(request, id):
+    fichaMedicaGet = FichaMedica.objects.get(id_mascota=id)
+    historico = HistoricoFichaMedica.objects.filter(id_ficha_medica=fichaMedicaGet.id).order_by('-last_modified')
+    paginator = Paginator(historico, 10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    context = {'page_obj' : page_obj, 'historico': historico, 'id_mascota': id}
+
+    return render(request, "ventas/mascota/ficha_medica/list_historico.html", context)
+
+
+def create_historico_ficha_medica(id):
+    historico = HistoricoFichaMedica()
+    try:
+        mascota = Mascota.objects.get(id=id)
+        fichaMedicaGet = FichaMedica.objects.get(id_mascota=id)
+        vacunaGet = Vacuna.objects.get(id_ficha_medica=fichaMedicaGet.id)
+        consultaGet = Consulta.objects.get(id_ficha_medica=fichaMedicaGet.id)
+        antiparasitarioGet = Antiparasitario.objects.get(id_ficha_medica=fichaMedicaGet.id)
+        
+        historico.vacuna = vacunaGet.vacuna
+        historico.tipo_vacuna = vacunaGet.tipo_vacuna
+        historico.proxima_vacunacion = vacunaGet.proxima_vacunacion
+        historico.diagnostico = consultaGet.diagnostico
+        historico.tratamiento = consultaGet.proximo_tratamiento
+        historico.proximo_tratamiento = consultaGet.proximo_tratamiento
+        historico.medicamento = consultaGet.medicamento
+        historico.fecha_ultima_consulta = consultaGet.fecha_ultima_consulta
+        historico.fecha_proxima_consulta = consultaGet.fecha_proxima_consulta
+        historico.antiparasitario = antiparasitarioGet.antiparasitario
+        historico.proximo_antiparasitario = antiparasitarioGet.proximo_antiparasitario
+        historico.peso = mascota.peso
+        historico.last_modified = fichaMedicaGet.fecha_create
+        historico.id_ficha_medica = id
+        historico.save()
+
+        vacunaGet.vacuna = "-"
+        vacunaGet.tipo_vacuna = "-"
+        vacunaGet.proxima_vacunacion = "-"
+        consultaGet.diagnostico = "-"
+        consultaGet.tratamiento = "-"
+        consultaGet.proximo_tratamiento = "-"
+        consultaGet.medicamento = "-"
+        consultaGet.fecha_ultima_consulta = None
+        consultaGet.fecha_proxima_consulta = None
+        antiparasitarioGet.antiparasitario = "-"
+        antiparasitarioGet.proximo_antiparasitario = "-"
+        formVacuna = VacunaForm(instance=vacunaGet)
+        formConsulta = ConsultaForm(instance=consultaGet)
+        formAntiparasitario = AntiparasitarioForm(instance=antiparasitarioGet)
+        vacunaGet.save()
+        consultaGet.save()
+        antiparasitarioGet.save()
+
+    except:
+        pass
+
+    return historico        
+
+
 
 
 

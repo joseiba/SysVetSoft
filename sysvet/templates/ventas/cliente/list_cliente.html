@@ -67,13 +67,16 @@
                         <button type="submit" class="btn btn-primary float-right">
                             <a style="color: white;" href="{% url 'add_cliente' %}">Agregar nuevo cliente</a>
                         </button>
+                        <button type="submit" class="btn btn-secondary float-right">
+                            <a style="color: white;" href="{% url 'reporte_pdf_cliente' %}" target="_blank">Exportar PDF</a>
+                        </button>                       
 
                         <div class="float-left">
                             <div class="wrap">
                                 <div class="search">
                                     <form action="{% url 'search_cliente' %}" method="GET" class="d-inline-flex">
                                         <input type="search" class="searchTerm" name="q" value="{{ request.GET.q }}"
-                                            placeholder="Buscá por cedula, nombre">
+                                            placeholder="Buscá por cedula, nombre" onkeyup="replaceCaratect(this)">
                                         <button type="submit" class="searchButton">
                                             <i class="fa fa-search"></i>
                                         </button>
@@ -130,7 +133,7 @@
                                                         <a class="confirm-delete pointer" data-id="{{ cliente.id }}"
                                                             data-name-cliente="{{ cliente.nombre_cliente }}"
                                                             data-toggle="modal" data-target="#confirmDeleteModal">
-                                                            Eliminar
+                                                            Baja
                                                         </a>
                                                     </button>
                                                 </td>
@@ -159,7 +162,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header no_borders" style="background-color:#dc3545 ;">
-                <h5 class="modal-title" id="exampleModalLabel" style="color: white;">Eliminar Cliente</h5>
+                <h5 class="modal-title" id="exampleModalLabel" style="color: white;">Baja del Cliente</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -169,7 +172,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                <button type="button" id="confirmDeleteButtonModal" class="btn btn-danger">Eliminar</button>
+                <button type="button" id="confirmDeleteButtonModal" class="btn btn-danger">Baja</button>
             </div>
         </div>
     </div>
@@ -201,7 +204,7 @@
             var id_cliente = $(this).data("id")
             var name_cliente = $(this).data("name-cliente")
             $("#content-value-name").html('<div class="modal-body" style="font-size: 16px; color: #383232c7;">\
-                                                Estás seguro/a que deseas eliminar a <strong>'+ name_cliente + '</strong> ?\
+                                                Estás seguro/a que deseas dar de baja a <strong>'+ name_cliente + '</strong> ?\
                                             </div>');
             sessionStorage.setItem("id_cliente", id_cliente)
             sessionStorage.setItem("name_cliente", name_cliente)

@@ -138,8 +138,7 @@ class Vacuna(models.Model):
     """ 
     vacuna = models.CharField(max_length = 200, default = '-', null = True, blank = True)
     tipo_vacuna = models.CharField(max_length = 200, default = '-', null = True, blank = True)
-    fecha_ultima_vacunacion = models.CharField(max_length = 200, default = '-', null = True, blank = True)
-    fecha_proxima_vacunacion = models.CharField(max_length = 200, default = '-', null = True, blank = True)
+    proxima_vacunacion = models.CharField(max_length = 200, default = '-', null = True, blank = True)
     id_ficha_medica = models.ForeignKey('FichaMedica', on_delete=models.CASCADE, null=False)
 
     class Meta:
@@ -158,7 +157,10 @@ class Consulta(models.Model):
     """ 
     diagnostico = models.CharField(max_length = 500, default = '-', null = True, blank = True)
     tratamiento = models.CharField(max_length = 500, default = '-', null = True, blank = True)
+    proximo_tratamiento = models.CharField(max_length = 500, default = '-', null = True, blank = True)
     medicamento = models.CharField(max_length = 500, default = '-', null = True, blank = True)
+    fecha_ultima_consulta = models.DateField(null = True, blank = True)
+    fecha_proxima_consulta = models.DateField(null = True, blank = True)
     id_ficha_medica = models.ForeignKey('FichaMedica', on_delete=models.CASCADE, null=False)
     
     class Meta:
@@ -176,8 +178,7 @@ class Antiparasitario(models.Model):
         models ([Antiparasitario]): [Contiene la informacion de los antiparasitarios]                        
     """ 
     antiparasitario = models.CharField(max_length = 500, default = '-', null = True, blank = True)
-    fecha_ultima_procedimiento = models.CharField(max_length = 200, default = '-', null = True, blank = True)
-    fecha_proxima_procedimiento = models.CharField(max_length = 200, default = '-', null = True, blank = True)
+    proximo_antiparasitario= models.CharField(max_length = 500, default = '-', null = True, blank = True)
     id_ficha_medica = models.ForeignKey('FichaMedica', on_delete=models.CASCADE, null=False)
     
     class Meta:
@@ -187,4 +188,32 @@ class Antiparasitario(models.Model):
     def __str__(self):
         return self.id_ficha_medica.id_mascota.nombre_mascota
 
+
+class HistoricoFichaMedica(models.Model):
+    """[summary]
+
+    Args:
+        models ([HistoricoFichaMedica]): [Contiene la informacion del historico de la ficha medica]                        
+    """
+    vacuna = models.CharField(max_length = 200, default = '-', null = True, blank = True)
+    tipo_vacuna = models.CharField(max_length = 200, default = '-', null = True, blank = True)
+    proxima_vacunacion = models.CharField(max_length = 200, default = '-', null = True, blank = True)
+    diagnostico = models.CharField(max_length = 500, default = '-', null = True, blank = True)
+    tratamiento = models.CharField(max_length = 500, default = '-', null = True, blank = True)
+    proximo_tratamiento = models.CharField(max_length = 500, default = '-', null = True, blank = True)
+    medicamento = models.CharField(max_length = 500, default = '-', null = True, blank = True)
+    fecha_ultima_consulta = models.DateField(null = True, blank = True)
+    fecha_proxima_consulta = models.DateField(null = True, blank = True)
+    antiparasitario = models.CharField(max_length = 500, default = '-', null = True, blank = True)
+    proximo_antiparasitario = models.CharField(max_length = 500, default = '-', null = True, blank = True)
+    peso = models.CharField(max_length = 200,default = '-', null = True, blank = True)
+    last_modified = models.DateTimeField(auto_now=True, blank=True)
+    id_ficha_medica = models.IntegerField(null = True, blank = True)
+
+    class Meta:
+        verbose_name = "Historico Ficha Medicas"
+        verbose_name_plural = "Historicos Fichas Medicas"
+
+    """def __str__(self):
+        return self.id_ficha_medica.id_mascota.nombre_mascota"""
 
