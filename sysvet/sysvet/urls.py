@@ -21,7 +21,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 from apps.usuario.views  import Login, logoutUser,home_user
-from apps.ventas.cliente.views import add_cliente, list_clientes, edit_cliente, delete_cliente, search_cliente
+from apps.ventas.cliente.views import add_cliente, list_clientes, edit_cliente, delete_cliente, search_cliente, ReporteClientesPDF
 from apps.ventas.mascota.views import (list_mascotas, add_mascota, edit_mascota, list_especie, add_especie, 
 edit_especie,search_especie, list_raza, add_raza, edit_raza, search_raza,search_mascota, order_by_mascotas, 
 edit_ficha_medica, list_historial)
@@ -39,6 +39,8 @@ urlpatterns = [
     path('cliente/edit/<int:id>/', edit_cliente, name="edit_cliente"),
     path('<int:id>', delete_cliente, name="delete_cliente"),
     path('cliente/search/', search_cliente, name="search_cliente"),
+    path('cliente/reportePDF', ReporteClientesPDF.as_view() , name="reporte_pdf_cliente"),
+
 
     #Urls mascotas
     path('mascota/list/', list_mascotas , name="list_mascotas"),
@@ -56,9 +58,6 @@ urlpatterns = [
     path('mascota/searchRaza/', search_raza, name="search_raza"),
     path('mascota/editFichaMedica/<int:id>/', edit_ficha_medica, name="edit_ficha_medica"),
     path('mascota/historial/<int:id>/', list_historial , name="list_historial"),
-
-
-
     #End Urls Mascotas
 ]
 

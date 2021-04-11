@@ -4,6 +4,7 @@ from django.contrib import messages
 from django.db.models import Q
 from django.core.paginator import Paginator
 
+
 from .models import Mascota, Especie, Raza, Raza, FichaMedica, Vacuna, Consulta, Antiparasitario, HistoricoFichaMedica
 from .form import MascotaForm, EspecieForm, RazaForm, FichaMedicaForm, VacunaForm, ConsultaForm, AntiparasitarioForm
 
@@ -301,7 +302,9 @@ def create_historico_ficha_medica(id):
     except:
         pass
 
-    return historico
+    return historico        
+
+
 
 
 
