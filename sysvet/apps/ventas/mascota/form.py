@@ -102,7 +102,7 @@ class ConsultaForm(forms.ModelForm):
         'medicamento': forms.Textarea(attrs={'class':'form-control optional', 'rows': '2', 'name': 'medicamento', 'placeholder': 'Medicamento','onkeyup':'replaceDirection(this)'}),
         'fecha_ultima_consulta' : forms.TextInput(attrs={'class':'form-control optional date', 'type': 'date','name':'fecha_ultima_consulta'}),
         'fecha_proxima_consulta' : forms.TextInput(attrs={'class':'form-control optional date', 'type': 'date','name':'fecha_proxima_consulta'}),
-        'proximo_tratamiento' : forms.Textarea(attrs={'class':'form-control optional', 'rows': '2', 'type': 'text','name':'proximo_tratamiento'}),
+        'proximo_tratamiento' : forms.Textarea(attrs={'class':'form-control optional', 'rows': '2', 'type': 'text','name':'proximo_tratamiento','onkeyup':'replaceDirection(this)'}),
         'id_ficha_medica' : forms.HiddenInput(),
         }
 
@@ -117,7 +117,7 @@ class AntiparasitarioForm(forms.ModelForm):
         fields = '__all__'   
         widgets = {
         'antiparasitario': forms.TextInput(attrs={'class':'form-control optional', 'name': 'antiparasitario', 'placeholder': 'Antiparasitario','onkeyup':'replaceDirection(this)'}),
-        'proxima_antiparasitario' : forms.TextInput(attrs={'class':'form-control optional', 'type': 'text','name':'proxima_antiparasitario','onkeyup':'replaceDirection(this)'}),  
+        'proximo_antiparasitario' : forms.TextInput(attrs={'class':'form-control optional', 'type': 'text','name':'proximo_antiparasitario','onkeyup':'replaceDirection(this)'}),  
         'id_ficha_medica' : forms.HiddenInput(),
         }
 

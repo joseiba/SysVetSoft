@@ -131,6 +131,11 @@
                                                 {{ mascota.id_raza.nombre_raza }}
                                             </p>
                                         </div>
+                                        <div class="status m-0 mt-2">
+                                            <a class="btn btn-outline-primary text_align_center m-0" href="{% url 'list_historial' mascota.id %}">
+                                                Ver Historial
+                                            </a>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -235,7 +240,7 @@
                                                 </label>
                                                 <div class="col-sm-12">
                                                     <p class="m-0">
-                                                        {% if  mascota.color_pelaje == None %}
+                                                        {% if  mascota.color_pelaje == '#000000' %}
                                                             -
                                                         {% else %}
                                                             {{ mascota.color_pelaje }}
@@ -342,7 +347,7 @@
                                                     style="font-size: 16px;">Próximo Antiparasitario
                                                 </label>
                                                 <div class="col-sm-12">
-                                                    <p class="m-0">{{ formAntiparasitario.proxima_antiparasitario }}
+                                                    <p class="m-0">{{ formAntiparasitario.proximo_antiparasitario }}
                                                     </p>
                                                 </div>
                                             </div>

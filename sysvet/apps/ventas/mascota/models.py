@@ -178,7 +178,7 @@ class Antiparasitario(models.Model):
         models ([Antiparasitario]): [Contiene la informacion de los antiparasitarios]                        
     """ 
     antiparasitario = models.CharField(max_length = 500, default = '-', null = True, blank = True)
-    proxima_antiparasitario= models.CharField(max_length = 500, default = '-', null = True, blank = True)
+    proximo_antiparasitario= models.CharField(max_length = 500, default = '-', null = True, blank = True)
     id_ficha_medica = models.ForeignKey('FichaMedica', on_delete=models.CASCADE, null=False)
     
     class Meta:
@@ -206,6 +206,7 @@ class HistoricoFichaMedica(models.Model):
     fecha_proxima_consulta = models.DateField(null = True, blank = True)
     antiparasitario = models.CharField(max_length = 500, default = '-', null = True, blank = True)
     proximo_antiparasitario = models.CharField(max_length = 500, default = '-', null = True, blank = True)
+    peso = models.CharField(max_length = 200,default = '-', null = True, blank = True)
     last_modified = models.DateTimeField(auto_now=True, blank=True)
     id_ficha_medica = models.IntegerField(null = True, blank = True)
 

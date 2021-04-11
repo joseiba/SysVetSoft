@@ -24,7 +24,7 @@ from apps.usuario.views  import Login, logoutUser,home_user
 from apps.ventas.cliente.views import add_cliente, list_clientes, edit_cliente, delete_cliente, search_cliente
 from apps.ventas.mascota.views import (list_mascotas, add_mascota, edit_mascota, list_especie, add_especie, 
 edit_especie,search_especie, list_raza, add_raza, edit_raza, search_raza,search_mascota, order_by_mascotas, 
-edit_ficha_medica)
+edit_ficha_medica, list_historial)
 
 urlpatterns = [
     # Login and logout   
@@ -55,6 +55,8 @@ urlpatterns = [
     path('mascota/editRaza/<int:id>/',  edit_raza, name="edit_raza"),
     path('mascota/searchRaza/', search_raza, name="search_raza"),
     path('mascota/editFichaMedica/<int:id>/', edit_ficha_medica, name="edit_ficha_medica"),
+    path('mascota/historial/<int:id>/', list_historial , name="list_historial"),
+
 
 
     #End Urls Mascotas
