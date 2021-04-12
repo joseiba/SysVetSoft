@@ -1,0 +1,88 @@
+<link rel="stylesheet" href="/static/project_static/other/commons/shared.css">
+<div class="modal-dialog" role="document">
+    <div class="modal-content">
+        <div class="modal-header no_borders" style="background-color:#2a3f54;">
+            <h5 class="modal-title" id="exampleModalLabel" style="color: white;">Agregar Servicio</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <form action="{% url 'add_servicio' %}" method="post">
+            {% csrf_token %}
+            <div class="field item form-group mt-3">
+                <label class="col-form-label col-md-3 col-sm-3  label-align">Nombre Servicio<span
+                        class="required">*</span></label>
+                <div class="col-md-6 col-sm-6">
+                    <input class="form-control" data-validate-length-range="20" data-validate-words="4"
+                        name="nombre_servicio" placeholder="Nombre del servicio" required="required" id="nombre_servicio" onkeyup="replaceCaratect(this)"/>
+                </div>
+                <div id="alert_nombre_servicio">
+
+                </div>              
+            </div>
+
+            <div class="field item form-group mt-3">
+                <label class="col-form-label col-md-3 col-sm-3  label-align">Precio Servicio<span
+                    class="required">*</span></label>
+                <div class="col-md-6 col-sm-6">
+                    <input class="form-control" name="precio_servicio" placeholder="Precio del servicio" required="required" id="precio_servicio" onkeyup="replaceABC(this)"/>
+                </div>
+                <div id="alert_precio_servicio">
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                <button type="submit" class="btn btn-primary">Agregar</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    $('#nombre_servicio').change(function () {
+        var nombre = $("#nombre_servicio").val()
+        if (nombre !== "") 
+        {
+            $('#alert_nombre_servicio').empty()
+        } 
+        else {
+            if (nombre !== "") 
+            {
+                $('#alert_nombre_servicio').empty()
+            }
+            else 
+            {
+                $("#alert_nombre_servicio").html('<div class="alert" style="opacity: 1; white-space: inherit">\
+                                    Complete este campo\
+                                </div>');
+            }
+
+        }
+    })
+
+    $('#alert_precio_servicio').change(function () {
+        var nombre = $("#alert_precio_servicio").val()
+        if (nombre !== "") 
+        {
+            $('#alert_precio_servicio').empty()
+        } 
+        else {
+            if (nombre !== "") 
+            {
+                $('#alert_precio_servicio').empty()
+            }
+            else 
+            {
+                $("#alert_precio_servicio").html('<div class="alert" style="opacity: 1; white-space: inherit">\
+                                    Complete este campo\
+                                </div>');
+            }
+
+        }
+    })
+
+    $('form input').on("cut copy paste",function(e) {
+            e.preventDefault();
+        });
+</script>
