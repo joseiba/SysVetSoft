@@ -82,6 +82,8 @@
                                 <div class="search">
                                     <form action="{% url 'search_servicio' %}" method="GET" class="d-inline-flex">
                                         <input type="search" class="searchTerm" name="q" value="{{ request.GET.q }}"
+                                            data-toggle="tooltip" data-placement="top"
+                                            title="Buscar por nombre de servicio"
                                             placeholder="Buscar por nombre de servicio" onkeyup="replaceCaratect(this)">
                                         <button type="submit" class="searchButton">
                                             <i class="fa fa-search"></i>
@@ -106,7 +108,7 @@
                         <div class="row">
                             <div class="col-sm-12">
                                 <div class="card-box table-responsive" style="text-align: center;">
-                                    <table id="" class="table table-striped table-bordered" style="width:50%; margin: auto;">
+                                    <table id="" class="table table-striped table-bordered" style="width:60%; margin: auto;">
                                         <thead>
                                             <tr class="" style="background-color: #2a3f54; font-size: medium;">
                                                 <th style="color: white;">Nombre del servicio</th>
@@ -120,10 +122,13 @@
                                             <tr style="font-size: medium;">
                                                 <td>{{ servicio.nombre_servicio}}</td>
                                                 <td>{{ servicio.precio_servicio}}</td>
-                                                <td style="width: 26px !important;">
+                                                <td>
                                                     <button class="btn btn-warning" onclick="abrir_modal_edicion('/reserva/editServicio/' + '{{ servicio.id }}' + '/');">
                                                         Editar
                                                     </button>
+                                                    <!--<button class="btn btn-danger" onclick="abrir_modal_eliminacion('/reserva/bajaServicio/' + '{{ servicio.id }}' + '/');">
+                                                        Baja
+                                                    </button>-->
                                                 </td>
                                             </tr>
                                             {% endfor %}
@@ -149,6 +154,9 @@
 </div>
 
 <div class="modal fade" id="edicion" role="dialog">
+
+</div>
+<div class="modal fade" id="eliminacion" role="dialog">
 
 </div>
 

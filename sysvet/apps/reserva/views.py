@@ -35,7 +35,7 @@ def edit_servicio(request, id):
             messages.success(request, 'Se ha editado correctamente!')
             return redirect('/reserva/listServicio/')
     context = {'form' : form, 'servicios': servicios}
-    return render(request, 'reserva/servicios/edit_servicio_modal.html', context)
+    return render(request, 'reserva/servicio/edit_servicio_modal.html', context)
 
 @login_required()
 def list_servicio(request):
@@ -46,13 +46,17 @@ def list_servicio(request):
     context = {'page_obj' : page_obj}
     return render(request, "reserva/servicio/list_servicio.html", context)
 
-#Metodo para eliminar cliente
+#Metodo para eliminar servicio
 @login_required()
 def delete_servicio(request, id):
     servicio = Servicio.objects.get(id=id)
-    servicio.is_active = "N"
-    servicio.save()
-    return redirect('/reserva/listServicio/')
+    if request.method == 'POST':
+        servicio.is_active = "N"
+        servicio.save()
+        return redirect('/reserva/listServicio/')
+    context = {'servicio': servicio}
+    return render(request, "reserva/servicio/baja_servicio_modal.html", context)
+
 
 @login_required()
 def search_servicio(request):

@@ -66,7 +66,7 @@ urlpatterns = [
     path('reserva/addServicio/',  add_servicio, name="add_servicio"),
     path('reserva/editServicio/<int:id>/',edit_servicio , name="edit_servicio"),
     path('reserva/searchServicio/', search_servicio, name="search_servicio"),
-    path('<int:id>', delete_servicio, name="delete_servicio"),
+    path('reserva/bajaServicio/<int:id>', delete_servicio, name="delete_servicio"),
 
 ]
 

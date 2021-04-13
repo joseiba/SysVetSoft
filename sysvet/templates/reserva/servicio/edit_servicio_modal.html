@@ -1,29 +1,30 @@
 <link rel="stylesheet" href="/static/project_static/other/commons/shared.css">
 <div class="modal-dialog" role="document">
     <div class="modal-content">
-        <div class="modal-header no_borders" style="background-color:#2a3f54;">
+        <div class="modal-header no_borders"style="background-color:#ffc107">
             <h5 class="modal-title" id="exampleModalLabel" style="color: white;">Agregar Servicio</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
-        <form action="{% url 'delete_servicio' ser%}" method="post">
+        <form action="{% url 'edit_servicio' servicios.id %}" method="post">
             {% csrf_token %}
-            <div class="modal-header no_borders" style="background-color:#dc3545 ;">
-                <h5 class="modal-title" id="exampleModalLabel" style="color: white;">Baja del Servicio</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div id="content-value-name">
+            <div class="field item form-group mt-3">
+                <label class="col-form-label col-md-3 col-sm-3  label-align">Nombre Servicio<span
+                        class="required">*</span></label>
+                <div class="col-md-6 col-sm-6">
+                    {{form.nombre_servicio}}
+                </div>
+                <div id="alert_nombre_servicio">
 
+                </div>              
             </div>
 
             <div class="field item form-group mt-3">
                 <label class="col-form-label col-md-3 col-sm-3  label-align">Precio Servicio<span
                     class="required">*</span></label>
                 <div class="col-md-6 col-sm-6">
-                    <input class="form-control" name="precio_servicio" placeholder="Precio del servicio" required="required" id="precio_servicio" onkeyup="replaceABC(this)"/>
+                    {{form.precio_servicio}}
                 </div>
                 <div id="alert_precio_servicio">
 
@@ -31,7 +32,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                <button type="submit" class="btn btn-primary">Agregar</button>
+                <button type="submit" class="btn btn-primary">Editar</button>
             </div>
         </form>
     </div>
