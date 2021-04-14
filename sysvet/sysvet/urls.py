@@ -25,7 +25,8 @@ from apps.ventas.cliente.views import add_cliente, list_clientes, edit_cliente, 
 from apps.ventas.mascota.views import (list_mascotas, add_mascota, edit_mascota, list_especie, add_especie, 
 edit_especie,search_especie, list_raza, add_raza, edit_raza, search_raza,search_mascota, order_by_mascotas, 
 edit_ficha_medica, list_historial)
-from apps.reserva.views import (add_servicio, edit_servicio, delete_servicio, list_servicio, search_servicio)
+from apps.reserva.views import (add_servicio, edit_servicio, delete_servicio, list_servicio, search_servicio, add_reserva, edit_reserva,
+list_reserva, delete_reserva, search_reserva)
 
 urlpatterns = [
     # Login and logout   
@@ -67,7 +68,11 @@ urlpatterns = [
     path('reserva/editServicio/<int:id>/',edit_servicio , name="edit_servicio"),
     path('reserva/searchServicio/', search_servicio, name="search_servicio"),
     path('reserva/bajaServicio/<int:id>', delete_servicio, name="delete_servicio"),
-
+    path('reserva/listReserva/', list_reserva , name="list_reserva"),
+    path('reserva/addReserva/',  add_reserva, name="add_reserva"),
+    path('reserva/editReserva/<int:id>/',edit_reserva , name="edit_reserva"),
+    path('reserva/bajaReserva/<int:id>', delete_reserva, name="delete_reserva"),
+    path('reserva/searchReserva/', search_reserva, name="search_reserva"),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
