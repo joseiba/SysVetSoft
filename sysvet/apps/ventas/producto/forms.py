@@ -10,7 +10,7 @@ class TipoProductoForm(forms.ModelForm):
     """    
     class Meta:
         model = TipoProducto
-        fields = '__all__'
+        exclude = ['is_active']
         widgets = {
 			'nombre_tipo' : forms.TextInput(attrs={'class':'form-control', 'name': 'nombre_tipo', 'placeholder': 'Nombre Tipo Producto', 'required': 'required', 'onkeyup':'replaceCaratect(this)'}),
 			'fecha_alta' : forms.TextInput(attrs={'class':'form-control','type':'datetime',

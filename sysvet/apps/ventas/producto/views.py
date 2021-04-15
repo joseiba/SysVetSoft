@@ -3,10 +3,12 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.db.models import Q
 from django.core.paginator import Paginator
+from datetime import datetime
 
 from .forms import TipoProductoForm, DepositoForm, ProductoForm
 from .models import TipoProducto, Deposito, Producto
 
+date = datetime.now()
 
 #Metodo para agregar tipo producto
 @login_required()
@@ -16,6 +18,7 @@ def add_tipo_producto(request):
         form = TipoProductoForm(request.POST or None)
         if form.is_valid():
             form.save()
+            messages.add_message(request, messages.SUCCESS, 'Tipo de producto agregado correctamente!')
             return redirect('/tipoProducto/list')
     context = {'form' : form}
     return render(request, 'ventas/producto/add_tipo_producto.html', context)
@@ -37,9 +40,26 @@ def edit_tipo_producto(request, id):
             messages.add_message(request, messages.SUCCESS, 'Tipo de producto editado correctamente!')
             return redirect('/tipoProducto/list/')
 
-    context = {'form': form}
+    context = {'form': form, 'tipo_producto':tipo_producto}
     return render(request, 'ventas/producto/edit_tipo_producto.html', context)
 
+# Metodo para editar tipo producto
+@login_required()
+def baja_tipo_producto(request, id):
+    tipo_producto = TipoProducto.objects.get(id=id)
+    if request.method == 'POST':
+        if tipo_producto.fecha_baja == "-":
+            tipo_producto.is_active = "N"
+            tipo_producto.fecha_baja = date.strftime("%d/%m/%Y %H:%M:%S hs")
+            tipo_producto.save()
+            return redirect('/tipoProducto/list/')
+        else:
+            messages.success(request, 'El tipo de producto ya fue dado de baja!')
+            return redirect('/tipoProducto/list/')
+    context = {'tipo_producto':tipo_producto}
+    return render(request, 'ventas/producto/baja_tipo_producto.html', context)
+
+    
 
 #Metodo para listar todos los tipos de producto
 @login_required()
@@ -77,6 +97,7 @@ def add_deposito(request):
         form = DepositoForm(request.POST or None)
         if form.is_valid():
             form.save()
+            messages.add_message(request, messages.SUCCESS, 'Deposito agregado correctamente!')
             return redirect('/deposito/list')   
     context = {'form' : form}
     return render(request, 'ventas/producto/add_deposito.html', context)
@@ -133,6 +154,7 @@ def add_producto(request):
         form = ProductoForm(request.POST or None)
         if form.is_valid():
             form.save()
+            messages.add_message(request, messages.SUCCESS, 'Producto agregado correctamente!')
             return redirect('/producto/list')
     tipoproducto = TipoProducto.objects.all()
     deposito = Deposito.objects.all()    

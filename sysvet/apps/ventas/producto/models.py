@@ -10,6 +10,7 @@ class TipoProducto (models.Model):
     nombre_tipo = models.CharField(max_length = 200, help_text = "Ingrese nombre del tipo de producto")
     fecha_alta = models.CharField(max_length = 200, default = date.strftime("%d/%m/%Y %H:%M:%S hs"), editable = False)
     fecha_baja = models.CharField(max_length = 200, default = '-', null = True, blank = True)
+    is_active = models.CharField(max_length=2, default="S", blank=True, null=True)
 
 
     def __str__(self):
@@ -18,7 +19,7 @@ class TipoProducto (models.Model):
 
     def get_absolute_url(self):
         """Retorna el URL para acceder a una instancia de un tipo de producto en particular."""
-        return reverse('ciudad-detail', args=[str(self.id)])
+        return reverse('tipoProducto-detail', args=[str(self.id)])
 
 
 class Deposito (models.Model):

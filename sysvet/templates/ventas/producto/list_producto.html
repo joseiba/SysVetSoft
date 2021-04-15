@@ -103,14 +103,7 @@
                                             <tr class="" style="background-color: #2a3f54; font-size: medium;">
                                                 <th style="color: white;">Nombre</th>
                                                 <th style="color: white;">Descripcion</th>
-                                                <th style="color: white;">Fecha de vencimiento</th>
-                                                <th style="color: white;">Fecha de baja</th>
-                                                <th style="color: white;">Fecha de movimiento</th>
-                                                <th style="color: white;">Fecha de compra</th>
-                                                <th style="color: white;">Precio de compra</th>
-                                                <th style="color: white;">Precio de venta</th>
                                                 <th style="color: white;">Stock</th>
-                                                <th style="color: white;">Stock minimo</th>
                                                 <th style="color: white;">Ubicacion</th>
                                                 <th style="color: white;">Accion</th>
                                             </tr>
@@ -121,14 +114,7 @@
                                             <tr style="font-size: medium;">
                                                 <td>{{ producto.nombre_producto}}</td>
                                                 <td>{{ producto.descripcion}}</td>
-                                                <td>{{ producto.fecha_vencimiento}}</td>
-                                                <td>{{ producto.fecha_baja}}</td>
-                                                <td>{{ producto.fecha_movimiento}}</td>
-                                                <td>{{ producto.fecha_compra}}</td>
-                                                <td>{{ producto.precio_compra}}</td>
-                                                <td>{{ producto.precio_venta}}</td>
                                                 <td>{{ producto.stock}}</td>
-                                                <td>{{ producto.stock_minimo}}</td>
                                                 <td>{{ producto.id_deposito}}</td>
                                                 <td>
                                                     <button class="btn btn-warning">
@@ -141,7 +127,7 @@
                                                         <a class="confirm-delete pointer" data-id="{{ producto.id }}"
                                                             data-name-producto="{{ producto.nombre_producto }}"
                                                             data-toggle="modal" data-target="#confirmDeleteModal">
-                                                            Eliminar
+                                                            Dar de baja
                                                         </a>
                                                     </button>
                                                 </td>

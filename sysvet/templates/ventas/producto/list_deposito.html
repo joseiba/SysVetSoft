@@ -95,10 +95,11 @@
                     <div class="x_content">
                         <div class="row">
                             <div class="col-sm-12">
-                                <div class="card-box table-responsive">
-                                    <table id="" class="table table-striped table-bordered" style="width:100%">
+                                <div class="card-box table-responsive" style="text-align: center;">
+                                    <table id="" class="table table-striped table-bordered" style="width:50%; margin: auto;">
                                         <thead>
                                             <tr class="" style="background-color: #2a3f54; font-size: medium;">
+                                                <th style="color: white;">Nº</th>
                                                 <th style="color: white;">Descripcion</th>
                                                 <th style="color: white;">Accion</th>
                                             </tr>
@@ -107,6 +108,7 @@
 
                                             {% for deposito in page_obj %}
                                             <tr style="font-size: medium;">
+                                                <td>{{ deposito.id}}</td>
                                                 <td>{{ deposito.descripcion}}</td>
                                                 <td style="width: 26px !important;">
                                                     <button class="btn btn-warning"

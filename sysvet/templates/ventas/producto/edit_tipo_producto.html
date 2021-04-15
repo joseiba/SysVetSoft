@@ -1,102 +1,56 @@
-{% extends "home/base_site.html" %}
+<link rel="stylesheet" href="/static/project_static/other/commons/shared.css">
 
-{% block title %} Editar Tipo Producto {% endblock title %}
-
-{% block content %}
-<div class="right_col" role="main">
-    <div class="">
-        <div class="page-title">
-            <div class="title_left">
-                <h3>Modificar Tipo Producto</h3>
-            </div>
+<div class="modal-dialog" role="document">
+    <div class="modal-content">
+        <div class="modal-header no_borders" style="background-color:#ffc107">
+            <h5 class="modal-title" id="exampleModalLabel" style="color: white;">Editar Tipo Producto</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
+                <span aria-hidden="true">&times;</span>
+            </button>
         </div>
-        <div class="clearfix"></div>
+        <form id="form_edicion" action="{% url 'edit_tipo_producto' tipo_producto.id %}" method="post">
+            {% csrf_token %}
+            <div class="field item form-group mt-3">
+                <label class="col-form-label col-md-3 col-sm-3  label-align">Nombre Tipo<span
+                        class="required">*</span></label>
+                <div class="col-md-6 col-sm-6">
+                    {{ form.nombre_tipo}}
+                </div>
+                <div id="alert_nombre_especie">
 
-        <div class="row">
-            <div class="col-md-12 col-sm-12">
-                <div class="x_panel">
-                    <div class="x_title">
-                        <h2>Tipo producto<small>Información</small></h2>
-                        <ul class="nav navbar-right panel_toolbox">
-                            <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
-                            </li>
-                            <li><a class="close-link"><i class="fa fa-close"></i></a>
-                            </li>
-                        </ul>
-                        <div class="clearfix"></div>
-                    </div>
-                    <div class="x_content">
-                        <form class="" method="POST">
-                            {% csrf_token %}
-                            <div class="field item form-group">
-                                <label class="col-form-label col-md-3 col-sm-3  label-align">Nombre tipo<span
-                                        class="required">*</span></label>
-                                <div class="col-md-6 col-sm-6">
-                                    {{ form.nombre_tipo }}
-                                </div>
-                            </div>
-                            <div class="field item form-group">
-                                <label class="col-form-label col-md-3 col-sm-3  label-align">Fecha baja<span
-                                        class="required">*</span></label>
-                                <div class="col-md-6 col-sm-6">
-                                    {{ form.fecha_baja }}
-                                </div>
-                            </div>
-                            <div class="ln_solid">
-                                <div class="form-group">
-                                    <div class="col-md-6 offset-md-3" style="margin-top: 1rem;">
-                                        <button type='submit' class="btn btn-primary">Actualizar</button>
-                                        <button' class="btn btn-success">
-                                            <a style="color: white; cursor: pointer;"
-                                                href="{% url  'list_tipo_producto'%}">
-                                                Cancelar
-                                            </a>
-                                            </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
                 </div>
             </div>
-        </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                <button type="submit" class="btn btn-primary">Editar</button>
+            </div>
+        </form>
     </div>
 </div>
-{% endblock content %}
 
-{% block javascripts %}
-{{ block.super }}
-<!-- validator -->
-<script src="/static/project_static/vendors/validator/multifield.js"></script>
-<script src="/static/project_static/vendors/validator/validator.js"></script>
-<script>   
-    $(function () {
-        // Handler for .ready() called.
-        $('input[type="datetime"]').setNow();
+<script>
+    $('#nombre_tipo').change(function () {
+        var nombre = $("#nombre_tipo").val()
+        if (nombre !== "") 
+        {
+            $('#alert_nombre_tipo').empty()
+        } 
+        else {
+            if (nombre !== "") 
+            {
+                $('#alert_nombre_tipo').empty()
+            }
+            else 
+            {
+                $("#alert_nombre_tipo").html('<div class="alert" style="opacity: 1; white-space: inherit">\
+                                    Complete este campo\
+                                </div>');
+            }
 
+        }
+    })
+
+    $('form input').on("cut copy paste",function(e) {
+        e.preventDefault();
     });
-    // initialize a validator instance from the "FormValidator" constructor.
-    // A "<form>" element is optionally passed as an argument, but is not a must
-    var validator = new FormValidator({
-        "events": ['blur', 'input', 'change']
-    }, document.forms[0]);
-    // on form "submit" event
-    document.forms[0].onsubmit = function (e) {
-        var submit = true,
-            validatorResult = validator.checkAll(this);
-        console.log(validatorResult);
-        return !!validatorResult.valid;
-    };
-    // on form "reset" event
-    document.forms[0].onreset = function (e) {
-        validator.reset();
-    };
-    // stuff related ONLY for this demo page:
-    $('.toggleValidationTooltips').change(function () {
-        validator.settings.alerts = !this.checked;
-        if (this.checked)
-            $('form .alert').remove();
-    }).prop('checked', false);
-
 </script>
-{% endblock javascripts %}

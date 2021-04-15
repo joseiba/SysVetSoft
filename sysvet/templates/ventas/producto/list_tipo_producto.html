@@ -63,8 +63,18 @@
                         </ul>
                         <div class="clearfix"></div>
                     </div>
+                    <div class="clearfix"></div>
+                    {% if messages %}
+                    <div class="alert alert-success alert-dismissible" role="alert">
+                        {% for message in messages %}
+                            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                            {{ message }}
+                        {% endfor %}
+                    </div>
+                    {% endif %}
                     <div>
-                        <button data-toggle="modal" data-target="#addModal" class="btn btn-primary float-right">
+                        <button class="btn btn-primary float-right"
+                        onclick="abrir_modal_creacion('/tipoProducto/add/');">
                             Agregar nuevo tipo de producto
                         </button>
 
@@ -112,12 +122,15 @@
                                                 <td>{{ tipo_producto.fecha_alta}}</td>
                                                 <td>{{ tipo_producto.fecha_baja}}</td>
                                                 <td>
-                                                    <a class="edit pointer" href="{% url 'edit_tipo_producto' tipo_producto.id %}">
-                                                        <i class="fas fa-pencil-alt" data-toggle="modal"
-                                                            data-target="#editModal" style="color: #ffc107;">
-                                                        </i>
-                                                    </a>
+                                                    <button class="btn btn-warning"
+                                                        onclick="abrir_modal_edicion('/tipoProducto/edit/' + '{{ tipo_producto.id }}' + '/');">
+                                                        Editar
+                                                    </button>
 
+                                                    <button class="btn btn-danger"
+                                                        onclick="abrir_modal_eliminacion('/tipoProducto/baja/' + '{{ tipo_producto.id }}' + '/');">
+                                                        Dar de baja
+                                                    </button>
                                                 </td>
                                             </tr>
                                             {% endfor %}
@@ -138,37 +151,19 @@
     </div>
 </div>
 
-<div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-    aria-hidden="true">
-    <div></div>
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header" style="background-color:#1abb9c ;">
-                <h5 class="modal-title" id="exampleModalLabel" style="color: white;">Agregar Tipo Producto</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div>
-                <form action="{% url 'add_tipo_producto' %}" method="post">
-                    {% csrf_token %}
-                    <div class="field item form-group">
-                        <label class="col-form-label col-md-3 col-sm-3  label-align">Nombre tipo<span
-                                class="required">*</span></label>
-                        <div class="col-md-6 col-sm-6">
-                            <input class="form-control" data-validate-length-range="6" data-validate-words="1"
-                                name="nombre_tipo" placeholder="Nombre del Tipo" required="required" onkeyup="replaceCaratect(this)" />
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                        <button type="submit" class="btn btn-primary">Agregar</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
+<div class="modal fade" id="creacion" role="dialog">
+
 </div>
+
+<div class="modal fade" id="edicion" role="dialog">
+
+</div>
+
+<div class="modal fade" id="eliminacion" role="dialog">
+
+</div>
+
+
 
 
 

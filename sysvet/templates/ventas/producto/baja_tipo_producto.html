@@ -1,0 +1,27 @@
+<link rel="stylesheet" href="/static/project_static/other/commons/shared.css">
+
+<div class="modal-dialog" role="document">
+    <div class="modal-content">
+        <form action="{% url 'baja_tipo_producto' tipo_producto.id %}" method="post">
+            {% csrf_token %}
+            <div class="modal-header no_borders" style="background-color:#dc3545">
+                <h5 class="modal-title" id="exampleModalLabel" style="color: white;">Dar de baja Tipo Producto</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" style="font-size: 16px; color: #383232c7;">
+                Estás seguro/a que deseas dar de <strong>{{tipo_producto.nombre_tipo}}</strong> ?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                <button type="submit" id="confirmDeleteButtonModal" class="btn btn-danger">Dar de baja</button>
+            </div>
+        </form>
+        
+    </div>
+</div>
+
+<script>
+    
+</script>
