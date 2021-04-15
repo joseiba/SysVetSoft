@@ -67,11 +67,11 @@ urlpatterns = [
     path('reserva/addServicio/',  add_servicio, name="add_servicio"),
     path('reserva/editServicio/<int:id>/',edit_servicio , name="edit_servicio"),
     path('reserva/searchServicio/', search_servicio, name="search_servicio"),
-    path('reserva/bajaServicio/<int:id>', delete_servicio, name="delete_servicio"),
+    path('reserva/bajaServicio/<int:id>/', delete_servicio, name="delete_servicio"),
     path('reserva/listReserva/', list_reserva , name="list_reserva"),
     path('reserva/addReserva/',  add_reserva, name="add_reserva"),
     path('reserva/editReserva/<int:id>/',edit_reserva , name="edit_reserva"),
-    path('reserva/bajaReserva/<int:id>', delete_reserva, name="delete_reserva"),
+    path('reserva/bajaReserva/<int:id>/', delete_reserva, name="delete_reserva"),
     path('reserva/searchReserva/', search_reserva, name="search_reserva"),
 ]
 

@@ -54,7 +54,7 @@
             <div class="col-md-12 col-sm-12 ">
                 <div class="x_panel">
                     <div class="x_title">
-                        <h2>Lista de Clientes</h2>
+                        <h2>Lista de Reservas</h2>
                         <ul class="nav navbar-right panel_toolbox">
                             <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
                             </li>
@@ -101,11 +101,10 @@
                                             <tr class="" style="background-color: #2a3f54; font-size: medium;">
                                                 <th style="color: white;">Nombre </br>Cliente</th>
                                                 <th style="color: white;">Apellido </br>Cliente</th>
-                                                <th style="color: white;">Nombre </br>Mascota</th>
                                                 <th style="color: white;">Teléfono </br>Cliente</th>
                                                 <th style="color: white;">Servicio</th>
                                                 <th style="color: white;">Descripción </br> Reserva</th>
-                                                <th style="color: white;">Fecha y Hora</th>
+                                                <th style="color: white;">Fecha <br>y Hora</th>
                                                 <th style="color: white;">Acciones</th>
                                             </tr>
                                         </thead>
@@ -115,10 +114,17 @@
                                             <tr style="font-size: medium;">
                                                 <td>{{ reserva.id_cliente.nombre_cliente}}</td>
                                                 <td>{{ reserva.id_cliente.apellido_cliente}}</td>
-                                                <td>{{ reserva.id_mascota.nombre_mascota}}</td>
                                                 <td>{{ reserva.id_cliente.telefono}}</td>
-                                                <td>{{ reserva.nombre_servicio}}</td>
-                                                <td>{{ reserva.descripcion}}</td>
+                                                <td>{{ reserva.id_servicio.nombre_servicio}}</td>
+                                                <td>
+                                                    
+                                                    {% if reserva.descripcion == None %}
+                                                        --
+                                                    {% else %}
+                                                        {{ reserva.descripcion}}
+                                                    {% endif %}
+                                                        
+                                                </td>
                                                 <td>{{ reserva.fecha_reserva}}</br> {{reserva.hora_reserva}}hs</td>
                                                 <td>
                                                     <button class="btn btn-warning">
@@ -127,11 +133,9 @@
                                                         </a>
                                                     </button>
 
-                                                    <!-- <button class="btn btn-danger">
-                                                        <a href="{% url 'delete_reserva' reserva.id %}" style="color: #444;">
-                                                            Cancelar
-                                                        </a>
-                                                    </button>-->
+                                                    <button class="btn btn-danger"  onclick="abrir_modal_eliminacion('/reserva/bajaReserva/' + '{{ reserva.id }}' + '/');">
+                                                        Cancelar
+                                                    </button>
                                                 </td>
                                             </tr>
                                             {% endfor %}
@@ -152,26 +156,8 @@
     </div>
 </div>
 
-<div class="modal fade" id="confirmDeleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-    aria-hidden="true">
-    <div></div>
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header no_borders" style="background-color:#dc3545 ;">
-                <h5 class="modal-title" id="exampleModalLabel" style="color: white;">Baja del Cliente</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div id="content-value-name">
+<div class="modal fade" id="eliminacion" role="dialog">
 
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                <button type="button" id="confirmDeleteButtonModal" class="btn btn-danger">Baja</button>
-            </div>
-        </div>
-    </div>
 </div>
 {% endblock content %}
 

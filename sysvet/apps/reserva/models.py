@@ -32,13 +32,12 @@ class Reserva(models.Model):
     """
     Clase que define la estructura de la reserva
     """
-    descripcion = models.CharField(max_length=200, help_text = "Ingrese la descripción del la reserva", blank=True, null=True)
+    descripcion = models.CharField(max_length=200, help_text = "Ingrese la descripción del la reserva", blank=True, null=True, default="-")
     fecha_reserva = models.DateField()
-    hora_reserva = models.TimeField()
+    hora_reserva = models.CharField(max_length=200)
     last_modified = models.DateTimeField(auto_now=True, blank=True)
     is_active = models.CharField(max_length=2, default="S", blank=True, null=True)
     id_servicio = models.ForeignKey('Servicio', on_delete=models.CASCADE, null=False)
-    id_mascota = models.ForeignKey(Mascota, on_delete=models.CASCADE, null=False) 
     id_cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE, null=False) 
 
     class Meta:

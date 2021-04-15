@@ -9,7 +9,7 @@
         </div>
         <form action="{% url 'delete_servicio' servicio.id %}" method="post">
             {% csrf_token %}
-            <div class="modal-body" style="font-size: 16px; color: #383232c7;">\
+            <div class="modal-body" style="font-size: 16px; color: #383232c7;">
                 Estás seguro/a que deseas dar de baja este servicio <strong>{{ servicio.nombre_servicio }}</strong>?
             </div>'
             <div class="modal-footer">

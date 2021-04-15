@@ -78,6 +78,8 @@ def add_reserva(request):
     form = ReservaForm    
     if request.method == 'POST':
         form = ReservaForm(request.POST) 
+        print(form.is_valid())
+        print(form)
         if form.is_valid():           
             form.save()
             messages.success(request, 'Se ha agregado correctamente!')
@@ -115,6 +117,7 @@ def list_reserva(request):
 @login_required()
 def delete_reserva(request, id):
     reserva = Reserva.objects.get(id=id)
+    print("test")
     if request.method == 'POST':
         reserva.is_active = "N"
         reserva.save()

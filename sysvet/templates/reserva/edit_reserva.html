@@ -1,0 +1,146 @@
+{% extends "home/base_site.html" %}
+
+{% block title %} Editar Reserva{% endblock title %}
+
+{% block content %}
+<div class="right_col" role="main">
+    <div class="">
+        <div class="page-title">
+            <div class="title_left">
+                <h3>Editar Reserva</h3>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+        {% if messages %}
+        <div class="alert alert-success alert-dismissible" role="alert">
+            {% for message in messages %}
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            {{ message }}
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <div class="clearfix"></div>
+
+        <div class="row">
+            <div class="col-md-12 col-sm-12">
+                <div class="x_panel">
+                    <div class="x_title">
+                        <h2>Información para la reserva</h2>
+                        <ul class="nav navbar-right panel_toolbox">
+                            <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                            </li>
+                            <li><a class="close-link"><i class="fa fa-close"></i></a>
+                            </li>
+                        </ul>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="x_content">
+                        <form class="" action="{% url 'edit_reserva' reserva.id  %}" method="POST"  >
+                            {% csrf_token %}
+                            <div class="field item form-group">
+                                <label class="col-form-label col-md-3 col-sm-3  label-align">Descripción Reserva<span
+                                        class="required">*</span></label>
+                                <div class="col-md-6 col-sm-6">
+                                    {{ form.descripcion}}
+                                </div>
+                            </div>
+                            <div class="field item form-group">
+                                <label class="col-form-label col-md-3 col-sm-3  label-align">Fecha Reserva<span
+                                        class="required">*</span></label>
+                                <div class="col-md-6 col-sm-6">
+                                    {{form.fecha_reserva}}
+                                </div>
+                            </div>
+                            <div class="field item form-group">
+                                <label class="col-form-label col-md-3 col-sm-3  label-align">Hora Reserva
+                                    <span class="required">*</span>
+                                </label>
+                                <div class="col-md-6 col-sm-6">
+                                    {{form.hora_reserva}}
+                                </div>
+                            </div>
+                            <div class="field item form-group">
+                                <label class="col-form-label col-md-3 col-sm-3  label-align">Servicio<span
+                                        class="required">*</span></label>
+                                <div class="col-md-6 col-sm-6">
+                                    {{form.id_servicio}}
+                                </div>
+                            </div>
+                            <div class="field item form-group">
+                                <label class="col-form-label col-md-3 col-sm-3  label-align">Cliente<span
+                                        class="required">*</span></label>
+                                <div class="col-md-6 col-sm-6">
+                                    {{form.id_cliente}}
+                                </div>
+                            </div>
+                            <div class="ln_solid">
+                                <div class="form-group">
+                                    <div class="col-md-6 offset-md-3" style="margin-top: 1rem;">
+                                        <button type='submit' id="test" class="btn btn-primary">Agregar</button>
+                                        <button type='reset' class="btn btn-success">Reset</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+{% block javascripts %}
+{{ block.super }}
+<!-- validator -->
+<script src="/static/project_static/vendors/validator/multifield.js"></script>
+<script src="/static/project_static/vendors/validator/validator.js"></script>
+<script>
+    function hideshow() {      
+    }
+</script>
+<script>
+    // initialize a validator instance from the "FormValidator" constructor.
+    // A "<form>" element is optionally passed as an argument, but is not a must
+    var validator = new FormValidator({
+        "events": ['blur', 'input', 'change']
+    }, document.forms[0]);
+    // on form "submit" event
+    document.forms[0].onsubmit = function (e) {
+        var submit = true,
+            validatorResult = validator.checkAll(this);
+        console.log(validatorResult);
+        return !!validatorResult.valid;
+    };
+    // on form "reset" event
+    document.forms[0].onreset = function (e) {
+        $('#alert_email').empty();
+        validator.reset();
+    };
+    // stuff related ONLY for this demo page:
+    $('.toggleValidationTooltips').change(function () {
+        validator.settings.alerts = !this.checked;
+        if (this.checked)
+            $('form .alert').remove();
+    }).prop('checked', false);
+
+    $(function(){
+    $("#id_cuidad").change(function() {
+        var cuidad = $("#id_cuidad").val()
+        var cuidad_empty = cuidad.replace("Seleccione una Cuidad", "")
+
+        if(cuidad_empty === ""){
+            $("#alert_cuidad").html('<div class="alert" style="opacity: 1; white-space: inherit; left: 0">\
+                                    Seleccione una opción\
+                                </div>');
+        }
+    })
+    $('form input').on("cut copy paste",function(e) {
+      e.preventDefault();
+   });
+
+})
+
+</script>
+{% endblock javascripts %}
