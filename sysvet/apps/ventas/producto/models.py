@@ -42,6 +42,7 @@ class Producto (models.Model):
     Clase que define la estructura de un producto
     """
 
+    codigo_producto = models.CharField(max_length = 50, help_text = "Ingrese codigo del producto")
     nombre_producto = models.CharField(max_length = 200, help_text = "Ingrese nombre del producto")
     descripcion = models.CharField(max_length = 200, help_text = "Ingrese descripcion del producto")
     fecha_vencimiento = models.DateField(help_text = "Ingrese fecha de vencimiento", null=True, blank=True)

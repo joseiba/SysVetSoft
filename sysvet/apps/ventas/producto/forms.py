@@ -12,7 +12,7 @@ class TipoProductoForm(forms.ModelForm):
         model = TipoProducto
         exclude = ['is_active']
         widgets = {
-			'nombre_tipo' : forms.TextInput(attrs={'class':'form-control', 'name': 'nombre_tipo', 'placeholder': 'Nombre Tipo Producto', 'required': 'required', 'onkeyup':'replaceCaratect(this)'}),
+            'nombre_tipo' : forms.TextInput(attrs={'class':'form-control', 'name': 'nombre_tipo', 'placeholder': 'Nombre Tipo Producto', 'required': 'required', 'onkeyup':'replaceCaratect(this)'}),
 			'fecha_alta' : forms.TextInput(attrs={'class':'form-control','type':'datetime',
                 'name': 'fecha_alta', 'placeholder': 'Fecha de Alta', 'readonly': 'readonly'}),
 			'fecha_baja' : forms.TextInput(attrs={'class':'form-control','type':'datetime', 'name': 'fecha_baja', 
@@ -46,7 +46,8 @@ class ProductoForm(forms.ModelForm):
         model = Producto
         fields = '__all__'
         widgets = {
-			'nombre_producto': forms.TextInput(attrs={'class':'form-control','data-validate-length-range':'20', 
+			'codigo_producto' : forms.TextInput(attrs={'class':'form-control', 'name': 'codigo_producto', 'placeholder': 'Codigo Producto', 'required': 'required', 'onkeyup':'replaceDirection(this)'}),
+            'nombre_producto': forms.TextInput(attrs={'class':'form-control','data-validate-length-range':'20', 
                 'data-validate-words':'1', 'name': 'nombre_producto', 'placeholder': 'Nombre del producto', 'required': 'required', 'onkeyup':'replaceCaratect(this)'}),
             'descripcion' : forms.TextInput(attrs={'class':'form-control', 'name': 'descripcion', 'placeholder': 'Descripcion', 'required': 'required', 'onkeyup':'replaceCaratect(this)'}),
             'fecha_vencimiento' : forms.TextInput(attrs={'class':'form-control date', 'type': 'date','name':'fecha_vencimiento'}),

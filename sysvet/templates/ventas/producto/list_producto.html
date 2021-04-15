@@ -97,10 +97,11 @@
                     <div class="x_content">
                         <div class="row">
                             <div class="col-sm-12">
-                                <div class="card-box table-responsive">
-                                    <table id="" class="table table-striped table-bordered" style="width:100%">
+                                <div class="card-box table-responsive" style="text-align: center;">
+                                    <table id="" class="table table-striped table-bordered" style="width:90%; margin: auto;"">
                                         <thead>
                                             <tr class="" style="background-color: #2a3f54; font-size: medium;">
+                                                <th style="color: white;">Codigo</th>
                                                 <th style="color: white;">Nombre</th>
                                                 <th style="color: white;">Descripcion</th>
                                                 <th style="color: white;">Stock</th>
@@ -112,6 +113,7 @@
 
                                             {% for producto in page_obj %}
                                             <tr style="font-size: medium;">
+                                                <td>{{ producto.codigo_producto}}</td>
                                                 <td>{{ producto.nombre_producto}}</td>
                                                 <td>{{ producto.descripcion}}</td>
                                                 <td>{{ producto.stock}}</td>
