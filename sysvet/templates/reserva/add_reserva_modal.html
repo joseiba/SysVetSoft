@@ -1,0 +1,108 @@
+<link rel="stylesheet" href="/static/project_static/other/commons/shared.css">
+<style>
+    .alert{
+        display: none;
+    }
+</style>
+
+<div class="modal-dialog" role="document">
+    <div class="modal-content" style="box-shadow: 0 10px 20px 0 rgba(0,0,0,.05);">
+        <div class="modal-header no_borders">
+            <h5 class="modal-title" id="exampleModalLabel">Agregar Reserva</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <form action="{% url 'add_reserva' %}" method="post">
+            {% csrf_token %}
+            <form class="" action="{% url 'add_reserva' %}" method="POST"  >
+                {% csrf_token %}
+                <div class="field item form-group" style="display: grid;"> 
+                    <label class="col-form-label col-md-6 col-sm-3">Descripción Reserva</label>
+                    <div class="col-md-12 col-sm-6">
+                        <textarea  class="form-control optional" name="descripcion" id="descripcion" placeholder="Descripción de la reserva"
+                        onkeyup="replaceDirection(this)"></textarea>                                   
+                    </div>
+                </div>
+                <div class="field item form-group" style="display: grid;">
+                    <label class="col-form-label col-md-6 col-sm-3">Fecha Reserva<span
+                            class="required">*</span></label>
+                    <div class="col-md-12 col-sm-6">
+                        <input class="form-control" type="date" name="fecha_reserva" required="required">
+                    </div>
+                </div>
+                <div class="field item form-group" style="display: grid;">
+                    <label class="col-form-label col-md-6 col-sm-3">Hora Reserva
+                        <span class="required">*</span>
+                    </label>
+                    <div class="col-md-12 col-sm-6 " style="display: grid;">
+                        <input class="form-control" type="time" name="hora_reserva" required="required">
+                    </div>
+                </div>
+                <div class="field item form-group" style="display: grid;">
+                    <label class="col-form-label col-md-6 col-sm-3">Servicio<span
+                            class="required">*</span></label>
+                    <div class="col-md-12 col-sm-6">
+                        {{form.id_servicio}}
+                    </div>
+                </div>
+
+                <div class="field item form-group" style="display: grid;">
+                    <label class="col-form-label col-md-3 col-sm-3">Cliente<span
+                            class="required">*</span></label>
+                    <div class="col-md-12 col-sm-6">
+                        {{form.id_cliente}}
+                    </div>
+                </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
+                <button type="submit" class="btn btn-primary">Agregar</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- validator -->
+<script src="/static/project_static/vendors/validator/multifield.js"></script>
+<script src="/static/project_static/vendors/validator/validator.js"></script>
+<script src="/static/project_static/other/js/main.js"></script>
+
+
+<script>
+    // initialize a validator instance from the "FormValidator" constructor.
+    // A "<form>" element is optionally passed as an argument, but is not a must
+    var validator = new FormValidator({
+        "events": ['blur', 'input', 'change']
+    }, document.forms[0]);
+    // on form "submit" event
+    document.forms[0].onsubmit = function (e) {
+        var submit = true,
+            validatorResult = validator.checkAll(this);
+        return !!validatorResult.valid;
+    };
+    // on form "reset" event
+    document.forms[0].onreset = function (e) {
+        validator.reset();
+    };
+    // stuff related ONLY for this demo page:
+    $('.toggleValidationTooltips').change(function () {
+        validator.settings.alerts = !this.checked;
+        if (this.checked)
+            $('form .alert').remove();
+    }).prop('checked', false);
+
+    $(function(){
+        $(document).on('click', '#confirmDeleteButtonModal', function () {
+            var id = $(this).data("id-reserva")
+            var url = '/reserva/bajaReserva/' + id;
+            window.location = url;
+        })
+
+        $('form input').on("cut copy paste",function(e) {
+            e.preventDefault();
+        });
+
+})
+
+</script>

@@ -83,9 +83,9 @@ def add_reserva(request):
         if form.is_valid():           
             form.save()
             messages.success(request, 'Se ha agregado correctamente!')
-            return redirect('/reserva/addReserva/')
+            return redirect('/reserva/listReserva/')
     context = {'form' : form}
-    return render(request, 'reserva/add_reserva.html', context)
+    return render(request, 'reserva/add_reserva_modal.html', context)
 
 @login_required()
 def edit_reserva(request, id):
@@ -95,14 +95,14 @@ def edit_reserva(request, id):
         form = ReservaForm(request.POST, instance=reserva)
         if not form.has_changed():
             messages.info(request, "No has hecho ningun cambio!")
-            return redirect('/reserva/editReserva/' + str(id))
+            return redirect('/reserva/listReserva/')
         if form.is_valid():
             reserva = form.save(commit=False)
             reserva.save()
             messages.success(request, 'Se ha editado correctamente!')
-            return redirect('/reserva/editReserva/' + str(id))
+            return redirect('/reserva/listReserva/')
     context = {'form' : form, 'reserva': reserva}
-    return render(request, 'reserva/edit_reserva.html', context)
+    return render(request, 'reserva/edit_reserva_modal.html', context)
 
 @login_required()
 def list_reserva(request):
@@ -117,14 +117,10 @@ def list_reserva(request):
 @login_required()
 def delete_reserva(request, id):
     reserva = Reserva.objects.get(id=id)
-    print("test")
-    if request.method == 'POST':
-        reserva.is_active = "N"
-        reserva.save()
-        return redirect('/reserva/listReserva/')
-    context = {'reserva': reserva}
-    return render(request, "reserva/cancelar_reserva_modal.html", context)
-
+    reserva.is_active = "N"
+    reserva.save()
+    messages.success(request, 'La reserva se ha eliminado!')
+    return redirect('/reserva/listReserva/')
 
 @login_required()
 def search_reserva(request):

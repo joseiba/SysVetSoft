@@ -4,51 +4,50 @@
 
 {% block stylesheets %}
 {{ block.super }}
-<link href="/static/project_static/vendors/datatables.net-bs/css/dataTables.bootstrap.min.css" rel="stylesheet">
-<link href="/static/project_static/vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css" rel="stylesheet">
-<link href="/static/project_static/vendors/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.min.css"
-    rel="stylesheet">
-<link href="/static/project_static/vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css"
-    rel="stylesheet">
-<link href="/static/project_static/vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="/static/project_static/other/commons/lib/main.css">
 <style>
-    .search {
-        width: 100%;
-        position: relative;
-        display: flex;
-    }
-
-    .searchTerm {
-        width: 100%;
-        border: 3px solid #00B4CC;
-        border-right: none;
-        padding: 5px;
-        height: 36px;
-        border-radius: 5px 0 0 5px;
-        outline: none;
-        color: #212529;
-    }
-
-    .searchTerm:focus {
-        color: #212529;
-    }
-
-    .searchButton {
-        width: 40px;
-        height: 36px;
-        border: 1px solid #00B4CC;
-        background: #00B4CC;
-        text-align: center;
-        color: #fff;
-        border-radius: 0 5px 5px 0;
-        cursor: pointer;
-        font-size: 20px;
+    .fc-daygrid-event{
+        cursor: pointer !important;
     }
 </style>
 {% endblock stylesheets %}
 
 {% block content %}
-<div class="right_col" role="main">
+<div class="right_col" role="main"> 
+    <div class="">
+        <div class="page-title">
+            <div class="title_left">
+                <h3>Calendario de Reservas</h3>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+        {% if messages %}
+        <div class="alert alert-success alert-dismissible" role="alert">
+            {% for message in messages %}
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            {{ message }}
+            {% endfor %}
+        </div>
+        {% endif %}
+        <div class="clearfix"></div>
+        <div class="row">
+            <div class="col-md-12 col-sm-12 ">
+                <div class="x_panel">
+                    <div id='calendar'></div>                
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="creacion"  role="dialog" >
+
+</div>
+
+<div class="modal fade" id="edicion"  role="dialog" >
+
+</div>
+<!--<div class="right_col" role="main">
     <div class="">
         <div class="row">
             <div class="col-md-12 col-sm-12 ">
@@ -70,18 +69,18 @@
                         <div class="float-left">
                             <div class="wrap">
                                 <div class="search">
-                                    <!--<form action="{% url 'search_cliente' %}" method="GET" class="d-inline-flex">
+                                    <form action="{% url 'search_cliente' %}" method="GET" class="d-inline-flex">
                                         <input type="search" class="searchTerm" name="q" value="{{ request.GET.q }}"
                                             placeholder="Buscá por cedula, nombre" onkeyup="replaceCaratect(this)">
                                         <button type="submit" class="searchButton">
                                             <i class="fa fa-search"></i>
                                         </button>
-                                    </form>-->
+                                    </form>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- <div>
+                        <div>
                             <div class="d-flex">
                                 <p>Ordenar por:</p>
                                 <select class="form-select form-select-lg mb-3" aria-label="Default select example">
@@ -89,7 +88,7 @@
                                     <option value="">Cédula del cliente</option>
                                 </select>
                             </div>
-                        </div>-->
+                        </div>
                     </div>
 
                     <div class="x_content">
@@ -119,7 +118,7 @@
                                                 <td>
                                                     
                                                     {% if reserva.descripcion == None %}
-                                                        --
+                                                        -
                                                     {% else %}
                                                         {{ reserva.descripcion}}
                                                     {% endif %}
@@ -158,29 +157,58 @@
 
 <div class="modal fade" id="eliminacion" role="dialog">
 
-</div>
+</div>-->
 {% endblock content %}
 
 {% block javascripts %}
 {{ block.super }}
-<!-- Datatables -->
-<script src="/static/project_static/vendors/datatables.net/js/jquery.dataTables.min.js"></script>
-<script src="/static/project_static/vendors/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
-<script src="/static/project_static/vendors/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
-<script src="/static/project_static/vendors/datatables.net-buttons-bs/js/buttons.bootstrap.min.js"></script>
-<script src="/static/project_static/vendors/datatables.net-buttons/js/buttons.flash.min.js"></script>
-<script src="/static/project_static/vendors/datatables.net-buttons/js/buttons.html5.min.js"></script>
-<script src="/static/project_static/vendors/datatables.net-buttons/js/buttons.print.min.js"></script>
-<script src="/static/project_static/vendors/datatables.net-fixedheader/js/dataTables.fixedHeader.min.js"></script>
-<script src="/static/project_static/vendors/datatables.net-keytable/js/dataTables.keyTable.min.js"></script>
-<script src="/static/project_static/vendors/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
-<script src="/static/project_static/vendors/datatables.net-responsive-bs/js/responsive.bootstrap.js"></script>
-<script src="/static/project_static/vendors/datatables.net-scroller/js/dataTables.scroller.min.js"></script>
-<script src="/static/project_static/vendors/jszip/dist/jszip.min.js"></script>
-<script src="/static/project_static/vendors/pdfmake/build/pdfmake.min.js"></script>
-<script src="/static/project_static/vendors/pdfmake/build/vfs_fonts.js"></script>
+
+<script src="/static/project_static/other/commons/lib/main.js"></script>
+<script src="/static/project_static/other/commons/lib/locales-all.min.js"></script>
 
 <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var calendarEl = document.getElementById('calendar');
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            headerToolbar: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'dayGridMonth,timeGridWeek,timeGridDay,listMonth'
+            },
+            locale: 'es',
+            navLinks: true, // can click day/week names to navigate views
+            businessHours: true, // display business hours
+            editable: true,
+            selectable: true,
+            select: function(arg) {
+                var url = '/reserva/addReserva/'
+                $('#creacion').load(url, function () {
+                    $(this).modal('show');
+                }); 
+                calendar.unselect() 
+            },
+            eventClick: function(arg) {
+                var url = '/reserva/editReserva/' + arg.event.groupId;
+                $('#edicion').load(url, function () {
+                    $(this).modal('show');
+                }); 
+            },
+            events: [
+                {% for reserva in  page_obj %}
+                    {
+                        groupId: "{{ reserva.id }}",
+                        title: "{{ reserva.id_servicio.nombre_servicio }}",
+                        start: '{{ reserva.fecha_reserva |  date:"Y-m-d" }}T{{reserva.hora_reserva}}',
+                    },
+                {% endfor  %}
+            ]   
+        });
+        calendar.render();
+        $(document).on("click", "#menu_toggle", function(){
+            calendar.render();
+        })
+    });
+
     $(function () {
 
     $('form input').on("cut copy paste",function(e) {
