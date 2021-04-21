@@ -1,8 +1,11 @@
 <link rel="stylesheet" href="/static/project_static/other/commons/shared.css">
+<link rel="stylesheet" href="/static/project_static/other/js//jquery-ui-themes-1.12.1/jquery-ui-themes-1.12.1/themes/base/jquery-ui.css">
+<link rel="stylesheet" href="/static/project_static/other/js/jquery-timepicker-1.3.5/jquery.timepicker.min.css">
 <style>
     .alert{
         display: none;
     }
+
 </style>
 
 <div class="modal-dialog" role="document">
@@ -28,15 +31,7 @@
                     <label class="col-form-label col-md-6 col-sm-3">Fecha Reserva<span
                             class="required">*</span></label>
                     <div class="col-md-12 col-sm-6">
-                        <input class="form-control" type="date" name="fecha_reserva" required="required">
-                    </div>
-                </div>
-                <div class="field item form-group" style="display: grid;">
-                    <label class="col-form-label col-md-6 col-sm-3">Hora Reserva
-                        <span class="required">*</span>
-                    </label>
-                    <div class="col-md-12 col-sm-6 " style="display: grid;">
-                        <input class="form-control" type="time" name="hora_reserva" required="required">
+                        <input class="form-control" type="text" name="fecha_reserva" id="datepicker" required="required">
                     </div>
                 </div>
                 <div class="field item form-group" style="display: grid;">
@@ -47,6 +42,14 @@
                     </div>
                 </div>
 
+                <div class="field item form-group" style="display: grid;">
+                    <label class="col-form-label col-md-6 col-sm-3">Hora Reserva
+                        <span class="required">*</span>
+                    </label>
+                    <div class="col-md-12 col-sm-6 " id="hora_reserva" style="display: grid;">
+                        <input class="form-control timepicker" type="text" name="hora_reserva" required="required">
+                    </div>
+                </div>               
                 <div class="field item form-group" style="display: grid;">
                     <label class="col-form-label col-md-3 col-sm-3">Cliente<span
                             class="required">*</span></label>
@@ -67,6 +70,8 @@
 <script src="/static/project_static/vendors/validator/multifield.js"></script>
 <script src="/static/project_static/vendors/validator/validator.js"></script>
 <script src="/static/project_static/other/js/main.js"></script>
+<script src="/static/project_static/other/js/jquery-ui-1.12.1/jquery-ui-1.12.1/jquery-ui.js"></script>
+<script src="/static/project_static/other/js/jquery-timepicker-1.3.5/jquery.timepicker.min.js"></script>
 
 
 <script>
@@ -103,6 +108,22 @@
             e.preventDefault();
         });
 
+        $("#datepicker").datepicker({
+            minDate: 0,
+            maxDate: "+12M +5D"
+        });
+
+        $(".timepicker").timepicker({
+            interval: 30,
+            minTime: '8',
+            maxTime: '18:00',
+            defaultTime: '8',
+            startTime: '08:00',
+            dropdown: true,
+            scrollbar: true,
+            zindex:1151,
+            timeFormat: 'HH:mm',
+        });
 })
 
 </script>

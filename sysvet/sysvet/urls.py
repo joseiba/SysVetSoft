@@ -25,8 +25,8 @@ from apps.ventas.cliente.views import add_cliente, list_clientes, edit_cliente, 
 from apps.ventas.mascota.views import (list_mascotas, add_mascota, edit_mascota, list_especie, add_especie, 
 edit_especie,search_especie, list_raza, add_raza, edit_raza, search_raza,search_mascota, order_by_mascotas, 
 edit_ficha_medica, list_historial)
-from apps.reserva.views import (add_servicio, edit_servicio, delete_servicio, list_servicio, search_servicio, add_reserva, edit_reserva,
-list_reserva, delete_reserva, search_reserva)
+from apps.reserva.views import (add_reserva, edit_reserva, list_reserva, delete_reserva, search_reserva)
+from apps.configuracion.views import (add_servicio, edit_servicio, delete_servicio, list_servicio, search_servicio)
 
 urlpatterns = [
     # Login and logout   
