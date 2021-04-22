@@ -18,7 +18,7 @@
         </div>
         <form action="{% url 'add_reserva' %}" method="post">
             {% csrf_token %}
-            <form class="" action="{% url 'add_reserva' %}" method="POST"  >
+            <form class="" action="{% url 'add_reserva' %}" method="POST" id="form" >
                 {% csrf_token %}
                 <div class="field item form-group" style="display: grid;"> 
                     <label class="col-form-label col-md-6 col-sm-3">Descripción Reserva</label>
@@ -31,7 +31,7 @@
                     <label class="col-form-label col-md-6 col-sm-3">Fecha Reserva<span
                             class="required">*</span></label>
                     <div class="col-md-12 col-sm-6">
-                        <input class="form-control" type="text" name="fecha_reserva" id="datepicker" required="required">
+                        <input class="form-control" type="text" name="fecha_reserva" id="datepicker" data-date-format="YYYY-MM-DD"  required="required">
                     </div>
                 </div>
                 <div class="field item form-group" style="display: grid;">
@@ -47,7 +47,7 @@
                         <span class="required">*</span>
                     </label>
                     <div class="col-md-12 col-sm-6 " id="hora_reserva" style="display: grid;">
-                        <input class="form-control timepicker" type="text" name="hora_reserva" required="required">
+                        <input class="form-control timepicker" type="text" name="hora_reserva" id="hora_reserva" required="required">
                     </div>
                 </div>               
                 <div class="field item form-group" style="display: grid;">
@@ -57,6 +57,15 @@
                         {{form.id_cliente}}
                     </div>
                 </div>
+
+                <div class="form-group">                
+                    <div class="col-md-12 col-sm-6">
+                        <div id="id_mensaje_alert">
+                            
+                        </div>
+                    </div>
+                </div>
+                
 
             <div class="modal-footer">
                 <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
@@ -108,9 +117,50 @@
             e.preventDefault();
         });
 
+        $("#datepicker").change(function(){
+            var fecha = $("#datepicker").val()
+
+            sessionStorage.setItem("fecha", fecha)        
+        })
+
+        $("#id_servicio").change(function(){
+            var servicio = $("#id_servicio").val()
+            sessionStorage.setItem("servicio", servicio)            
+        })
+
+        $("#hora_reserva").change(function(){
+            var hora = $("#hora_reserva").val()
+            sessionStorage.setItem("hora", hora) 
+        })
+
+        $("#id_cliente").change(function(){
+            var id_cliente = $("#id_cliente").val()
+            
+            var fecha = sessionStorage.getItem("fecha");
+            var servicio = sessionStorage.getItem("servicio")
+            var hora = sessionStorage.getItem("hora_reserva");
+
+            if( fecha != "" && servicio != "" && hora != "" && id_cliente != ""){
+                var urlValidate = "/reserva/validarDatos/"
+                $.ajax({
+                    data: {'fecha': fecha, 'servicio': servicio, 'hora': hora, 'id_cliente': id_cliente},
+                    url: urlValidate,
+                    success: function(response){
+                        if(response.mensaje != ''){
+                            $("#id_mensaje_alert").html('<div class="alert alert-warning" role="alert">\
+                                                            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>'+ response.mensaje + '</div>');
+                        }
+                    },
+                    error: function(response){
+
+                    }
+                })
+            }
+        })
+
         $("#datepicker").datepicker({
             minDate: 0,
-            maxDate: "+12M +5D"
+            maxDate: "+12M +5D",
         });
 
         $(".timepicker").timepicker({

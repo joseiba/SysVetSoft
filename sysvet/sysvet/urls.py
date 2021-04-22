@@ -25,7 +25,7 @@ from apps.ventas.cliente.views import add_cliente, list_clientes, edit_cliente, 
 from apps.ventas.mascota.views import (list_mascotas, add_mascota, edit_mascota, list_especie, add_especie, 
 edit_especie,search_especie, list_raza, add_raza, edit_raza, search_raza,search_mascota, order_by_mascotas, 
 edit_ficha_medica, list_historial)
-from apps.reserva.views import (add_reserva, edit_reserva, list_reserva, delete_reserva, search_reserva)
+from apps.reserva.views import (add_reserva, edit_reserva, list_reserva, delete_reserva, search_reserva, validar_fecha_hora)
 from apps.configuracion.views import (add_servicio, edit_servicio, delete_servicio, list_servicio, search_servicio)
 
 urlpatterns = [
@@ -73,6 +73,8 @@ urlpatterns = [
     path('reserva/editReserva/<int:id>/',edit_reserva , name="edit_reserva"),
     path('reserva/bajaReserva/<int:id>/', delete_reserva, name="delete_reserva"),
     path('reserva/searchReserva/', search_reserva, name="search_reserva"),
+    path('reserva/validarDatos/', validar_fecha_hora, name="search_reserva"),
+
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

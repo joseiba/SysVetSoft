@@ -3,6 +3,8 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.db.models import Q
 from django.core.paginator import Paginator
+from django.http import JsonResponse
+
 
 from .models import Reserva
 from .forms import ReservaForm
@@ -75,3 +77,22 @@ def search_reserva(request):
     context = { 'page_obj': page_obj}
     return render(request, "reserva/list_reserva.html", context)
         
+
+def validar_fecha_hora(request):
+    fecha = request.GET.get('fecha')
+    hora = request.GET.get('hora')
+    servicio = request.GET.get('servicio')
+    cliente = request.GET.get('id_cliente')
+    
+    messageReponse = ""
+
+    reserva = Reserva.objects.filter(fecha_reserva=fecha, id_servicio=servicio)
+
+    if reserva is None:
+        for re in reserva:
+            if re.hora_reserva == hora:                
+                messageReponse = "Ya existe un agendamiento para ese dia y para esa hora"
+                response = { 'mensaje': messageReponse}
+                return JsonResponse(response)
+    response = { 'mensaje': messageReponse}
+    return JsonResponse(response)
