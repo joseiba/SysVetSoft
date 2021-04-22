@@ -106,7 +106,7 @@
                         <div class="row">
                             <div class="col-sm-12">
                                 <div class="card-box table-responsive" style="text-align: center;">
-                                    <table id="" class="table table-striped table-bordered" style="width:70%; margin: auto;">
+                                    <table id="" class="table table-striped table-bordered" style="width:90%; margin: auto;">
                                         <thead>
                                             <tr class="" style="background-color: #2a3f54; font-size: medium;">
                                                 <th style="color: white;">Nombre tipo</th>
@@ -129,7 +129,12 @@
 
                                                     <button class="btn btn-danger"
                                                         onclick="abrir_modal_eliminacion('/tipoProducto/baja/' + '{{ tipo_producto.id }}' + '/');">
-                                                        Dar de baja
+                                                        Baja
+                                                    </button>
+
+                                                    <button class="btn btn-success"
+                                                        onclick="abrir_modal_edicion('/tipoProducto/alta/' + '{{ tipo_producto.id }}' + '/');">
+                                                        Alta
                                                     </button>
                                                 </td>
                                             </tr>

@@ -12,6 +12,7 @@ class TipoProductoForm(forms.ModelForm):
         model = TipoProducto
         exclude = ['is_active']
         widgets = {
+            'codigo_tipo' : forms.TextInput(attrs={'class':'form-control', 'name': 'codigo_tipo', 'placeholder': 'Codigo Tipo', 'required': 'required', 'onkeyup':'replaceDirection(this)'}),
             'nombre_tipo' : forms.TextInput(attrs={'class':'form-control', 'name': 'nombre_tipo', 'placeholder': 'Nombre Tipo Producto', 'required': 'required', 'onkeyup':'replaceCaratect(this)'}),
 			'fecha_alta' : forms.TextInput(attrs={'class':'form-control','type':'datetime',
                 'name': 'fecha_alta', 'placeholder': 'Fecha de Alta', 'readonly': 'readonly'}),
@@ -44,7 +45,7 @@ class ProductoForm(forms.ModelForm):
     """    
     class Meta:
         model = Producto
-        fields = '__all__'
+        exclude = ['is_active']
         widgets = {
 			'codigo_producto' : forms.TextInput(attrs={'class':'form-control', 'name': 'codigo_producto', 'placeholder': 'Codigo Producto', 'required': 'required', 'onkeyup':'replaceDirection(this)'}),
             'nombre_producto': forms.TextInput(attrs={'class':'form-control','data-validate-length-range':'20', 

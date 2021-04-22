@@ -43,22 +43,47 @@ def edit_tipo_producto(request, id):
     context = {'form': form, 'tipo_producto':tipo_producto}
     return render(request, 'ventas/producto/edit_tipo_producto.html', context)
 
-# Metodo para editar tipo producto
+# Metodo para dar de baja tipo producto
 @login_required()
 def baja_tipo_producto(request, id):
     tipo_producto = TipoProducto.objects.get(id=id)
+    print('Producto 1')
+    try:
+        producto = Producto.objects.get(tipo_producto=id)
+    except:
+        producto = None
+    print('Producto 2')
     if request.method == 'POST':
-        if tipo_producto.fecha_baja == "-":
-            tipo_producto.is_active = "N"
-            tipo_producto.fecha_baja = date.strftime("%d/%m/%Y %H:%M:%S hs")
-            tipo_producto.save()
-            return redirect('/tipoProducto/list/')
+        if producto is None:
+            if tipo_producto.fecha_baja == "-":
+                tipo_producto.is_active = "N"
+                tipo_producto.fecha_baja = date.strftime("%d/%m/%Y %H:%M:%S hs")
+                tipo_producto.save()
+                return redirect('/tipoProducto/list/')
+            else:
+                messages.success(request, 'El tipo de producto ya fue dado de baja!')
+                return redirect('/tipoProducto/list/')
         else:
-            messages.success(request, 'El tipo de producto ya fue dado de baja!')
+            messages.success(request, 'Este tipo de producto está asociado a productos en stock!')
             return redirect('/tipoProducto/list/')
     context = {'tipo_producto':tipo_producto}
     return render(request, 'ventas/producto/baja_tipo_producto.html', context)
 
+# Metodo para dar de alta tipo producto
+@login_required()
+def alta_tipo_producto(request, id):
+    tipo_producto = TipoProducto.objects.get(id=id)
+    if request.method == 'POST':
+        if tipo_producto.fecha_baja != "-":
+            tipo_producto.is_active = "Y"
+            tipo_producto.fecha_baja = '-'
+            tipo_producto.save()
+            return redirect('/tipoProducto/list/')
+        else:
+            messages.success(request, 'El tipo de producto ya fue dado de alta!')
+            return redirect('/tipoProducto/list/')
+    context = {'tipo_producto':tipo_producto}
+    return render(request, 'ventas/producto/alta_tipo_producto.html', context)
     
 
 #Metodo para listar todos los tipos de producto
@@ -184,7 +209,8 @@ def edit_producto(request, id):
 @login_required()
 def delete_producto(request, id):
     producto = Producto.objects.get(id=id)
-    producto.delete()
+    producto.is_active = "N"
+    producto.save()
     return redirect('/producto/list/')
 
 #Metodo para listar todos los productos

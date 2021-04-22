@@ -54,6 +54,7 @@ class Producto (models.Model):
     precio_venta = models.IntegerField( help_text = 'Ingrese precio de venta')
     stock_minimo = models.IntegerField(help_text = 'Ingrese stock minimo')
     stock = models.IntegerField(help_text = 'Ingrese stock minimo')
+    is_active = models.CharField(max_length=2, default="S", blank=True, null=True)
     id_deposito = models.ForeignKey('Deposito', on_delete=models.CASCADE, null=False)
 
     def __str__(self):

@@ -21,7 +21,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 from apps.usuario.views  import Login, logoutUser,home_user
-from apps.ventas.producto.views import add_tipo_producto, list_tipo_producto, edit_tipo_producto, search_tipo_producto, baja_tipo_producto, add_deposito, list_deposito, edit_deposito, search_deposito, add_producto, edit_producto, list_producto, delete_producto, search_producto
+from apps.ventas.producto.views import add_tipo_producto, list_tipo_producto, edit_tipo_producto, search_tipo_producto, baja_tipo_producto, alta_tipo_producto, add_deposito, list_deposito, edit_deposito, search_deposito, add_producto, edit_producto, list_producto, delete_producto, search_producto
 from apps.ventas.cliente.views import add_cliente, list_clientes, edit_cliente, delete_cliente, search_cliente
 from apps.ventas.mascota.views import (list_mascotas, add_mascota, edit_mascota, list_especie, add_especie, 
 edit_especie,search_especie, list_raza, add_raza, edit_raza, search_raza,search_mascota, order_by_mascotas, 
@@ -46,6 +46,7 @@ urlpatterns = [
     path('tipoProducto/list/', list_tipo_producto, name="list_tipo_producto"),
     path('tipoProducto/edit/<int:id>/', edit_tipo_producto, name="edit_tipo_producto"),
     path('tipoProducto/baja/<int:id>/', baja_tipo_producto, name="baja_tipo_producto"),
+    path('tipoProducto/alta/<int:id>/', alta_tipo_producto, name="alta_tipo_producto"),
     path('tipoProducto/search/', search_tipo_producto, name="search_tipo_producto"),
 
 #Urls producto
