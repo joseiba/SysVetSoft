@@ -1,11 +1,11 @@
 <link rel="stylesheet" href="/static/project_static/other/commons/shared.css">
-<link rel="stylesheet" href="/static/project_static/other/js//jquery-ui-themes-1.12.1/jquery-ui-themes-1.12.1/themes/base/jquery-ui.css">
+<link rel="stylesheet"
+    href="/static/project_static/other/js//jquery-ui-themes-1.12.1/jquery-ui-themes-1.12.1/themes/base/jquery-ui.css">
 <link rel="stylesheet" href="/static/project_static/other/js/jquery-timepicker-1.3.5/jquery.timepicker.min.css">
 <style>
-    .alert{
+    .alert {
         display: none;
     }
-
 </style>
 
 <div class="modal-dialog" role="document">
@@ -18,25 +18,24 @@
         </div>
         <form action="{% url 'add_reserva' %}" method="post">
             {% csrf_token %}
-            <form class="" action="{% url 'add_reserva' %}" method="POST" id="form" >
+            <form class="" action="{% url 'add_reserva' %}" method="POST" id="form">
                 {% csrf_token %}
-                <div class="field item form-group" style="display: grid;"> 
+                <div class="field item form-group" style="display: grid;">
                     <label class="col-form-label col-md-6 col-sm-3">Descripción Reserva</label>
                     <div class="col-md-12 col-sm-6">
-                        <textarea  class="form-control optional" name="descripcion" id="descripcion" placeholder="Descripción de la reserva"
-                        onkeyup="replaceDirection(this)"></textarea>                                   
+                        <textarea class="form-control optional" name="descripcion" id="descripcion"
+                            placeholder="Descripción de la reserva" onkeyup="replaceDirection(this)"></textarea>
                     </div>
                 </div>
                 <div class="field item form-group" style="display: grid;">
-                    <label class="col-form-label col-md-6 col-sm-3">Fecha Reserva<span
-                            class="required">*</span></label>
+                    <label class="col-form-label col-md-6 col-sm-3">Fecha Reserva<span class="required">*</span></label>
                     <div class="col-md-12 col-sm-6">
-                        <input class="form-control" type="text" name="fecha_reserva" id="datepicker" data-date-format="YYYY-MM-DD"  required="required">
+                        <input class="form-control" type="text" name="fecha_reserva" id="datepicker" autocomplete="off"
+                            required="required">
                     </div>
                 </div>
                 <div class="field item form-group" style="display: grid;">
-                    <label class="col-form-label col-md-6 col-sm-3">Servicio<span
-                            class="required">*</span></label>
+                    <label class="col-form-label col-md-6 col-sm-3">Servicio<span class="required">*</span></label>
                     <div class="col-md-12 col-sm-6">
                         {{form.id_servicio}}
                     </div>
@@ -46,32 +45,41 @@
                     <label class="col-form-label col-md-6 col-sm-3">Hora Reserva
                         <span class="required">*</span>
                     </label>
-                    <div class="col-md-12 col-sm-6 " id="hora_reserva" style="display: grid;">
-                        <input class="form-control timepicker" type="text" name="hora_reserva" id="hora_reserva" required="required">
+                    <div class="col-md-12 col-sm-6 ">
+                        <input class="form-control timepicker" type="text" name="hora_reserva" id="hora_reserva"
+                            required="required">
                     </div>
-                </div>               
+                </div>
                 <div class="field item form-group" style="display: grid;">
-                    <label class="col-form-label col-md-3 col-sm-3">Cliente<span
-                            class="required">*</span></label>
+                    <label class="col-form-label col-md-3 col-sm-3">Cliente<span class="required">*</span></label>
                     <div class="col-md-12 col-sm-6">
                         {{form.id_cliente}}
                     </div>
                 </div>
 
-                <div class="form-group">                
-                    <div class="col-md-12 col-sm-6">
-                        <div id="id_mensaje_alert">
-                            
-                        </div>
-                    </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
+                    <button type="submit" class="btn btn-primary">Agregar</button>
                 </div>
-                
+            </form>
+    </div>
+</div>
 
-            <div class="modal-footer">
-                <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
-                <button type="submit" class="btn btn-primary">Agregar</button>
+<div class="modal" id="mensaje">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header"  style="background-color:#dc3545 ;">
+                <h5 class="modal-title" style="color: white;">Mensaje</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
-        </form>
+            <div class="modal-body">
+                <div id="id_mensaje_alert" style="font-size: 25px; text-align: center;">
+
+                </div>
+            </div>        
+        </div>
     </div>
 </div>
 
@@ -106,52 +114,49 @@
             $('form .alert').remove();
     }).prop('checked', false);
 
-    $(function(){
+    $(function () {
+        console.log("add")
         $(document).on('click', '#confirmDeleteButtonModal', function () {
             var id = $(this).data("id-reserva")
             var url = '/reserva/bajaReserva/' + id;
             window.location = url;
         })
 
-        $('form input').on("cut copy paste",function(e) {
+        $('form input').on("cut copy paste", function (e) {
             e.preventDefault();
         });
 
-        $("#datepicker").change(function(){
+        $("#datepicker").change(function () {
             var fecha = $("#datepicker").val()
 
-            sessionStorage.setItem("fecha", fecha)        
+            sessionStorage.setItem("fecha", fecha)
         })
 
-        $("#id_servicio").change(function(){
+        $("#id_servicio").change(function () {
             var servicio = $("#id_servicio").val()
-            sessionStorage.setItem("servicio", servicio)            
+            sessionStorage.setItem("servicio", servicio)
         })
 
-        $("#hora_reserva").change(function(){
-            var hora = $("#hora_reserva").val()
-            sessionStorage.setItem("hora", hora) 
-        })
-
-        $("#id_cliente").change(function(){
+        $("#id_cliente").change(function () {
             var id_cliente = $("#id_cliente").val()
-            
+
             var fecha = sessionStorage.getItem("fecha");
             var servicio = sessionStorage.getItem("servicio")
-            var hora = sessionStorage.getItem("hora_reserva");
+            var hora = $(".timepicker").val()
 
-            if( fecha != "" && servicio != "" && hora != "" && id_cliente != ""){
+            if ((fecha != "" || fecha != null) && (servicio != "" || servicio != null) && (hora != "" || hora != null) && (id_cliente != "" || id_cliente != null)) {
                 var urlValidate = "/reserva/validarDatos/"
                 $.ajax({
-                    data: {'fecha': fecha, 'servicio': servicio, 'hora': hora, 'id_cliente': id_cliente},
+                    data: { 'fecha': fecha, 'servicio': servicio, 'hora': hora, 'id_cliente': id_cliente },
                     url: urlValidate,
-                    success: function(response){
-                        if(response.mensaje != ''){
-                            $("#id_mensaje_alert").html('<div class="alert alert-warning" role="alert">\
-                                                            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>'+ response.mensaje + '</div>');
+                    success: function (response) {
+                        console.log(response)
+                        if (response.mensaje != "") {
+                            $("#id_mensaje_alert").html('<div>' + response.mensaje + '</div>');
+                            $('#mensaje').modal('show');
                         }
                     },
-                    error: function(response){
+                    error: function (response) {
 
                     }
                 })
@@ -161,6 +166,7 @@
         $("#datepicker").datepicker({
             minDate: 0,
             maxDate: "+12M +5D",
+            dateFormat: "yy-mm-dd"
         });
 
         $(".timepicker").timepicker({
@@ -171,9 +177,9 @@
             startTime: '08:00',
             dropdown: true,
             scrollbar: true,
-            zindex:1151,
+            zindex: 1151,
             timeFormat: 'HH:mm',
         });
-})
+    })
 
 </script>

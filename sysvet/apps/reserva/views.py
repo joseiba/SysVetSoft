@@ -81,14 +81,16 @@ def search_reserva(request):
 def validar_fecha_hora(request):
     fecha = request.GET.get('fecha')
     hora = request.GET.get('hora')
+    print(hora)
     servicio = request.GET.get('servicio')
     cliente = request.GET.get('id_cliente')
-    
+    print("entro")
+
     messageReponse = ""
-
     reserva = Reserva.objects.filter(fecha_reserva=fecha, id_servicio=servicio)
-
-    if reserva is None:
+    print("paso")
+    if reserva is not None:
+        print("entro 1 if")
         for re in reserva:
             if re.hora_reserva == hora:                
                 messageReponse = "Ya existe un agendamiento para ese dia y para esa hora"
