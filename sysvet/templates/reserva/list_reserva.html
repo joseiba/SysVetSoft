@@ -180,9 +180,11 @@
             businessHours: true, // display business hours
             editable: true,
             selectable: true,
-            select: function(arg) {
+            dateClick: function(info) {
                 var url = '/reserva/addReserva/'
-                $('#creacion').load(url, function () {
+                var today = info.dateStr;
+                sessionStorage.setItem('fecha_seleccionada', today)
+                $('#creacion').load(url, today, function () {
                     $(this).modal('show');
                 }); 
                 calendar.unselect() 

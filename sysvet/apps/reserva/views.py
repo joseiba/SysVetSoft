@@ -4,7 +4,7 @@ from django.contrib import messages
 from django.db.models import Q
 from django.core.paginator import Paginator
 from django.http import JsonResponse
-
+from datetime import time, datetime
 
 from .models import Reserva
 from .forms import ReservaForm
@@ -59,8 +59,7 @@ def list_reserva(request):
 @login_required()
 def delete_reserva(request, id):
     reserva = Reserva.objects.get(id=id)
-    reserva.is_active = "N"
-    reserva.save()
+    reserva.delete()
     messages.success(request, 'La reserva se ha eliminado!')
     return redirect('/reserva/listReserva/')
 
@@ -81,20 +80,55 @@ def search_reserva(request):
 def validar_fecha_hora(request):
     fecha = request.GET.get('fecha')
     hora = request.GET.get('hora')
-    print(hora)
+    horaSelected = hora.split(':')
     servicio = request.GET.get('servicio')
     cliente = request.GET.get('id_cliente')
-    print("entro")
-
+    diaActual = datetime.now()
+    mesActual =  str(diaActual.month) if diaActual.month > 9 else '0' + str(diaActual.month)
+    dayActual = str(diaActual.day) if diaActual.day > 9 else '0' + str(diaActual.day)
+    diaCompare = str(diaActual.year) + "-" + mesActual + "-" + dayActual
+    print(diaCompare)
     messageReponse = ""
-    reserva = Reserva.objects.filter(fecha_reserva=fecha, id_servicio=servicio)
-    print("paso")
-    if reserva is not None:
-        print("entro 1 if")
-        for re in reserva:
-            if re.hora_reserva == hora:                
+    isFalse = True
+    splitHoraActual = diaActual.hour
+
+    try:
+        reserva = Reserva.objects.get(fecha_reserva=fecha, id_servicio=servicio, hora_reserva=hora)
+    except:
+        isFalse = False        
+
+    if diaCompare == fecha:
+        if splitHoraActual <= int(horaSelected[0]): 
+            if isFalse: 
                 messageReponse = "Ya existe un agendamiento para ese dia y para esa hora"
                 response = { 'mensaje': messageReponse}
                 return JsonResponse(response)
+            else:
+                try:
+                    reserva = Reserva.objects.get(fecha_reserva=fecha, id_servicio=servicio, id_cliente=cliente, hora_reserva=hora)
+                except: 
+                    isFalse = False
+                if isFalse:
+                    messageReponse = "Este cliente ya tiene una reserva para este dia y hora"
+                    response = { 'mensaje': messageReponse}
+                    return JsonResponse(response)
+        else:
+            messageReponse = "Has seleccionado un horario que ya a ha pasado"
+            response = { 'mensaje': messageReponse}
+            return JsonResponse(response)
+    else:
+        if isFalse: 
+            messageReponse = "Ya existe un agendamiento para ese dia y para esa hora"
+            response = { 'mensaje': messageReponse}
+            return JsonResponse(response)
+        else:
+            try:
+                reserva = Reserva.objects.filter(fecha_reserva=fecha, id_servicio=servicio, id_cliente=cliente, hora_reserva=hora)
+            except: 
+                isFalse = True
+            if isFalse:
+                messageReponse = "Este cliente ya tiene una reserva para este dia y hora"
+                response = { 'mensaje': messageReponse}
+                return JsonResponse(response)        
     response = { 'mensaje': messageReponse}
     return JsonResponse(response)

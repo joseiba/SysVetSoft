@@ -27,12 +27,8 @@
                             placeholder="Descripción de la reserva" onkeyup="replaceDirection(this)"></textarea>
                     </div>
                 </div>
-                <div class="field item form-group" style="display: grid;">
-                    <label class="col-form-label col-md-6 col-sm-3">Fecha Reserva<span class="required">*</span></label>
-                    <div class="col-md-12 col-sm-6">
-                        <input class="form-control" type="text" name="fecha_reserva" id="datepicker" autocomplete="off"
-                            required="required">
-                    </div>
+                <div id="id_fecha_reserva">
+                        
                 </div>
                 <div class="field item form-group" style="display: grid;">
                     <label class="col-form-label col-md-6 col-sm-3">Servicio<span class="required">*</span></label>
@@ -87,10 +83,9 @@
 <script src="/static/project_static/vendors/validator/multifield.js"></script>
 <script src="/static/project_static/vendors/validator/validator.js"></script>
 <script src="/static/project_static/other/js/main.js"></script>
-<script src="/static/project_static/other/js/jquery-ui-1.12.1/jquery-ui-1.12.1/jquery-ui.js"></script>
 <script src="/static/project_static/other/js/jquery-timepicker-1.3.5/jquery.timepicker.min.js"></script>
 
-
+<script src="/static/project_static/other/js/jquery-ui-1.12.1/jquery-ui-1.12.1/jquery-ui.js"></script>
 <script>
     // initialize a validator instance from the "FormValidator" constructor.
     // A "<form>" element is optionally passed as an argument, but is not a must
@@ -114,8 +109,7 @@
             $('form .alert').remove();
     }).prop('checked', false);
 
-    $(function () {
-        console.log("add")
+    $(function () {    
         $(document).on('click', '#confirmDeleteButtonModal', function () {
             var id = $(this).data("id-reserva")
             var url = '/reserva/bajaReserva/' + id;
@@ -137,10 +131,15 @@
             sessionStorage.setItem("servicio", servicio)
         })
 
+        var today = sessionStorage.getItem("fecha_seleccionada")
+
+
+        $("#id_fecha_reserva").html('<input type="hidden" name="fecha_reserva" id="fecha_reserva" value="'+ today +'"/>');
+
         $("#id_cliente").change(function () {
             var id_cliente = $("#id_cliente").val()
 
-            var fecha = sessionStorage.getItem("fecha");
+            var fecha = today;
             var servicio = sessionStorage.getItem("servicio")
             var hora = $(".timepicker").val()
 
@@ -170,7 +169,7 @@
         });
 
         $(".timepicker").timepicker({
-            interval: 30,
+            interval: 60,
             minTime: '8',
             maxTime: '18:00',
             defaultTime: '8',

@@ -1,10 +1,11 @@
 {
     "configurations": [
+
         {
             "name": "Python: Django",
             "type": "python",
             "request": "launch",
-            "program": "${workspaceFolder}\\manage.py",
+            "program": "${sysVet}sysVet/manage.py",
             "args": [
                 "runserver"
             ],
