@@ -26,7 +26,8 @@ from apps.ventas.mascota.views import (list_mascotas, add_mascota, edit_mascota,
 edit_especie,search_especie, list_raza, add_raza, edit_raza, search_raza,search_mascota, order_by_mascotas, 
 edit_ficha_medica, list_historial)
 from apps.reserva.views import (add_reserva, edit_reserva, list_reserva, delete_reserva, search_reserva, validar_fecha_hora)
-from apps.configuracion.views import (add_servicio, edit_servicio, delete_servicio, list_servicio, search_servicio)
+from apps.configuracion.views import (add_servicio, edit_servicio, delete_servicio, list_servicio, search_servicio, 
+add_empleado, edit_empleado, list_empleado, delete_empleado, search_empleado)
 
 urlpatterns = [
     # Login and logout   
@@ -74,6 +75,13 @@ urlpatterns = [
     path('reserva/bajaReserva/<int:id>/', delete_reserva, name="delete_reserva"),
     path('reserva/searchReserva/', search_reserva, name="search_reserva"),
     path('reserva/validarDatos/', validar_fecha_hora, name="search_reserva"),
+
+    #Urls configuraciones 
+    path('configuracion/listEmpleado/', list_empleado , name="list_empleado"),
+    path('configuracion/addEmpleado/',  add_empleado, name="add_empleado"),
+    path('configuracion/editEmpleado/<int:id>/',edit_empleado , name="edit_empleado"),
+    path('configuracion/searchEmpleado/', search_empleado, name="search_empleado"),
+    path('configuracion/bajaEmpleado/<int:id>/', delete_empleado, name="delete_empleado"),
 
 ]
 

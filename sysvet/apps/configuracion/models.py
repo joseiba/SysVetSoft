@@ -49,3 +49,20 @@ class Servicio(models.Model):
     def get_absolute_url(self):
         """Retorna el URL para acceder a una instancia de una ciudad en particular."""
         return reverse('servicio-detail', args=[str(self.id)])
+
+class Empleado(models.Model):
+    nombre_emp = models.CharField(max_length=200)
+    apellido_emp = models.CharField(max_length=200)
+    ci_empe = models.CharField(max_length=200)
+    disponible = models.BooleanField(blank=True, null=True, default=True)    
+    last_modified = models.DateTimeField(auto_now=True, blank=True)
+    is_active = models.CharField(max_length=200, blank=True, null=True, default="S")
+    id_servicio = models.ForeignKey('Servicio', on_delete=models.CASCADE, null=False)
+
+    class Meta:
+        verbose_name = "Empleado"
+        verbose_name_plural = "Empleados"
+
+    def __str__(self):
+        """Formato del empleado"""
+        return '{0}'.format(self.nombre_emp)
