@@ -209,9 +209,6 @@ def edit_ficha_medica(request,id):
         formConsulta = ConsultaForm(request.POST, instance=consultaGet)
         formAntiparasitario = AntiparasitarioForm(request.POST, instance=antiparasitarioGet)
         if not formVacuna.has_changed() and not formConsulta.has_changed() and not formAntiparasitario.has_changed():
-            print(formVacuna.has_changed())
-            print(formConsulta.has_changed())
-            print(formAntiparasitario.has_changed())
             messages.info(request, "No has hecho ningun cambio!")
             return redirect('/mascota/editFichaMedica/' + str(id))   
         if formVacuna.is_valid() or formConsulta.is_valid() or formAntiparasitario.is_valid():                    

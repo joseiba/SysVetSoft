@@ -10,21 +10,14 @@
         <form action="{% url 'add_servicio' %}" method="post">
             {% csrf_token %}
             <div class="field item form-group mt-3">
-                <label class="col-form-label col-md-3 col-sm-3  label-align">Precio Servicio<span
+                <label class="col-form-label col-md-3 col-sm-3  label-align">Codigo Servicio<span
                     class="required">*</span></label>
                 <div class="col-md-6 col-sm-6">
-                    <input class="form-control" name="cod_serv" placeholder="Nombre del servicio" required="required" id="cod_serv" onkeyup="replaceCaratect(this)"/>
+                    <input class="form-control" name="cod_serv" placeholder="Codigo del servicio" required="required" id="cod_serv" onkeyup="replaceCaratect(this)"/>
                 </div>
-            </div>
+            </div>          
             <div class="field item form-group mt-3">
-                <label class="col-form-label col-md-3 col-sm-3  label-align">Precio Servicio<span
-                    class="required">*</span></label>
-                <div class="col-md-6 col-sm-6">
-                    <input class="form-control" name="min_sev" placeholder="Nombre del servicio" required="required" id="min_sev" onkeyup="replaceCaratect(this)"/>
-                </div>
-            </div>
-            <div class="field item form-group mt-3">
-                <label class="col-form-label col-md-3 col-sm-3  label-align">Precio Servicio<span
+                <label class="col-form-label col-md-3 col-sm-3  label-align">Nombre Servicio<span
                     class="required">*</span></label>
                 <div class="col-md-6 col-sm-6">
                     <input class="form-control" name="nombre_servicio" placeholder="Nombre del servicio" required="required" id="nombre_servicio" onkeyup="replaceCaratect(this)"/>

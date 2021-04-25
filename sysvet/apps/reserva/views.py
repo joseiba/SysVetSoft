@@ -8,7 +8,7 @@ from datetime import time, datetime
 
 from .models import Reserva
 from .forms import ReservaForm
-from apps.configuracion.models import Servicio
+from apps.configuracion.models import Servicio, Empleado
 from apps.configuracion.forms import ServicioForm
 
 hora_entrada = "08:00"
@@ -22,8 +22,9 @@ def add_reserva(request):
     servicios = Servicio.objects.exclude(is_active="N").order_by('-last_modified')
     if request.method == 'POST':
         form = ReservaForm(request.POST) 
-        if form.is_valid():           
-            form.save()
+        if form.is_valid():
+            print(form)         
+            form.save()            
             messages.success(request, 'Se ha agregado correctamente!')
             return redirect('/reserva/listReserva/')
     context = {'form' : form}
@@ -91,16 +92,16 @@ def validar_fecha_hora(request):
     messageReponse = ""
     isFalse = True
     splitHoraActual = diaActual.hour
-
-    try:
-        reserva = Reserva.objects.get(fecha_reserva=fecha, id_servicio=servicio, hora_reserva=hora)
-    except:
-        isFalse = False        
+    serviEmpleado = Empleado.objects.filter(id_servicio=servicio).exclude(disponible=False)
+    countEmpleadoServi = Empleado.objects.filter(id_servicio=servicio).exclude(disponible=False).count()
+    countEmpleadoDiaServi = Reserva.objects.filter(id_servicio=servicio, fecha_reserva=fecha, hora_reserva=hora).exclude(disponible_emp='S').count()
 
     if diaCompare == fecha:
-        if splitHoraActual <= int(horaSelected[0]): 
-            if isFalse: 
-                messageReponse = "Ya existe un agendamiento para ese dia y para esa hora"
+        print('today')
+        if splitHoraActual <= int(horaSelected[0]):
+            print("hora")             
+            if countEmpleadoServi <= countEmpleadoDiaServi: 
+                messageReponse = "Ya no hay disponibilidad del servicio para esa hora"
                 response = { 'mensaje': messageReponse}
                 return JsonResponse(response)
             else:
@@ -109,7 +110,7 @@ def validar_fecha_hora(request):
                 except: 
                     isFalse = False
                 if isFalse:
-                    messageReponse = "Este cliente ya tiene una reserva para este dia y hora"
+                    messageReponse = "Este cliente ya tiene una reserva para ese dia y hora"
                     response = { 'mensaje': messageReponse}
                     return JsonResponse(response)
         else:
@@ -117,18 +118,18 @@ def validar_fecha_hora(request):
             response = { 'mensaje': messageReponse}
             return JsonResponse(response)
     else:
-        if isFalse: 
-            messageReponse = "Ya existe un agendamiento para ese dia y para esa hora"
+        if countEmpleadoServi <= countEmpleadoDiaServi:
+            messageReponse = "Ya no hay disponibilidad del servicio para esa hora y dia"
             response = { 'mensaje': messageReponse}
             return JsonResponse(response)
         else:
             try:
-                reserva = Reserva.objects.filter(fecha_reserva=fecha, id_servicio=servicio, id_cliente=cliente, hora_reserva=hora)
+                reserva = Reserva.objects.get(fecha_reserva=fecha, id_servicio=servicio, id_cliente=cliente, hora_reserva=hora)
             except: 
-                isFalse = True
+                isFalse = False
             if isFalse:
-                messageReponse = "Este cliente ya tiene una reserva para este dia y hora"
+                messageReponse = "Este cliente ya tiene una reserva para ese dia y hora"
                 response = { 'mensaje': messageReponse}
-                return JsonResponse(response)        
+                return JsonResponse(response)   
     response = { 'mensaje': messageReponse}
     return JsonResponse(response)
