@@ -23,7 +23,6 @@ def add_reserva(request):
     if request.method == 'POST':
         form = ReservaForm(request.POST) 
         if form.is_valid():
-            print(form)         
             form.save()            
             messages.success(request, 'Se ha agregado correctamente!')
             return redirect('/reserva/listReserva/')
@@ -41,6 +40,9 @@ def edit_reserva(request, id):
             return redirect('/reserva/listReserva/')
         if form.is_valid():
             reserva = form.save(commit=False)
+            estado = request.POST.get('estado_re')
+            if estado == 'FIN' or estado == 'CAN':
+                reserva.disponible_emp = "S"
             reserva.save()
             messages.success(request, 'Se ha editado correctamente!')
             return redirect('/reserva/listReserva/')

@@ -20,14 +20,7 @@
                     <div class="col-md-12 col-sm-6">
                         {{form.descripcion}}                                  
                     </div>
-                </div>
-                <div class="field item form-group" style="display: grid;">
-                    <label class="col-form-label col-md-6 col-sm-3">Fecha Reserva<span
-                            class="required">*</span></label>
-                    <div class="col-md-12 col-sm-6">
-                        {{form.fecha_reserva}}
-                    </div>
-                </div>
+                </div>              
                 <div class="field item form-group" style="display: grid;">
                     <label class="col-form-label col-md-6 col-sm-3">Hora Reserva
                         <span class="required">*</span>
@@ -58,7 +51,7 @@
                         {{form.estado_re}}
                     </div>
                 </div>
-
+                {{ form.fecha_reserva}}
             <div class="modal-footer">
                 <button type="button" class="btn btn-danger" id="confirmDeleteButtonModal" data-dismiss="modal" data-id-reserva="{{reserva.id}}">Eliminar</button>
                 <button type="submit" class="btn btn-warning" style="color: #fff;">Editar</button>
