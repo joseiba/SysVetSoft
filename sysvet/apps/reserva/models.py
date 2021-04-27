@@ -22,7 +22,8 @@ class Reserva(models.Model):
     last_modified = models.DateTimeField(auto_now=True, blank=True)
     is_active = models.CharField(max_length=2, default="S", blank=True, null=True)
     id_servicio = models.ForeignKey(Servicio, on_delete=models.CASCADE, null=False)
-    id_cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE, null=False) 
+    id_cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE, null=False)
+    id_mascota = models.ForeignKey(Mascota, on_delete=models.CASCADE, null=False)
 
     class Meta:
         verbose_name = "Reserva"

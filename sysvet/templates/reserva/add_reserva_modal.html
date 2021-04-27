@@ -16,53 +16,60 @@
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
-            <form class="" action="{% url 'add_reserva' %}" method="POST" id="form">
-                {% csrf_token %}
-                <div class="field item form-group" style="display: grid;">
-                    <label class="col-form-label col-md-6 col-sm-3">Descripción Reserva</label>
-                    <div class="col-md-12 col-sm-6">
-                        <textarea class="form-control optional" name="descripcion" id="descripcion"
-                            placeholder="Descripción de la reserva" onkeyup="replaceDirection(this)"></textarea>
-                    </div>
+        <form class="" action="{% url 'add_reserva' %}" method="POST" id="form">
+            {% csrf_token %}
+            <div class="field item form-group" style="display: grid;">
+                <label class="col-form-label col-md-6 col-sm-3">Descripción Reserva</label>
+                <div class="col-md-12 col-sm-6">
+                    <textarea class="form-control optional" name="descripcion" id="descripcion"
+                        placeholder="Descripción de la reserva" onkeyup="replaceDirection(this)"></textarea>
                 </div>
-                <div id="id_fecha_reserva">
-                        
-                </div>
-                <div class="field item form-group" style="display: grid;">
-                    <label class="col-form-label col-md-6 col-sm-3">Servicio<span class="required">*</span></label>
-                    <div class="col-md-12 col-sm-6">
-                        {{form.id_servicio}}
-                    </div>
-                </div>
+            </div>
+            <div id="id_fecha_reserva">
 
-                <div class="field item form-group" style="display: grid;">
-                    <label class="col-form-label col-md-6 col-sm-3">Hora Reserva
-                        <span class="required">*</span>
-                    </label>
-                    <div class="col-md-12 col-sm-6 ">
-                        <input class="form-control timepicker" type="text" name="hora_reserva" id="hora_reserva"
-                            required="required">
-                    </div>
+            </div>
+            <div class="field item form-group" style="display: grid;">
+                <label class="col-form-label col-md-6 col-sm-3">Servicio<span class="required">*</span></label>
+                <div class="col-md-12 col-sm-6">
+                    {{form.id_servicio}}
                 </div>
-                <div class="field item form-group" style="display: grid;">
-                    <label class="col-form-label col-md-3 col-sm-3">Cliente<span class="required">*</span></label>
-                    <div class="col-md-12 col-sm-6">
-                        {{form.id_cliente}}
-                    </div>
+            </div>
+
+            <div class="field item form-group" style="display: grid;">
+                <label class="col-form-label col-md-6 col-sm-3">Hora Reserva
+                    <span class="required">*</span>
+                </label>
+                <div class="col-md-12 col-sm-6 ">
+                    <input class="form-control timepicker" type="text" name="hora_reserva" id="hora_reserva"
+                        required="required">
                 </div>
-                <input type="hidden" name="disponible_emp" value="N"/>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
-                    <button type="submit" class="btn btn-primary">Agregar</button>
+            </div>
+            <div class="field item form-group" style="display: grid;">
+                <label class="col-form-label col-md-3 col-sm-3">Cliente<span class="required">*</span></label>
+                <div class="col-md-12 col-sm-6">
+                    {{form.id_cliente}}
                 </div>
-            </form>
+            </div>
+
+            <div class="field item form-group d-none" id="id_mascota_cliente" style="display: grid;">
+                <label class="col-form-label col-md-3 col-sm-3">Mascota<span class="required">*</span></label>
+                <div class="form-control" id="list_mascota">
+
+                </div>
+            </div>
+            <input type="hidden" name="disponible_emp" value="N" />
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
+                <button type="submit" class="btn btn-primary">Agregar</button>
+            </div>
+        </form>
     </div>
 </div>
 
 <div class="modal" id="mensaje">
     <div class="modal-dialog">
         <div class="modal-content">
-            <div class="modal-header"  style="background-color:#dc3545 ;">
+            <div class="modal-header" style="background-color:#dc3545 ;">
                 <h5 class="modal-title" style="color: white;">Mensaje</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
@@ -72,7 +79,7 @@
                 <div id="id_mensaje_alert" style="font-size: 25px; text-align: center;">
 
                 </div>
-            </div>        
+            </div>
         </div>
     </div>
 </div>
@@ -107,7 +114,7 @@
             $('form .alert').remove();
     }).prop('checked', false);
 
-    $(function () {    
+    $(function () {
         $(document).on('click', '#confirmDeleteButtonModal', function () {
             var id = $(this).data("id-reserva")
             var url = '/reserva/bajaReserva/' + id;
@@ -132,19 +139,68 @@
         var today = sessionStorage.getItem("fecha_seleccionada")
 
 
-        $("#id_fecha_reserva").html('<input type="hidden" name="fecha_reserva" id="fecha_reserva" value="'+ today +'"/>');
+        $("#id_fecha_reserva").html('<input type="hidden" name="fecha_reserva" id="fecha_reserva" value="' + today + '"/>');
+
+        $(".timepicker").timepicker({
+            interval: 60,
+            minTime: '8',
+            maxTime: '18:00',
+            defaultTime: '8',
+            startTime: '08:00',
+            dropdown: true,
+            scrollbar: true,
+            zindex: 1151,
+            timeFormat: 'HH:mm',
+        });
 
         $("#id_cliente").change(function () {
             var id_cliente = $("#id_cliente").val()
+            if (id_cliente !== "" && id_cliente != null) {
+                sessionStorage.setItem("id_cliente", id_cliente)
+                var urlValidate = "/reserva/getMascotaCliente"
+                $.ajax({
+                    data: { 'id_cliente': id_cliente },
+                    url: urlValidate,
+                    success: function (response) {
+                        var mascotas = JSON.parse(response.mascota);
+                        if (response.mensaje != "") {
+                            var selectMascota = '<select class="form-control" required="required" name="id_mascota" id="id_mascota">\
+                                                    <option>Seleccione la mascota</option>';
+                            $.each(mascotas, function (i, data) {
+                                selectMascota += "<option required='required' value='" + data.id + "'>" + data.nombre + "</option>";
+                            });
 
+                            selectMascota += '</select>';
+                            $("#form").find("#id_mascota_cliente").removeClass("d-none");
+                            $("#list_mascota").html(selectMascota)
+                        }
+                        else {
+                            $("#form").find("#id_mascota_cliente").addClass("d-none")
+                        }
+                    },
+                    error: function (response) {
+                        /*<select class="form-control" required='required' name="id_ciudad" id="id_cuidad">
+                                        <option required='required'>Seleccione una Cuidad</option>
+                                        {% for cui in cuidad %}
+                                        <option required="required" value={{ cui.id}}>{{ cui.nombre_ciudad }}</option>
+                                        {% endfor %}
+                                    </select>  */
+                    }
+                })
+            }
+        })
+
+        $(document).on("change", "#id_mascota", function () {
+            var id_cliente = sessionStorage.getItem("id_cliente")
             var fecha = today;
             var servicio = sessionStorage.getItem("servicio")
             var hora = $(".timepicker").val()
+            var id_mascota = $("#id_mascota").val()
 
-            if ((fecha != "" || fecha != null) && (servicio != "" || servicio != null) && (hora != "" || hora != null) && (id_cliente != "" || id_cliente != null)) {
+            if ((fecha != "" || fecha != null) && (servicio != "" || servicio != null) && (hora != "" || hora != null) && (id_cliente != "" || id_cliente != null) && (id_mascota != "" || id_mascota != null)) {
                 var urlValidate = "/reserva/validarDatos/"
                 $.ajax({
-                    data: { 'fecha': fecha, 'servicio': servicio, 'hora': hora, 'id_cliente': id_cliente },
+                    data: { 'fecha': fecha, 'servicio': servicio, 'hora': hora, 'id_cliente': id_cliente, 'id_mascota': id_mascota},
                     url: urlValidate,
                     success: function (response) {
                         console.log(response)
@@ -159,24 +215,6 @@
                 })
             }
         })
-
-        $("#datepicker").datepicker({
-            minDate: 0,
-            maxDate: "+12M +5D",
-            dateFormat: "yy-mm-dd"
-        });
-
-        $(".timepicker").timepicker({
-            interval: 60,
-            minTime: '8',
-            maxTime: '18:00',
-            defaultTime: '8',
-            startTime: '08:00',
-            dropdown: true,
-            scrollbar: true,
-            zindex: 1151,
-            timeFormat: 'HH:mm',
-        });
     })
 
 </script>

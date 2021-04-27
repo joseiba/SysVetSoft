@@ -5,11 +5,14 @@ from django.db.models import Q
 from django.core.paginator import Paginator
 from django.http import JsonResponse
 from datetime import time, datetime
+import json
 
 from .models import Reserva
 from .forms import ReservaForm
 from apps.configuracion.models import Servicio, Empleado
 from apps.configuracion.forms import ServicioForm
+from apps.ventas.mascota.models import Mascota
+
 
 hora_entrada = "08:00"
 hora_salida_lun_vie = "18:00"
@@ -86,6 +89,7 @@ def validar_fecha_hora(request):
     horaSelected = hora.split(':')
     servicio = request.GET.get('servicio')
     cliente = request.GET.get('id_cliente')
+    mascota = request.GET.get('id_mascota')
     diaActual = datetime.now()
     mesActual =  str(diaActual.month) if diaActual.month > 9 else '0' + str(diaActual.month)
     dayActual = str(diaActual.day) if diaActual.day > 9 else '0' + str(diaActual.day)
@@ -93,6 +97,7 @@ def validar_fecha_hora(request):
     print(diaCompare)
     messageReponse = ""
     isFalse = True
+    isFalseOtherDay = True    
     splitHoraActual = diaActual.hour
     serviEmpleado = Empleado.objects.filter(id_servicio=servicio).exclude(disponible=False)
     countEmpleadoServi = Empleado.objects.filter(id_servicio=servicio).exclude(disponible=False).count()
@@ -108,7 +113,7 @@ def validar_fecha_hora(request):
                 return JsonResponse(response)
             else:
                 try:
-                    reserva = Reserva.objects.get(fecha_reserva=fecha, id_servicio=servicio, id_cliente=cliente, hora_reserva=hora)
+                    reserva = Reserva.objects.get(fecha_reserva=fecha, id_servicio=servicio, id_cliente=cliente, hora_reserva=hora, id_mascota=mascota)
                 except: 
                     isFalse = False
                 if isFalse:
@@ -126,12 +131,32 @@ def validar_fecha_hora(request):
             return JsonResponse(response)
         else:
             try:
-                reserva = Reserva.objects.get(fecha_reserva=fecha, id_servicio=servicio, id_cliente=cliente, hora_reserva=hora)
+                reserva = Reserva.objects.get(fecha_reserva=fecha, id_servicio=servicio, id_cliente=cliente, hora_reserva=hora, id_mascota=mascota)
             except: 
-                isFalse = False
-            if isFalse:
+                isFalseOtherDay = False
+            if isFalseOtherDay:
                 messageReponse = "Este cliente ya tiene una reserva para ese dia y hora"
                 response = { 'mensaje': messageReponse}
                 return JsonResponse(response)   
     response = { 'mensaje': messageReponse}
     return JsonResponse(response)
+
+
+def get_mascota_cliente(request):
+    cliente = request.GET.get('id_cliente')
+
+    mascotas = Mascota.objects.filter(id_cliente=cliente)
+
+    listMascota = [{'id': mascota.id, 'nombre': mascota.nombre_mascota} for mascota in mascotas]
+
+    listJsonMascotas = json.dumps(listMascota)
+    print((listJsonMascotas))
+    print(len(listJsonMascotas))
+    if listJsonMascotas != '[]':
+        response = { 'mascota': listJsonMascotas, 'mensaje': "Ok"}
+        return JsonResponse(response)
+    response = { 'mascota': listJsonMascotas, 'mensaje': ""}       
+    return JsonResponse(response)
+
+
+
