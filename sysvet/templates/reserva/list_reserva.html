@@ -178,7 +178,7 @@
             locale: 'es',
             navLinks: true, // can click day/week names to navigate views
             businessHours: true, // display business hours
-            editable: true,
+            editable: false,
             selectable: true,
             dateClick: function(info) {
                 var url = '/reserva/addReserva/'
@@ -201,6 +201,7 @@
                         groupId: "{{ reserva.id }}",
                         title: "{{ reserva.id_servicio.nombre_servicio }}",
                         start: '{{ reserva.fecha_reserva |  date:"Y-m-d" }}T{{reserva.hora_reserva}}',
+                        color: "{{ reserva.color_estado }}"                        
                     },
                 {% endfor  %}
             ]   

@@ -25,7 +25,7 @@ def add_reserva(request):
     servicios = Servicio.objects.exclude(is_active="N").order_by('-last_modified')
     if request.method == 'POST':
         form = ReservaForm(request.POST) 
-        if form.is_valid():
+        if form.is_valid():           
             form.save()            
             messages.success(request, 'Se ha agregado correctamente!')
             return redirect('/reserva/listReserva/')
@@ -38,14 +38,17 @@ def edit_reserva(request, id):
     form = ReservaForm(instance=reserva)
     if request.method == 'POST':
         form = ReservaForm(request.POST, instance=reserva)
+        print(form.is_valid())
+        print(form)
         if not form.has_changed():
+            print("entro")
             messages.info(request, "No has hecho ningun cambio!")
             return redirect('/reserva/listReserva/')
         if form.is_valid():
             reserva = form.save(commit=False)
             estado = request.POST.get('estado_re')
             if estado == 'FIN' or estado == 'CAN':
-                reserva.disponible_emp = "S"
+                reserva.disponible_emp = "S"                                                     
             reserva.save()
             messages.success(request, 'Se ha editado correctamente!')
             return redirect('/reserva/listReserva/')
@@ -150,13 +153,23 @@ def get_mascota_cliente(request):
     listMascota = [{'id': mascota.id, 'nombre': mascota.nombre_mascota} for mascota in mascotas]
 
     listJsonMascotas = json.dumps(listMascota)
-    print((listJsonMascotas))
-    print(len(listJsonMascotas))
     if listJsonMascotas != '[]':
         response = { 'mascota': listJsonMascotas, 'mensaje': "Ok"}
         return JsonResponse(response)
     response = { 'mascota': listJsonMascotas, 'mensaje': ""}       
     return JsonResponse(response)
 
+def get_min_service(request):
+    servicio = request.GET.get('servicio')
+    isFalse = True
+    try:
+        minService = Servicio.objects.get(id=servicio)
+    except:
+        isFalse = False
+    if isFalse:
+        response = { 'tiempo': minService.min_serv, 'mensaje': "Ok"}
+        return JsonResponse(response)
+    response = { 'tiempo': minService.min_serv, 'mensaje': ""}       
+    return JsonResponse(response)
 
 

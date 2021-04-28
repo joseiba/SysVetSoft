@@ -35,13 +35,12 @@
                 </div>
             </div>
 
-            <div class="field item form-group" style="display: grid;">
+            <div class="field item form-group d-none" id="id_reserva_hora" style="display: grid;">
                 <label class="col-form-label col-md-6 col-sm-3">Hora Reserva
                     <span class="required">*</span>
                 </label>
-                <div class="col-md-12 col-sm-6 ">
-                    <input class="form-control timepicker" type="text" name="hora_reserva" id="hora_reserva"
-                        required="required">
+                <div class="col-md-12 col-sm-6" id="hora_input">
+                    
                 </div>
             </div>
             <div class="field item form-group" style="display: grid;">
@@ -133,25 +132,57 @@
 
         $("#id_servicio").change(function () {
             var servicio = $("#id_servicio").val()
-            sessionStorage.setItem("servicio", servicio)
+
+            if (servicio !== "" && servicio != null) {
+                sessionStorage.setItem("servicio", servicio)
+
+                var urlValidate = "/reserva/getTimeServices"
+                $.ajax({
+                    data: { 'servicio': servicio },
+                    url: urlValidate,
+                    success: function (response) {
+                        if (response.mensaje != "") {
+                            var inputHora = '<input class="form-control timepicker" type="text" name="hora_reserva" id="hora_reserva" required="required">';
+                            $("#form").find("#id_reserva_hora").removeClass("d-none");
+                            $("#hora_input").html(inputHora)
+                            var timeServ = parseInt(response.tiempo)
+
+                            $(".timepicker").timepicker({
+                                interval: timeServ,
+                                minTime: '8',
+                                maxTime: '18:00',
+                                defaultTime: '8',
+                                startTime: '08:00',
+                                dropdown: true,
+                                scrollbar: true,
+                                zindex: 1151,
+                                timeFormat: 'HH:mm',
+                            });
+                        }
+                        else {
+                            $("#form").find("#id_reserva_hora").addClass("d-none")
+
+                        }
+                    },
+                    error: function (response) {
+                        /*<select class="form-control" required='required' name="id_ciudad" id="id_cuidad">
+                                        <option required='required'>Seleccione una Cuidad</option>
+                                        {% for cui in cuidad %}
+                                        <option required="required" value={{ cui.id}}>{{ cui.nombre_ciudad }}</option>
+                                        {% endfor %}
+                                    </select>  */
+                    }
+                })
+            }
+            else{
+                $("#form").find("#id_reserva_hora").addClass("d-none")
+            }
         })
 
         var today = sessionStorage.getItem("fecha_seleccionada")
 
 
-        $("#id_fecha_reserva").html('<input type="hidden" name="fecha_reserva" id="fecha_reserva" value="' + today + '"/>');
-
-        $(".timepicker").timepicker({
-            interval: 60,
-            minTime: '8',
-            maxTime: '18:00',
-            defaultTime: '8',
-            startTime: '08:00',
-            dropdown: true,
-            scrollbar: true,
-            zindex: 1151,
-            timeFormat: 'HH:mm',
-        });
+        $("#id_fecha_reserva").html('<input type="hidden" name="fecha_reserva" id="fecha_reserva" value="' + today + '"/>');        
 
         $("#id_cliente").change(function () {
             var id_cliente = $("#id_cliente").val()
@@ -216,5 +247,7 @@
             }
         })
     })
+
+
 
 </script>

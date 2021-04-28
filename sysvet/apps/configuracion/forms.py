@@ -18,6 +18,8 @@ class ServicioForm(forms.ModelForm):
                 'data-validate-words':'4', 'name': 'nombre_servicio', 'placeholder': 'Nombre del Servicio', 'required': 'required','onkeyup':'replaceCaratect(this)'}),
 			'precio_servicio' : forms.TextInput(attrs={'class':'form-control', 'name': 'precio_servicio', 'placeholder': 'Precio del Servicio', 
                 'required': 'required','onkeyup':'replaceABC(this)'}),
+            'min_serv' : forms.TextInput(attrs={'class':'form-control', 'name': 'min_serv', 'placeholder': 'Tiempo del servicio en minutos', 
+                'required': 'required','onkeyup':'replaceABC(this)'})
 		}
 
 

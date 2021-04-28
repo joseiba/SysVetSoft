@@ -33,6 +33,7 @@ class Servicio(models.Model):
     cod_serv = models.CharField(max_length=200)
     nombre_servicio = models.CharField(max_length = 200, help_text = "Ingrese nombre del servicio")
     precio_servicio = models.CharField(max_length = 200, help_text = "Ingrese el precio del servicio")
+    min_serv = models.CharField(max_length = 200)
     last_modified = models.DateTimeField(auto_now=True, blank=True)
     is_active = models.CharField(max_length=200, blank=True, null=True, default="S")
 

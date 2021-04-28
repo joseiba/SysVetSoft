@@ -19,6 +19,7 @@ class Reserva(models.Model):
     hora_reserva = models.CharField(max_length=200)
     disponible_emp = models.CharField(max_length=2, default="S", blank=True, null=True)
     estado_re = models.CharField(max_length=15, choices=estados, default=PENDIENTE, help_text="Seleccione el estado", blank=True, null=True)
+    color_estado = models.CharField(max_length=200, blank=True, null=True, default="light blue")
     last_modified = models.DateTimeField(auto_now=True, blank=True)
     is_active = models.CharField(max_length=2, default="S", blank=True, null=True)
     id_servicio = models.ForeignKey(Servicio, on_delete=models.CASCADE, null=False)
