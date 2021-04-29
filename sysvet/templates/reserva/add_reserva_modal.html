@@ -52,14 +52,14 @@
 
             <div class="field item form-group d-none" id="id_mascota_cliente" style="display: grid;">
                 <label class="col-form-label col-md-3 col-sm-3">Mascota<span class="required">*</span></label>
-                <div class="form-control" id="list_mascota">
+                <div class="col-md-12 col-sm-6" id="list_mascota">
 
                 </div>
             </div>
             <input type="hidden" name="disponible_emp" value="N" />
-            <div class="modal-footer">
+            <div class="modal-footer" id="buttons_reserva">
                 <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
-                <button type="submit" class="btn btn-primary">Agregar</button>
+                <button type="submit" class="btn btn-primary d-none" id="button_add">Agregar</button>
             </div>
         </form>
     </div>
@@ -123,12 +123,6 @@
         $('form input').on("cut copy paste", function (e) {
             e.preventDefault();
         });
-
-        $("#datepicker").change(function () {
-            var fecha = $("#datepicker").val()
-
-            sessionStorage.setItem("fecha", fecha)
-        })
 
         $("#id_servicio").change(function () {
             var servicio = $("#id_servicio").val()
@@ -238,6 +232,9 @@
                         if (response.mensaje != "") {
                             $("#id_mensaje_alert").html('<div>' + response.mensaje + '</div>');
                             $('#mensaje').modal('show');
+                            $("#form").find("#button_add").addClass("d-none")
+                        }else{
+                            $("#form").find("#button_add").removeClass("d-none")
                         }
                     },
                     error: function (response) {
@@ -245,7 +242,7 @@
                     }
                 })
             }
-        })
+        })       
     })
 
 

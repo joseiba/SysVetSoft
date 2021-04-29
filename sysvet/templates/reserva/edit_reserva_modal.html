@@ -13,20 +13,12 @@
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
-        <form action="{% url 'edit_reserva' reserva.id %}" method="post">
+        <form action="{% url 'edit_reserva' reserva.id %}" method="post" id="form">
             {% csrf_token %}
             <div class="field item form-group" style="display: grid;">
                 <label class="col-form-label col-md-6 col-sm-3">Descripción Reserva</label>
                 <div class="col-md-12 col-sm-6">
                     {{form.descripcion}}
-                </div>
-            </div>
-            <div class="field item form-group" style="display: grid;">
-                <label class="col-form-label col-md-6 col-sm-3">Hora Reserva
-                    <span class="required">*</span>
-                </label>
-                <div class="col-md-12 col-sm-6 " style="display: grid;">
-                    {{form.hora_reserva}}
                 </div>
             </div>
             <div class="field item form-group" style="display: grid;">
@@ -42,6 +34,37 @@
                     {{form.id_cliente}}
                 </div>
             </div>
+            <div class="field item form-group d-none" id="id_mascota_cliente" style="display: grid;">
+                <label class="col-form-label col-md-3 col-sm-3">Mascota<span class="required">*</span></label>
+                <div class="col-md-12 col-sm-6" id="list_mascota">
+
+                </div>
+            </div>
+            <div class="field item form-group d-none" id="id_list_mascota_edit" style="display: grid;">
+                <label class="col-form-label col-md-3 col-sm-3">Mascota<span class="required">*</span></label>
+                <div class="col-md-12 col-sm-6" id="list_mascota_edit">
+
+                </div>
+            </div>
+
+            <div class="field item form-group d-none" id="id_reserva_hora" style="display: grid;">
+                <label class="col-form-label col-md-6 col-sm-3">Hora Reserva
+                    <span class="required">*</span>
+                </label>
+                <div class="col-md-12 col-sm-6" id="hora_input">
+                    
+                </div>
+            </div>
+
+            <div class="field item form-group d-none" id="id_reserva_hora_edit" style="display: grid;">
+                <label class="col-form-label col-md-6 col-sm-3">Hora Reserva
+                    <span class="required">*</span>
+                </label>
+                <div class="col-md-12 col-sm-6" id="hora_input_edit">
+                    
+                </div>
+            </div>
+
             <div class="field item form-group" style="display: grid;">
                 <label class="col-form-label col-md-3 col-sm-3">Estado<span class="required">*</span></label>
                 <div class="col-md-12 col-sm-6">
@@ -49,6 +72,8 @@
                 </div>
             </div>
             {{ form.fecha_reserva}}
+
+            <input type="hidden" id="hora_reserva_id" value="{{ reserva.hora_reserva }}">
 
             <div id="estado_color_reserva">
 
@@ -98,7 +123,6 @@
         $("#estado_re").change(function () {
             var estado = $("#estado_re").val()
             var color = "";
-            console.log("entro")
             switch (estado) {
                 case "PEN":
                     color = "light blue"
@@ -123,6 +147,205 @@
         $('form input').on("cut copy paste", function (e) {
             e.preventDefault();
         });
+
+        var id_seleted_cliente = $("#id_cliente").val()
+        var hora_reserva = $("#hora_reserva_id").val()
+        var fecha_reserva = $("#fecha_reserva").val()
+        var servicio = $("#id_servicio").val()
+
+        console.log(id_seleted_cliente)
+
+        if (id_seleted_cliente !== "" && id_seleted_cliente != null) {
+                var urlValidate = "/reserva/getMascotaSelected"
+                $.ajax({
+                    data: { 'id_cliente': id_seleted_cliente, 'hora_reserva': hora_reserva, "fecha_reserva": fecha_reserva, 'servicio':servicio},
+                    url: urlValidate,
+                    success: function (response) {
+                        var mascotas = JSON.parse(response.mascota);
+                        if (response.mensaje != "") {
+                            var selectMascota = '<select class="form-control" required="required" name="id_mascota" id="id_mascota">';
+                            $.each(mascotas, function (i, data) {
+                                if (response.mascota_selected == data.id) {
+                                    selectMascota += "<option selected required='required' value='" + data.id + "'>" + data.nombre + "</option>";
+                                } else {
+                                    selectMascota += "<option required='required' value='" + data.id + "'>" + data.nombre + "</option>";                                    
+                                }
+                            });
+
+                            selectMascota += '</select>';
+                            $("#form").find("#id_mascota_cliente").removeClass("d-none");
+                            $("#list_mascota").html(selectMascota)
+                        }
+                        else {
+                            $("#form").find("#id_mascota_cliente").addClass("d-none")
+                        }
+                    },
+                    error: function (response) {
+                        /*<select class="form-control" required='required' name="id_ciudad" id="id_cuidad">
+                                        <option required='required'>Seleccione una Cuidad</option>
+                                        {% for cui in cuidad %}
+                                        <option required="required" value={{ cui.id}}>{{ cui.nombre_ciudad }}</option>
+                                        {% endfor %}
+                                    </select>  */
+                    }
+                })
+            }
+
+        $("#id_cliente").change(function () {
+            var id_cliente = $("#id_cliente").val()
+            if (id_cliente !== "" && id_cliente != null) {
+                var urlValidate = "/reserva/getMascotaCliente"
+                $.ajax({
+                    data: { 'id_cliente': id_cliente },
+                    url: urlValidate,
+                    success: function (response) {
+                        var mascotas = JSON.parse(response.mascota);
+                        if (response.mensaje != "") {
+                            var selectMascota = '<select class="form-control" required="required" name="id_mascota" id="id_mascota">\
+                                                    <option>Seleccione la mascota</option>';
+                            $.each(mascotas, function (i, data) {
+                                selectMascota += "<option required='required' value='" + data.id + "'>" + data.nombre + "</option>";
+                            });
+
+                            selectMascota += '</select>';
+                            $("#form").find("#id_mascota_cliente").addClass("d-none");
+                            $("#form").find("#id_list_mascota_edit").removeClass("d-none");
+                            $("#list_mascota_edit").html(selectMascota)
+                        }
+                        else {
+                            $("#form").find("#id_list_mascota_edit").addClass("d-none")
+                            $("#form").find("#id_mascota_cliente").addClass("d-none")
+
+                        }
+                    },
+                    error: function (response) {
+                        /*<select class="form-control" required='required' name="id_ciudad" id="id_cuidad">
+                                        <option required='required'>Seleccione una Cuidad</option>
+                                        {% for cui in cuidad %}
+                                        <option required="required" value={{ cui.id}}>{{ cui.nombre_ciudad }}</option>
+                                        {% endfor %}
+                                    </select>  */
+                    }
+                })
+            }else{
+                $("#form").find("#id_list_mascota_edit").addClass("d-none")
+                $("#form").find("#id_mascota_cliente").addClass("d-none")
+            }
+        })
+
+        if (servicio !== "" && servicio != null) {
+                sessionStorage.setItem("servicio", servicio)
+
+                var urlValidate = "/reserva/getTimeServices"
+                $.ajax({
+                    data: { 'servicio': servicio },
+                    url: urlValidate,
+                    success: function (response) {
+                        if (response.mensaje != "") {
+                            var inputHora = '<input class="form-control timepicker" type="text" name="hora_reserva" id="hora_reserva" required="required">';
+                            $("#form").find("#id_reserva_hora_edit").removeClass("d-none");
+                            $("#form").find("#id_reserva_hora").addClass("d-none")
+                            $("#hora_input_edit").html(inputHora)
+                            var timeServ = parseInt(response.tiempo)
+                            sessionStorage.setItem("timeServ", timeServ)
+                            $(".timepicker").timepicker({
+                                interval: timeServ,
+                                minTime: '8',
+                                maxTime: '18:00',
+                                defaultTime: hora_reserva,
+                                startTime: '08:00',
+                                dropdown: true,
+                                scrollbar: true,
+                                zindex: 1151,
+                                timeFormat: 'HH:mm',
+                            });
+                        }
+                        else {
+                            $("#form").find("#id_reserva_hora").addClass("d-none")
+
+                        }
+                    },
+                    error: function (response) {
+                        /*<select class="form-control" required='required' name="id_ciudad" id="id_cuidad">
+                                        <option required='required'>Seleccione una Cuidad</option>
+                                        {% for cui in cuidad %}
+                                        <option required="required" value={{ cui.id}}>{{ cui.nombre_ciudad }}</option>
+                                        {% endfor %}
+                                    </select>*/  
+                    }
+                })
+            }
+            else{
+                $("#form").find("#id_reserva_hora_edit").addClass("d-none")
+                $("#form").find("#hora_input_edit").addClass("d-none")
+
+            }    
+
+        $("#id_servicio").change(function () {
+            var servicio = $("#id_servicio").val()
+
+            if (servicio !== "" && servicio != null) {
+                sessionStorage.setItem("servicio", servicio)
+
+                var urlValidate = "/reserva/getTimeServices"
+                $.ajax({
+                    data: { 'servicio': servicio },
+                    url: urlValidate,
+                    success: function (response) {
+                        if (response.mensaje != "") {
+                            var inputHora = '<input class="form-control timepicker" type="text" name="hora_reserva" id="hora_reserva" required="required">';
+                            $("#form").find("#id_reserva_hora").removeClass("d-none");
+                            $("#form").find("#id_reserva_hora_edit").addClass("d-none")
+                            $("#hora_input").html(inputHora)
+                            var timeServ = parseInt(response.tiempo)
+                            sessionStorage.setItem("timeServ", timeServ)
+                            $(".timepicker").timepicker({
+                                interval: timeServ,
+                                minTime: '8',
+                                maxTime: '18:00',
+                                defaultTime: '8',
+                                startTime: '08:00',
+                                dropdown: true,
+                                scrollbar: true,
+                                zindex: 1151,
+                                timeFormat: 'HH:mm',
+                            });
+                        }
+                        else {
+                            $("#form").find("#id_reserva_hora").addClass("d-none")
+
+                        }
+                    },
+                    error: function (response) {
+                        /*<select class="form-control" required='required' name="id_ciudad" id="id_cuidad">
+                                        <option required='required'>Seleccione una Cuidad</option>
+                                        {% for cui in cuidad %}
+                                        <option required="required" value={{ cui.id}}>{{ cui.nombre_ciudad }}</option>
+                                        {% endfor %}
+                                    </select>  */
+                    }
+                })
+            }
+            else{
+                $("#form").find("#id_reserva_hora").addClass("d-none")
+                $("#form").find("#id_reserva_hora_edit").addClass("d-none")
+
+            }
+        })
+        
+        $(document).on("click","#hora_reserva", function(){
+            $(".timepicker").timepicker({
+                interval: 60,
+                minTime: '8',
+                maxTime: '18:00',
+                defaultTime: '8',
+                startTime: '08:00',
+                dropdown: true,
+                scrollbar: true,
+                zindex: 1151,
+                timeFormat: 'HH:mm',
+            });
+        })
     })
 
 </script>

@@ -38,10 +38,7 @@ def edit_reserva(request, id):
     form = ReservaForm(instance=reserva)
     if request.method == 'POST':
         form = ReservaForm(request.POST, instance=reserva)
-        print(form.is_valid())
-        print(form)
         if not form.has_changed():
-            print("entro")
             messages.info(request, "No has hecho ningun cambio!")
             return redirect('/reserva/listReserva/')
         if form.is_valid():
@@ -170,6 +167,22 @@ def get_min_service(request):
         response = { 'tiempo': minService.min_serv, 'mensaje': "Ok"}
         return JsonResponse(response)
     response = { 'tiempo': minService.min_serv, 'mensaje': ""}       
+    return JsonResponse(response)
+
+def get_mascota_selected(request):
+    cliente = request.GET.get('id_cliente')
+    hora_reserva = request.GET.get('hora_reserva')
+    fecha_reserva = request.GET.get('fecha_reserva')
+    servicio = request.GET.get('servicio')
+    mascotas = Mascota.objects.filter(id_cliente=cliente)
+    listMascota = [{'id': mascota.id, 'nombre': mascota.nombre_mascota} for mascota in mascotas]
+
+    listJsonMascotas = json.dumps(listMascota)
+    reserva = Reserva.objects.get(fecha_reserva=fecha_reserva, id_servicio=servicio, id_cliente=cliente, hora_reserva=hora_reserva)
+    if listJsonMascotas != '[]':
+        response = { 'mascota': listJsonMascotas, 'mensaje': "Ok", 'mascota_selected': reserva.id_mascota.id}
+        return JsonResponse(response)
+    response = { 'mascota': listJsonMascotas, 'mensaje': ""}       
     return JsonResponse(response)
 
 

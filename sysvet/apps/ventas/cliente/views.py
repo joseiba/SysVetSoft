@@ -75,7 +75,7 @@ def list_clientes(request):
 def search_cliente(request):
     query = request.GET.get('q')
     if query:
-        clientes = Cliente.objects.exclude(is_active="N").filter(Q(nombre_cliente__icontains=query) | Q(cedula__icontains=query))
+        clientes = Cliente.objects.exclude(is_active="N").filter(Q(nombre_cliente__icontains=query) | Q(cedula__icontains=query) | Q(id_ciudad__nombre_ciudad__icontains=query))
     else:
         clientes = Cliente.objects.exclude(is_active="N").order_by('-last_modified')
     paginator = Paginator(clientes, 10)
