@@ -63,6 +63,15 @@
                         </ul>
                         <div class="clearfix"></div>
                     </div>
+                    <div class="clearfix"></div>
+                    {% if messages %}
+                    <div class="alert alert-success alert-dismissible" role="alert">
+                        {% for message in messages %}
+                            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                            {{ message }}
+                        {% endfor %}
+                    </div>
+                    {% endif %}
                     <div>
                         <button type="submit" class="btn btn-primary float-right" onclick="abrir_modal_creacion('/configuracion/addEmpleado/')">
                             Agregar nuevo empleado
@@ -104,7 +113,13 @@
                                                 <td>{{ emp.nombre_emp}}</td>
                                                 <td>{{ emp.apellido_emp}}</td>
                                                 <td>{{ emp.ci_empe}}</td>
-                                                <td>{{ emp.disponible}}</td>
+                                                <td>
+                                                    {% if emp.disponible %}
+                                                        Si
+                                                    {% else %}
+                                                        No
+                                                    {% endif %}
+                                                </td>
                                                 <td>{{ emp.id_servicio}}</td>
                                                 <td>
                                                     <button class="btn btn-warning" onclick="abrir_modal_edicion('/configuracion/editEmpleado/' + '{{ emp.id }}' + '/');">                                                        

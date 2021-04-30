@@ -54,7 +54,7 @@ def edit_reserva(request, id):
 
 @login_required()
 def list_reserva(request):
-    reserva = Reserva.objects.exclude(is_active="N").order_by('-last_modified')
+    reserva = Reserva.objects.all()
     paginator = Paginator(reserva, 10)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
@@ -94,19 +94,17 @@ def validar_fecha_hora(request):
     mesActual =  str(diaActual.month) if diaActual.month > 9 else '0' + str(diaActual.month)
     dayActual = str(diaActual.day) if diaActual.day > 9 else '0' + str(diaActual.day)
     diaCompare = str(diaActual.year) + "-" + mesActual + "-" + dayActual
-    print(diaCompare)
     messageReponse = ""
     isFalse = True
-    isFalseOtherDay = True    
+    isFalseOtherDay = True
+    isFalseMascota = True    
     splitHoraActual = diaActual.hour
     serviEmpleado = Empleado.objects.filter(id_servicio=servicio).exclude(disponible=False)
     countEmpleadoServi = Empleado.objects.filter(id_servicio=servicio).exclude(disponible=False).count()
     countEmpleadoDiaServi = Reserva.objects.filter(id_servicio=servicio, fecha_reserva=fecha, hora_reserva=hora).exclude(disponible_emp='S').count()
 
     if diaCompare == fecha:
-        print('today')
         if splitHoraActual <= int(horaSelected[0]):
-            print("hora")             
             if countEmpleadoServi <= countEmpleadoDiaServi: 
                 messageReponse = "Ya no hay disponibilidad del servicio para esa hora"
                 response = { 'mensaje': messageReponse}
@@ -114,12 +112,22 @@ def validar_fecha_hora(request):
             else:
                 try:
                     reserva = Reserva.objects.get(fecha_reserva=fecha, id_servicio=servicio, id_cliente=cliente, hora_reserva=hora, id_mascota=mascota)
-                except: 
+                except:
                     isFalse = False
                 if isFalse:
                     messageReponse = "Este cliente ya tiene una reserva para ese dia y hora"
                     response = { 'mensaje': messageReponse}
+                    return JsonResponse(response)                    
+                try: 
+                    reserva = Reserva.objects.get(fecha_reserva=fecha, hora_reserva=hora, id_mascota=mascota)
+                except: 
+                    isFalseMascota = False
+                    
+                if isFalseMascota:
+                    messageReponse = "Esta mascota ya tiene una reserva para este dia y hora"
+                    response = { 'mensaje': messageReponse}
                     return JsonResponse(response)
+
         else:
             messageReponse = "Has seleccionado un horario que ya a ha pasado"
             response = { 'mensaje': messageReponse}
@@ -132,12 +140,21 @@ def validar_fecha_hora(request):
         else:
             try:
                 reserva = Reserva.objects.get(fecha_reserva=fecha, id_servicio=servicio, id_cliente=cliente, hora_reserva=hora, id_mascota=mascota)
-            except: 
-                isFalseOtherDay = False
-            if isFalseOtherDay:
+            except:
+                isFalse = False
+            if isFalse:
                 messageReponse = "Este cliente ya tiene una reserva para ese dia y hora"
                 response = { 'mensaje': messageReponse}
-                return JsonResponse(response)   
+                return JsonResponse(response)
+            try: 
+                reserva = Reserva.objects.get(fecha_reserva=fecha, hora_reserva=hora, id_mascota=mascota)
+            except: 
+                isFalseMascota = False
+
+            if isFalseMascota:
+                messageReponse = "Esta mascota ya tiene una reserva para este dia y hora"
+                response = { 'mensaje': messageReponse}
+                return JsonResponse(response)                                                      
     response = { 'mensaje': messageReponse}
     return JsonResponse(response)
 

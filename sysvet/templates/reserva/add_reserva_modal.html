@@ -113,6 +113,18 @@
             $('form .alert').remove();
     }).prop('checked', false);
 
+    $(".timepicker").timepicker({
+                                interval: 60,
+                                minTime: '8',
+                                maxTime: '18:00',
+                                defaultTime: '8',
+                                startTime: '08:00',
+                                dropdown: true,
+                                scrollbar: true,
+                                zindex: 1151,
+                                timeFormat: 'HH:mm',
+                            });
+
     $(function () {
         $(document).on('click', '#confirmDeleteButtonModal', function () {
             var id = $(this).data("id-reserva")
@@ -123,6 +135,8 @@
         $('form input').on("cut copy paste", function (e) {
             e.preventDefault();
         });
+
+        var today = sessionStorage.getItem("fecha_seleccionada")
 
         $("#id_servicio").change(function () {
             var servicio = $("#id_servicio").val()
@@ -167,14 +181,17 @@
                                     </select>  */
                     }
                 })
+
+                var id_cliente = sessionStorage.getItem("id_cliente")
+                var hora = $(".timepicker").val()
+                var id_mascota = sessionStorage.getItem("id_mascota")
+                
+                validar_reserva(today, servicio, hora, id_cliente, id_mascota)
             }
             else{
                 $("#form").find("#id_reserva_hora").addClass("d-none")
             }
         })
-
-        var today = sessionStorage.getItem("fecha_seleccionada")
-
 
         $("#id_fecha_reserva").html('<input type="hidden" name="fecha_reserva" id="fecha_reserva" value="' + today + '"/>');        
 
@@ -221,8 +238,15 @@
             var servicio = sessionStorage.getItem("servicio")
             var hora = $(".timepicker").val()
             var id_mascota = $("#id_mascota").val()
+            sessionStorage.setItem("id_mascota", id_mascota)
 
-            if ((fecha != "" || fecha != null) && (servicio != "" || servicio != null) && (hora != "" || hora != null) && (id_cliente != "" || id_cliente != null) && (id_mascota != "" || id_mascota != null)) {
+            validar_reserva(fecha, servicio, hora, id_cliente, id_mascota)
+            
+        })     
+
+        var validar_reserva = function(fecha, servicio, hora, id_cliente, id_mascota){
+            console.log("entro")
+            if ((fecha != "" && fecha != null && fecha != undefined) && (servicio != "" && servicio != null && servicio != undefined) && (hora != "" && hora != null && hora != undefined) && (id_cliente != "" && id_cliente != null && id_cliente != undefined) && (id_mascota != "" && id_mascota != null && id_mascota != undefined)) {
                 var urlValidate = "/reserva/validarDatos/"
                 $.ajax({
                     data: { 'fecha': fecha, 'servicio': servicio, 'hora': hora, 'id_cliente': id_cliente, 'id_mascota': id_mascota},
@@ -242,9 +266,6 @@
                     }
                 })
             }
-        })       
+        }
     })
-
-
-
 </script>

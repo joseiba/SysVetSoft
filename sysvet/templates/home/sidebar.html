@@ -41,8 +41,13 @@
                 </li>
                 <li><a><i class="fa fa-edit"></i> Reservas <span class="fa fa-chevron-down"></span></a>
                     <ul class="nav child_menu">
+                        <li><a href="{% url 'list_reserva' %}">Calendario de Reservas</a></li>
+                    </ul>
+                </li>
+                <li><a><i class="glyphicon glyphicon-cog fa-lg" style="color: white;"></i> Configuraciones <span class="fa fa-chevron-down"></span></a>
+                    <ul class="nav child_menu">
                         <li><a href="{% url 'list_servicio' %}">Lista de Servicios</a></li>
-                        <li><a href="{% url 'list_reserva' %}">Lista de Reservas</a></li>
+                        <li><a href="{% url 'list_empleado' %}">Lista de Empleados</a></li>
                     </ul>
                 </li>
                 <!--<li><a><i class="fa fa-edit"></i> Forms <span class="fa fa-chevron-down"></span></a>
