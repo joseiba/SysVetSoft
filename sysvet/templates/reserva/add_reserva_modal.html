@@ -40,7 +40,15 @@
                     <span class="required">*</span>
                 </label>
                 <div class="col-md-12 col-sm-6" id="hora_input">
-                    
+
+                </div>
+            </div>
+            <div class="field item form-group d-none" id="id_empleado_list" style="display: grid;">
+                <label class="col-form-label col-md-6 col-sm-3">Empleado
+                    <span class="required">*</span>
+                </label>
+                <div class="col-md-12 col-sm-6" id="empleado_input">
+
                 </div>
             </div>
             <div class="field item form-group" style="display: grid;">
@@ -86,10 +94,11 @@
 <!-- validator -->
 <script src="/static/project_static/vendors/validator/multifield.js"></script>
 <script src="/static/project_static/vendors/validator/validator.js"></script>
-<script src="/static/project_static/other/js/main.js"></script>
 <script src="/static/project_static/other/js/jquery-timepicker-1.3.5/jquery.timepicker.min.js"></script>
 
 <script src="/static/project_static/other/js/jquery-ui-1.12.1/jquery-ui-1.12.1/jquery-ui.js"></script>
+<script src="/static/project_static/other/js/main.js"></script>
+
 <script>
     // initialize a validator instance from the "FormValidator" constructor.
     // A "<form>" element is optionally passed as an argument, but is not a must
@@ -113,19 +122,22 @@
             $('form .alert').remove();
     }).prop('checked', false);
 
-    $(".timepicker").timepicker({
-                                interval: 60,
-                                minTime: '8',
-                                maxTime: '18:00',
-                                defaultTime: '8',
-                                startTime: '08:00',
-                                dropdown: true,
-                                scrollbar: true,
-                                zindex: 1151,
-                                timeFormat: 'HH:mm',
-                            });
-
     $(function () {
+        $(document).on('click', '#hora_reserva',function () {
+            $(".timepicker").timepicker({
+                interval: 60,
+                minTime: '8',
+                maxTime: '18:00',
+                defaultTime: '8',
+                startTime: '08:00',
+                dropdown: true,
+                scrollbar: true,
+                zindex: 1151,
+                timeFormat: 'HH:mm',
+            });
+        })
+
+
         $(document).on('click', '#confirmDeleteButtonModal', function () {
             var id = $(this).data("id-reserva")
             var url = '/reserva/bajaReserva/' + id;
@@ -135,6 +147,11 @@
         $('form input').on("cut copy paste", function (e) {
             e.preventDefault();
         });
+
+        $(document).on('change',"#id_empleado", function() {
+            var empleado = $("#id_empleado").val()
+            sessionStorage.setItem("id_empleado", empleado)
+        })
 
         var today = sessionStorage.getItem("fecha_seleccionada")
 
@@ -166,34 +183,44 @@
                                 zindex: 1151,
                                 timeFormat: 'HH:mm',
                             });
+                            var empleados = JSON.parse(response.empleado);
+                            var selectEmp = '<select class="form-control" required="required" name="id_empleado" id="id_empleado">\
+                                                    <option>Seleccione un empleado</option>';
+                            $.each(empleados, function (i, data) {
+                                selectEmp += "<option required='required' value='" + data.id + "'>" + data.nombre + "</option>";
+                            });
+
+                            selectEmp += '</select>';
+                            $("#form").find("#id_empleado_list").removeClass("d-none");
+                            $("#empleado_input").html(selectEmp)
+
+
                         }
                         else {
                             $("#form").find("#id_reserva_hora").addClass("d-none")
-
+                            $("#form").find("#id_empleado_list").addClass("d-none")
                         }
                     },
                     error: function (response) {
-                        /*<select class="form-control" required='required' name="id_ciudad" id="id_cuidad">
-                                        <option required='required'>Seleccione una Cuidad</option>
-                                        {% for cui in cuidad %}
-                                        <option required="required" value={{ cui.id}}>{{ cui.nombre_ciudad }}</option>
-                                        {% endfor %}
-                                    </select>  */
+
                     }
                 })
 
                 var id_cliente = sessionStorage.getItem("id_cliente")
                 var hora = $(".timepicker").val()
                 var id_mascota = sessionStorage.getItem("id_mascota")
-                
-                validar_reserva(today, servicio, hora, id_cliente, id_mascota)
+                var empleado = sessionStorage.getItem("id_empleado")
+
+                validar_reserva(today, servicio, hora, id_cliente, id_mascota,empleado)
             }
-            else{
+            else {
                 $("#form").find("#id_reserva_hora").addClass("d-none")
+                $("#form").find("#id_empleado_list").addClass("d-none")
+
             }
         })
 
-        $("#id_fecha_reserva").html('<input type="hidden" name="fecha_reserva" id="fecha_reserva" value="' + today + '"/>');        
+        $("#id_fecha_reserva").html('<input type="hidden" name="fecha_reserva" id="fecha_reserva" value="' + today + '"/>');
 
         $("#id_cliente").change(function () {
             var id_cliente = $("#id_cliente").val()
@@ -238,18 +265,19 @@
             var servicio = sessionStorage.getItem("servicio")
             var hora = $(".timepicker").val()
             var id_mascota = $("#id_mascota").val()
+            var empleado = sessionStorage.getItem("id_empleado")
             sessionStorage.setItem("id_mascota", id_mascota)
 
-            validar_reserva(fecha, servicio, hora, id_cliente, id_mascota)
-            
-        })     
+            validar_reserva(fecha, servicio, hora, id_cliente, id_mascota, empleado)
 
-        var validar_reserva = function(fecha, servicio, hora, id_cliente, id_mascota){
+        })
+
+        var validar_reserva = function (fecha, servicio, hora, id_cliente, id_mascota, empleado) {
             console.log("entro")
-            if ((fecha != "" && fecha != null && fecha != undefined) && (servicio != "" && servicio != null && servicio != undefined) && (hora != "" && hora != null && hora != undefined) && (id_cliente != "" && id_cliente != null && id_cliente != undefined) && (id_mascota != "" && id_mascota != null && id_mascota != undefined)) {
+            if ((fecha != "" && fecha != null && fecha != undefined) && (servicio != "" && servicio != null && servicio != undefined) && (hora != "" && hora != null && hora != undefined) && (id_cliente != "" && id_cliente != null && id_cliente != undefined) && (id_mascota != "" && id_mascota != null && id_mascota != undefined) && (empleado != "" && empleado != null && empleado != undefined)) {
                 var urlValidate = "/reserva/validarDatos/"
                 $.ajax({
-                    data: { 'fecha': fecha, 'servicio': servicio, 'hora': hora, 'id_cliente': id_cliente, 'id_mascota': id_mascota},
+                    data: { 'fecha': fecha, 'servicio': servicio, 'hora': hora, 'id_cliente': id_cliente, 'id_mascota': id_mascota, 'empleado': empleado },
                     url: urlValidate,
                     success: function (response) {
                         console.log(response)
@@ -257,7 +285,7 @@
                             $("#id_mensaje_alert").html('<div>' + response.mensaje + '</div>');
                             $('#mensaje').modal('show');
                             $("#form").find("#button_add").addClass("d-none")
-                        }else{
+                        } else {
                             $("#form").find("#button_add").removeClass("d-none")
                         }
                     },

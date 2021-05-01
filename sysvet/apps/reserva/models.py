@@ -2,7 +2,7 @@ from django.db import models
 
 from apps.ventas.mascota.models import Mascota
 from apps.ventas.cliente.models import Cliente
-from apps.configuracion.models import Servicio
+from apps.configuracion.models import Servicio, Empleado
 
 class Reserva(models.Model):
     """
@@ -25,6 +25,7 @@ class Reserva(models.Model):
     id_servicio = models.ForeignKey(Servicio, on_delete=models.CASCADE, null=False)
     id_cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE, null=False)
     id_mascota = models.ForeignKey(Mascota, on_delete=models.CASCADE, null=False)
+    id_empleado = models.ForeignKey(Empleado, on_delete=models.CASCADE, null=False)
 
     class Meta:
         verbose_name = "Reserva"

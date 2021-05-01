@@ -90,6 +90,7 @@ def validar_fecha_hora(request):
     servicio = request.GET.get('servicio')
     cliente = request.GET.get('id_cliente')
     mascota = request.GET.get('id_mascota')
+    emp = request.GET.get('empleado')
     diaActual = datetime.now()
     mesActual =  str(diaActual.month) if diaActual.month > 9 else '0' + str(diaActual.month)
     dayActual = str(diaActual.day) if diaActual.day > 9 else '0' + str(diaActual.day)
@@ -111,7 +112,7 @@ def validar_fecha_hora(request):
                 return JsonResponse(response)
             else:
                 try:
-                    reserva = Reserva.objects.get(fecha_reserva=fecha, id_servicio=servicio, id_cliente=cliente, hora_reserva=hora, id_mascota=mascota)
+                    reserva = Reserva.objects.get(fecha_reserva=fecha, id_servicio=servicio, id_cliente=cliente, hora_reserva=hora, id_mascota=mascota, id_empleado=emp)
                 except:
                     isFalse = False
                 if isFalse:
@@ -119,7 +120,7 @@ def validar_fecha_hora(request):
                     response = { 'mensaje': messageReponse}
                     return JsonResponse(response)                    
                 try: 
-                    reserva = Reserva.objects.get(fecha_reserva=fecha, hora_reserva=hora, id_mascota=mascota)
+                    reserva = Reserva.objects.get(fecha_reserva=fecha, hora_reserva=hora, id_mascota=mascota, id_empleado=emp)
                 except: 
                     isFalseMascota = False
                     
@@ -139,7 +140,7 @@ def validar_fecha_hora(request):
             return JsonResponse(response)
         else:
             try:
-                reserva = Reserva.objects.get(fecha_reserva=fecha, id_servicio=servicio, id_cliente=cliente, hora_reserva=hora, id_mascota=mascota)
+                reserva = Reserva.objects.get(fecha_reserva=fecha, id_servicio=servicio, id_cliente=cliente, hora_reserva=hora, id_mascota=mascota, id_empleado=emp)
             except:
                 isFalse = False
             if isFalse:
@@ -147,7 +148,7 @@ def validar_fecha_hora(request):
                 response = { 'mensaje': messageReponse}
                 return JsonResponse(response)
             try: 
-                reserva = Reserva.objects.get(fecha_reserva=fecha, hora_reserva=hora, id_mascota=mascota)
+                reserva = Reserva.objects.get(fecha_reserva=fecha, hora_reserva=hora, id_mascota=mascota, id_empleado=emp)
             except: 
                 isFalseMascota = False
 
@@ -175,15 +176,21 @@ def get_mascota_cliente(request):
 
 def get_min_service(request):
     servicio = request.GET.get('servicio')
+    emp = Empleado.objects.filter(id_servicio=servicio)
+    print("test")
+    listEmpleado = [{'id': empleado.id, 'nombre': empleado.nombre_emp + " " + empleado.apellido_emp} for empleado in emp]
+    print("test1")
+
+    listJsonEmpleado= json.dumps(listEmpleado)
     isFalse = True
     try:
         minService = Servicio.objects.get(id=servicio)
     except:
         isFalse = False
     if isFalse:
-        response = { 'tiempo': minService.min_serv, 'mensaje': "Ok"}
+        response = { 'tiempo': minService.min_serv, 'mensaje': "Ok", 'empleado': listJsonEmpleado}
         return JsonResponse(response)
-    response = { 'tiempo': minService.min_serv, 'mensaje': ""}       
+    response = { 'tiempo': minService.min_serv, 'mensaje': "", 'empleado': listJsonEmpleado}       
     return JsonResponse(response)
 
 def get_mascota_selected(request):
@@ -191,13 +198,16 @@ def get_mascota_selected(request):
     hora_reserva = request.GET.get('hora_reserva')
     fecha_reserva = request.GET.get('fecha_reserva')
     servicio = request.GET.get('servicio')
+    emp = Empleado.objects.filter(id_servicio=servicio)
     mascotas = Mascota.objects.filter(id_cliente=cliente)
     listMascota = [{'id': mascota.id, 'nombre': mascota.nombre_mascota} for mascota in mascotas]
+    listEmpleado = [{'id': empleado.id, 'nombre': empleado.nombre_emp + " " + empleado.apellido_emp} for empleado in emp]
 
+    listJsonEmpleado= json.dumps(listEmpleado)
     listJsonMascotas = json.dumps(listMascota)
     reserva = Reserva.objects.get(fecha_reserva=fecha_reserva, id_servicio=servicio, id_cliente=cliente, hora_reserva=hora_reserva)
     if listJsonMascotas != '[]':
-        response = { 'mascota': listJsonMascotas, 'mensaje': "Ok", 'mascota_selected': reserva.id_mascota.id}
+        response = { 'mascota': listJsonMascotas, 'mensaje': "Ok", 'mascota_selected': reserva.id_mascota.id, 'empleado': reserva.id_empleado.id, 'empleados':listJsonEmpleado}
         return JsonResponse(response)
     response = { 'mascota': listJsonMascotas, 'mensaje': ""}       
     return JsonResponse(response)
