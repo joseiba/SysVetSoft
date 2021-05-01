@@ -21,7 +21,8 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 from apps.usuario.views  import Login, logoutUser,home_user
-from apps.ventas.cliente.views import add_cliente, list_clientes, edit_cliente, delete_cliente, search_cliente, ReporteClientesPDF
+from apps.ventas.cliente.views import (add_cliente, list_clientes, edit_cliente, delete_cliente, search_cliente, ReporteClientesPDF,
+list_client_ajax)
 from apps.ventas.mascota.views import (list_mascotas, add_mascota, edit_mascota, list_especie, add_especie, 
 edit_especie,search_especie, list_raza, add_raza, edit_raza, search_raza,search_mascota, order_by_mascotas, 
 edit_ficha_medica, list_historial)
@@ -40,6 +41,7 @@ urlpatterns = [
     #Urls clientes
     path('cliente/add/',add_cliente , name="add_cliente"),
     path('cliente/list/', list_clientes, name="list_cliente"),
+    path('cliente/get_list_client/', list_client_ajax, name="list_client_ajax"),
     path('cliente/edit/<int:id>/', edit_cliente, name="edit_cliente"),
     path('<int:id>', delete_cliente, name="delete_cliente"),
     path('cliente/search/', search_cliente, name="search_cliente"),

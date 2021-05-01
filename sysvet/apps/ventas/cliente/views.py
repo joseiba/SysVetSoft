@@ -10,6 +10,9 @@ from django.views.generic import View
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle
 from reportlab.lib.units import cm
 from reportlab.lib import colors
+from django.http import JsonResponse
+import json
+
 
 from .forms import ClienteForm
 from .models import Cliente, Ciudad
@@ -70,6 +73,20 @@ def list_clientes(request):
     context = {'page_obj' : page_obj}
     return render(request, "ventas/cliente/list_cliente.html", context)
 
+@login_required()
+def list_client_ajax(request):
+    clientes = Cliente.objects.exclude(is_active="N").order_by('-last_modified')
+
+    listCliente = [{'id': clie.id, 'nombre': clie.nombre_cliente, 'apellido': clie.apellido_cliente, 
+        'cedula': clie.cedula, 'telefono': clie.telefono, 'direccion': clie.direccion, 'ciudad': clie.id_ciudad.nombre_ciudad } for clie in clientes]
+
+    listJsonCliente = json.dumps(listCliente)
+    """paginator = Paginator(clientes, 10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    context = {'page_obj' : page_obj}"""
+    response = { 'cliente': listJsonCliente, 'mensaje': "Ok"}
+    return JsonResponse(response)
 #Metodo para la busqueda de clientes
 @login_required()
 def search_cliente(request):
