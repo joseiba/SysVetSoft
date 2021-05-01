@@ -89,6 +89,8 @@ class Mascota(models.Model):
                                             None)
 
         super().save(*args, **kwargs)'''
+    def __str__(self):
+        return self.nombre_mascota
 
     def get_profile(self):
         if self.imagen:
@@ -99,7 +101,7 @@ class Mascota(models.Model):
         is_new = not self.id
         super().save(*args, **kwargs)
         if is_new:
-            FichaMedica.objects.create(id_mascota=self)
+            FichaMeidca.objects.create(id_mascota=self)
     
 
 #Modelos de ficha medica

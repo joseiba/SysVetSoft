@@ -25,6 +25,10 @@ from apps.ventas.cliente.views import add_cliente, list_clientes, edit_cliente, 
 from apps.ventas.mascota.views import (list_mascotas, add_mascota, edit_mascota, list_especie, add_especie, 
 edit_especie,search_especie, list_raza, add_raza, edit_raza, search_raza,search_mascota, order_by_mascotas, 
 edit_ficha_medica, list_historial)
+from apps.reserva.views import (add_reserva, edit_reserva, list_reserva, delete_reserva, search_reserva, 
+validar_fecha_hora, get_mascota_cliente, get_min_service, get_mascota_selected)
+from apps.configuracion.views import (add_servicio, edit_servicio, delete_servicio, list_servicio, search_servicio, 
+add_empleado, edit_empleado, list_empleado, delete_empleado, search_empleado)
 
 urlpatterns = [
     # Login and logout   
@@ -57,8 +61,33 @@ urlpatterns = [
     path('mascota/editRaza/<int:id>/',  edit_raza, name="edit_raza"),
     path('mascota/searchRaza/', search_raza, name="search_raza"),
     path('mascota/editFichaMedica/<int:id>/', edit_ficha_medica, name="edit_ficha_medica"),
-    path('mascota/historial/<int:id>/', list_historial , name="list_historial"),
+    path('mascota/historial/<int:id>/', list_historial , name="list_historial"),    
     #End Urls Mascotas
+
+    #Urls reservas 
+    path('reserva/listServicio/', list_servicio , name="list_servicio"),
+    path('reserva/addServicio/',  add_servicio, name="add_servicio"),
+    path('reserva/editServicio/<int:id>/',edit_servicio , name="edit_servicio"),
+    path('reserva/searchServicio/', search_servicio, name="search_servicio"),
+    path('reserva/bajaServicio/<int:id>/', delete_servicio, name="delete_servicio"),
+    path('reserva/listReserva/', list_reserva , name="list_reserva"),
+    path('reserva/addReserva/',  add_reserva, name="add_reserva"),
+    path('reserva/editReserva/<int:id>/',edit_reserva , name="edit_reserva"),
+    path('reserva/bajaReserva/<int:id>/', delete_reserva, name="delete_reserva"),
+    path('reserva/searchReserva/', search_reserva, name="search_reserva"),
+    path('reserva/validarDatos/', validar_fecha_hora, name="search_reserva"),
+    path('reserva/getMascotaCliente', get_mascota_cliente, name="get_mascota_cliente"),
+    path('reserva/getTimeServices', get_min_service, name="get_min_service"),
+    path('reserva/getMascotaSelected', get_mascota_selected, name="get_mascota_selected"),
+
+
+    #Urls configuraciones 
+    path('configuracion/listEmpleado/', list_empleado , name="list_empleado"),
+    path('configuracion/addEmpleado/',  add_empleado, name="add_empleado"),
+    path('configuracion/editEmpleado/<int:id>/',edit_empleado , name="edit_empleado"),
+    path('configuracion/searchEmpleado/', search_empleado, name="search_empleado"),
+    path('configuracion/bajaEmpleado/<int:id>/', delete_empleado, name="delete_empleado"),
+
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
