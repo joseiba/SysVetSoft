@@ -3,12 +3,13 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.db.models import Q
 from django.core.paginator import Paginator
+from django.http import JsonResponse
+import json
+import math
 
 
 from .models import Mascota, Especie, Raza, Raza, FichaMedica, Vacuna, Consulta, Antiparasitario, HistoricoFichaMedica
 from .form import MascotaForm, EspecieForm, RazaForm, FichaMedicaForm, VacunaForm, ConsultaForm, AntiparasitarioForm
-
-import json
 
 # Create your views here.
 @login_required()
@@ -68,21 +69,6 @@ def search_mascota(request):
     context = { 'page_obj': page_obj}
     return render(request, "ventas/mascota/list_mascotas.html", context)
 
-@login_required()
-def order_by_mascotas(request, id):
-    print(id)
-    if id == "1":
-        print("funciona")
-        mascota = Mascota.objects.all().order_by('nombre_mascota')
-    else:
-        mascota = Mascota.objects.all().order_by('peso')
-    paginator = Paginator(mascota, 8)
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
-    print(page_obj)
-    context = { 'page_obj': page_obj}
-    return render(request, "ventas/mascota/list_mascotas.html", context)
-
     """
     Functions of Epecies 
     """
@@ -124,6 +110,36 @@ def list_especie(request):
     page_obj = paginator.get_page(page_number)
     context = {'page_obj' : page_obj}
     return render(request, "ventas/mascota/especie/list_especie.html", context)
+
+@login_required()
+def list_especie_ajax(request):
+    query = request.GET.get('busqueda')
+    if query != "":
+        especie = Especie.objects.filter(Q(nombre_especie__icontains=query))
+    else:
+        especie = Especie.objects.all().order_by('-last_modified')
+
+    total = especie.count()
+
+
+    _start = request.GET.get('start')
+    _length = request.GET.get('length')
+    if _start and _length:
+        start = int(_start)
+        length = int(_length)
+        page = math.ceil(start / length) + 1
+        per_page = length
+
+        especie = especie[start:start + length]
+
+    data = [{'id': espe.id, 'nombre': espe.nombre_especie} for espe in especie]        
+
+    response = {
+        'data': data,
+        'recordsTotal': total,
+        'recordsFiltered': total,
+    }
+    return JsonResponse(response)    
 
 @login_required()
 def search_especie(request):
@@ -179,6 +195,35 @@ def list_raza(request):
     page_obj = paginator.get_page(page_number)
     context = {'page_obj' : page_obj, 'form': raza_especie}
     return render(request, "ventas/mascota/raza/list_raza.html", context)
+
+@login_required()
+def get_list_raza_ajax(request):
+    query = request.GET.get('busqueda')
+    if query != "":
+        raza = Raza.objects.filter(Q(nombre_raza__icontains=query) | Q(id_especie__nombre_especie__icontains=query) )
+    else:
+        raza = Raza.objects.all().order_by('-last_modified')
+
+    total = raza.count()
+
+    _start = request.GET.get('start')
+    _length = request.GET.get('length')
+    if _start and _length:
+        start = int(_start)
+        length = int(_length)
+        page = math.ceil(start / length) + 1
+        per_page = length
+
+        raza = raza[start:start + length]
+
+    data = [{'id': ra.id, 'nombre_raza': ra.nombre_raza, 'nombre_especie': ra.id_especie.nombre_especie } for ra in raza]        
+
+    response = {
+        'data': data,
+        'recordsTotal': total,
+        'recordsFiltered': total,
+    }
+    return JsonResponse(response) 
 
 @login_required()
 def search_raza(request):

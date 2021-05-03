@@ -12,6 +12,7 @@ from reportlab.lib.units import cm
 from reportlab.lib import colors
 from django.http import JsonResponse
 import json
+import math
 
 
 from .forms import ClienteForm
@@ -75,18 +76,34 @@ def list_clientes(request):
 
 @login_required()
 def list_client_ajax(request):
-    clientes = Cliente.objects.exclude(is_active="N").order_by('-last_modified')
+    query = request.GET.get('busqueda')
+    if query != "":
+        clientes = Cliente.objects.exclude(is_active="N").filter(Q(nombre_cliente__icontains=query) | Q(cedula__icontains=query) | Q(id_ciudad__nombre_ciudad__icontains=query))
+    else:
+        clientes = Cliente.objects.exclude(is_active="N").order_by('-last_modified')
 
-    listCliente = [{'id': clie.id, 'nombre': clie.nombre_cliente, 'apellido': clie.apellido_cliente, 
-        'cedula': clie.cedula, 'telefono': clie.telefono, 'direccion': clie.direccion, 'ciudad': clie.id_ciudad.nombre_ciudad } for clie in clientes]
+    total = clientes.count()
 
-    listJsonCliente = json.dumps(listCliente)
-    """paginator = Paginator(clientes, 10)
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
-    context = {'page_obj' : page_obj}"""
-    response = { 'cliente': listJsonCliente, 'mensaje': "Ok"}
+    _start = request.GET.get('start')
+    _length = request.GET.get('length')
+    if _start and _length:
+        start = int(_start)
+        length = int(_length)
+        page = math.ceil(start / length) + 1
+        per_page = length
+
+        clientes = clientes[start:start + length]
+
+    data = [{'id': clie.id, 'nombre': clie.nombre_cliente, 'apellido': clie.apellido_cliente, 
+        'cedula': clie.cedula, 'telefono': clie.telefono, 'direccion': clie.direccion, 'ciudad': clie.id_ciudad.nombre_ciudad } for clie in clientes]        
+
+    response = {
+        'data': data,
+        'recordsTotal': total,
+        'recordsFiltered': total,
+    }
     return JsonResponse(response)
+    
 #Metodo para la busqueda de clientes
 @login_required()
 def search_cliente(request):

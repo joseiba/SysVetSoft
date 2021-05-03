@@ -146,21 +146,7 @@
                                     </form>
                                 </div>
                             </div>
-                        </div>
-
-                        <!--<div>
-                            <div class="d-flex">
-                                <p>Ordenar por:</p>
-                                <select class="form-select mb-3" id="order_by_mascota">
-                                    <option selected value="1">
-                                        Nombre mascota
-                                    </option>
-                                    <option value="2">
-                                        peso
-                                    </option>
-                                </select>
-                            </div>
-                        </div>-->
+                        </div>                    
                     </div>
 
                     <div class="x_content">
@@ -252,22 +238,6 @@
 <script src="/static/project_static/vendors/pdfmake/build/vfs_fonts.js"></script>
 
 <script>
-    /*$(function () {
-        $("#order_by_mascota").change(function () {
-            var url = "{% url 'order_by_mascotas' 1 %}";
-            var fullUr = url.replace('1', '1');
-            $.ajax({
-                data: { 'id': 1 },
-                url: fullUr,
-                type: 'GET',
-                success: function (response) {
-                    console.log("anda")
-                }
-            })
-        })
-
-    })*/
-
     $('form input').on("cut copy paste",function(e) {
             e.preventDefault();
         });

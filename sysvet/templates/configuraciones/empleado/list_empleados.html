@@ -44,6 +44,10 @@
         cursor: pointer;
         font-size: 20px;
     }
+
+    .dataTables_info {
+        width: 0 !important;
+    }
 </style>
 {% endblock stylesheets %}
 
@@ -67,25 +71,28 @@
                     {% if messages %}
                     <div class="alert alert-success alert-dismissible" role="alert">
                         {% for message in messages %}
-                            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                            {{ message }}
+                        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                        {{ message }}
                         {% endfor %}
                     </div>
                     {% endif %}
                     <div>
-                        <button type="submit" class="btn btn-primary float-right" onclick="abrir_modal_creacion('/configuracion/addEmpleado/')">
+                        <button type="submit" class="btn btn-primary float-right"
+                            onclick="abrir_modal_creacion('/configuracion/addEmpleado/')">
                             Agregar nuevo empleado
-                        </button>                       
+                        </button>
                         <div class="float-left">
                             <div class="wrap">
                                 <div class="search">
-                                    <form action="{% url 'search_empleado' %}" method="GET" class="d-inline-flex">
-                                        <input type="search" class="searchTerm" name="q" value="{{ request.GET.q }}"
-                                            placeholder="Buscá por nombre" onkeyup="replaceCaratect(this)">
-                                        <button type="submit" class="searchButton">
+                                    <div class="d-inline-flex">
+                                        <input type="search" class="searchTerm" id="searchTerm"
+                                        placeholder="Buscar por nombre, apellido, cédula o servicio"
+                                        data-toggle="tooltip" data-placement="top"
+                                        title="Buscar por nombre, apellido, cédula o servicio" onkeyup="replaceDirection(this)">
+                                        <button type="button" id="busqueda" class="searchButton">
                                             <i class="fa fa-search"></i>
                                         </button>
-                                    </form>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -93,9 +100,9 @@
 
                     <div class="x_content">
                         <div class="row">
-                            <div class="col-sm-12">
+                            <div class="col-sm-12 p-0">
                                 <div class="card-box table-responsive" style="text-align: center;">
-                                    <table id="" class="table table-striped table-bordered" style="width:100%">
+                                    <table id="list_empleados" class="table table-striped table-bordered" style="width:100%">
                                         <thead>
                                             <tr class="" style="background-color: #2a3f54; font-size: medium;">
                                                 <th style="color: white;">Nombres</th>
@@ -103,31 +110,11 @@
                                                 <th style="color: white;">Cédula</th>
                                                 <th style="color: white;">Disponible</th>
                                                 <th style="color: white;">Servicio Asignado</th>
-                                                <th style="color: white;">Acciones</th>
+                                                <th style="color: white;">Acción</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-
-                                            {% for emp in page_obj %}
-                                            <tr style="font-size: medium;">
-                                                <td>{{ emp.nombre_emp}}</td>
-                                                <td>{{ emp.apellido_emp}}</td>
-                                                <td>{{ emp.ci_empe}}</td>
-                                                <td>
-                                                    {% if emp.disponible %}
-                                                        Si
-                                                    {% else %}
-                                                        No
-                                                    {% endif %}
-                                                </td>
-                                                <td>{{ emp.id_servicio}}</td>
-                                                <td>
-                                                    <button class="btn btn-warning" onclick="abrir_modal_edicion('/configuracion/editEmpleado/' + '{{ emp.id }}' + '/');">                                                        
-                                                        Editar
-                                                    </button>                                                  
-                                                </td>
-                                            </tr>
-                                            {% endfor %}
+                                        
                                         </tbody>
                                     </table>
                                 </div>
@@ -135,9 +122,6 @@
                         </div>
                     </div>
                     <div class="clearfix"></div>
-                    {% block pagination %}
-                    {% include 'home/pagination.html' %}
-                    {% endblock pagination %}
                 </div>
 
             </div>
@@ -145,7 +129,7 @@
     </div>
 </div>
 
-<div class="modal fade" id="creacion"  role="dialog" >
+<div class="modal fade" id="creacion" role="dialog">
 
 </div>
 
@@ -176,12 +160,117 @@
 
 <script>
     $(function () {
+        $('form input').on("cut copy paste", function (e) {
+            e.preventDefault();
+        });
 
+        var get_list = function (busqueda) {
+            $("#list_empleados").DataTable({
+                destroy: true,
+                dom: 'Bfrtip',
+                buttons: ['pdf'],
+                searching: false,
+                pageLength: 10,
+                ajax: {
+                    url: "/configuracion/get_list_empleados_ajax",
+                    type: 'GET',
+                    datatype: 'json',
+                    data: { 'busqueda': busqueda },
+                    error: function (data) {
+                        $.fn.DataTable.ext.errorMode = 'none'
+
+                    }
+                },
+                columns: [
+                    {
+                        name: 'Nombres',
+                        data: 'nombre',
+                    },
+                    {
+                        name: 'Apellidos',
+                        data: 'apellido',
+                    },
+                    {
+                        name: 'Cédula',
+                        data: 'cedula',
+                    },
+                    {
+                        name: 'Disponible',
+                        data: 'disponible',
+                        render: function(data){
+                            if(data){
+                                return "Si";
+                            }else{
+                                return "No";
+                            }                            
+                        }
+                    },
+                    {
+                        name: 'Servicio Asignado',
+                        data: 'nombre_servicio',
+                    },
+                    {
+                        name: 'Acción',
+                        data: 'id',
+                        render: function (data) {
+                            return '<button class="btn btn-warning" onclick="abrir_modal_edicion("/configuracion/editEmpleado/' + data + '/");">\
+                                                        Editar\
+                                                    </button>';
+                        }
+                    }
+
+                ],
+                columnDefs: [{
+                    targets: [5], // column index (start from 0)
+                    orderable: false, // set orderable false for selected columns
+                }],
+                serverSide: false,
+                language: {
+                    decimal: "",
+                    emptyTable: "Sin resultados encontrados",
+                    info: "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
+                    infoEmpty: "Mostrando 0 to 0 de 0 Entradas",
+                    infoFiltered: "(Filtrado de _MAX_ total entradas)",
+                    infoPostFix: "",
+                    thousands: ",",
+                    lengthMenu: "Mostrar _MENU_ Entradas",
+                    loadingRecords: "Cargando...",
+                    processing: "Procesando...",
+                    search: "Buscar:",
+                    zeroRecords: "Sin resultados encontrados",
+                    paginate: {
+                        first: "Primero",
+                        last: "Ultimo",
+                        next: "Siguiente",
+                        previous: "Anterior",
+                    },
+                },
+
+            })
+        }
+
+        var query = ""
+
+        get_list(query);
+
+        $("#searchTerm").change(function () {
+            var busqueda = $("#searchTerm").val()
+            sessionStorage.setItem("busqueda", busqueda)
+        })
+
+        $("#busqueda").click(function () {
+            var busqueda = sessionStorage.getItem("busqueda")
+            if (busqueda == "" || busqueda == undefined || busqueda == null) {
+                busqueda = "";
+                get_list(busqueda)
+            }
+            else {
+                get_list(busqueda)
+            }
+        })
     })
 
-    $('form input').on("cut copy paste",function(e) {
-        e.preventDefault();
-    });
+
 </script>
 
 
