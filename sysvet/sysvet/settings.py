@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'apps.ventas.mascota',
     'apps.reserva',
     'apps.configuracion',
+    'apps.compras',
 
 ]
 
