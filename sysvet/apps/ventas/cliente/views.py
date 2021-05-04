@@ -10,6 +10,10 @@ from django.views.generic import View
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle
 from reportlab.lib.units import cm
 from reportlab.lib import colors
+from django.http import JsonResponse
+import json
+import math
+
 
 from .forms import ClienteForm
 from .models import Cliente, Ciudad
@@ -70,6 +74,36 @@ def list_clientes(request):
     context = {'page_obj' : page_obj}
     return render(request, "ventas/cliente/list_cliente.html", context)
 
+@login_required()
+def list_client_ajax(request):
+    query = request.GET.get('busqueda')
+    if query != "":
+        clientes = Cliente.objects.exclude(is_active="N").filter(Q(nombre_cliente__icontains=query) | Q(cedula__icontains=query) | Q(id_ciudad__nombre_ciudad__icontains=query))
+    else:
+        clientes = Cliente.objects.exclude(is_active="N").order_by('-last_modified')
+
+    total = clientes.count()
+
+    _start = request.GET.get('start')
+    _length = request.GET.get('length')
+    if _start and _length:
+        start = int(_start)
+        length = int(_length)
+        page = math.ceil(start / length) + 1
+        per_page = length
+
+        clientes = clientes[start:start + length]
+
+    data = [{'id': clie.id, 'nombre': clie.nombre_cliente, 'apellido': clie.apellido_cliente, 
+        'cedula': clie.cedula, 'telefono': clie.telefono, 'direccion': clie.direccion, 'ciudad': clie.id_ciudad.nombre_ciudad } for clie in clientes]        
+
+    response = {
+        'data': data,
+        'recordsTotal': total,
+        'recordsFiltered': total,
+    }
+    return JsonResponse(response)
+    
 #Metodo para la busqueda de clientes
 @login_required()
 def search_cliente(request):

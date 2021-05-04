@@ -101,7 +101,7 @@ class Mascota(models.Model):
         is_new = not self.id
         super().save(*args, **kwargs)
         if is_new:
-            FichaMeidca.objects.create(id_mascota=self)
+            FichaMedica.objects.create(id_mascota=self)
     
 
 #Modelos de ficha medica
