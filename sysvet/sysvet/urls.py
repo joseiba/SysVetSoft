@@ -34,6 +34,8 @@ validar_fecha_hora, get_mascota_cliente, get_min_service, get_mascota_selected)
 from apps.configuracion.views import (add_servicio, edit_servicio, delete_servicio, list_servicio, search_servicio, 
 add_empleado, edit_empleado, list_empleado, delete_empleado, search_empleado, list_servicio_ajax, get_list_empleados_ajax)
 
+from apps.compras.views import (add_proveedor, edit_proveedor, list_proveedor_ajax, delete_proveedor, list_proveedor)
+
 urlpatterns = [
     # Login and logout   
     path('admin/', admin.site.urls),
@@ -95,7 +97,12 @@ urlpatterns = [
     path('configuracion/bajaEmpleado/<int:id>/', delete_empleado, name="delete_empleado"),
     path('configuracion/get_list_empleados_ajax/', get_list_empleados_ajax, name="get_list_empleados_ajax"),
 
-    
+    #Urls compras
+    path('compra/addProveedor/', add_proveedor , name="add_proveedor"),
+    path('compra/listProveedor/', list_proveedor, name="list_proveedor"),
+    path('compra/get_list_proveedor/', list_proveedor_ajax, name="list_proveedor_ajax"),
+    path('compra/editProveedor/<int:id>/', edit_proveedor, name="edit_proveedor"),
+    path('<int:id>', delete_proveedor, name="delete_proveedor"),
 
 ]
 
