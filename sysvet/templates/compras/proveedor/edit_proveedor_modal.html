@@ -1,0 +1,117 @@
+<link rel="stylesheet" href="/static/project_static/other/commons/shared.css">
+<div class="modal-dialog" role="document">
+    <div class="modal-content">
+        <div class="modal-header no_borders" style="background-color:#2a3f54;">
+            <h5 class="modal-title" id="exampleModalLabel" style="color: white;">Agregar Proveedor</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <form action="{% url 'edit_proveedor' proveedor.id %}" method="post">
+            {% csrf_token %}
+            <div class="field item form-group mt-3">
+                <label class="col-form-label col-md-3 col-sm-3  label-align">Nombre Proveedor<span
+                        class="required">*</span></label>
+                <div class="col-md-7 col-sm-6">
+                    {{form.nombre_proveedor}}
+                </div>
+            </div>   
+            <div class="field item form-group">
+                <label class="col-form-label col-md-3 col-sm-3  label-align">Dirección
+                    <span class="required">*</span>
+                </label>
+                <div class="col-md-7 col-sm-6">
+                    {{form.direccion}}
+                </div>
+            </div> 
+
+            <div class="field item form-group">
+                <label class="col-form-label col-md-3 col-sm-3  label-align">Nro. RUC<span
+                        class="required">*</span></label>
+                <div class="col-md-7 col-sm-6">
+                    {{form.ruc_proveedor}}
+                </div>
+            </div>
+            <div class="field item form-group mb-3">
+                <label class="col-form-label col-md-3 col-sm-3  label-align">Telefono<span
+                        class="required">*</span></label>
+                <div class="col-md-7 col-sm-6">        
+                        {{form.telefono}}
+                </div>
+            </div> 
+            
+            <div class="field item form-group">
+                <label class="col-form-label col-md-3 col-sm-3  label-align">Email</label>
+                <div class="col-md-7 col-sm-6">
+                    {{form.email}}
+                </div>
+                <div id="alert_email">
+
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                <button type="submit" class="btn btn-primary">Agregar</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- validator -->
+
+<script src="/static/project_static/build/js/custom.js"></script>
+
+<script src="/static/project_static/vendors/validator/validator.js"></script>
+<script src="/static/project_static/vendors/validator/multifield.js"></script>
+
+<script src="/static/project_static/other/js/main.js"></script>
+
+
+<script>
+
+    // initialize a validator instance from the "FormValidator" constructor.
+    // A "<form>" element is optionally passed as an argument, but is not a must
+        var validator = new FormValidator({
+        "events": ['blur', 'input', 'change']
+    }, document.forms[0]);
+    // on form "submit" event
+    document.forms[0].onsubmit = function (e) {
+        var submit = true,
+            validatorResult = validator.checkAll(this);
+        return !!validatorResult.valid;
+    };
+    // on form "reset" event
+    document.forms[0].onreset = function (e) {
+        validator.reset();
+    };
+    // stuff related ONLY for this demo page:
+    $('.toggleValidationTooltips').change(function () {
+        validator.settings.alerts = !this.checked;
+        if (this.checked)
+            $('form .alert').remove();
+    }).prop('checked', false);
+
+    $('form input').on("cut copy paste",function(e) {
+        e.preventDefault();
+    });
+
+    document.getElementById('email').addEventListener('input', function() {
+        campo = event.target;        
+        emailRegex =/^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+        //Se muestra un texto a modo de ejemplo, luego va a ser un icono
+        if (emailRegex.test(campo.value)) {
+            $('#alert_email').empty()
+        } else {
+            if(campo.value === ""){
+                $('#alert_email').empty()
+            }
+            else{
+                $("#alert_email").html('<div class="alert" style="opacity: 1; white-space: inherit; left: 0">\
+                                        email no valido\
+                                    </div>');
+            }
+            
+        }
+    });
+</script>
