@@ -49,7 +49,7 @@ def list_proveedor(request):
 def list_proveedor_ajax(request):
     query = request.GET.get('busqueda')
     if query != "":
-        proveedor = Proveedor.objects.exclude(is_active="N").filter(Q(nombre_proveedor__icontains=query))
+        proveedor = Proveedor.objects.exclude(is_active="N").filter(Q(nombre_proveedor__icontains=query) | Q(ruc_proveedor__icontains=query))
     else:
         proveedor = Proveedor.objects.exclude(is_active="N").order_by('-last_modified')
 
@@ -83,5 +83,5 @@ def delete_proveedor(request, id):
         proveedor.is_active = "N"
         proveedor.save()
         return redirect('/compra/listProveedor')
-    context = {'servicio': servicio}
+    context = {'proveedor': proveedor}
     return render(request, "compras/proveedor/baja_proveedor_modal.html", context)

@@ -102,7 +102,7 @@ urlpatterns = [
     path('compra/listProveedor/', list_proveedor, name="list_proveedor"),
     path('compra/get_list_proveedor/', list_proveedor_ajax, name="list_proveedor_ajax"),
     path('compra/editProveedor/<int:id>/', edit_proveedor, name="edit_proveedor"),
-    path('<int:id>', delete_proveedor, name="delete_proveedor"),
+    path('compra/deleteProveedor/<int:id>/', delete_proveedor, name="delete_proveedor"),
 
 ]
 

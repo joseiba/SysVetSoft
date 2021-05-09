@@ -58,7 +58,7 @@
             <div class="col-md-12 col-sm-12 ">
                 <div class="x_panel">
                     <div class="x_title">
-                        <h2>Lista de Clientes</h2>
+                        <h2>Lista de Proveedores</h2>
                         <ul class="nav navbar-right panel_toolbox">
                             <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
                             </li>
@@ -87,8 +87,8 @@
                                     <div class="d-inline-flex">
                                         <input type="search" class="searchTerm" id="searchTerm"
                                             data-toggle="tooltip" data-placement="top"
-                                            title="Buscá por cedula, nombre, apellido y ciudad"
-                                            placeholder="Buscá por cedula, nombre, apellido y cuidad"
+                                            title="Buscar por nombre y ruc del proveedor"
+                                            placeholder="Buscár por nombre y ruc del proveedor"
                                             onkeyup="replaceDirection(this)">
                                         <button type="button" id="busqueda" class="searchButton">
                                             <i class="fa fa-search"></i>
@@ -212,11 +212,12 @@
                         name: 'Acciones',
                         data: 'id',
                         render: function (data) {
-                            return '<button class="btn btn-warning">\
-                                                        <a href="/compra/editProveedor/' + data + '/" style="color: black">\
-                                                            Editar\
-                                                        </a>\
-                                                    </button>';
+                            return '<button class="btn btn-warning" onclick="abrir_modal_edicion(\'/compra/editProveedor/' + data + '/\');">\
+                                                        Editar\
+                                                    </button>\
+                                                    <button class="btn btn-danger" onclick="abrir_modal_eliminacion(\'/compra/deleteProveedor/' + data + '/\');">\
+                                                        Baja\
+                                                    </button>';                                                                                                   
                         }
                     }
 

@@ -21,3 +21,11 @@ class Proveedor(models.Model):
 
     def __str__(self):
         return self.nombre_proveedor
+
+
+class Pedido(models.Model):
+    """[summary]
+
+    Args:
+        models ([Pedido]): [Contiene la informacion de los pedidos]
+    """        
