@@ -1,0 +1,160 @@
+{% extends "home/base_site.html" %}
+
+{% block title %} Editar Producto {% endblock title %}
+
+{% block content %}
+<div class="right_col" role="main">
+    <div class="">
+        <div class="page-title">
+            <div class="title_left">
+                <h3>Modificar Producto</h3>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+
+        <div class="row">
+            <div class="col-md-12 col-sm-12">
+                <div class="x_panel">
+                    <div class="x_title">
+                        <h2>Información del Producto <small>Producto</small></h2>
+                        <ul class="nav navbar-right panel_toolbox">
+                            <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                            </li>
+                            <li><a class="close-link"><i class="fa fa-close"></i></a>
+                            </li>
+                        </ul>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="x_content">
+                        <form class="" method="POST">
+                            {% csrf_token %}
+                            <div class="field item form-group">
+                                <label class="col-form-label col-md-3 col-sm-3  label-align">Nombre Producto<span
+                                        class="required">*</span></label>
+                                <div class="col-md-6 col-sm-6">
+                                    {{ form.nombre_producto }}
+                                </div>
+                            </div>
+                            <div class="field item form-group">
+                                <label class="col-form-label col-md-3 col-sm-3  label-align">Descripcion<span
+                                        class="required">*</span></label>
+                                <div class="col-md-6 col-sm-6">
+                                    {{ form.descripcion }}
+                                </div>
+                            </div>
+                            <div class="field item form-group">
+                                <label class="col-form-label col-md-3 col-sm-3  label-align">Fecha de vencimiento</label>
+                                <div class="col-sm-10">
+                                    {{ form.fecha_vencimiento }}
+                                </div>
+                            </div>
+                            <div class="field item form-group">
+                                <label class="col-form-label col-md-3 col-sm-3  label-align">Fecha de baja</label>
+                                <div class="col-sm-10">
+                                    {{ form.fecha_baja }}
+                                </div>
+                            </div>
+                            <div class="field item form-group">
+                                <label class="col-form-label col-md-3 col-sm-3  label-align">Fecha de movimiento</label>
+                                <div class="col-sm-10">
+                                    {{ form.fecha_movimiento }}
+                                </div>
+                            </div>
+                            <div class="field item form-group">
+                                <label class="col-form-label col-md-3 col-sm-3  label-align">Fecha de compra</label>
+                                <div class="col-sm-10">
+                                    {{ form.fecha_compra }}
+                                </div>
+                            </div>
+                            <div class="field item form-group">
+                                <label class="col-form-label col-md-3 col-sm-3  label-align">Precio compra
+                                </label>
+                                <div class="col-sm-10">
+                                    {{ form.precio_compra }}
+                                </div>
+                            </div>
+                            <div class="field item form-group">
+                                <label class="col-form-label col-md-3 col-sm-3  label-align">Precio venta
+                                </label>
+                                <div class="col-sm-10">
+                                    {{ form.precio_venta }}
+                                </div>
+                            </div>
+                            <div class="field item form-group">
+                                <label class="col-form-label col-md-3 col-sm-3  label-align">Stock minimo
+                                </label>
+                                <div class="col-sm-10">
+                                    {{ form.stock_minimo }}
+                                </div>
+                            </div>
+                            <div class="ln_solid">
+                                <div class="form-group">
+                                    <div class="col-md-6 offset-md-3" style="margin-top: 1rem;">
+                                        <button type='submit' class="btn btn-primary">Actualizar</button>
+                                        <button' class="btn btn-success">
+                                            <a style="color: white; cursor: pointer;" href="{% url  'list_producto'%}">
+                                                Volver
+                                            </a>
+                                            </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+{% block javascripts %}
+{{ block.super }}
+<!-- validator -->
+<script src="/static/project_static/vendors/validator/multifield.js"></script>
+<script src="/static/project_static/vendors/validator/validator.js"></script>
+<script>
+    /*function hideshow() {
+      var password = document.getElementById("password1");
+      var slash = document.getElementById("slash");
+      var eye = document.getElementById("eye");
+  
+      if (password.type === 'password') {
+        password.type = "text";
+        slash.style.display = "block";
+        eye.style.display = "none";
+      }
+      else {
+        password.type = "password";
+        slash.style.display = "none";
+        eye.style.display = "block";
+      }
+  
+    }*/
+</script>
+<script>
+    /*// initialize a validator instance from the "FormValidator" constructor.
+    // A "<form>" element is optionally passed as an argument, but is not a must
+    var validator = new FormValidator({
+      "events": ['blur', 'input', 'change']
+    }, document.forms[0]);
+    // on form "submit" event
+    document.forms[0].onsubmit = function (e) {
+      var submit = true,
+        validatorResult = validator.checkAll(this);
+      console.log(validatorResult);
+      return !!validatorResult.valid;
+    };
+    // on form "reset" event
+    document.forms[0].onreset = function (e) {
+      validator.reset();
+    };
+    // stuff related ONLY for this demo page:
+    $('.toggleValidationTooltips').change(function () {
+      validator.settings.alerts = !this.checked;
+      if (this.checked)
+        $('form .alert').remove();
+    }).prop('checked', false);*/
+
+</script>
+{% endblock javascripts %}

@@ -1,0 +1,189 @@
+{% extends "home/base_site.html" %}
+
+{% block title %} Agregar Producto{% endblock title %}
+
+{% block content %}
+<div class="right_col" role="main">
+    <div class="">
+        <div class="page-title">
+            <div class="title_left">
+                <h3>Agregar Producto</h3>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+
+        <div class="row">
+            <div class="col-md-12 col-sm-12">
+                <div class="x_panel">
+                    <div class="x_title">
+                        <h2>Información del Producto</h2>
+                        <ul class="nav navbar-right panel_toolbox">
+                            <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                            </li>
+                            <li><a class="close-link"><i class="fa fa-close"></i></a>
+                            </li>
+                        </ul>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="x_content">
+                        <form class="" action="{% url 'add_producto' %}" method="POST"  >
+                            {% csrf_token %}
+                            <div class="form-group field item">
+                                <label class="col-form-label col-md-3 col-sm-3  label-align">Tipo
+                                    <span class="required">*</span>
+                                </label>
+                                <div class="col-md-6 col-sm-6">
+                                    <select class="form-control" required='required' name="tipo_producto">
+                                        <option required='required'>Seleccione un Tipo</option>
+                                        {% for tipo in tipoproducto %}
+                                        <option required="required" value={{ tipo.id}}>{{ tipo.nombre_tipo }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="field item form-group">
+                                <label class="col-form-label col-md-3 col-sm-3  label-align">Codigo Producto<span
+                                        class="required">*</span></label>
+                                <div class="col-md-6 col-sm-6">
+                                    <input class="form-control" data-validate-length-range="6" data-validate-words="1"
+                                        name="codigo_producto" placeholder="Codigo del Producto" required="required" onkeyup="replaceDirection(this)" />
+                                </div>
+                            </div>
+                            <div class="field item form-group">
+                                <label class="col-form-label col-md-3 col-sm-3  label-align">Nombre Producto<span
+                                        class="required">*</span></label>
+                                <div class="col-md-6 col-sm-6">
+                                    <input class="form-control" data-validate-length-range="6" data-validate-words="1"
+                                        name="nombre_producto" placeholder="Nombre del Producto" required="required" onkeyup="replaceCaratect(this)" />
+                                </div>
+                            </div>
+                            <div class="field item form-group">
+                                <label class="col-form-label col-md-3 col-sm-3  label-align">Descripcion<span
+                                        class="required">*</span></label>
+                                <div class="col-md-6 col-sm-6">
+                                    <input class="form-control" data-validate-length-range="6" data-validate-words="1"
+                                        name="descripcion" placeholder="Descripcion" required="required" onkeyup="replaceCaratect(this)" />
+                                </div>
+                            </div>
+                            <div class="field item form-group">
+                                <label class="col-form-label col-md-3 col-sm-3  label-align">Fecha de vencimiento</label>
+                                <div class="col-md-6 col-sm-6">
+                                    <input class="form-control" class='date' type="date"
+                                        name="fecha_vencimiento">
+                                </div>
+                            </div>
+                            <div class="mb-3 row">
+                                <label class="col-form-label col-md-3 col-sm-3  label-align">Fecha de movimiento</label>
+                                <div class="col-md-6 col-sm-6">
+                                    <input class="form-control" class='date' type="date"
+                                        name="fecha_movimiento">
+                                </div>
+                            </div>
+                            <div class="field item form-group">
+                                <label class="col-form-label col-md-3 col-sm-3  label-align">Fecha de compra</label>
+                                <div class="col-md-6 col-sm-6">
+                                    <input class="form-control" class='date' type="date"
+                                        name="fecha_compra">
+                                </div>
+                            </div>
+                            <div class="mb-3 row">
+                                <label class="col-form-label col-md-3 col-sm-3  label-align">Precio compra
+                                </label>
+                                <div class="col-md-6 col-sm-6">
+                                    <input class="form-control" name="precio_compra" placeholder="Precio compra"
+                                        type="text" onkeyup="replaceDirection(this)" />
+                                </div>
+                            </div>
+                            <div class="field item form-group">
+                                <label class="col-form-label col-md-3 col-sm-3  label-align">Precio venta
+                                </label>
+                                <div class="col-md-6 col-sm-6">
+                                    <input class="form-control" name="precio_venta" placeholder="Precio venta"
+                                        type="text" onkeyup="replaceDirection(this)" />
+                                </div>
+                            </div>
+                            <div class="field item form-group">
+                                <label class="col-form-label col-md-3 col-sm-3  label-align">Stock
+                                </label>
+                                <div class="col-sm-10">
+                                    <input class="form-control" name="stock" placeholder="Stock"
+                                        type="text" onkeyup="replaceDirection(this)" />
+                                </div>
+                            </div>
+                            <div class="field item form-group">
+                                <label class="col-form-label col-md-3 col-sm-3  label-align">Stock minimo
+                                </label>
+                                <div class="col-sm-10">
+                                    <input class="form-control" name="stock_minimo" placeholder="Stock minimo"
+                                        type="text" onkeyup="replaceDirection(this)" />
+                                </div>
+                            </div>
+                            <div class="form-group field item">
+                                <label class="col-form-label col-md-3 col-sm-3  label-align">Deposito
+                                    <span class="required">*</span>
+                                </label>
+                                <div class="col-md-6 col-sm-6">
+                                    <select class="form-control" required='required' name="id_deposito" id="id_deposito">
+                                        <option required='required'>Seleccione un Deposito</option>
+                                        {% for dep in deposito %}
+                                        <option required="required" value={{ dep.id}}>{{ dep.descripcion }}</option>
+                                        {% endfor %}
+                                    </select>                                    
+                                </div>
+                                <div id="alert_deposito">
+
+                                </div>
+                            </div>
+                            <div class="ln_solid">
+                                <div class="form-group">
+                                    <div class="col-md-6 offset-md-3" style="margin-top: 1rem;">
+                                        <button type='submit' class="btn btn-primary">Agregar</button>
+                                        <button type='reset' class="btn btn-success">Reset</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+{% block javascripts %}
+{{ block.super }}
+<!-- validator -->
+<script src="/static/project_static/vendors/validator/multifield.js"></script>
+<script src="/static/project_static/vendors/validator/validator.js"></script>
+<script src="/static/project_static/vendors/fastclick/lib/fastclick.js"></script>
+<script>
+    function hideshow() {      
+    }
+</script>
+<script>
+    // initialize a validator instance from the "FormValidator" constructor.
+    // A "<form>" element is optionally passed as an argument, but is not a must
+   var validator = new FormValidator({
+        "events": ['blur', 'input', 'change']
+    }, document.forms[0]);
+    // on form "submit" event
+    document.forms[0].onsubmit = function (e) {
+        var submit = true,
+            validatorResult = validator.checkAll(this);
+        console.log(validatorResult);
+        return !!validatorResult.valid;
+    };
+    // on form "reset" event
+    document.forms[0].onreset = function (e) {
+        validator.reset();
+    };
+    // stuff related ONLY for this demo page:
+    $('.toggleValidationTooltips').change(function () {
+        validator.settings.alerts = !this.checked;
+        if (this.checked)
+            $('form .alert').remove();
+    }).prop('checked', false);
+
+</script>
+{% endblock javascripts %}
