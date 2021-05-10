@@ -95,8 +95,6 @@ def add_pedido():
         try:
             pe = pro.id
             pedi = Pedido.objects.get(id_producto=pro.id)
-            print(pro.stock_minimo)
-            print(pro.stock)
             if pro.stock_minimo >= pro.stock:
                 pedi.id_producto = pro
                 pedi.save()
