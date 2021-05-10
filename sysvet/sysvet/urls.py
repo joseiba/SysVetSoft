@@ -37,7 +37,8 @@ validar_fecha_hora, get_mascota_cliente, get_min_service, get_mascota_selected)
 from apps.configuracion.views import (add_servicio, edit_servicio, delete_servicio, list_servicio, search_servicio, 
 add_empleado, edit_empleado, list_empleado, delete_empleado, search_empleado, list_servicio_ajax, get_list_empleados_ajax)
 
-from apps.compras.views import (add_proveedor, edit_proveedor, list_proveedor_ajax, delete_proveedor, list_proveedor)
+from apps.compras.views import (add_proveedor, edit_proveedor, list_proveedor_ajax, delete_proveedor, list_proveedor,
+list_pedido, list_pedido_ajax, edit_pedido)
 
 urlpatterns = [
     # Login and logout   
@@ -128,6 +129,10 @@ urlpatterns = [
     path('compra/get_list_proveedor/', list_proveedor_ajax, name="list_proveedor_ajax"),
     path('compra/editProveedor/<int:id>/', edit_proveedor, name="edit_proveedor"),
     path('compra/deleteProveedor/<int:id>/', delete_proveedor, name="delete_proveedor"),
+    path('compra/listPedido/', list_pedido, name="list_pedido"),
+    path('compra/get_list_pedido/', list_pedido_ajax, name="list_pedido_ajax"),
+    path('compra/editPedido/<int:id>/', edit_pedido, name="edit_pedido"),
+
 ]
 
 

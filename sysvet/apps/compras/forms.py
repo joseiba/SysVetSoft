@@ -1,5 +1,5 @@
 from django import forms
-from  apps.compras.models import Proveedor
+from  apps.compras.models import Proveedor, Pedido
 
 class ProveedorForm(forms.ModelForm):
     """[summary]
@@ -19,3 +19,19 @@ class ProveedorForm(forms.ModelForm):
                 'data-validate-length-range': '9','onkeyup':'replaceABC(this)'}),
             'email' : forms.TextInput(attrs={'class':'form-control optional', 'placeholder': 'Email','name':'email', 'type':'email', 'id':'email'}),
 		}
+
+class PedidoForm(forms.ModelForm):
+    """[summary]
+
+    Args:
+        forms ([PedidoForm]): [Formulario de pedidos]
+    """    
+    class Meta:
+        model = Pedido
+        exclude = ['is_active']
+        widgets = {		
+			'cantidad_pedido' : forms.TextInput(attrs={'class':'form-control', 'name':'cantidad_pedido', 'placeholder': 'Cantidad a pedir', 'required':'required','onkeyup':'replaceABC(this)'}),
+            'id_producto' : forms.Select(attrs={'class':'form-control', 'id': 'id_producto','required':'required' ,'name':'id_producto', 'readonly': 'readonly', 'disabled':'disabled'})
+		}
+
+

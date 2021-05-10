@@ -2,53 +2,28 @@
 <div class="modal-dialog" role="document">
     <div class="modal-content">
         <div class="modal-header no_borders" style="background-color:#ffc107;">
-            <h5 class="modal-title" id="exampleModalLabel" style="color: white;">Editar Proveedor</h5>
+            <h5 class="modal-title" id="exampleModalLabel" style="color: white;">Editar Pedido</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
-        <form action="{% url 'edit_proveedor' proveedor.id %}" method="post">
+        <form action="{% url 'edit_pedido' pedido.id %}" method="post">
             {% csrf_token %}
             <div class="field item form-group mt-3">
-                <label class="col-form-label col-md-3 col-sm-3  label-align">Nombre Proveedor<span
+                <label class="col-form-label col-md-3 col-sm-3  label-align">Cantidad a Pedir<span
                         class="required">*</span></label>
                 <div class="col-md-7 col-sm-6">
-                    {{form.nombre_proveedor}}
+                    {{form.cantidad_pedido}}
                 </div>
             </div>   
             <div class="field item form-group">
-                <label class="col-form-label col-md-3 col-sm-3  label-align">Dirección
+                <label class="col-form-label col-md-3 col-sm-3  label-align">Producto
                     <span class="required">*</span>
                 </label>
                 <div class="col-md-7 col-sm-6">
-                    {{form.direccion}}
+                    {{form.id_producto}}
                 </div>
             </div> 
-
-            <div class="field item form-group">
-                <label class="col-form-label col-md-3 col-sm-3  label-align">Nro. RUC<span
-                        class="required">*</span></label>
-                <div class="col-md-7 col-sm-6">
-                    {{form.ruc_proveedor}}
-                </div>
-            </div>
-            <div class="field item form-group mb-3">
-                <label class="col-form-label col-md-3 col-sm-3  label-align">Telefono<span
-                        class="required">*</span></label>
-                <div class="col-md-7 col-sm-6">        
-                        {{form.telefono}}
-                </div>
-            </div> 
-            
-            <div class="field item form-group">
-                <label class="col-form-label col-md-3 col-sm-3  label-align">Email</label>
-                <div class="col-md-7 col-sm-6">
-                    {{form.email}}
-                </div>
-                <div id="alert_email">
-
-                </div>
-            </div>
 
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
@@ -91,24 +66,5 @@
 
     $('form input').on("cut copy paste",function(e) {
         e.preventDefault();
-    });
-
-    document.getElementById('email').addEventListener('input', function() {
-        campo = event.target;        
-        emailRegex =/^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
-        //Se muestra un texto a modo de ejemplo, luego va a ser un icono
-        if (emailRegex.test(campo.value)) {
-            $('#alert_email').empty()
-        } else {
-            if(campo.value === ""){
-                $('#alert_email').empty()
-            }
-            else{
-                $("#alert_email").html('<div class="alert" style="opacity: 1; white-space: inherit; left: 0">\
-                                        email no valido\
-                                    </div>');
-            }
-            
-        }
     });
 </script>

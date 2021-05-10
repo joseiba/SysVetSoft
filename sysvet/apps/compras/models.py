@@ -1,5 +1,7 @@
 from django.db import models
 
+from apps.ventas.producto.models import Producto
+
 # Create your models here.
 class Proveedor(models.Model):
     """[summary]
@@ -28,4 +30,15 @@ class Pedido(models.Model):
 
     Args:
         models ([Pedido]): [Contiene la informacion de los pedidos]
-    """        
+    """
+    cantidad_pedido = models.CharField(max_length=500, blank=True, null=True, default="-")
+    last_modified = models.DateTimeField(auto_now=True, blank=True)
+    is_active = models.CharField(max_length=2, default="S", blank=True, null=True)
+    id_producto = models.ForeignKey(Producto, on_delete=models.PROTECT, null=False)
+
+    class Meta:
+        verbose_name = "Proveedor"
+        verbose_name_plural = "Proveedores"
+
+    def __str__(self):
+        return self.id_proveedor.nombre_proveedor

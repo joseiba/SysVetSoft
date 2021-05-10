@@ -7,8 +7,9 @@ from django.http import JsonResponse
 import json
 import math
 
-from apps.compras.models import Proveedor
-from apps.compras.forms import ProveedorForm
+from apps.compras.models import Proveedor, Pedido
+from apps.compras.forms import ProveedorForm, PedidoForm
+from apps.ventas.producto.models import Producto
 
 
 # Create your views here.
@@ -85,3 +86,77 @@ def delete_proveedor(request, id):
         return redirect('/compra/listProveedor')
     context = {'proveedor': proveedor}
     return render(request, "compras/proveedor/baja_proveedor_modal.html", context)
+
+
+def add_pedido():
+    producto = Producto.objects.all()
+
+    for pro in producto:
+        try:
+            pe = pro.id
+            pedi = Pedido.objects.get(id_producto=pro.id)
+            print(pro.stock_minimo)
+            print(pro.stock)
+            if pro.stock_minimo >= pro.stock:
+                pedi.id_producto = pro
+                pedi.save()
+            else:
+                pedi.delete()
+        except:
+            if pro.stock_minimo >= pro.stock:
+                pedido = Pedido()
+                pedido.id_producto = pro
+                pedido.cantidad_pedido = '-'
+                pedido.save()            
+
+@login_required()
+def list_pedido(request):
+    add_pedido()
+    return render(request, "compras/pedidos/list_pedidos.html")
+
+@login_required()
+def list_pedido_ajax(request):
+    query = request.GET.get('busqueda')
+    if query != "":
+        pedido = Pedido.objects.exclude(is_active="N").filter(Q(id_producto__nombre_producto__icontains=query))
+    else:
+        pedido = Pedido.objects.exclude(is_active="N").order_by('-last_modified')
+
+    total = pedido.count()
+
+    _start = request.GET.get('start')
+    _length = request.GET.get('length')
+    if _start and _length:
+        start = int(_start)
+        length = int(_length)
+        page = math.ceil(start / length) + 1
+        per_page = length
+
+        pedido = pedido[start:start + length]
+
+    data = [{'id': pe.id, 'nombre': pe.id_producto.nombre_producto, 'precio': pe.id_producto.precio_compra, 
+    'cantidad': pe.cantidad_pedido, 'stock': pe.id_producto.stock} for pe in pedido]        
+
+    response = {
+        'data': data,
+        'recordsTotal': total,
+        'recordsFiltered': total,
+    }
+    return JsonResponse(response)
+
+@login_required()
+def edit_pedido(request, id):
+    pedido = Pedido.objects.get(id=id)
+    form = PedidoForm(instance=pedido)
+    if request.method == 'POST':
+        form = PedidoForm(request.POST, instance=pedido)
+        if not form.has_changed():
+            messages.info(request, "No has hecho ningun cambio!")
+            return redirect('/compra/listPedido')
+        if form.is_valid():
+            pedido = form.save(commit=False)
+            pedido.save()
+            messages.success(request, 'Se ha editado correctamente!')
+            return redirect('/compra/listPedido')
+    context = {'form' : form, 'pedido': pedido}
+    return render(request, 'compras/pedidos/edit_pedido_modal.html', context)    
