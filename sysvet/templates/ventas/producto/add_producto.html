@@ -2,6 +2,10 @@
 
 {% block title %} Agregar Producto{% endblock title %}
 
+
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
+
 {% block content %}
 <div class="right_col" role="main">
     <div class="">
@@ -33,7 +37,7 @@
                                     <span class="required">*</span>
                                 </label>
                                 <div class="col-md-6 col-sm-6">
-                                    <select class="form-control" required='required' name="tipo_producto">
+                                    <select class="form-control" required='required' name="tipo_producto" id="tipo_producto">
                                         <option required='required'>Seleccione un Tipo</option>
                                         {% for tipo in tipoproducto %}
                                         <option required="required" value={{ tipo.id}}>{{ tipo.nombre_tipo }}</option>
@@ -68,8 +72,8 @@
                             <div class="field item form-group">
                                 <label class="col-form-label col-md-3 col-sm-3  label-align">Fecha de vencimiento</label>
                                 <div class="col-md-6 col-sm-6">
-                                    <input class="form-control" type="text" id="datepicker"
-                                        name="fecha_vencimiento">
+                                    <input class="form-control fecha_vencimiento" type="text" id="datepicker"
+                                        name="fecha_vencimiento" disabled>
                                 </div>
                             </div>
                             <div class="field item form-group">
@@ -184,7 +188,29 @@
         $( "#datepicker").datepicker({
             startDate: "+0D"
         });
+
+        $("#tipo_producto").change(function() {
+            var tipo = $("#tipo_producto").val()
+            if (tipo !== "" && tipo != null) {
+                $.ajax({
+                    type: 'GET',
+                    url: '/tipoProducto/vence_si_no/',
+                    data: {'tipo' : tipo},
+                    success: function(response){
+                        if (response.mensaje == 'S') {
+                            $(".fecha_vencimiento").prop("disabled", false)
+                        }else {
+                            $(".fecha_vencimiento").prop("disabled", true)
+                        }
+                    }
+                })
+            }else {
+                $(".fecha_vencimiento").prop("disabled", true)
+            }
+        })
     });
+
+
 
 </script>
 {% endblock javascripts %}

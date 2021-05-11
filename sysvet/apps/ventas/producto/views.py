@@ -5,6 +5,9 @@ from django.db.models import Q
 from django.core.paginator import Paginator
 from datetime import datetime
 
+import json
+from django.http import JsonResponse
+
 from .forms import TipoProductoForm, DepositoForm, ProductoForm
 from .models import TipoProducto, Deposito, Producto
 
@@ -109,6 +112,25 @@ def search_tipo_producto(request):
     page_obj = paginator.get_page(page_number)
     context = { 'page_obj': page_obj}
     return render(request, "ventas/producto/list_tipo_producto.html", context)
+
+#Metodo para la busqueda de tipo de producto
+@login_required()
+def vence_si_no(request):
+    tipo_producto = request.GET.get('tipo')
+    tipo_producto_vence = TipoProducto.objects.get(id=tipo_producto)
+
+    if tipo_producto_vence.vence == 'S':
+        response = {
+            'mensaje' : 'S'
+        }
+
+        return JsonResponse(response)
+    
+    response = {
+        'mensaje' : 'N'
+    }
+
+    return JsonResponse(response)
 
 
 # def order_tipo_producto(request):
