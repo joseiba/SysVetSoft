@@ -66,13 +66,8 @@ def delete_cliente(request, id):
 
 #Metodo para listar todos los clientes
 @login_required()
-def list_clientes(request):
-    clientes = Cliente.objects.exclude(is_active="N").order_by('-last_modified')
-    paginator = Paginator(clientes, 10)
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
-    context = {'page_obj' : page_obj}
-    return render(request, "ventas/cliente/list_cliente.html", context)
+def list_clientes(request):    
+    return render(request, "ventas/cliente/list_cliente.html")
 
 @login_required()
 def list_client_ajax(request):

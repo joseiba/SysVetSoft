@@ -90,17 +90,25 @@ def delete_proveedor(request, id):
 
 def add_pedido():
     producto = Producto.objects.all()
-
+    print("hola")
     for pro in producto:
+        pe = pro.id
+        pedi = Pedido.objects.get(id_producto=pe)
+        pedi.delete()
+
         try:
-            pe = pro.id
-            pedi = Pedido.objects.get(id_producto=pro.id)
+            pedi = Pedido.objects.get(id_producto=pe)
             if pro.stock_minimo >= pro.stock:
+                print('si')
                 pedi.id_producto = pro
                 pedi.save()
             else:
+                print('no 2')
                 pedi.delete()
+                print('pasa')
+
         except:
+            print("except")
             if pro.stock_minimo >= pro.stock:
                 pedido = Pedido()
                 pedido.id_producto = pro
