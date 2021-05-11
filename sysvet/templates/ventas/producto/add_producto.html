@@ -62,31 +62,17 @@
                                         class="required">*</span></label>
                                 <div class="col-md-6 col-sm-6">
                                     <input class="form-control" data-validate-length-range="6" data-validate-words="1"
-                                        name="descripcion" placeholder="Descripcion" required="required" onkeyup="replaceCaratect(this)" />
+                                        name="descripcion" placeholder="Descripcion" required="required" onkeyup="replaceDirection(this)" />
                                 </div>
                             </div>
                             <div class="field item form-group">
                                 <label class="col-form-label col-md-3 col-sm-3  label-align">Fecha de vencimiento</label>
                                 <div class="col-md-6 col-sm-6">
-                                    <input class="form-control" class='date' type="date"
+                                    <input class="form-control" type="text" id="datepicker"
                                         name="fecha_vencimiento">
                                 </div>
                             </div>
-                            <div class="mb-3 row">
-                                <label class="col-form-label col-md-3 col-sm-3  label-align">Fecha de movimiento</label>
-                                <div class="col-md-6 col-sm-6">
-                                    <input class="form-control" class='date' type="date"
-                                        name="fecha_movimiento">
-                                </div>
-                            </div>
                             <div class="field item form-group">
-                                <label class="col-form-label col-md-3 col-sm-3  label-align">Fecha de compra</label>
-                                <div class="col-md-6 col-sm-6">
-                                    <input class="form-control" class='date' type="date"
-                                        name="fecha_compra">
-                                </div>
-                            </div>
-                            <div class="mb-3 row">
                                 <label class="col-form-label col-md-3 col-sm-3  label-align">Precio compra
                                 </label>
                                 <div class="col-md-6 col-sm-6">
@@ -103,9 +89,17 @@
                                 </div>
                             </div>
                             <div class="field item form-group">
+                                <label class="col-form-label col-md-3 col-sm-3  label-align">Lote
+                                </label>
+                                <div class="col-md-6 col-sm-6">
+                                    <input class="form-control" name="lote" placeholder="Lote"
+                                        type="text" onkeyup="replaceDirection(this)" />
+                                </div>
+                            </div>
+                            <div class="field item form-group">
                                 <label class="col-form-label col-md-3 col-sm-3  label-align">Stock
                                 </label>
-                                <div class="col-sm-10">
+                                <div class="col-md-6 col-sm-6">
                                     <input class="form-control" name="stock" placeholder="Stock"
                                         type="text" onkeyup="replaceDirection(this)" />
                                 </div>
@@ -113,7 +107,7 @@
                             <div class="field item form-group">
                                 <label class="col-form-label col-md-3 col-sm-3  label-align">Stock minimo
                                 </label>
-                                <div class="col-sm-10">
+                                <div class="col-md-6 col-sm-6">
                                     <input class="form-control" name="stock_minimo" placeholder="Stock minimo"
                                         type="text" onkeyup="replaceDirection(this)" />
                                 </div>
@@ -157,6 +151,7 @@
 <script src="/static/project_static/vendors/validator/multifield.js"></script>
 <script src="/static/project_static/vendors/validator/validator.js"></script>
 <script src="/static/project_static/vendors/fastclick/lib/fastclick.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script>
     function hideshow() {      
     }
@@ -164,7 +159,7 @@
 <script>
     // initialize a validator instance from the "FormValidator" constructor.
     // A "<form>" element is optionally passed as an argument, but is not a must
-   var validator = new FormValidator({
+    var validator = new FormValidator({
         "events": ['blur', 'input', 'change']
     }, document.forms[0]);
     // on form "submit" event
@@ -184,6 +179,12 @@
         if (this.checked)
             $('form .alert').remove();
     }).prop('checked', false);
+
+    $( function() {
+        $( "#datepicker").datepicker({
+            startDate: "+0D"
+        });
+    });
 
 </script>
 {% endblock javascripts %}

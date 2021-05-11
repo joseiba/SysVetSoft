@@ -16,6 +16,8 @@ def add_tipo_producto(request):
     form = TipoProductoForm
     if request.method == 'POST':
         form = TipoProductoForm(request.POST or None)
+        fecha_baja = request.POST.get('fecha_baja')
+        print('baja:' + str(fecha_baja))
         if form.is_valid():
             form.save()
             messages.add_message(request, messages.SUCCESS, 'Tipo de producto agregado correctamente!')
@@ -47,12 +49,10 @@ def edit_tipo_producto(request, id):
 @login_required()
 def baja_tipo_producto(request, id):
     tipo_producto = TipoProducto.objects.get(id=id)
-    print('Producto 1')
     try:
         producto = Producto.objects.get(tipo_producto=id)
     except:
         producto = None
-    print('Producto 2')
     if request.method == 'POST':
         if producto is None:
             if tipo_producto.fecha_baja == "-":
@@ -176,7 +176,12 @@ def search_deposito(request):
 def add_producto(request):
     form = ProductoForm
     if request.method == 'POST':
+        print('POST')
         form = ProductoForm(request.POST or None)
+        lote = request.POST.get('lote')
+        print('lote:' + lote)
+        fecha_vencimiento = request.POST.get('fecha_vencimiento')
+        print('vencimiento:' + fecha_vencimiento)
         if form.is_valid():
             form.save()
             messages.add_message(request, messages.SUCCESS, 'Producto agregado correctamente!')
@@ -204,6 +209,40 @@ def edit_producto(request, id):
 
     context = {'form': form}
     return render(request, 'ventas/producto/edit_producto.html', context)
+
+# Metodo para editar Productos
+@login_required()
+def mover_producto(request, id):
+    producto_movido = Producto()
+    producto = Producto.objects.get(id=id)
+    form = ProductoForm(instance=producto)
+    if request.method == 'POST':
+        nombre_deposito = request.POST.get('id_deposito')
+        cantidad = request.POST.get('stock')
+        producto.stock = producto.stock - int(cantidad)
+        producto.save() 
+        deposito = Deposito.objects.get(id=nombre_deposito)
+        producto_movido.nombre_producto = producto.nombre_producto
+        producto_movido.codigo_producto = producto.codigo_producto
+        producto_movido.descripcion = producto.descripcion
+        producto_movido.fecha_baja = producto.fecha_baja
+        producto_movido.fecha_compra = producto.fecha_compra
+        producto_movido.fecha_movimiento = producto.fecha_movimiento
+        producto_movido.fecha_vencimiento = producto.fecha_vencimiento
+        producto_movido.id_deposito = deposito
+        producto_movido.is_active = producto.is_active
+        producto_movido.lote = producto.lote
+        producto_movido.precio_compra = producto.precio_compra
+        producto_movido.precio_venta = producto.precio_venta
+        producto_movido.stock = cantidad
+        producto_movido.stock_minimo = producto.stock_minimo
+        producto_movido.tipo_producto = producto.tipo_producto
+        producto_movido.save()
+
+        return redirect('/producto/list/')
+
+    context = {'form': form, 'producto': producto}
+    return render(request, 'ventas/producto/mover_producto.html', context)
 
 #Metodo para eliminar producto
 @login_required()

@@ -125,6 +125,11 @@
                                                         </a>
                                                     </button>
 
+                                                    <button class="btn btn-warning"
+                                                        onclick="abrir_modal_edicion('/producto/mover/' + '{{ producto.id }}' + '/');">
+                                                        Mover
+                                                    </button>
+
                                                     <button class="btn btn-danger">
                                                         <a class="confirm-delete pointer" data-id="{{ producto.id }}"
                                                             data-name-producto="{{ producto.nombre_producto }}"
@@ -173,6 +178,11 @@
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="edicion" role="dialog">
+
+</div>
+
 {% endblock content %}
 
 {% block javascripts %}
