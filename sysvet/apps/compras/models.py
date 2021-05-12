@@ -89,7 +89,7 @@ TIPO_IVA = [
 ]
 
 
-"""class FacturaDet(models.Model):
+class FacturaDet(models.Model):
     id_factura = models.ForeignKey('FacturaCompra', on_delete=models.CASCADE)
     id_pedido = models.ForeignKey('Pedido', on_delete=models.CASCADE)
     cantidad = models.IntegerField(default=1)
@@ -98,4 +98,4 @@ TIPO_IVA = [
     tipo_iva = models.CharField(max_length=10, choices=TIPO_IVA, default=TIPO_IVA[1])
 
     class Meta:
-        ordering = ['id']  """      
+        ordering = ['id']      

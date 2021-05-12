@@ -90,25 +90,20 @@ def delete_proveedor(request, id):
 
 def add_pedido():
     producto = Producto.objects.all()
-    print("hola")
     for pro in producto:
         pe = pro.id
-        pedi = Pedido.objects.get(id_producto=pe)
-        pedi.delete()
 
         try:
             pedi = Pedido.objects.get(id_producto=pe)
             if pro.stock_minimo >= pro.stock:
-                print('si')
                 pedi.id_producto = pro
+                pedi.is_active = "S"
                 pedi.save()
             else:
-                print('no 2')
-                pedi.delete()
-                print('pasa')
+                pedi.is_active = "N"
+                pedi.save()
 
         except:
-            print("except")
             if pro.stock_minimo >= pro.stock:
                 pedido = Pedido()
                 pedido.id_producto = pro
@@ -165,4 +160,12 @@ def edit_pedido(request, id):
             messages.success(request, 'Se ha editado correctamente!')
             return redirect('/compra/listPedido')
     context = {'form' : form, 'pedido': pedido}
-    return render(request, 'compras/pedidos/edit_pedido_modal.html', context)    
+    return render(request, 'compras/pedidos/edit_pedido_modal.html', context)
+
+@login_required()
+def list_facturas(request):
+    return render(request, 'compras/fatura/list_facturas.html')
+
+def list_facturas_ajax(request):
+    response = {}
+    return JsonResponse(response)

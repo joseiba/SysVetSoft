@@ -38,7 +38,7 @@ from apps.configuracion.views import (add_servicio, edit_servicio, delete_servic
 add_empleado, edit_empleado, list_empleado, delete_empleado, search_empleado, list_servicio_ajax, get_list_empleados_ajax)
 
 from apps.compras.views import (add_proveedor, edit_proveedor, list_proveedor_ajax, delete_proveedor, list_proveedor,
-list_pedido, list_pedido_ajax, edit_pedido)
+list_pedido, list_pedido_ajax, edit_pedido, list_facturas, list_facturas_ajax)
 
 urlpatterns = [
     # Login and logout   
@@ -132,7 +132,11 @@ urlpatterns = [
     path('compra/listPedido/', list_pedido, name="list_pedido"),
     path('compra/get_list_pedido/', list_pedido_ajax, name="list_pedido_ajax"),
     path('compra/editPedido/<int:id>/', edit_pedido, name="edit_pedido"),
+    path('compra/listFacturas/', list_facturas, name="list_facturas"),\
+    path('compra/get_list_proveedor/', list_proveedor_ajax, name="list_proveedor_ajax"),
+    path('compra/get_list_facturas/', list_facturas_ajax, name="list_facturas_ajax"),
 
+    
 ]
 
 
