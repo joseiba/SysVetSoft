@@ -4,11 +4,12 @@ from django.contrib import messages
 from django.db.models import Q
 from django.core.paginator import Paginator
 from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
 import json
 import math
 
-from apps.compras.models import Proveedor, Pedido
-from apps.compras.forms import ProveedorForm, PedidoForm
+from apps.compras.models import Proveedor, Pedido, FacturaCompra, FacturaDet, Pago
+from apps.compras.forms import ProveedorForm, PedidoForm, FacturaCompraForm, FacturaDetalleForm
 from apps.ventas.producto.models import Producto
 
 
@@ -136,7 +137,7 @@ def list_pedido_ajax(request):
         pedido = pedido[start:start + length]
 
     data = [{'id': pe.id, 'nombre': pe.id_producto.nombre_producto, 'precio': pe.id_producto.precio_compra, 
-    'cantidad': pe.cantidad_pedido, 'stock': pe.id_producto.stock} for pe in pedido]        
+    'cantidad': pe.cantidad_pedido, 'stock': pe.id_producto.stock, 'fecha_pedido': pe.fecha_alta} for pe in pedido]        
 
     response = {
         'data': data,
@@ -151,6 +152,7 @@ def edit_pedido(request, id):
     form = PedidoForm(instance=pedido)
     if request.method == 'POST':
         form = PedidoForm(request.POST, instance=pedido)
+        print(form)
         if not form.has_changed():
             messages.info(request, "No has hecho ningun cambio!")
             return redirect('/compra/listPedido')
@@ -162,10 +164,112 @@ def edit_pedido(request, id):
     context = {'form' : form, 'pedido': pedido}
     return render(request, 'compras/pedidos/edit_pedido_modal.html', context)
 
+
+#Facturas compras
 @login_required()
-def list_facturas(request):
-    return render(request, 'compras/fatura/list_facturas.html')
+def add_factura_compra(request):
+    form = FacturaCompraForm()
+    data = {}
+    if request.method == 'POST' and request.is_ajax():
+        try:
+            factura_dict = json.loads(request.POST['id_factura'])
+            #print(factura_dict)
+            try:
+                factura = FacturaCompra()
+                factura.nro_factura = factura_dict['nro_factura']
+                factura.nro_timbrado = factura_dict['nro_timbrado']
+                factura.id_proveedor = factura_dict['id_proveedor']
+                factura.fecha_emision = datetime.strptime(factura_dict['fecha_emision'],"%d/%m/%Y")
+                factura.fecha_vecimiento = datetime.strptime(factura_dict['fecha_emision'],"%d/%m/%Y")
+                factura.estado = 'PENDIENTE'
+                factura.total_iva = int(factura_dict['total_iva'])
+                factura.total = int(factura_dict['total_factura'])
+                factura.save()
+                for i in factura_dict['products']:
+                    detalle = FacturaDet()
+                    detalle.id_factura = factura.id
+                    detalle.id_pedido = i['codigo_producto']
+                    detalle.cantidad = int(i['cantidad'])
+                    detalle.descripcion = i['description']
+                    detalle.save()
+            except Exception as e:
+                print(e)
+        except Exception as e:
+            data['error'] = str(e)
+        return JsonResponse(data,safe=False)
+    context = {'form': form, 'calc_iva': 5}
+    return render(request, 'compras/factura/add_factura_compra.html', context)
+
+def get_detalle_factura(id):
+    data = []
+    try:
+        detalles = FacturaDet.objects.filter(id_factura=id)
+        for i in detalles:
+            item = i.id_pedido.obtener_dict()
+            item['description'] = i.descripcion
+            item['cantidad'] = i.cantidad
+            data.append(item)
+    except:
+        pass
+    return data
+
+@login_required()
+def list_factura_compra(request):
+    return render(request, 'compras/factura/list_facturas.html')
 
 def list_facturas_ajax(request):
-    response = {}
+    query = request.GET.get('busqueda')
+    if query != "":
+        factCompra = FacturaCompra.objects.exclude(is_active="N").filter(Q(nro_factura__icontains=query))
+    else:
+        factCompra = FacturaCompra.objects.exclude(is_active="N").order_by('-last_modified')
+
+    total = factCompra.count()
+
+    _start = request.GET.get('start')
+    _length = request.GET.get('length')
+    if _start and _length:
+        start = int(_start)
+        length = int(_length)
+        page = math.ceil(start / length) + 1
+        per_page = length
+
+        factCompra = factCompra[start:start + length]
+
+    data = [{'nro_factura': fc.nro_factura, 'fecha_emision': fc.fecha_emision, 'fecha_vecimiento': fc.fecha_vecimiento, 
+    'proveedor': fc.id_proveedor.nombre_proveedor, 'im_total': fc.total} for fc in factCompra]
+
+    response = {
+        'data': data,
+        'recordsTotal': total,
+        'recordsFiltered': total,
+    }
     return JsonResponse(response)
+
+@login_required()
+@csrf_exempt
+def search_pediddos_factura(request):
+    data = {}
+    try:
+        print(request.method)
+        print(request.POST['action'])
+        term = request.POST['term']
+        print(term)
+        if (request.method == 'POST') and (request.POST['action'] == 'search_products'):
+            print('entra')
+            data = []
+            prods = Pedido.objects.filter(id_producto__nombre_producto__icontains=term)[0:10]
+            print(prods, term)
+            for p in prods:
+                print('entra 2')
+                item = p.obtener_dict()
+                print('entra 2')
+                item['id'] = p.id
+                producto_desc = '%s' % (p.id_producto.nombre_producto)
+                item['text'] = producto_desc
+                data.append(item)
+    except Exception as e:
+        data['error'] = str(e)
+
+    return JsonResponse(data, safe=False)
+

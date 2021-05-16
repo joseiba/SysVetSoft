@@ -1,8 +1,11 @@
 from django.db import models
 
 from apps.ventas.producto.models import Producto
+from datetime import datetime
+
 
 # Create your models here.
+date = datetime.now()
 class Proveedor(models.Model):
     """[summary]
 
@@ -22,7 +25,7 @@ class Proveedor(models.Model):
         verbose_name_plural = "Proveedores"
 
     def __str__(self):
-        return self.nombre_proveedor
+        return  'Proveedor: %s - ruc: %s' % (self.nombre_proveedor, self.ruc_proveedor)
 
 
 class Pedido(models.Model):
@@ -32,6 +35,7 @@ class Pedido(models.Model):
         models ([Pedido]): [Contiene la informacion de los pedidos]
     """
     cantidad_pedido = models.CharField(max_length=500, blank=True, null=True, default="-")
+    fecha_alta = models.CharField(max_length = 200, default = date.strftime("%d/%m/%Y %H:%M:%S hs"), editable = False)
     last_modified = models.DateTimeField(auto_now=True, blank=True)
     is_active = models.CharField(max_length=2, default="S", blank=True, null=True)
     id_producto = models.ForeignKey(Producto, on_delete=models.PROTECT, null=False)
@@ -40,8 +44,17 @@ class Pedido(models.Model):
         verbose_name = "Proveedor"
         verbose_name_plural = "Proveedores"
 
+    def obtener_dict(self):
+        dict = {}
+        dict['codigo_producto'] = self.id_producto.codigo_producto
+        dict['nombre'] = self.id_producto.nombre_producto
+        dict['description'] = self.id_producto.descripcion
+        dict['precio'] = self.id_producto.precio_compra
+        dict['cantidad_pedido'] = self.cantidad_pedido
+        return dict
+
     def __str__(self):
-        return self.id_proveedor.nombre_proveedor
+        return self.id_producto.nombre_producto
 
 class Pago(models.Model):
     """[summary]
@@ -58,44 +71,36 @@ class Pago(models.Model):
 
 
 ESTADOS_FACTURA = [
-    ('RECIBIDO', 'Recibido'),
-    ('NORECIBIDO', 'No Recibido')]        
+    ('PENDIENTE', 'Pendiente'),
+    ('CANCELADO', 'Cancelado'),
+    ('FINALIZADO', 'Finalizado'),
+]        
 
 class FacturaCompra(models.Model):
-    nro_factura = models.CharField(max_length=200, unique=True)
+    nro_factura = models.CharField(max_length=200)
+    nro_timbrado = models.CharField(max_length=200)
     fecha_emision = models.DateField()
-    fecha_vecimiento = models.DateField()
-    tipo_factura = models.BooleanField()  # true: contado false: credito
+    fecha_vencimiento = models.DateField()
+    tipo_factura = models.BooleanField(default=True)
     estado = models.CharField(max_length=12, choices=ESTADOS_FACTURA, default=ESTADOS_FACTURA[0])
-    monto_iva1 = models.DecimalField(default=0.00, decimal_places=2, max_digits=9)  # 5%
-    monto_iva2 = models.DecimalField(default=0.00, decimal_places=2, max_digits=9)  # 10% preguntar si esta bien
+    total_iva = models.IntegerField(default=0)
     total = models.FloatField(default=0)
-    exenta = models.DecimalField(default=0.00, decimal_places=2, max_digits=9)
-    id_proveedor = models.ForeignKey('Proveedor', on_delete=models.PROTECT)
-    id_pago = models.ForeignKey(Pago, on_delete=models.PROTECT)
+    last_modified = models.DateTimeField(auto_now=True, blank=True)
+    is_active = models.CharField(max_length=2, default="S", blank=True, null=True)
+    id_proveedor = models.ForeignKey('Proveedor', on_delete=models.CASCADE)
 
     def __str__(self):
-        return 'Factura Compra: %s - Proveedor: %s' % (self.nro_factura, self.id_proveedor.razon_social)
+        return 'Factura Compra: %s - Proveedor: %s' % (self.nro_factura, self.id_proveedor)
 
     class Meta:
         verbose_name = 'Factura Compra'
         verbose_name_plural = 'Facturas Compras'
 
-
-TIPO_IVA = [
-    ('IVA5', '5%'),
-    ('IVA10', '10%'),
-    ('EXENTA', 'Exenta')
-]
-
-
 class FacturaDet(models.Model):
     id_factura = models.ForeignKey('FacturaCompra', on_delete=models.CASCADE)
     id_pedido = models.ForeignKey('Pedido', on_delete=models.CASCADE)
-    cantidad = models.IntegerField(default=1)
-    precio = models.DecimalField(default=0.00, decimal_places=2, max_digits=9)
+    cantidad = models.IntegerField()
     descripcion = models.CharField(max_length=200, blank=True)
-    tipo_iva = models.CharField(max_length=10, choices=TIPO_IVA, default=TIPO_IVA[1])
 
     class Meta:
         ordering = ['id']      
