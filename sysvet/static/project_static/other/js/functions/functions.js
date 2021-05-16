@@ -6,23 +6,19 @@ function alert_delete(title, content, callback) {
     swal({
         title: title,
         text: content,
-        type: "warning",
-        showCancelButton: true,
-        confirmButtonText: "Si, eliminar!",
-        cancelButtonText: "Cancelar!",
-        closeOnConfirm: false,
-        closeOnCancel: false
-    }, function (isConfirm) {
-        if (isConfirm) {
-            swal({
-                title: "Eliminado",
-                type: "success"
-            }, function () {
-                callback();
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+    })
+    .then((willDelete) => {
+        if (willDelete) {
+            swal("Se ha eliminado correctamente", {
+                icon: "success",
             });
-        } else {
-            swal("Cancelado", "", "error");
-        }
+            callback();
+            } else {
+                swal("Cancelado");
+            }
     });
 }
 
@@ -33,15 +29,12 @@ function submit_with_ajax(url, title, content, parameters, callback) {
     swal({
         title: title,
         text: content,
-        type: "warning",
-        showCancelButton: true,
-        confirmButtonText: "Si, registrar!",
-        cancelButtonText: "Cancelar!",
-        closeOnConfirm: false,
-        closeOnCancel: false
-    }, function (isConfirm) {
-        if (isConfirm) {
-            console.log(url);
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+    })
+    .then((confir) => {
+        if(confir){
             $.ajax({
                 url: url,
                 type: 'POST',
@@ -49,21 +42,32 @@ function submit_with_ajax(url, title, content, parameters, callback) {
                 dataType: 'json',
                 processData: false,
                 contentType: false,
-                success: function () {
-                    swal({
-                        title: 'Notificación',
-                        text: 'Se ha Registrado Correctamente',
-                        type: 'success'
-                    }, function () {
+                success: function (response) {  
+                    if(response.mensaje != "error"){
+                        swal({
+                            title: 'Notificación',
+                            text: 'Se ha Registrado Correctamente',
+                            icon: 'success'
+                        }),
                         callback();
-                    });
+                    }else{
+                        swal({
+                            title: 'Notificación',
+                            text: 'ha ocurrido un error, intenlo de nuevo',
+                            icon: 'error'
+                        });
+                        callback();
+
+                    }                                     
                 },
                 error: function (xhr, ajaxOptions, thrownError) {
-                    swal("Error", xhr + ' ' + ajaxOptions + ' ' + thrownError , "error");
+                    swal("Error", xhr + ' ' + ajaxOptions + ' ' + thrownError, "error");
                 }
             });
-        } else {
-            swal("Cancelado", "", "error");
         }
+        else{
+            swal("Cancelado");
+        }
+        
     });
 }

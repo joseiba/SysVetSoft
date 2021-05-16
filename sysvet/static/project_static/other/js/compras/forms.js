@@ -69,11 +69,15 @@ var factura = {
                     class: "text-center",
                     orderable: false,  
                     render: function (data, type, row) {
-                        if(row.cantidad_pedido === "-"){
-                            return '<input type="text" name="cantidad" class="form-control form-control-sm input-sm" autocomplete="off" value="' + row.cantidad + '">';
-                        }else{
-                            return  row.cantidad_pedido;
-                        }                        
+                        if(action == "A"){
+                            if(row.cantidad_pedido === "-"){
+                                return '<input type="text" name="cantidad" class="form-control form-control-sm input-sm" autocomplete="off" value="' + row.cantidad + '">';
+                            }else{
+                                return '<input type="text" name="cantidad" class="form-control form-control-sm input-sm" autocomplete="off" value="' + row.cantidad_pedido + '">';
+                            }    
+                        }else{  
+                            return '<input type="text" name="cantidad" class="form-control form-control-sm input-sm" autocomplete="off" value="' + row.cantidad_pedido + '">';
+                        }                                            
                     }                 
                 },
                 {
@@ -82,7 +86,7 @@ var factura = {
                     width: "5%",
                     orderable: false,
                     render: function (data, type, row) {
-                        return '<a rel="remove" class="btn btn-danger m-0 p-0"><i class="fa fa-trash m-1" aria-hidden="true"></i>\n</i></a>'
+                        return '<a rel="remove" class="btn btn-danger m-0 p-0"><i class="fa fa-trash m-1" style="color: white" aria-hidden="true"></i>\n</i></a>'
                     }
                 },
             ],
@@ -125,10 +129,11 @@ $(function () {
     $('#search').on('select2:select', function (e) {
         var data = e.params.data;
         if(data.cantidad_pedido === "-"){
-            data['cantidad'] = 1;
+                data['cantidad'] = 1;
         }else{
-            data['cantidad'] = parseInt(data.cantidad_pedido);
-        }
+                data['cantidad'] = parseInt(data.cantidad_pedido);
+            }
+        
         //data['subtotal'] = 0;
         //se agrega los datos a la estructura
         factura.add(data)
@@ -166,16 +171,23 @@ $(function () {
     $('form').on('submit', function (e) {
         e.preventDefault();
         factura.items.proveedor = $('select[name="id_proveedor"]').val();
+        console.log(factura.items.proveedor)
         factura.items.fecha_emision = $('input[name="fecha_emision"]').val();
+        console.log(factura.items.fecha_emision)
         factura.items.fecha_vencimiento = $('input[name="fecha_vencimiento"]').val();
+        console.log(factura.items.fecha_vencimiento)
         factura.items.nro_factura = $('input[name="nro_factura"]').val();
+        console.log(factura.items.nro_factura)
         factura.items.nro_timbrado = $('input[name="nro_timbrado"]').val();
+        console.log(factura.items.nro_timbrado)
         var parameters = new FormData();
+        console.log(factura.items)
         parameters.append('factura', JSON.stringify(factura.items));
         var csrf = $('input[name="csrfmiddlewaretoken"]').val();
         parameters.append('csrfmiddlewaretoken', csrf);
+        console.log(parameters)
         submit_with_ajax(window.location.pathname, 'Noticicación', '¿Desea registrar esta factura?', parameters, function () {
-            location.href = "/compra/listFacturasCompras/"
+            location.href = "/compra/addFacturaCompra/"
         });
     });
 });

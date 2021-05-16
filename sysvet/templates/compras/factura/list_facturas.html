@@ -78,8 +78,8 @@
                                     <div class="d-inline-flex">
                                         <input type="search" class="searchTerm" id="searchTerm"
                                             data-toggle="tooltip" data-placement="top"
-                                            title="Busca por nombre de producto"
-                                            placeholder="Busca por nombre de producto"
+                                            title="Busca por nº de factura o nombre del proveedor"
+                                            placeholder="Busca por nº de factura o nombre del proveedor"
                                             onkeyup="replaceDirection(this)">
                                         <button type="button" id="busqueda" class="searchButton">
                                             <i class="fa fa-search"></i>
@@ -103,7 +103,7 @@
                                                 <th style="color: white;">Fecha Vencimiento</th>
                                                 <th style="color: white;">Proveedor</th>
                                                 <th style="color: white;">Importe Total</th>
-                                                <th style="color: white;">Acciones</th>                   
+                                                <th style="color: white;">Acción</th>                   
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -198,23 +198,25 @@
                     {
                         name: 'Importe Total',
                         data: 'im_total',
+                        render: function(data){
+                            return data + ' Gs.'
+                        }
                     },
                     {
-                        name: 'Acciones',
+                        name: 'Acción',
                         data: 'id',
                         render: function (data) {
                             return '<button class="btn btn-warning">\
-                                                        Editar\
-                                                    </button>\
-                                                    <button class="btn btn-danger">\
-                                                        Baja\
+                                                        <a href="/compra/editFacturaCompra/' + data + '/" style="color: black">\
+                                                            Editar\
+                                                        </a>\
                                                     </button>';                                                                                                   
                         }
                     }
 
                 ],
                 columnDefs: [{
-                    targets: [], // column index (start from 0)
+                    targets: [5], // column index (start from 0)
                     orderable: false, // set orderable false for selected columns
                 }],
                 serverSide: false,

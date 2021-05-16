@@ -46,7 +46,7 @@ class Pedido(models.Model):
 
     def obtener_dict(self):
         dict = {}
-        dict['codigo_producto'] = self.id_producto.codigo_producto
+        dict['codigo_producto'] = self.id
         dict['nombre'] = self.id_producto.nombre_producto
         dict['description'] = self.id_producto.descripcion
         dict['precio'] = self.id_producto.precio_compra
@@ -77,10 +77,10 @@ ESTADOS_FACTURA = [
 ]        
 
 class FacturaCompra(models.Model):
-    nro_factura = models.CharField(max_length=200)
-    nro_timbrado = models.CharField(max_length=200)
-    fecha_emision = models.DateField()
-    fecha_vencimiento = models.DateField()
+    nro_factura = models.CharField(max_length=500)
+    nro_timbrado = models.CharField(max_length=500)
+    fecha_emision = models.CharField(max_length=200)
+    fecha_vencimiento = models.CharField(max_length=200)
     tipo_factura = models.BooleanField(default=True)
     estado = models.CharField(max_length=12, choices=ESTADOS_FACTURA, default=ESTADOS_FACTURA[0])
     total_iva = models.IntegerField(default=0)

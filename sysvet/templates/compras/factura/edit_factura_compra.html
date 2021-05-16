@@ -1,6 +1,6 @@
 {% extends "home/base_site.html" %}
 
-{% block title %} Agregar Factura Compra{% endblock title %}
+{% block title %} Editar Factura Compra{% endblock title %}
 {% block stylesheets %}
 {{ block.super }}
 <link href="/static/project_static/other/js/select2/select2.css" rel="stylesheet" />
@@ -26,18 +26,9 @@
     <div class="">
         <div class="page-title">
             <div class="title_left">
-                <h3>Agregar Factura Compra</h3>
+                <h3>Editar Factura Compra</h3>
             </div>
         </div>
-        <div class="clearfix"></div>
-        {% if messages %}
-        <div class="alert alert-success alert-dismissible" role="alert">
-            {% for message in messages %}
-            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-            {{ message }}
-            {% endfor %}
-        </div>
-        {% endif %}
 
         <div class="clearfix"></div>
 
@@ -164,7 +155,7 @@
                                 </div>
                                 <div class="tile-footer">
                                     <button type="submit" class="btn btn-primary" style="color: white"><i
-                                            class="fa fa-fw fa-lg fa-check-circle"></i>Registrar Factura
+                                            class="fa fa-fw fa-lg fa-check-circle"></i>Editar Factura
                                     </button>&nbsp;&nbsp;&nbsp;
                                     <a class="btn btn-secondary" href="{% url 'list_factura_compra' %}">
                                         <i class="fa fa-fw fa-lg fa-times-circle"></i>Volver</a>
@@ -199,7 +190,7 @@
 <script src="/static/project_static/vendors/pdfmake/build/pdfmake.min.js"></script>
 <script src="/static/project_static/vendors/pdfmake/build/vfs_fonts.js"></script>
 <script src="/static/project_static/other/js/select2/select2.js"></script>
-<script src="/static/project_static/other/js/sweetalert.min.js"></script>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 <script src="/static/project_static/other/js/bootstrap-touchspin-master/dist/jquery.bootstrap-touchspin.js"></script>
 <script src="/static/project_static/other/js/compras/forms.js"></script>
 <script src="/static/project_static/other/js/functions/functions.js"></script>
@@ -338,6 +329,9 @@
                 }
             }
         })
+
+        factura.items.products = {{ det|safe }};
+        factura.list();
     })
 
 </script>
