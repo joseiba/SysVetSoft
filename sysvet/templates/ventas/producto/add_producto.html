@@ -1,10 +1,12 @@
 {% extends "home/base_site.html" %}
 
 {% block title %} Agregar Producto{% endblock title %}
+{% block stylesheets %}
+{{ block.super }}
+<link rel="stylesheet"
+    href="/static/project_static/other/js/jquery-ui-themes-1.12.1/jquery-ui-themes-1.12.1/jquery-ui.min.css">
 
-
-<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-
+{% endblock stylesheets %}
 
 {% block content %}
 <div class="right_col" role="main">
@@ -49,30 +51,30 @@
                                 <label class="col-form-label col-md-3 col-sm-3  label-align">Codigo Producto<span
                                         class="required">*</span></label>
                                 <div class="col-md-6 col-sm-6">
-                                    <input class="form-control" data-validate-length-range="6" data-validate-words="1"
-                                        name="codigo_producto" placeholder="Codigo del Producto" required="required" onkeyup="replaceDirection(this)" />
+                                    <input class="form-control"
+                                        name="codigo_producto" placeholder="Codigo del Producto" required="required" autocomplete="off" onkeyup="replaceDirection(this)" />
                                 </div>
                             </div>
                             <div class="field item form-group">
                                 <label class="col-form-label col-md-3 col-sm-3  label-align">Nombre Producto<span
                                         class="required">*</span></label>
                                 <div class="col-md-6 col-sm-6">
-                                    <input class="form-control" data-validate-length-range="6" data-validate-words="1"
-                                        name="nombre_producto" placeholder="Nombre del Producto" required="required" onkeyup="replaceCaratect(this)" />
+                                    <input class="form-control"
+                                        name="nombre_producto" placeholder="Nombre del Producto" autocomplete="off" required="required" onkeyup="replaceCaratect(this)" />
                                 </div>
                             </div>
                             <div class="field item form-group">
                                 <label class="col-form-label col-md-3 col-sm-3  label-align">Descripcion<span
                                         class="required">*</span></label>
                                 <div class="col-md-6 col-sm-6">
-                                    <input class="form-control" data-validate-length-range="6" data-validate-words="1"
-                                        name="descripcion" placeholder="Descripcion" required="required" onkeyup="replaceDirection(this)" />
+                                    <input class="form-control"
+                                        name="descripcion" placeholder="Descripcion" autocomplete="off" required="required" onkeyup="replaceDirection(this)" />
                                 </div>
                             </div>
                             <div class="field item form-group">
                                 <label class="col-form-label col-md-3 col-sm-3  label-align">Fecha de vencimiento</label>
                                 <div class="col-md-6 col-sm-6">
-                                    <input class="form-control fecha_vencimiento" type="text" id="datepicker"
+                                    <input class="form-control fecha_vencimiento" placeholder="Fecha de vencimiento" autocomplete="off" type="text" id="datepicker"
                                         name="fecha_vencimiento" disabled>
                                 </div>
                             </div>
@@ -80,7 +82,7 @@
                                 <label class="col-form-label col-md-3 col-sm-3  label-align">Precio compra
                                 </label>
                                 <div class="col-md-6 col-sm-6">
-                                    <input class="form-control" name="precio_compra" placeholder="Precio compra"
+                                    <input class="form-control" name="precio_compra" autocomplete="off" placeholder="Precio compra"
                                         type="text" onkeyup="replaceDirection(this)" />
                                 </div>
                             </div>
@@ -88,7 +90,7 @@
                                 <label class="col-form-label col-md-3 col-sm-3  label-align">Precio venta
                                 </label>
                                 <div class="col-md-6 col-sm-6">
-                                    <input class="form-control" name="precio_venta" placeholder="Precio venta"
+                                    <input class="form-control" name="precio_venta" autocomplete="off" placeholder="Precio venta"
                                         type="text" onkeyup="replaceDirection(this)" />
                                 </div>
                             </div>
@@ -96,7 +98,7 @@
                                 <label class="col-form-label col-md-3 col-sm-3  label-align">Lote
                                 </label>
                                 <div class="col-md-6 col-sm-6">
-                                    <input class="form-control" name="lote" placeholder="Lote"
+                                    <input class="form-control" name="lote" placeholder="Lote" autocomplete="off"
                                         type="text" onkeyup="replaceDirection(this)" />
                                 </div>
                             </div>
@@ -104,7 +106,7 @@
                                 <label class="col-form-label col-md-3 col-sm-3  label-align">Stock
                                 </label>
                                 <div class="col-md-6 col-sm-6">
-                                    <input class="form-control" name="stock" placeholder="Stock"
+                                    <input class="form-control" name="stock" placeholder="Stock" autocomplete="off"
                                         type="text" onkeyup="replaceDirection(this)" />
                                 </div>
                             </div>
@@ -112,7 +114,7 @@
                                 <label class="col-form-label col-md-3 col-sm-3  label-align">Stock minimo
                                 </label>
                                 <div class="col-md-6 col-sm-6">
-                                    <input class="form-control" name="stock_minimo" placeholder="Stock minimo"
+                                    <input class="form-control" name="stock_minimo" placeholder="Stock minimo" autocomplete="off"
                                         type="text" onkeyup="replaceDirection(this)" />
                                 </div>
                             </div>
@@ -152,14 +154,12 @@
 {% block javascripts %}
 {{ block.super }}
 <!-- validator -->
-<script src="/static/project_static/vendors/validator/multifield.js"></script>
+<script src="/static/project_static/other/js/jquery-ui-1.12.1/jquery-ui-1.12.1/jquery-ui.js"></script>
 <script src="/static/project_static/vendors/validator/validator.js"></script>
-<script src="/static/project_static/vendors/fastclick/lib/fastclick.js"></script>
-<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-<script>
-    function hideshow() {      
-    }
-</script>
+<script src="/static/project_static/vendors/validator/multifield.js"></script>
+<script src="/static/project_static/other/js/sweetalert.min.js"></script>
+
+
 <script>
     // initialize a validator instance from the "FormValidator" constructor.
     // A "<form>" element is optionally passed as an argument, but is not a must
@@ -183,10 +183,30 @@
         if (this.checked)
             $('form .alert').remove();
     }).prop('checked', false);
+    
+        $.datepicker.regional['es'] = {
+        closeText: 'Cerrar',
+        prevText: '< Ant',
+        nextText: 'Sig >',
+        currentText: 'Hoy',
+        monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+        monthNamesShort: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+        dayNames: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
+        dayNamesShort: ['Dom', 'Lun', 'Mar', 'Mié', 'Juv', 'Vie', 'Sáb'],
+        dayNamesMin: ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sá'],
+        weekHeader: 'Sm',
+        dateFormat: 'dd/mm/yy',
+        firstDay: 1,
+        isRTL: false,
+        showMonthAfterYear: false,
+        yearSuffix: ''
+    };
+    $.datepicker.setDefaults($.datepicker.regional['es']);
 
     $( function() {
         $( "#datepicker").datepicker({
-            startDate: "+0D"
+            minDate: "+0D",
+
         });
 
         $("#tipo_producto").change(function() {
