@@ -21,8 +21,11 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 from apps.usuario.views  import Login, logoutUser,home_user
+
 from apps.ventas.cliente.views import (add_cliente, list_clientes, edit_cliente, delete_cliente, search_cliente, ReporteClientesPDF,
 list_client_ajax, list_client_ajax)
+
+from apps.ventas.producto.views import add_tipo_producto, list_tipo_producto, edit_tipo_producto, search_tipo_producto, baja_tipo_producto, alta_tipo_producto, vence_si_no, add_deposito, list_deposito, edit_deposito, search_deposito, add_producto, edit_producto, list_producto, delete_producto, search_producto, mover_producto
 
 from apps.ventas.mascota.views import (list_mascotas, add_mascota, edit_mascota, list_especie, add_especie, 
 edit_especie,search_especie, list_raza, add_raza, edit_raza, search_raza,search_mascota, 
@@ -50,6 +53,30 @@ urlpatterns = [
     path('cliente/search/', search_cliente, name="search_cliente"),
     path('cliente/reportePDF', ReporteClientesPDF.as_view() , name="reporte_pdf_cliente"),
 
+
+    #Urls tipo producto
+    path('tipoProducto/add/',add_tipo_producto , name="add_tipo_producto"),
+    path('tipoProducto/list/', list_tipo_producto, name="list_tipo_producto"),
+    path('tipoProducto/edit/<int:id>/', edit_tipo_producto, name="edit_tipo_producto"),
+    path('tipoProducto/baja/<int:id>/', baja_tipo_producto, name="baja_tipo_producto"),
+    path('tipoProducto/alta/<int:id>/', alta_tipo_producto, name="alta_tipo_producto"),
+    path('tipoProducto/search/', search_tipo_producto, name="search_tipo_producto"),
+    path('tipoProducto/vence_si_no/', vence_si_no, name="vence_si_no"),
+
+    #Urls producto
+    path('producto/add/', add_producto, name="add_producto"),
+    path('producto/list/', list_producto, name="list_producto"),
+    path('producto/edit/<int:id>/', edit_producto, name="edit_producto"),
+    path('producto/mover/<int:id>/', mover_producto, name="mover_producto"),
+    path('producto/search/', search_producto, name="search_producto"),
+    path('<int:id>', delete_producto, name="delete_producto"),
+
+
+    #Urls deposito
+    path('deposito/add/',add_deposito , name="add_deposito"),
+    path('deposito/list/', list_deposito, name="list_deposito"),
+    path('deposito/edit/<int:id>/', edit_deposito, name="edit_deposito"),
+    path('deposito/search/', search_deposito, name="search_deposito"),
 
     #Urls mascotas
     path('mascota/list/', list_mascotas , name="list_mascotas"),     
@@ -94,9 +121,7 @@ urlpatterns = [
     path('configuracion/searchEmpleado/', search_empleado, name="search_empleado"),
     path('configuracion/bajaEmpleado/<int:id>/', delete_empleado, name="delete_empleado"),
     path('configuracion/get_list_empleados_ajax/', get_list_empleados_ajax, name="get_list_empleados_ajax"),
-
-    
-
 ]
+
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
