@@ -32,14 +32,15 @@
                         <div class="clearfix"></div>
                     </div>
                     <div class="x_content">
-                        <form class="" action="{% url 'add_producto' %}" method="POST"  >
+                        <form class="" action="{% url 'add_producto' %}" method="POST">
                             {% csrf_token %}
                             <div class="form-group field item">
                                 <label class="col-form-label col-md-3 col-sm-3  label-align">Tipo
                                     <span class="required">*</span>
                                 </label>
                                 <div class="col-md-6 col-sm-6">
-                                    <select class="form-control" required='required' name="tipo_producto" id="tipo_producto">
+                                    <select class="form-control" required='required' name="tipo_producto"
+                                        id="tipo_producto">
                                         <option required='required'>Seleccione un Tipo</option>
                                         {% for tipo in tipoproducto %}
                                         <option required="required" value={{ tipo.id}}>{{ tipo.nombre_tipo }}</option>
@@ -51,47 +52,49 @@
                                 <label class="col-form-label col-md-3 col-sm-3  label-align">Codigo Producto<span
                                         class="required">*</span></label>
                                 <div class="col-md-6 col-sm-6">
-                                    <input class="form-control"
-                                        name="codigo_producto" placeholder="Codigo del Producto" required="required" autocomplete="off" onkeyup="replaceDirection(this)" />
+                                    <input class="form-control" name="codigo_producto" placeholder="Codigo del Producto"
+                                        required="required" autocomplete="off" onkeyup="replaceDirection(this)" />
                                 </div>
                             </div>
                             <div class="field item form-group">
                                 <label class="col-form-label col-md-3 col-sm-3  label-align">Nombre Producto<span
                                         class="required">*</span></label>
                                 <div class="col-md-6 col-sm-6">
-                                    <input class="form-control"
-                                        name="nombre_producto" placeholder="Nombre del Producto" autocomplete="off" required="required" onkeyup="replaceCaratect(this)" />
+                                    <input class="form-control" name="nombre_producto" placeholder="Nombre del Producto"
+                                        autocomplete="off" required="required" onkeyup="replaceCaratect(this)" />
                                 </div>
                             </div>
                             <div class="field item form-group">
                                 <label class="col-form-label col-md-3 col-sm-3  label-align">Descripcion<span
                                         class="required">*</span></label>
                                 <div class="col-md-6 col-sm-6">
-                                    <input class="form-control"
-                                        name="descripcion" placeholder="Descripcion" autocomplete="off" required="required" onkeyup="replaceDirection(this)" />
+                                    <input class="form-control" name="descripcion" placeholder="Descripcion"
+                                        autocomplete="off" required="required" onkeyup="replaceDirection(this)" />
                                 </div>
                             </div>
                             <div class="field item form-group">
-                                <label class="col-form-label col-md-3 col-sm-3  label-align">Fecha de vencimiento</label>
+                                <label class="col-form-label col-md-3 col-sm-3  label-align">Fecha de
+                                    vencimiento</label>
                                 <div class="col-md-6 col-sm-6">
-                                    <input class="form-control fecha_vencimiento" placeholder="Fecha de vencimiento" autocomplete="off" type="text" id="datepicker"
-                                        name="fecha_vencimiento" disabled>
+                                    <input class="form-control fecha_vencimiento" placeholder="Fecha de vencimiento"
+                                        autocomplete="off" type="text" id="datepicker" name="fecha_vencimiento"
+                                        disabled>
                                 </div>
                             </div>
                             <div class="field item form-group">
                                 <label class="col-form-label col-md-3 col-sm-3  label-align">Precio compra
                                 </label>
                                 <div class="col-md-6 col-sm-6">
-                                    <input class="form-control" name="precio_compra" autocomplete="off" placeholder="Precio compra"
-                                        type="text" onkeyup="replaceDirection(this)" />
+                                    <input class="form-control" name="precio_compra" autocomplete="off"
+                                        placeholder="Precio compra" type="text" onkeyup="replaceDirection(this)" />
                                 </div>
                             </div>
                             <div class="field item form-group">
                                 <label class="col-form-label col-md-3 col-sm-3  label-align">Precio venta
                                 </label>
                                 <div class="col-md-6 col-sm-6">
-                                    <input class="form-control" name="precio_venta" autocomplete="off" placeholder="Precio venta"
-                                        type="text" onkeyup="replaceDirection(this)" />
+                                    <input class="form-control" name="precio_venta" autocomplete="off"
+                                        placeholder="Precio venta" type="text" onkeyup="replaceDirection(this)" />
                                 </div>
                             </div>
                             <div class="field item form-group">
@@ -114,8 +117,8 @@
                                 <label class="col-form-label col-md-3 col-sm-3  label-align">Stock minimo
                                 </label>
                                 <div class="col-md-6 col-sm-6">
-                                    <input class="form-control" name="stock_minimo" placeholder="Stock minimo" autocomplete="off"
-                                        type="text" onkeyup="replaceDirection(this)" />
+                                    <input class="form-control" name="stock_minimo" placeholder="Stock minimo"
+                                        autocomplete="off" type="text" onkeyup="replaceDirection(this)" />
                                 </div>
                             </div>
                             <div class="form-group field item">
@@ -123,12 +126,13 @@
                                     <span class="required">*</span>
                                 </label>
                                 <div class="col-md-6 col-sm-6">
-                                    <select class="form-control" required='required' name="id_deposito" id="id_deposito">
+                                    <select class="form-control" required='required' name="id_deposito"
+                                        id="id_deposito">
                                         <option required='required'>Seleccione un Deposito</option>
                                         {% for dep in deposito %}
                                         <option required="required" value={{ dep.id}}>{{ dep.descripcion }}</option>
                                         {% endfor %}
-                                    </select>                                    
+                                    </select>
                                 </div>
                                 <div id="alert_deposito">
 
@@ -162,29 +166,8 @@
 
 <script>
     // initialize a validator instance from the "FormValidator" constructor.
-    // A "<form>" element is optionally passed as an argument, but is not a must
-    var validator = new FormValidator({
-        "events": ['blur', 'input', 'change']
-    }, document.forms[0]);
-    // on form "submit" event
-    document.forms[0].onsubmit = function (e) {
-        var submit = true,
-            validatorResult = validator.checkAll(this);
-        console.log(validatorResult);
-        return !!validatorResult.valid;
-    };
-    // on form "reset" event
-    document.forms[0].onreset = function (e) {
-        validator.reset();
-    };
-    // stuff related ONLY for this demo page:
-    $('.toggleValidationTooltips').change(function () {
-        validator.settings.alerts = !this.checked;
-        if (this.checked)
-            $('form .alert').remove();
-    }).prop('checked', false);
-    
-        $.datepicker.regional['es'] = {
+    // A "<form>" element is optionally passed as an argument, but is not a must    
+    $.datepicker.regional['es'] = {
         closeText: 'Cerrar',
         prevText: '< Ant',
         nextText: 'Sig >',
@@ -203,31 +186,72 @@
     };
     $.datepicker.setDefaults($.datepicker.regional['es']);
 
-    $( function() {
-        $( "#datepicker").datepicker({
+    $(function () {
+        var validator = new FormValidator({
+            "events": ['blur', 'input', 'change']
+        }, document.forms[0]);
+        // on form "submit" event
+        document.forms[0].onsubmit = function (e) {
+            var submit = true,
+                validatorResult = validator.checkAll(this);
+            console.log(validatorResult);
+            return !!validatorResult.valid;
+        };
+        // on form "reset" event
+        document.forms[0].onreset = function (e) {
+            validator.reset();
+        };
+        // stuff related ONLY for this demo page:
+        $('.toggleValidationTooltips').change(function () {
+            validator.settings.alerts = !this.checked;
+            if (this.checked)
+                $('form .alert').remove();
+        }).prop('checked', false);
+        $("#datepicker").datepicker({
             minDate: "+0D",
-
         });
 
-        $("#tipo_producto").change(function() {
+        $("#tipo_producto").change(function () {
             var tipo = $("#tipo_producto").val()
             if (tipo !== "" && tipo != null) {
                 $.ajax({
                     type: 'GET',
                     url: '/tipoProducto/vence_si_no/',
-                    data: {'tipo' : tipo},
-                    success: function(response){
+                    data: { 'tipo': tipo },
+                    success: function (response) {
                         if (response.mensaje == 'S') {
                             $(".fecha_vencimiento").prop("disabled", false)
-                        }else {
+                        } else {
                             $(".fecha_vencimiento").prop("disabled", true)
                         }
                     }
                 })
-            }else {
+            } else {
                 $(".fecha_vencimiento").prop("disabled", true)
             }
         })
+
+        $("input[name='precio_venta'], input[name='precio_compra']").change(function () {
+            var precio_venta = $("input[name='precio_venta']").val()
+
+            var precio_compra = $("input[name='precio_compra']").val()
+            if (precio_compra != "" && precio_venta) {
+                if (parseFloat(precio_compra) > parseFloat(precio_venta)) {
+                    swal({
+                        title: "Notificacion",
+                        text: "El precio de venta no puede ser menor al de compra",
+                        icon: "warning",
+                        buttons: true,
+                        dangerMode: true,
+                    })
+                }
+            }
+
+
+        })
+        $('form input').on("cut copy paste", function (e) {
+            e.preventDefault();
+        });
     });
 
 

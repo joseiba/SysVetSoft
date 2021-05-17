@@ -36,14 +36,15 @@
                         <div class="clearfix"></div>
                     </div>
                     <div class="x_content">
-                        <form class="" action="{% url 'add_cliente' %}" method="POST"  >
+                        <form class="" action="{% url 'add_cliente' %}" method="POST">
                             {% csrf_token %}
                             <div class="field item form-group">
                                 <label class="col-form-label col-md-3 col-sm-3  label-align">Nombre<span
                                         class="required">*</span></label>
                                 <div class="col-md-6 col-sm-6">
                                     <input class="form-control" data-validate-length-range="6" data-validate-words="1"
-                                        name="nombre_cliente" placeholder="Nombre del Cliente" required="required" onkeyup="replaceCaratect(this)"/>
+                                        name="nombre_cliente" placeholder="Nombre del Cliente" required="required"
+                                        onkeyup="replaceCaratect(this)" />
                                 </div>
                             </div>
                             <div class="field item form-group">
@@ -51,7 +52,8 @@
                                         class="required">*</span></label>
                                 <div class="col-md-6 col-sm-6">
                                     <input class="form-control" data-validate-length-range="6" data-validate-words="1"
-                                        name="apellido_cliente" placeholder="Apellido" required="required" onkeyup="replaceCaratect(this)"/>
+                                        name="apellido_cliente" placeholder="Apellido" required="required"
+                                        onkeyup="replaceCaratect(this)" />
                                 </div>
                             </div>
                             <div class="field item form-group">
@@ -60,7 +62,8 @@
                                 </label>
                                 <div class="col-md-6 col-sm-6">
                                     <input class="form-control" class='optional' name="direccion"
-                                        placeholder="Dirección" type="text" required="required" onkeyup="replaceDirection(this)"/>
+                                        placeholder="Dirección" type="text" required="required"
+                                        onkeyup="replaceDirection(this)" />
                                 </div>
                             </div>
                             <div class="field item form-group">
@@ -68,14 +71,14 @@
                                         class="required">*</span></label>
                                 <div class="col-md-6 col-sm-6">
                                     <input class="form-control" name="cedula" placeholder="Nro. Cédula"
-                                        required="required" onkeyup = "replaceABC(this)"/>
+                                        required="required" onkeyup="replaceABC(this)" />
                                 </div>
                             </div>
                             <div class="field item form-group">
                                 <label class="col-form-label col-md-3 col-sm-3  label-align">Nro. RUC</label>
                                 <div class="col-md-6 col-sm-6">
                                     <input class="form-control" class='optional' name="ruc" placeholder="Nro. RUC"
-                                        type="text" onkeyup = "replaceABC(this)"/>
+                                        type="text" onkeyup="replaceABC(this)" />
                                 </div>
                             </div>
                             <div class="field item form-group">
@@ -83,14 +86,15 @@
                                         class="required">*</span></label>
                                 <div class="col-md-6 col-sm-6">
                                     <input class="form-control" type="tel" class='tel' name="telefono"
-                                        placeholder="Telefono" required='required' data-validate-length-range="9" onkeyup = "replaceABC(this)"/>
+                                        placeholder="Telefono" required='required' data-validate-length-range="9"
+                                        onkeyup="replaceABC(this)" />
                                 </div>
                             </div>
                             <div class="field item form-group">
                                 <label class="col-form-label col-md-3 col-sm-3  label-align">Email</label>
                                 <div class="col-md-6 col-sm-6">
                                     <input class="form-control" id="email" name="email" placeholder="Email"
-                                        type="email"/>
+                                        type="email" />
                                 </div>
                                 <div id="alert_email">
 
@@ -106,7 +110,7 @@
                                         {% for cui in cuidad %}
                                         <option required="required" value={{ cui.id}}>{{ cui.nombre_ciudad }}</option>
                                         {% endfor %}
-                                    </select>                                    
+                                    </select>
                                 </div>
                                 <div id="alert_cuidad">
 
@@ -135,69 +139,68 @@
 <script src="/static/project_static/vendors/validator/multifield.js"></script>
 <script src="/static/project_static/vendors/validator/validator.js"></script>
 <script>
-    function hideshow() {      
+    function hideshow() {
     }
 </script>
 <script>
-    // initialize a validator instance from the "FormValidator" constructor.
-    // A "<form>" element is optionally passed as an argument, but is not a must
-    var validator = new FormValidator({
-        "events": ['blur', 'input', 'change']
-    }, document.forms[0]);
-    // on form "submit" event
-    document.forms[0].onsubmit = function (e) {
-        var submit = true,
-            validatorResult = validator.checkAll(this);
-        console.log(validatorResult);
-        return !!validatorResult.valid;
-    };
-    // on form "reset" event
-    document.forms[0].onreset = function (e) {
-        $('#alert_email').empty();
-        validator.reset();
-    };
-    // stuff related ONLY for this demo page:
-    $('.toggleValidationTooltips').change(function () {
-        validator.settings.alerts = !this.checked;
-        if (this.checked)
-            $('form .alert').remove();
-    }).prop('checked', false);
-
-    document.getElementById('email').addEventListener('input', function() {
-    campo = event.target;        
-    emailRegex =/^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
-    //Se muestra un texto a modo de ejemplo, luego va a ser un icono
-    if (emailRegex.test(campo.value)) {
-        $('#alert_email').empty()
-    } else {
-        if(campo.value === ""){
+    document.getElementById('email').addEventListener('input', function () {
+        campo = event.target;
+        emailRegex = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+        //Se muestra un texto a modo de ejemplo, luego va a ser un icono
+        if (emailRegex.test(campo.value)) {
             $('#alert_email').empty()
-        }
-        else{
-            $("#alert_email").html('<div class="alert" style="opacity: 1; white-space: inherit; left: 0">\
+        } else {
+            if (campo.value === "") {
+                $('#alert_email').empty()
+            }
+            else {
+                $("#alert_email").html('<div class="alert" style="opacity: 1; white-space: inherit; left: 0">\
                                     email no valido\
                                 </div>');
+            }
+
         }
-        
-    }
     });
 
-    $(function(){
-    $("#id_cuidad").change(function() {
-        var cuidad = $("#id_cuidad").val()
-        var cuidad_empty = cuidad.replace("Seleccione una Cuidad", "")
+    $(function () {
+        // initialize a validator instance from the "FormValidator" constructor.
+        // A "<form>" element is optionally passed as an argument, but is not a must
+        var validator = new FormValidator({
+            "events": ['blur', 'input', 'change']
+        }, document.forms[0]);
+        // on form "submit" event
+        document.forms[0].onsubmit = function (e) {
+            var submit = true,
+                validatorResult = validator.checkAll(this);
+            return !!validatorResult.valid;
+        };
+        // on form "reset" event
+        document.forms[0].onreset = function (e) {
+            $('#alert_email').empty();
+            validator.reset();
+        };
+        // stuff related ONLY for this demo page:
+        $('.toggleValidationTooltips').change(function () {
+            validator.settings.alerts = !this.checked;
+            if (this.checked)
+                $('form .alert').remove();
+        }).prop('checked', false);
 
-        if(cuidad_empty === ""){
-            $("#alert_cuidad").html('<div class="alert" style="opacity: 1; white-space: inherit; left: 0">\
+        $("#id_cuidad").change(function () {
+            var cuidad = $("#id_cuidad").val()
+            var cuidad_empty = cuidad.replace("Seleccione una Cuidad", "")
+
+            if (cuidad_empty === "") {
+                $("#alert_cuidad").html('<div class="alert" style="opacity: 1; white-space: inherit; left: 0">\
                                     Seleccione una opción\
                                 </div>');
-        }
-    })
-    $('form input').on("cut copy paste",function(e) {
-      e.preventDefault();
-   });
+            }
+        })
+        $('form input').on("cut copy paste", function (e) {
+            e.preventDefault();
+        });
 
-})
+    })
 
 </script>
 {% endblock javascripts %}
