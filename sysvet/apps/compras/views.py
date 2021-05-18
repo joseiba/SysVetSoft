@@ -153,7 +153,6 @@ def edit_pedido(request, id):
     form = PedidoForm(instance=pedido)
     if request.method == 'POST':
         form = PedidoForm(request.POST, instance=pedido)
-        print(form)
         if not form.has_changed():
             messages.info(request, "No has hecho ningun cambio!")
             return redirect('/compra/listPedido')

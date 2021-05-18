@@ -31,6 +31,15 @@
                         </ul>
                         <div class="clearfix"></div>
                     </div>
+                    <div class="clearfix"></div>
+                    {% if messages %}
+                    <div class="alert alert-success alert-dismissible" role="alert">
+                        {% for message in messages %}
+                            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                            {{ message }}
+                        {% endfor %}
+                    </div>
+                    {% endif %}
                     <div class="x_content">
                         <form class="" action="{% url 'add_producto' %}" method="POST">
                             {% csrf_token %}
@@ -39,13 +48,7 @@
                                     <span class="required">*</span>
                                 </label>
                                 <div class="col-md-6 col-sm-6">
-                                    <select class="form-control" required='required' name="tipo_producto"
-                                        id="tipo_producto">
-                                        <option required='required'>Seleccione un Tipo</option>
-                                        {% for tipo in tipoproducto %}
-                                        <option required="required" value={{ tipo.id}}>{{ tipo.nombre_tipo }}</option>
-                                        {% endfor %}
-                                    </select>
+                                    {{ form.tipo_producto}}
                                 </div>
                             </div>
                             <div class="field item form-group">
@@ -126,16 +129,7 @@
                                     <span class="required">*</span>
                                 </label>
                                 <div class="col-md-6 col-sm-6">
-                                    <select class="form-control" required='required' name="id_deposito"
-                                        id="id_deposito">
-                                        <option required='required'>Seleccione un Deposito</option>
-                                        {% for dep in deposito %}
-                                        <option required="required" value={{ dep.id}}>{{ dep.descripcion }}</option>
-                                        {% endfor %}
-                                    </select>
-                                </div>
-                                <div id="alert_deposito">
-
+                                    {{ form.id_deposito}}
                                 </div>
                             </div>
                             <div class="ln_solid">
@@ -165,8 +159,6 @@
 
 
 <script>
-    // initialize a validator instance from the "FormValidator" constructor.
-    // A "<form>" element is optionally passed as an argument, but is not a must    
     $.datepicker.regional['es'] = {
         closeText: 'Cerrar',
         prevText: '< Ant',
@@ -207,6 +199,7 @@
             if (this.checked)
                 $('form .alert').remove();
         }).prop('checked', false);
+
         $("#datepicker").datepicker({
             minDate: "+0D",
         });

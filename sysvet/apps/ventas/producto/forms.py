@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import TipoProducto, Deposito, Producto
+from apps.ventas.producto.models import TipoProducto, Deposito, Producto
 
 class TipoProductoForm(forms.ModelForm):
     """[summary]
@@ -48,23 +48,22 @@ class ProductoForm(forms.ModelForm):
         model = Producto
         exclude = ['is_active']
         widgets = {
-			'codigo_producto' : forms.TextInput(attrs={'class':'form-control', 'name': 'codigo_producto', 'placeholder': 'Codigo Producto', 'required': 'required', 'onkeyup':'replaceDirection(this)'}),
-            'nombre_producto': forms.TextInput(attrs={'class':'form-control','data-validate-length-range':'20', 
-                'data-validate-words':'1', 'name': 'nombre_producto', 'placeholder': 'Nombre del producto', 'required': 'required', 'onkeyup':'replaceCaratect(this)'}),
-            'descripcion' : forms.TextInput(attrs={'class':'form-control', 'name': 'descripcion', 'placeholder': 'Descripcion', 'required': 'required', 'onkeyup':'replaceDirection(this)'}),
-            'fecha_vencimiento' : forms.TextInput(attrs={'class':'form-control','type':'text', 'name': 'fecha_vencimiento', 
+			'codigo_producto' : forms.TextInput(attrs={'class':'form-control', 'name': 'codigo_producto','autocomplete': 'off' ,'placeholder': 'Codigo Producto', 'required': 'required', 'onkeyup':'replaceDirection(this)'}),
+            'nombre_producto': forms.TextInput(attrs={'class':'form-control', 'name': 'nombre_producto', 'autocomplete': 'off' ,'placeholder': 'Nombre del producto', 'required': 'required', 'onkeyup':'replaceCaratect(this)'}),
+            'descripcion' : forms.TextInput(attrs={'class':'form-control', 'name': 'descripcion', 'autocomplete': 'off' ,'placeholder': 'Descripcion', 'required': 'required', 'onkeyup':'replaceDirection(this)'}),
+            'fecha_vencimiento' : forms.TextInput(attrs={'class':'form-control','type':'text', 'autocomplete': 'off' ,'id':'datepicker' ,'name': 'fecha_vencimiento', 
                 'placeholder': 'Fecha de Vencimiento'}),
-            'fecha_baja' : forms.TextInput(attrs={'class':'form-control','type':'text', 'name': 'fecha_baja', 
+            'fecha_baja' : forms.TextInput(attrs={'class':'form-control','type':'text', 'autocomplete': 'off' ,'name': 'fecha_baja', 
                 'placeholder': 'Fecha de Baja'}),
-            'fecha_movimiento' : forms.TextInput(attrs={'class':'form-control','type':'text',
+            'fecha_movimiento' : forms.TextInput(attrs={'class':'form-control','type':'text', 'autocomplete': 'off' ,
                 'name': 'fecha_movimiento', 'placeholder': 'Fecha de Movimiento'}),
-            'fecha_compra' : forms.TextInput(attrs={'class':'form-control','type':'text', 'name': 'fecha_compra', 
+            'fecha_compra' : forms.TextInput(attrs={'class':'form-control','type':'text', 'name': 'fecha_compra', 'autocomplete': 'off' ,
                 'placeholder': 'Fecha de Compra', 'readonly': 'readonly'}),
-			'precio_compra': forms.TextInput(attrs={'class':'form-control', 'name': 'precio_compra', 'placeholder': 'Precio de compra', 'onkeyup':'replaceDirection(this)'}),
-            'precio_venta': forms.TextInput(attrs={'class':'form-control', 'name': 'precio_venta', 'placeholder': 'Precio de Venta', 'onkeyup':'replaceDirection(this)'}),
-            'stock_minimo': forms.TextInput(attrs={'class':'form-control', 'name': 'stock_minimo', 'placeholder': 'Stock Minimo', 'onkeyup':'replaceDirection(this)'}),
-            'lote': forms.TextInput(attrs={'class':'form-control', 'name': 'lote', 'placeholder': 'Lote', 'onkeyup':'replaceDirection(this)'}),
-            'stock': forms.TextInput(attrs={'id':'stock', 'class':'form-control', 'name': 'stock', 'placeholder': 'Stock', 'onkeyup':'replaceDirection(this)'}),
-            'tipo_producto' : forms.Select(attrs={'class':'form-control', 'id': 'tipo_producto','required':'required' ,'name':'tipo_producto'}),
-            'id_deposito' : forms.Select(attrs={'class':'form-control', 'id': 'id_deposito','required':'required' ,'name':'id_deposito'})
+			'precio_compra': forms.TextInput(attrs={'class':'form-control', 'name': 'precio_compra', 'autocomplete': 'off' ,'placeholder': 'Precio de compra', 'onkeyup':'replaceDirection(this)'}),
+            'precio_venta': forms.TextInput(attrs={'class':'form-control', 'name': 'precio_venta','autocomplete': 'off' , 'placeholder': 'Precio de Venta', 'onkeyup':'replaceDirection(this)'}),
+            'stock_minimo': forms.TextInput(attrs={'class':'form-control', 'name': 'stock_minimo','autocomplete': 'off' , 'placeholder': 'Stock Minimo', 'onkeyup':'replaceDirection(this)'}),
+            'lote': forms.TextInput(attrs={'class':'form-control', 'name': 'lote', 'placeholder': 'Lote', 'autocomplete': 'off' ,'onkeyup':'replaceDirection(this)'}),
+            'stock': forms.TextInput(attrs={'id':'stock', 'class':'form-control', 'name': 'stock', 'autocomplete': 'off' ,'placeholder': 'Stock', 'onkeyup':'replaceDirection(this)'}),
+            'tipo_producto' : forms.Select(attrs={'class':'form-control', 'id': 'tipo_producto', 'autocomplete': 'off' ,'required':'required' ,'name':'tipo_producto'}),
+            'id_deposito' : forms.Select(attrs={'class':'form-control', 'id': 'id_deposito','autocomplete': 'off' ,'required':'required' ,'name':'id_deposito'})
 		}

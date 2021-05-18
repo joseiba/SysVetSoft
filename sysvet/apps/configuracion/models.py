@@ -6,12 +6,11 @@ HORAS_SER = []
 # Create your models here.
 class ConfiEmpresa(models.Model):
     """
-    Clase que define la estructura de una ciudad
+    Clase que define la la configuracion de la empresa
     """
-    semana = models.CharField(max_length = 200)
-    apertura = models.CharField(max_length = 200)
-    cierre = models.CharField(max_length=200)
-
+    id_confi = models.IntegerField(unique=True, default=1)
+    apertura_caja_inicial = models.CharField(max_length=200, blank=True, null=True, default="-")
+    ubicacion_deposito_inicial =  models.CharField(max_length=200, blank=True, null=True, default="-")
 
     class Meta:
         verbose_name = "Configuracion Empresa"
@@ -19,16 +18,12 @@ class ConfiEmpresa(models.Model):
 
     def __str__(self):
         """Formato de configurcion"""
-        return '{0}'.format(self.semana)
-
-    def get_absolute_url(self):
-        """Retorna el URL para acceder a una instancia de una ciudad en particular."""
-        return reverse('configuracion-detail', args=[str(self.id)])
+        return '{0}'.format(self.id_confi)
 
     # Create your models here.
 class Servicio(models.Model):
     """
-    Clase que define la estructura de una ciudad
+    Clase que define la estructura de un Servicio
     """
     cod_serv = models.CharField(max_length=200)
     nombre_servicio = models.CharField(max_length = 200, help_text = "Ingrese nombre del servicio")

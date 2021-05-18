@@ -1,7 +1,15 @@
 from django import forms
 
-from .models import Servicio, Empleado
+from .models import Servicio, Empleado, ConfiEmpresa
 
+class ConfiEmpresaForm(forms.ModelForm):
+    class Meta:
+        model = ConfiEmpresa
+        exclude = ['id_confi']
+        widgets = {
+            'apertura_caja_inicial' : forms.TextInput(attrs={'class':'form-control', 'name': 'apertura_caja_inicial', 'placeholder': 'Ingrese el monto inicial de la caja', 'required': 'required','onkeyup':'replaceABC(this)'}),
+			'ubicacion_deposito_inicial' : forms.TextInput(attrs={'class':'form-control', 'name': 'ubicacion_deposito_inicial', 'placeholder': 'Deposito inicial', 'required': 'required','onkeyup':'replaceCaratect(this)'}),			
+		}
 
 class ServicioForm(forms.ModelForm):
     """[summary]

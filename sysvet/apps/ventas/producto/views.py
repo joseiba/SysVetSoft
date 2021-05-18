@@ -8,8 +8,9 @@ from datetime import datetime
 import json
 from django.http import JsonResponse
 
-from .forms import TipoProductoForm, DepositoForm, ProductoForm
-from .models import TipoProducto, Deposito, Producto
+from apps.ventas.producto.forms import TipoProductoForm, DepositoForm, ProductoForm
+from apps.ventas.producto.models import TipoProducto, Deposito, Producto, ProductoStock
+from apps.compras.models import FacturaCompra, FacturaDet
 
 date = datetime.now()
 
@@ -19,8 +20,6 @@ def add_tipo_producto(request):
     form = TipoProductoForm
     if request.method == 'POST':
         form = TipoProductoForm(request.POST or None)
-        fecha_baja = request.POST.get('fecha_baja')
-        print('baja:' + str(fecha_baja))
         if form.is_valid():
             form.save()
             messages.add_message(request, messages.SUCCESS, 'Tipo de producto agregado correctamente!')
@@ -132,10 +131,6 @@ def vence_si_no(request):
 
     return JsonResponse(response)
 
-
-# def order_tipo_producto(request):
-
-
 #Metodo para agregar deposito
 @login_required()
 def add_deposito(request):
@@ -198,19 +193,12 @@ def search_deposito(request):
 def add_producto(request):
     form = ProductoForm
     if request.method == 'POST':
-        print('POST')
         form = ProductoForm(request.POST or None)
-        lote = request.POST.get('lote')
-        print('lote:' + lote)
-        fecha_vencimiento = request.POST.get('fecha_vencimiento')
-        print('vencimiento:' + fecha_vencimiento)
         if form.is_valid():
             form.save()
             messages.add_message(request, messages.SUCCESS, 'Producto agregado correctamente!')
-            return redirect('/producto/list')
-    tipoproducto = TipoProducto.objects.all()
-    deposito = Deposito.objects.all()    
-    context = {'form' : form, 'tipoproducto' : tipoproducto, 'deposito' : deposito}
+            return redirect('/producto/add')  
+    context = {'form' : form}
     return render(request, 'ventas/producto/add_producto.html', context)
 
 # Metodo para editar Productos
@@ -222,29 +210,31 @@ def edit_producto(request, id):
         form = ProductoForm(request.POST, instance=producto)
         if not form.has_changed():
             messages.info(request, "No ha hecho ningun cambio")
-            return redirect('/producto/list/')
+            return redirect('/producto/edit/' + str(id))
         if form.is_valid():
             producto = form.save(commit=False)
             producto.save()
             messages.add_message(request, messages.SUCCESS, 'El producto se ha editado correctamente!')
-            return redirect('/producto/list/')
+            return redirect('/producto/edit/' + str(id) )
 
-    context = {'form': form}
+    context = {'form': form, 'producto': producto}
     return render(request, 'ventas/producto/edit_producto.html', context)
 
 # Metodo para editar Productos
 @login_required()
 def mover_producto(request, id):
     producto_movido = Producto()
+    producto_moved = ProductoStock()
     producto = Producto.objects.get(id=id)
     form = ProductoForm(instance=producto)
     if request.method == 'POST':
         nombre_deposito = request.POST.get('id_deposito')
         cantidad = request.POST.get('stock')
+        deposito = Deposito.objects.get(id=nombre_deposito)
+
         producto.stock = producto.stock - int(cantidad)
         producto.save() 
-        deposito = Deposito.objects.get(id=nombre_deposito)
-        producto_movido.nombre_producto = producto.nombre_producto
+        """producto_movido.nombre_producto = producto.nombre_producto
         producto_movido.codigo_producto = producto.codigo_producto
         producto_movido.descripcion = producto.descripcion
         producto_movido.fecha_baja = producto.fecha_baja
@@ -259,7 +249,12 @@ def mover_producto(request, id):
         producto_movido.stock = cantidad
         producto_movido.stock_minimo = producto.stock_minimo
         producto_movido.tipo_producto = producto.tipo_producto
-        producto_movido.save()
+        producto_movido.save()"""
+
+        producto_moved.producto_stock = int(cantidad)
+        producto_moved.id_deposito = deposito
+        producto_moved.id_producto = producto
+        producto_moved.save()
 
         return redirect('/producto/list/')
 
@@ -277,11 +272,26 @@ def delete_producto(request, id):
 #Metodo para listar todos los productos
 @login_required()
 def list_producto(request):
+    facturaCompra = FacturaCompra.objects.all()
+    if facturaCompra is not None:
+        for factCom in facturaCompra:
+            facDe = FacturaDet.objects.filter(id_factura=factCom)
+            for factDet in facDe:
+                try:
+                    print(factDet.id_pedido.id_producto.id)                
+                    prod = Producto.objects.get(id=factDet.id_pedido.id_producto.id)
+                    prod.fecha_compra = factCom.fecha_emision
+                    prod.precio_compra = factDet.id_pedido.id_producto.precio_compra
+                    prod.stock = prod.stock + factDet.cantidad 
+                    prod.save()
+                except Exception as e:
+                    print(e)
+    producDetalle = ProductoStock.objects.all()
     productos = Producto.objects.all()
     paginator = Paginator(productos, 10)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
-    context = {'page_obj' : page_obj}
+    context = {'page_obj' : page_obj, 'producDetalle': producDetalle}
     return render(request, "ventas/producto/list_producto.html", context)
 
 #Metodo para la busqueda de productos
@@ -297,6 +307,3 @@ def search_producto(request):
     page_obj = paginator.get_page(page_number)
     context = { 'page_obj': page_obj}
     return render(request, "ventas/producto/list_producto.html", context)
-
-
-# def order_producto(request):
