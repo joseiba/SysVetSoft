@@ -178,9 +178,9 @@ def list_deposito(request):
 def search_deposito(request):
     query = request.GET.get('q')
     if query:
-        depositos = Deposito.objects.filter(Q(descripcion__icontains=query))
+        depositos = Deposito.objects.filter(Q(descripcion__icontains=query)).order_by('-last_modified')
     else:
-        depositos = Deposito.objects.all()
+        depositos = Deposito.objects.all().order_by('-last_modified')
     paginator = Paginator(depositos, 10)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
@@ -234,22 +234,6 @@ def mover_producto(request, id):
 
         producto.stock = producto.stock - int(cantidad)
         producto.save() 
-        """producto_movido.nombre_producto = producto.nombre_producto
-        producto_movido.codigo_producto = producto.codigo_producto
-        producto_movido.descripcion = producto.descripcion
-        producto_movido.fecha_baja = producto.fecha_baja
-        producto_movido.fecha_compra = producto.fecha_compra
-        producto_movido.fecha_movimiento = producto.fecha_movimiento
-        producto_movido.fecha_vencimiento = producto.fecha_vencimiento
-        producto_movido.id_deposito = deposito
-        producto_movido.is_active = producto.is_active
-        producto_movido.lote = producto.lote
-        producto_movido.precio_compra = producto.precio_compra
-        producto_movido.precio_venta = producto.precio_venta
-        producto_movido.stock = cantidad
-        producto_movido.stock_minimo = producto.stock_minimo
-        producto_movido.tipo_producto = producto.tipo_producto
-        producto_movido.save()"""
 
         producto_moved.producto_stock = int(cantidad)
         producto_moved.id_deposito = deposito
@@ -275,19 +259,21 @@ def list_producto(request):
     facturaCompra = FacturaCompra.objects.all()
     if facturaCompra is not None:
         for factCom in facturaCompra:
-            facDe = FacturaDet.objects.filter(id_factura=factCom)
-            for factDet in facDe:
-                try:
-                    print(factDet.id_pedido.id_producto.id)                
-                    prod = Producto.objects.get(id=factDet.id_pedido.id_producto.id)
-                    prod.fecha_compra = factCom.fecha_emision
-                    prod.precio_compra = factDet.id_pedido.id_producto.precio_compra
-                    prod.stock = prod.stock + factDet.cantidad 
-                    prod.save()
-                except Exception as e:
-                    print(e)
+            if(factCom.factura_cargada_producto != 'S'):
+                factCom.factura_cargada_producto = 'S'
+                factCom.save()
+                facDe = FacturaDet.objects.filter(id_factura=factCom)
+                for factDet in facDe:
+                    try:
+                        prod = Producto.objects.get(id=factDet.id_pedido.id_producto.id)
+                        prod.fecha_compra = factCom.fecha_emision
+                        prod.precio_compra = factDet.id_pedido.id_producto.precio_compra
+                        prod.stock = prod.stock + factDet.cantidad 
+                        prod.save()
+                    except Exception as e:
+                        print(e)
     producDetalle = ProductoStock.objects.all()
-    productos = Producto.objects.all()
+    productos = Producto.objects.exclude(is_active='N').order_by('-last_modified')
     paginator = Paginator(productos, 10)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
@@ -299,9 +285,9 @@ def list_producto(request):
 def search_producto(request):
     query = request.GET.get('q')
     if query:
-        productos = Producto.objects.filter(Q(nombre_producto__icontains=query))
+        productos = Producto.objects.filter(Q(nombre_producto__icontains=query) | Q(codigo_producto__icontains=query) | Q(id_deposito__descripcion__icontains=query)).order_by('-last_modified')
     else:
-        productos = Producto.objects.all()
+        productos = Producto.objects.all().order_by('-last_modified')
     paginator = Paginator(productos, 10)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)

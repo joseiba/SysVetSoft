@@ -72,7 +72,7 @@ urlpatterns = [
     path('producto/edit/<int:id>/', edit_producto, name="edit_producto"),
     path('producto/mover/<int:id>/', mover_producto, name="mover_producto"),
     path('producto/search/', search_producto, name="search_producto"),
-    path('<int:id>', delete_producto, name="delete_producto"),
+    path('producto/darBaja/<int:id>', delete_producto, name="delete_producto"),
 
 
     #Urls deposito

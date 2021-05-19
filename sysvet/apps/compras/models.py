@@ -36,6 +36,7 @@ class Pedido(models.Model):
     """
     cantidad_pedido = models.CharField(max_length=500, blank=True, null=True, default="-")
     fecha_alta = models.CharField(max_length = 200, default = date.strftime("%d/%m/%Y %H:%M:%S hs"), editable = False)
+    pedido_cargado = models.CharField(max_length=2, default="N", blank=True, null=True)
     last_modified = models.DateTimeField(auto_now=True, blank=True)
     is_active = models.CharField(max_length=2, default="S", blank=True, null=True)
     id_producto = models.ForeignKey(Producto, on_delete=models.PROTECT, null=False)
@@ -85,6 +86,7 @@ class FacturaCompra(models.Model):
     estado = models.CharField(max_length=12, choices=ESTADOS_FACTURA, default=ESTADOS_FACTURA[0])
     total_iva = models.IntegerField(default=0)
     total = models.FloatField(default=0)
+    factura_cargada_producto = models.CharField(max_length=2, default="N", blank=True, null=True)
     last_modified = models.DateTimeField(auto_now=True, blank=True)
     is_active = models.CharField(max_length=2, default="S", blank=True, null=True)
     id_proveedor = models.ForeignKey('Proveedor', on_delete=models.CASCADE)
@@ -101,6 +103,7 @@ class FacturaDet(models.Model):
     id_pedido = models.ForeignKey('Pedido', on_delete=models.CASCADE)
     cantidad = models.IntegerField()
     descripcion = models.CharField(max_length=200, blank=True)
+    
 
     class Meta:
         ordering = ['id']      

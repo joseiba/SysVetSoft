@@ -102,6 +102,7 @@
                                                 <th style="color: white;">Cantidad Stock</th>
                                                 <th style="color: white;">Cantidad a Pedir</th>
                                                 <th style="color: white;">Fecha Pedido</th>
+                                                <th style="color: white;">Pedido Cargado Factura</th>
                                                 <!--<th style="color: white;">Cantidad a Pedir</th>-->
                                                 <th style="color: white;">Accion</th>
                                             </tr>
@@ -208,6 +209,16 @@
                         data: 'fecha_pedido',
                     },
                     {
+                        name: 'Pedido Cargado Factura',
+                        data: 'pedido_cargado',
+                        render: function(data){
+                            if(data == 'S'){
+                                return 'Si'
+                            }
+                            return 'No'
+                        }
+                    },
+                    {
                         name: 'Accion',
                         data: 'id',
                         render: function (data) {
@@ -222,7 +233,7 @@
 
                 ],
                 columnDefs: [{
-                    targets: [3, 4], // column index (start from 0)
+                    targets: [5, 6], // column index (start from 0)
                     orderable: false, // set orderable false for selected columns
                 }],
                 serverSide: false,

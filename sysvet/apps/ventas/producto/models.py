@@ -16,6 +16,7 @@ class TipoProducto (models.Model):
     fecha_alta = models.CharField(max_length = 200, default = date.strftime("%d/%m/%Y %H:%M:%S hs"), editable = False)
     fecha_baja = models.CharField(max_length = 200, default = '-', null = True, blank = True)
     vence = models.CharField(max_length=2, choices=opciones, default="S", blank=True, null=True, help_text='El producto vence?')
+    last_modified = models.DateTimeField(auto_now=True, blank=True)
     is_active = models.CharField(max_length=2, default="S", blank=True, null=True)
 
     def __str__(self):
@@ -32,6 +33,9 @@ class Deposito (models.Model):
     Clase que define la estructura de un deposito
     """
     descripcion = models.CharField(max_length = 200, help_text = "Ingrese descripcion del deposito")
+    last_modified = models.DateTimeField(auto_now=True, blank=True)
+    is_active = models.CharField(max_length=2, default="S", blank=True, null=True)
+
 
     def __str__(self):
         """Formato de la ciudad"""
@@ -52,7 +56,7 @@ class Producto (models.Model):
     descripcion = models.CharField(max_length = 200, help_text = "Ingrese descripcion del producto")
     fecha_vencimiento = models.CharField(max_length = 200, default = '-', null = True, blank = True)
     fecha_baja = models.CharField(max_length = 200, default = '-', null = True, blank = True)
-    fecha_movimiento = models.CharField(max_length = 200, default = date.strftime("%d/%m/%Y"), blank = True)
+    fecha_movimiento = models.CharField(max_length = 200, default ="-", blank = True)
     tipo_producto = models.ForeignKey('TipoProducto', on_delete=models.CASCADE, null=False)
     fecha_compra = models.CharField(max_length = 200, default = date.strftime("%d/%m/%Y"), editable = False)
     precio_compra = models.IntegerField(help_text = 'Ingrese precio de compra')
@@ -61,6 +65,7 @@ class Producto (models.Model):
     lote = models.CharField(max_length = 200, default = '-', null = True, blank = True)
     stock = models.IntegerField(help_text = 'Ingrese stock minimo')
     stock_movido = models.IntegerField(blank = True, null=True, default=0)
+    last_modified = models.DateTimeField(auto_now=True, blank=True)
     is_active = models.CharField(max_length=2, default="S", blank=True, null=True)
     id_deposito = models.ForeignKey('Deposito', on_delete=models.CASCADE, null=False)
 
@@ -75,11 +80,13 @@ class Producto (models.Model):
 
 class ProductoStock (models.Model):
     """
-    Clase que define 
+    Clase que define el detalle de los producto que se han movidos
     """
     producto_stock = models.IntegerField(help_text = 'Ingrese stock')
     id_deposito = models.ForeignKey('Deposito', on_delete=models.CASCADE, null=False)
     id_producto = models.ForeignKey('Producto', on_delete=models.CASCADE, null=False)
+    last_modified = models.DateTimeField(auto_now=True, blank=True)
+    is_active = models.CharField(max_length=2, default="S", blank=True, null=True)
 
 
     def _str_(self):

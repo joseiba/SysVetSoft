@@ -44,6 +44,10 @@
         cursor: pointer;
         font-size: 20px;
     }
+
+    .dataTables_info {
+        width: 0 !important;
+    }
 </style>
 {% endblock stylesheets %}
 
@@ -83,7 +87,7 @@
                                 <div class="search">
                                     <form action="{% url 'search_tipo_producto' %}" method="GET" class="d-inline-flex">
                                         <input type="search" class="searchTerm" name="q" value="{{ request.GET.q }}"
-                                            placeholder="Buscá por nombre">
+                                            placeholder="Buscar por nombre tipo" autocomplete="off">
                                         <button type="submit" class="searchButton">
                                             <i class="fa fa-search"></i>
                                         </button>
@@ -183,9 +187,11 @@
 <script src="/static/project_static/vendors/jszip/dist/jszip.min.js"></script>
 <script src="/static/project_static/vendors/pdfmake/build/pdfmake.min.js"></script>
 <script src="/static/project_static/vendors/pdfmake/build/vfs_fonts.js"></script>
-
 <script>
     $(function () {
+        $('form input').on("cut copy paste", function (e) {
+            e.preventDefault();
+        });
 
     })
 </script>

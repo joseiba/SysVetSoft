@@ -82,7 +82,7 @@
                                 <div class="search">
                                     <form action="{% url 'search_deposito' %}" method="GET" class="d-inline-flex">
                                         <input type="search" class="searchTerm" name="q" value="{{ request.GET.q }}"
-                                            placeholder="Buscá por nombre">
+                                            placeholder="Buscar por descripcion" autocomplete="off">
                                         <button type="submit" class="searchButton">
                                             <i class="fa fa-search"></i>
                                         </button>
@@ -167,7 +167,9 @@
 
 <script>
     $(function () {
-
+        $('form input').on("cut copy paste", function (e) {
+            e.preventDefault();
+        });
     })
 </script>
 

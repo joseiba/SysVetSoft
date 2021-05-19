@@ -91,19 +91,16 @@ def delete_proveedor(request, id):
 
 
 def add_pedido():
-    producto = Producto.objects.all()
+    producto = Producto.objects.exclude(is_active='N').all()
     for pro in producto:
         pe = pro.id
-
         try:
             pedi = Pedido.objects.get(id_producto=pe)
             if pro.stock_minimo >= pro.stock:
-                pedi.id_producto = pro
-                pedi.is_active = "S"
-                pedi.save()
-            else:
-                pedi.is_active = "N"
-                pedi.save()
+                pedido = Pedido()
+                pedido.id_producto = pro
+                pedido.cantidad_pedido = '-'
+                pedido.save()
 
         except:
             if pro.stock_minimo >= pro.stock:
@@ -121,9 +118,9 @@ def list_pedido(request):
 def list_pedido_ajax(request):
     query = request.GET.get('busqueda')
     if query != "":
-        pedido = Pedido.objects.exclude(is_active="N").filter(Q(id_producto__nombre_producto__icontains=query))
+        pedido = Pedido.objects.filter(Q(id_producto__nombre_producto__icontains=query)).order_by('-last_modified')
     else:
-        pedido = Pedido.objects.exclude(is_active="N").order_by('-last_modified')
+        pedido = Pedido.objects.order_by('-last_modified')
 
     total = pedido.count()
 
@@ -138,7 +135,7 @@ def list_pedido_ajax(request):
         pedido = pedido[start:start + length]
 
     data = [{'id': pe.id, 'nombre': pe.id_producto.nombre_producto, 'precio': pe.id_producto.precio_compra, 
-    'cantidad': pe.cantidad_pedido, 'stock': pe.id_producto.stock, 'fecha_pedido': pe.fecha_alta} for pe in pedido]        
+    'cantidad': pe.cantidad_pedido, 'stock': pe.id_producto.stock, 'fecha_pedido': pe.fecha_alta, 'pedido_cargado': pe.pedido_cargado} for pe in pedido]        
 
     response = {
         'data': data,
@@ -189,8 +186,10 @@ def add_factura_compra(request):
                 factura_id = FacturaCompra.objects.get(id=factura.id)
                 for i in factura_dict['products']:
                     detalle = FacturaDet()
-                    detalle.id_factura = factura_id
+                    detalle.id_factura = factura_id                    
                     pedido_id = Pedido.objects.get(id=i['codigo_producto'])
+                    pedido_id.pedido_cargado = "S"
+                    pedido_id.save()            
                     detalle.id_pedido =pedido_id
                     detalle.cantidad = int(i['cantidad'])
                     detalle.descripcion = i['description']
@@ -198,12 +197,10 @@ def add_factura_compra(request):
                 response = {'mensaje':mensaje }
                 return JsonResponse(response)
             except Exception as e:
-                print(e)
                 mensaje = 'error'
                 response = {'mensaje':mensaje }
                 return JsonResponse(response)
         except Exception as e:
-            print(e)
             mensaje = 'error'
             response = {'mensaje':mensaje }
         return JsonResponse(response)
@@ -245,12 +242,10 @@ def edit_factura_compra(request, id):
                 response = {'mensaje':mensaje }
                 return JsonResponse(response)
             except Exception as e:
-                print(e)
                 mensaje = 'error'
                 response = {'mensaje':mensaje }
                 return JsonResponse(response)
         except Exception as e:
-            print(e)
             mensaje = 'error'
             response = {'mensaje':mensaje }
         return JsonResponse(response)
@@ -277,7 +272,7 @@ def list_factura_compra(request):
 def list_facturas_ajax(request):
     query = request.GET.get('busqueda')
     if query != "":
-        factCompra = FacturaCompra.objects.exclude(is_active="N").filter(Q(nro_factura__icontains=query) | Q(id_proveedor__nombre_proveedor__icontains=query))
+        factCompra = FacturaCompra.objects.exclude(is_active="N").filter(Q(nro_factura__icontains=query) | Q(id_proveedor__nombre_proveedor__icontains=query)).order_by('-last_modified')
     else:
         factCompra = FacturaCompra.objects.exclude(is_active="N").order_by('-last_modified')
 
@@ -311,7 +306,7 @@ def search_pediddos_factura(request):
         term = request.POST['term']
         if (request.method == 'POST') and (request.POST['action'] == 'search_products'):
             data = []
-            prods = Pedido.objects.filter(id_producto__nombre_producto__icontains=term)[0:10]
+            prods = Pedido.objects.exclude(pedido_cargado='S').filter(id_producto__nombre_producto__icontains=term)[0:10]
             for p in prods:
                 item = p.obtener_dict()
                 item['id'] = p.id

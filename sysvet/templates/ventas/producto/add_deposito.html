@@ -1,4 +1,4 @@
-<div></div>
+<link rel="stylesheet" href="/static/project_static/other/commons/shared.css">
 <div class="modal-dialog" role="document">
     <div class="modal-content">
         <div class="modal-header" style="background-color:#2a3f54;">
@@ -13,8 +13,8 @@
                 <label class="col-form-label col-md-3 col-sm-3  label-align">Descripcion<span
                         class="required" >*</span></label>
                 <div class="col-md-6 col-sm-6">
-                    <input class="form-control" data-validate-length-range="20" data-validate-words="1"
-                        name="descripcion" placeholder="Descripcion" required="required"  onkeyup="replaceCaratect(this)"/>
+                    <input class="form-control"
+                        name="descripcion" placeholder="Descripcion" required="required" autocomplete="off" onkeyup="replaceDirection(this)"/>
                 </div>
             </div>
             <div class="modal-footer">
@@ -24,3 +24,40 @@
         </form>
     </div>
 </div>
+
+<!-- validator -->
+<script src="/static/project_static/vendors/validator/validator.js"></script>
+<script src="/static/project_static/vendors/validator/multifield.js"></script>
+<script src="/static/project_static/other/js/main.js"></script>
+
+
+<script>
+    $(function () {
+        // initialize a validator instance from the "FormValidator" constructor.
+        // A "<form>" element is optionally passed as an argument, but is not a must
+        var validator = new FormValidator({
+            "events": ['blur', 'input', 'change']
+        }, document.forms[0]);
+        // on form "submit" event
+        document.forms[0].onsubmit = function (e) {
+            var submit = true,
+                validatorResult = validator.checkAll(this);
+            return !!validatorResult.valid;
+        };
+        // on form "reset" event
+        document.forms[0].onreset = function (e) {
+            validator.reset();
+        };
+        // stuff related ONLY for this demo page:
+        $('.toggleValidationTooltips').change(function () {
+            validator.settings.alerts = !this.checked;
+            if (this.checked)
+                $('form .alert').remove();
+        }).prop('checked', false);
+
+        $('form input').on("cut copy paste", function (e) {
+            e.preventDefault();
+        });
+    })
+
+</script>

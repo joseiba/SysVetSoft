@@ -73,7 +73,10 @@
                                 <div class="search">
                                     <form action="{% url 'search_producto' %}" method="GET" class="d-inline-flex">
                                         <input type="search" class="searchTerm" name="q" value="{{ request.GET.q }}"
-                                            placeholder="Buscá por nombre">
+                                        data-toggle="tooltip"
+                                        data-placement="top" title="Busca por nombre de producto, codigo y ubicación"
+                                        placeholder="Busca por nombre de producto, codigo y ubicación"
+                                        autocomplete="off">
                                         <button type="submit" class="searchButton">
                                             <i class="fa fa-search"></i>
                                         </button>
@@ -154,19 +157,21 @@
                     </div>
                     <div>                    
 
-                        <div class="float-left">
+                        <!--<div class="float-left">
                             <div class="wrap">
                                 <div class="search">
                                     <form action="{% url 'search_producto' %}" method="GET" class="d-inline-flex">
                                         <input type="search" class="searchTerm" name="q" value="{{ request.GET.q }}"
-                                            placeholder="Buscá por nombre">
+                                        data-toggle="tooltip"
+                                        data-placement="top" title="Busca por nombre de producto, codigo y ubicación"
+                                        placeholder="Busca por nombre de producto, codigo y ubicación">
                                         <button type="submit" class="searchButton">
                                             <i class="fa fa-search"></i>
                                         </button>
                                     </form>
                                 </div>
                             </div>
-                        </div>
+                        </div>-->
                     
                     </div>
 
@@ -258,6 +263,7 @@
 <script>
     $(function () {
         $(document).on('click', '.confirm-delete', function () {
+            console.log("entro")
             var id_producto = $(this).data("id")
             var name_producto = $(this).data("name-producto")
             $("#content-value-name").html('<div class="modal-body" style="font-size: 16px; color: #383232c7;">\
@@ -275,6 +281,10 @@
             var url = "{% url 'delete_producto' 1 %}"
             window.location = url.replace('1', id_producto);
         })
+
+        $('form input').on("cut copy paste", function (e) {
+            e.preventDefault();
+        });
     })
 </script>
 
