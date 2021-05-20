@@ -7,8 +7,8 @@ class ConfiEmpresaForm(forms.ModelForm):
         model = ConfiEmpresa
         exclude = ['id_confi']
         widgets = {
-            'apertura_caja_inicial' : forms.TextInput(attrs={'class':'form-control', 'name': 'apertura_caja_inicial', 'placeholder': 'Ingrese el monto inicial de la caja', 'required': 'required','onkeyup':'replaceABC(this)'}),
-			'ubicacion_deposito_inicial' : forms.TextInput(attrs={'class':'form-control', 'name': 'ubicacion_deposito_inicial', 'placeholder': 'Deposito inicial', 'required': 'required','onkeyup':'replaceCaratect(this)'}),			
+            'apertura_caja_inicial' : forms.TextInput(attrs={'class':'form-control', 'autocomplete': 'off','name': 'apertura_caja_inicial', 'placeholder': 'Ingrese el monto inicial de la caja', 'required': 'required','onkeyup':'replaceABC(this)'}),
+			'ubicacion_deposito_inicial' : forms.TextInput(attrs={'class':'form-control', 'autocomplete': 'off','name': 'ubicacion_deposito_inicial', 'placeholder': 'Deposito inicial', 'required': 'required','onkeyup':'replaceDiretion(this)'}),			
 		}
 
 class ServicioForm(forms.ModelForm):

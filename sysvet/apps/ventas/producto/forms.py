@@ -58,11 +58,11 @@ class ProductoForm(forms.ModelForm):
                 'name': 'fecha_movimiento', 'placeholder': 'Fecha de Movimiento'}),
             'fecha_compra' : forms.TextInput(attrs={'class':'form-control','type':'text', 'name': 'fecha_compra', 'autocomplete': 'off' ,
                 'placeholder': 'Fecha de Compra', 'readonly': 'readonly'}),
-			'precio_compra': forms.TextInput(attrs={'class':'form-control', 'required':'required','name': 'precio_compra', 'autocomplete': 'off' ,'placeholder': 'Precio de compra', 'onkeyup':'replaceDirection(this)'}),
-            'precio_venta': forms.TextInput(attrs={'class':'form-control', 'required':'required','name': 'precio_venta','autocomplete': 'off' , 'placeholder': 'Precio de Venta', 'onkeyup':'replaceDirection(this)'}),
-            'stock_minimo': forms.TextInput(attrs={'class':'form-control', 'required':'required','name': 'stock_minimo','autocomplete': 'off' , 'placeholder': 'Stock Minimo', 'onkeyup':'replaceDirection(this)'}),
+			'precio_compra': forms.TextInput(attrs={'class':'form-control', 'required':'required','name': 'precio_compra', 'autocomplete': 'off' ,'placeholder': 'Precio de compra', 'onkeyup':'replaceABC(this)'}),
+            'precio_venta': forms.TextInput(attrs={'class':'form-control', 'required':'required','name': 'precio_venta','autocomplete': 'off' , 'placeholder': 'Precio de Venta', 'onkeyup':'replaceABC(this)'}),
+            'stock_minimo': forms.TextInput(attrs={'class':'form-control', 'required':'required','name': 'stock_minimo','autocomplete': 'off' , 'placeholder': 'Stock Minimo', 'onkeyup':'replaceABC(this)'}),
             'lote': forms.TextInput(attrs={'class':'form-control', 'name': 'lote', 'placeholder': 'Lote', 'autocomplete': 'off' ,'onkeyup':'replaceDirection(this)'}),
-            'stock': forms.TextInput(attrs={'id':'stock', 'required':'required','class':'form-control', 'name': 'stock', 'autocomplete': 'off' ,'placeholder': 'Stock', 'onkeyup':'replaceDirection(this)'}),
+            'stock': forms.TextInput(attrs={'id':'stock', 'required':'required','class':'form-control', 'name': 'stock', 'autocomplete': 'off' ,'placeholder': 'Stock', 'onkeyup':'replaceABC(this)'}),
             'tipo_producto' : forms.Select(attrs={'class':'form-control', 'id': 'tipo_producto', 'autocomplete': 'off' ,'required':'required' ,'name':'tipo_producto'}),
             'id_deposito' : forms.Select(attrs={'class':'form-control', 'id': 'id_deposito','autocomplete': 'off' ,'required':'required' ,'name':'id_deposito'})
 		}

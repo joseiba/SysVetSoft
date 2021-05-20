@@ -8,7 +8,6 @@ class ConfiEmpresa(models.Model):
     """
     Clase que define la la configuracion de la empresa
     """
-    id_confi = models.IntegerField(unique=True, default=1)
     apertura_caja_inicial = models.CharField(max_length=200, blank=True, null=True, default="-")
     ubicacion_deposito_inicial =  models.CharField(max_length=200, blank=True, null=True, default="-")
 

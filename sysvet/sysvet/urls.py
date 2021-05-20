@@ -25,7 +25,9 @@ from apps.usuario.views  import Login, logoutUser,home_user
 from apps.ventas.cliente.views import (add_cliente, list_clientes, edit_cliente, delete_cliente, search_cliente, ReporteClientesPDF,
 list_client_ajax, list_client_ajax)
 
-from apps.ventas.producto.views import add_tipo_producto, list_tipo_producto, edit_tipo_producto, search_tipo_producto, baja_tipo_producto, alta_tipo_producto, vence_si_no, add_deposito, list_deposito, edit_deposito, search_deposito, add_producto, edit_producto, list_producto, delete_producto, search_producto, mover_producto
+from apps.ventas.producto.views import (add_tipo_producto, list_tipo_producto, edit_tipo_producto, search_tipo_producto, 
+baja_tipo_producto, alta_tipo_producto, vence_si_no, add_deposito, list_deposito, edit_deposito, search_deposito, 
+add_producto, edit_producto, list_producto, delete_producto, search_producto, mover_producto)
 
 from apps.ventas.mascota.views import (list_mascotas, add_mascota, edit_mascota, list_especie, add_especie, 
 edit_especie,search_especie, list_raza, add_raza, edit_raza, search_raza,search_mascota, 
@@ -35,10 +37,12 @@ from apps.reserva.views import (add_reserva, edit_reserva, list_reserva, delete_
 validar_fecha_hora, get_mascota_cliente, get_min_service, get_mascota_selected)
 
 from apps.configuracion.views import (add_servicio, edit_servicio, delete_servicio, list_servicio, search_servicio, 
-add_empleado, edit_empleado, list_empleado, delete_empleado, search_empleado, list_servicio_ajax, get_list_empleados_ajax)
+add_empleado, edit_empleado, list_empleado, delete_empleado, search_empleado, list_servicio_ajax, get_list_empleados_ajax,
+confi_inicial)
 
 from apps.compras.views import (add_proveedor, edit_proveedor, list_proveedor_ajax, delete_proveedor, list_proveedor,
-list_pedido, list_pedido_ajax, edit_pedido, list_factura_compra, list_facturas_ajax, add_factura_compra, search_pediddos_factura, edit_factura_compra)
+list_pedido, list_pedido_ajax, edit_pedido, list_factura_compra, list_facturas_ajax, add_factura_compra, 
+search_pediddos_factura, edit_factura_compra)
 
 urlpatterns = [
     # Login and logout   
@@ -124,6 +128,8 @@ urlpatterns = [
     path('configuracion/searchEmpleado/', search_empleado, name="search_empleado"),
     path('configuracion/bajaEmpleado/<int:id>/', delete_empleado, name="delete_empleado"),
     path('configuracion/get_list_empleados_ajax/', get_list_empleados_ajax, name="get_list_empleados_ajax"),
+    path('configuracion/confiInicial/', confi_inicial, name="confi_inicial"),
+
 
     #Urls compras
     path('compra/addProveedor/', add_proveedor , name="add_proveedor"),

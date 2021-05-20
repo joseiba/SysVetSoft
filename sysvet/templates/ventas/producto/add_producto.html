@@ -91,7 +91,7 @@
                                 </label>
                                 <div class="col-md-6 col-sm-6">
                                     <input class="form-control" name="precio_compra" autocomplete="off"
-                                        placeholder="Precio compra" type="text" onkeyup="replaceDirection(this)" required="required"/>
+                                        placeholder="Precio compra" type="text" onkeyup="replaceABC(this)" required="required"/>
                                 </div>
                             </div>
                             <div class="field item form-group">
@@ -101,7 +101,7 @@
                                 </label>
                                 <div class="col-md-6 col-sm-6">
                                     <input class="form-control" name="precio_venta" autocomplete="off"
-                                        placeholder="Precio venta" type="text" onkeyup="replaceDirection(this)" required="required"/>
+                                        placeholder="Precio venta" type="text" onkeyup="replaceABC(this)" required="required"/>
                                 </div>
                             </div>
                             <div class="field item form-group">
@@ -119,7 +119,7 @@
                                 </label>
                                 <div class="col-md-6 col-sm-6">
                                     <input class="form-control" name="stock" placeholder="Stock" autocomplete="off"
-                                        type="text" onkeyup="replaceDirection(this)" required="required"/>
+                                        type="text" onkeyup="replaceABC(this)" required="required"/>
                                 </div>
                             </div>
                             <div class="field item form-group">
@@ -127,17 +127,18 @@
                                 </label>
                                 <div class="col-md-6 col-sm-6">
                                     <input class="form-control" name="stock_minimo" placeholder="Stock minimo"
-                                        autocomplete="off" type="text" onkeyup="replaceDirection(this)" required="required"/>
+                                        autocomplete="off" type="text" onkeyup="replaceABC(this)" required="required"/>
                                 </div>
                             </div>
-                            <div class="form-group field item">
+                            <!--<div class="form-group field item">
                                 <label class="col-form-label col-md-3 col-sm-3  label-align">Deposito
                                     <span class="required">*</span>
                                 </label>
                                 <div class="col-md-6 col-sm-6">
                                     {{ form.id_deposito}}
                                 </div>
-                            </div>
+                            </div>-->
+                            <input type="hidden" value="{{deposito_inicial}}" name="id_deposito">
                             <div class="ln_solid">
                                 <div class="form-group">
                                     <div class="col-md-6 offset-md-3" style="margin-top: 1rem;">

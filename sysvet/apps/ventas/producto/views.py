@@ -11,6 +11,7 @@ from django.http import JsonResponse
 from apps.ventas.producto.forms import TipoProductoForm, DepositoForm, ProductoForm
 from apps.ventas.producto.models import TipoProducto, Deposito, Producto, ProductoStock
 from apps.compras.models import FacturaCompra, FacturaDet
+from apps.configuracion.models import ConfiEmpresa
 
 date = datetime.now()
 
@@ -192,13 +193,20 @@ def search_deposito(request):
 @login_required()
 def add_producto(request):
     form = ProductoForm
-    if request.method == 'POST':
-        form = ProductoForm(request.POST or None)
-        if form.is_valid():
-            form.save()
-            messages.add_message(request, messages.SUCCESS, 'Producto agregado correctamente!')
-            return redirect('/producto/add')  
-    context = {'form' : form}
+    try:
+        confiEm = ConfiEmpresa.objects.get(id=1)
+        depo = Deposito.objects.get(descripcion=confiEm.ubicacion_deposito_inicial)
+        if request.method == 'POST':
+            form = ProductoForm(request.POST or None)
+            if form.is_valid():
+                form.save()
+                messages.add_message(request, messages.SUCCESS, 'Producto agregado correctamente!')
+                return redirect('/producto/add')  
+    except:
+        messages.add_message(request, messages.SUCCESS, 'Se debe agrega primeramente un deposito en configuraciones iniciales!')
+        context = {'form' : form}
+        return render(request, 'ventas/producto/add_producto.html', context)
+    context = {'form' : form, 'deposito_inicial': depo.id}
     return render(request, 'ventas/producto/add_producto.html', context)
 
 # Metodo para editar Productos
