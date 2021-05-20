@@ -112,6 +112,8 @@ def add_pedido():
 @login_required()
 def list_pedido(request):
     add_pedido()
+    pedi = Pedido.objects.exclude(pedido_cargado="S").all()
+    context = {'pedidos': pedi}
     return render(request, "compras/pedidos/list_pedidos.html")
 
 @login_required()
@@ -310,7 +312,10 @@ def search_pediddos_factura(request):
             for p in prods:
                 item = p.obtener_dict()
                 item['id'] = p.id
-                producto_desc = '%s %s' % (p.id_producto.nombre_producto, p.id_producto.descripcion)
+                producto_desc = '%s %s %s %s' % ('Nº Pedido: ' + str(p.id),
+                                        'Producto: ' + p.id_producto.nombre_producto, 
+                                        'Descripción: ' + p.id_producto.descripcion,
+                                        'Cantidad a Pedir: ' + p.cantidad_pedido)
                 item['text'] = producto_desc
                 data.append(item)
     except Exception as e:
