@@ -247,6 +247,7 @@ def mover_producto(request, id):
         producto_moved.id_deposito = deposito
         producto_moved.id_producto = producto
         producto_moved.save()
+        messages.add_message(request, messages.SUCCESS, 'El producto se ha movido correctamente!')
 
         return redirect('/producto/list/')
 

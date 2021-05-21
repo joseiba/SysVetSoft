@@ -108,8 +108,8 @@
                                 <label class="col-form-label col-md-3 col-sm-3  label-align">Lote
                                 </label>
                                 <div class="col-md-6 col-sm-6">
-                                    <input class="form-control" name="lote" placeholder="Lote" autocomplete="off"
-                                        type="text" onkeyup="replaceDirection(this)" />
+                                    <input class="form-control" name="lote" placeholder="Lote" id="lote_id" autocomplete="off"
+                                        type="text" onkeyup="replaceDirection(this)" disabled />
                                 </div>
                             </div>
                             <div class="field item form-group">
@@ -221,13 +221,18 @@
                     success: function (response) {
                         if (response.mensaje == 'S') {
                             $(".fecha_vencimiento").prop("disabled", false)
+                            $("#lote_id").prop("disabled", false)
+
                         } else {
                             $(".fecha_vencimiento").prop("disabled", true)
+                            $("#lote_id").prop("disabled", true)
                         }
                     }
                 })
             } else {
                 $(".fecha_vencimiento").prop("disabled", true)
+                $("#lote_id").prop("disabled", true)
+
             }
         })
 

@@ -27,7 +27,6 @@ class Proveedor(models.Model):
     def __str__(self):
         return  'Proveedor: %s - ruc: %s' % (self.nombre_proveedor, self.ruc_proveedor)
 
-
 class Pedido(models.Model):
     """[summary]
 
@@ -55,7 +54,37 @@ class Pedido(models.Model):
         return dict
 
     def __str__(self):
-        return self.id_producto.nombre_producto
+        return self.id_producto.nombre_producto        
+
+class PedidoCabecera(models.Model):
+
+    fecha_alta = models.CharField(max_length = 200, default = date.strftime("%d/%m/%Y"), editable = False)
+    pedido_cargado = models.CharField(max_length=2, default="N", blank=True, null=True)
+    last_modified = models.DateTimeField(auto_now=True, blank=True)
+    is_active = models.CharField(max_length=2, default="S", blank=True, null=True)
+
+    class Meta:
+        verbose_name = "Pedido Cabecera"
+        verbose_name_plural = "Pedido Cabeceras"
+
+    def __str__(self):
+        return self.fecha_alta
+
+class PedidoDetalle(models.Model):
+    """Model definition for Pedido Detalle."""
+    id_pedido_cabecera = models.ForeignKey('PedidoCabecera', on_delete=models.CASCADE)
+    id_pedido = models.ForeignKey('Pedido', on_delete=models.CASCADE)
+    cantidad = models.IntegerField()
+    descripcion = models.CharField(max_length=200, blank=True)
+    class Meta:
+        """Meta definition for Pedido Detalle"""
+
+        verbose_name = 'Pedido Detalle'
+        verbose_name_plural = 'Pedido Detalle'
+
+    def __str__(self):
+        """Unicode representation of Pedido Detalle."""
+        pass
 
 class Pago(models.Model):
     """[summary]
