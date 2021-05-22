@@ -9,7 +9,7 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from datetime import datetime
 
-from apps.compras.models import Proveedor, Pedido, FacturaCompra, FacturaDet, Pago
+from apps.compras.models import Proveedor, Pedido, FacturaCompra, FacturaDet, Pago, PedidoCabecera, PedidoDetalle
 from apps.compras.forms import ProveedorForm, PedidoForm, FacturaCompraForm, FacturaDetalleForm
 from apps.ventas.producto.models import Producto
 
@@ -323,3 +323,72 @@ def search_pediddos_factura(request):
 
     return JsonResponse(data, safe=False)
 
+#Refactor de pedidos
+@login_required()
+def list_pedido_compra(request):
+    add_pedido()
+    return render(request, 'compras/pedidos/list_pedidos_compras.html')
+
+def list_pedido_compra_ajax(request):
+    query = request.GET.get('busqueda')
+    if query != "":
+        pedidoDetalle = PedidoCabecera.objects.exclude(is_active="N").filter(Q(id__icontains=query)).order_by('-last_modified')
+    else:
+        pedidoDetalle = PedidoCabecera.objects.exclude(is_active="N").order_by('-last_modified')
+
+    total = pedidoDetalle.count()
+
+    _start = request.GET.get('start')
+    _length = request.GET.get('length')
+    if _start and _length:
+        start = int(_start)
+        length = int(_length)
+        page = math.ceil(start / length) + 1
+        per_page = length
+
+        pedidoDetalle = pedidoDetalle[start:start + length]
+
+    data = [{'id': pc.id, 'fecha_pedido': pc.fecha_alta, 'pedido_cargado':pc.pedido_cargado} for pc in pedidoDetalle]
+
+    response = {
+        'data': data,
+        'recordsTotal': total,
+        'recordsFiltered': total,
+    }
+    return JsonResponse(response)
+
+@login_required()
+def add_pedido_compra(request):
+    print(request.method)
+    print(request.is_ajax())
+    print("entro 2")
+    data = {}
+    mensaje = ""
+    if request.method == 'POST' and request.is_ajax():    
+        print("entro 2")
+        try:        
+            pedido_dict = json.loads(request.POST['pedido'])
+            try:
+                pedidoCabecera = PedidoCabecera()
+                pedidoCabecera.save()
+                pedido_cabecera_id = PedidoCabecera.objects.get(id=pedidoCabecera.id)
+                for i in pedido_dict['products']:
+                    pedido_detalle = PedidoDetalle()
+                    pedido_detalle.id_pedido_cabecera = pedido_cabecera_id                   
+                    pedido_detalle_id = Pedido.objects.get(id=i['codigo_producto'])
+                    pedido_detalle.id_pedido =pedido_detalle_id
+                    pedido_detalle.cantidad = int(i['cantidad'])
+                    pedido_detalle.descripcion = i['description']
+                    pedido_detalle.save()
+                response = {'mensaje':mensaje }
+                return JsonResponse(response)
+            except Exception as e:
+                mensaje = 'error'
+                response = {'mensaje':mensaje }
+                return JsonResponse(response)
+        except Exception as e:
+            mensaje = 'error'
+            response = {'mensaje':mensaje }
+        return JsonResponse(response)
+    context = {'accion': 'A'}
+    return render(request, 'compras/pedidos/add_pedido_compra.html', context)
