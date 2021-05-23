@@ -36,11 +36,12 @@ var factura = {
             ordering: false,
             columns: [
                 {"data": "codigo_producto"},
+                {"data": "nombre"},
                 {"data": "description"},
                 {"data": "precio"},
                 {"data": "cantidad"},
                 {"data": "subtotal"},
-                {"data": "id"},
+                /*{"data": "id"},*/
             ],
             columnDefs: [
                 {
@@ -49,14 +50,21 @@ var factura = {
                     width: "10%",
                     orderable: false,
                 },
+                
                 {
                     targets: [1],
+                    class: "",
+                    width: "20%",
+                    orderable: false,                
+                },
+                {
+                    targets: [2],
                     class: "",
                     width: "30%",
                     orderable: false,                
                 },
                 {
-                    targets: [2, 4],
+                    targets: [3, 5],
                     class: "text-center my-0 ",
                     orderable: false,
                     render: function (data, type, row) {
@@ -64,23 +72,23 @@ var factura = {
                     }
                 },
                 {
-                    targets: [3],
-                    width: "20%",
+                    targets: [4],
+                    width: "10%",
                     class: "text-center",
                     orderable: false,  
-                    render: function (data, type, row) {
+                    /*render: function (data, type, row) {
                         if(action == "A"){
                             if(row.cantidad_pedido === "-"){
                                 return '<input type="text" name="cantidad" class="form-control form-control-sm input-sm" autocomplete="off" value="' + row.cantidad + '">';
                             }else{
-                                return '<input type="text" name="cantidad" class="form-control form-control-sm input-sm" autocomplete="off" value="' + row.cantidad_pedido + '">';
+                                return '<input type="text" name="cantidad" class="form-control form-control-sm input-sm" autocomplete="off" value="' + row.cantidad + '">';
                             }    
                         }else{  
-                            return '<input type="text" name="cantidad" class="form-control form-control-sm input-sm" autocomplete="off" value="' + row.cantidad_pedido + '">';
+                            return '<input type="text" name="cantidad" class="form-control form-control-sm input-sm" autocomplete="off" value="' + row.cantidad + '">';
                         }                                            
-                    }                 
+                    }   */              
                 },
-                {
+                /*{
                     targets: [5],
                     class: "text-center",
                     width: "5%",
@@ -88,7 +96,7 @@ var factura = {
                     render: function (data, type, row) {
                         return '<a rel="remove" class="btn btn-danger m-0 p-0"><i class="fa fa-trash m-1" style="color: white" aria-hidden="true"></i>\n</i></a>'
                     }
-                },
+                },*/
             ],
             rowCallback(row, data, displayNum, displayIndex, dataIndex) {
                 $(row).find('input[name="cantidad"]').TouchSpin({
@@ -154,14 +162,12 @@ $(function () {
         factura.items.products.splice(tr.row, 1);
         factura.list();
     }).on('change', 'input[name="cantidad"]', function () {
-        console.clear();
         var cant = parseInt($(this).val());
         var tr = tblFactura.cell($(this).closest('td, li')).index();
         factura.items.products[tr.row].cantidad = cant;
         factura.calc_invoice();
         // el 4 es el lugar donde tiene que estar el subtotal
         $('td:eq(4)', tblFactura.row(tr.row).node()).html('Gs.' + Math.round(factura.items.products[tr.row].subtotal));
-        console.log(cant);
     }).on('change', 'input[name="descripcion"]', function (){
         var descripcion = $(this).val();
         var tr = tblFactura.cell($(this).closest('td, li')).index();
@@ -171,23 +177,16 @@ $(function () {
     $('form').on('submit', function (e) {
         e.preventDefault();
         factura.items.proveedor = $('select[name="id_proveedor"]').val();
-        console.log(factura.items.proveedor)
         factura.items.fecha_emision = $('input[name="fecha_emision"]').val();
-        console.log(factura.items.fecha_emision)
         factura.items.fecha_vencimiento = $('input[name="fecha_vencimiento"]').val();
-        console.log(factura.items.fecha_vencimiento)
         factura.items.nro_factura = $('input[name="nro_factura"]').val();
-        console.log(factura.items.nro_factura)
         factura.items.nro_timbrado = $('input[name="nro_timbrado"]').val();
-        console.log(factura.items.nro_timbrado)
         var parameters = new FormData();
-        console.log(factura.items)
         parameters.append('factura', JSON.stringify(factura.items));
         var csrf = $('input[name="csrfmiddlewaretoken"]').val();
         parameters.append('csrfmiddlewaretoken', csrf);
-        console.log(parameters)
         submit_with_ajax(window.location.pathname, 'Noticicación', '¿Desea registrar esta factura?', parameters, function () {
-            location.href = "/compra/addFacturaCompra/"
+            location.href = "/compra/listFacturasCompras/"
         });
     });
 });

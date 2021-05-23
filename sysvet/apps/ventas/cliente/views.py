@@ -1,3 +1,5 @@
+import json
+import math
 from django.shortcuts import render, redirect, HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -11,9 +13,6 @@ from reportlab.platypus import SimpleDocTemplate, Table, TableStyle
 from reportlab.lib.units import cm
 from reportlab.lib import colors
 from django.http import JsonResponse
-import json
-import math
-
 
 from .forms import ClienteForm
 from .models import Cliente, Ciudad

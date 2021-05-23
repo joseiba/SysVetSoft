@@ -8,6 +8,12 @@ from django.core.paginator import Paginator
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from datetime import datetime
+from io import BytesIO
+from reportlab.pdfgen import canvas
+from django.views.generic import View
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle
+from reportlab.lib.units import cm
+from reportlab.lib import colors
 
 from apps.compras.models import Proveedor, Pedido, FacturaCompra, FacturaDet, Pago, PedidoCabecera, PedidoDetalle
 from apps.compras.forms import ProveedorForm, PedidoForm, FacturaCompraForm, FacturaDetalleForm
@@ -96,12 +102,6 @@ def add_pedido():
         pe = pro.id
         try:
             pedi = Pedido.objects.get(id_producto=pe)
-            if pro.stock_minimo >= pro.stock:
-                pedido = Pedido()
-                pedido.id_producto = pro
-                pedido.cantidad_pedido = '-'
-                pedido.save()
-
         except:
             if pro.stock_minimo >= pro.stock:
                 pedido = Pedido()
@@ -209,6 +209,143 @@ def add_factura_compra(request):
     context = {'form': form, 'calc_iva': 5, 'accion': 'A'}
     return render(request, 'compras/factura/add_factura_compra.html', context)
 
+#Refactor de pedidos
+@login_required()
+def list_pedido_compra(request):
+    add_pedido()
+    return render(request, 'compras/pedidos/list_pedidos_compras.html')
+
+def list_pedido_compra_ajax(request):
+    query = request.GET.get('busqueda')
+    if query != "":
+        pedidoCabecera = PedidoCabecera.objects.exclude(is_active="N").filter(Q(id__icontains=query)).order_by('-last_modified')
+    else:
+        pedidoCabecera = PedidoCabecera.objects.exclude(is_active="N").order_by('-last_modified')
+
+    total = pedidoCabecera.count()
+
+    _start = request.GET.get('start')
+    _length = request.GET.get('length')
+    if _start and _length:
+        start = int(_start)
+        length = int(_length)
+        page = math.ceil(start / length) + 1
+        per_page = length
+
+        pedidoCabecera = pedidoCabecera[start:start + length]
+
+    data = [{'id': pc.id, 'fecha_pedido': pc.fecha_alta, 'pedido_cargado':pc.pedido_cargado} for pc in pedidoCabecera]
+
+    response = {
+        'data': data,
+        'recordsTotal': total,
+        'recordsFiltered': total,
+    }
+    return JsonResponse(response)
+
+@login_required()
+def add_pedido_compra(request):
+    data = {}
+    mensaje = ""
+    if request.method == 'POST' and request.is_ajax():    
+        try:        
+            pedido_dict = json.loads(request.POST['pedido'])
+            try:
+                pedidoCabecera = PedidoCabecera()
+                pedidoCabecera.save()
+                pedido_cabecera_id = PedidoCabecera.objects.get(id=pedidoCabecera.id)
+                for i in pedido_dict['products']:
+                    pedido_detalle = PedidoDetalle()
+                    pedido_detalle.id_pedido_cabecera = pedido_cabecera_id                   
+                    pedido_detalle_id = Pedido.objects.get(id=i['codigo_producto'])
+                    pedido_detalle.id_pedido =pedido_detalle_id
+                    pedido_detalle.cantidad = int(i['cantidad'])
+                    pedido_detalle.descripcion = i['description']
+                    pedido_detalle.save()
+                response = {'mensaje':mensaje }
+                return JsonResponse(response)
+            except Exception as e:
+                mensaje = 'error'
+                response = {'mensaje':mensaje }
+                return JsonResponse(response)
+        except Exception as e:
+            mensaje = 'error'
+            response = {'mensaje':mensaje }
+        return JsonResponse(response)
+    context = {'accion': 'A'}
+    return render(request, 'compras/pedidos/add_compra_pedido.html', context)
+
+@login_required()
+def edit_pedido_compra(request, id):
+    data = {}
+    mensaje = ""
+    if request.method == 'POST' and request.is_ajax():
+        try:        
+            pedido_dict = json.loads(request.POST['pedido'])
+            try:
+                pedidoCabecera = PedidoCabecera.objects.get(id=id)  
+                pedido_detail = PedidoDetalle.objects.filter(id_pedido_cabecera=id)          
+                pedido_detail.delete()
+                for i in pedido_dict['products']:
+                    pedido_detalle = PedidoDetalle()
+                    pedido_detalle.id_pedido_cabecera = pedidoCabecera                   
+                    pedido_detalle_id = Pedido.objects.get(id=i['codigo_producto'])
+                    pedido_detalle.id_pedido =pedido_detalle_id
+                    pedido_detalle.cantidad = int(i['cantidad'])
+                    pedido_detalle.descripcion = i['description']
+                    pedido_detalle.save()
+                response = {'mensaje':mensaje }
+                return JsonResponse(response)
+            except Exception as e:
+                mensaje = 'error'
+                response = {'mensaje':mensaje }
+                return JsonResponse(response)
+        except Exception as e:
+            mensaje = 'error'
+            response = {'mensaje':mensaje }
+        return JsonResponse(response)
+    context = {'det': json.dumps(get_detalle_pedido_compra(id)), 'accion': 'E'}
+    return render(request, 'compras/pedidos/edit_pedido_compra.html', context)   
+    
+def get_detalle_pedido_compra(id):
+    data = []
+    try:
+        detalles = PedidoDetalle.objects.filter(id_pedido_cabecera=id)
+        for i in detalles:
+            item = i.id_pedido.obtener_dict()
+            item['description'] = i.descripcion
+            item['cantidad'] = i.cantidad
+            data.append(item)
+    except:
+        pass
+    return data
+
+
+#Facturas compras
+def add_factura_compra():
+    pedido_cabecera = PedidoCabecera.objects.exclude(is_active='N').all()
+    if pedido_cabecera is not None:
+        for pediCabecera in pedido_cabecera:
+            try: 
+                factura = FacturaCompra.objects.get(id_pedido_cabecera=pediCabecera.id)
+            except Exception as e:
+                try:        
+                    factura = FacturaCompra()
+                    factura.id_pedido_cabecera = pediCabecera             
+                    factura.save()
+                    factura_id = FacturaCompra.objects.get(id=factura.id)
+                    pedido_detalle = PedidoDetalle.objects.filter(id_pedido_cabecera=pediCabecera.id)
+                    for i in pedido_detalle:
+                        detalle = FacturaDet()
+                        detalle.id_factura = factura_id                  
+                        pedido_id = Pedido.objects.get(id=i.id_pedido.id)           
+                        detalle.id_pedido =pedido_id
+                        detalle.cantidad = i.cantidad
+                        detalle.descripcion = i.descripcion
+                        detalle.save()
+                except Exception as e:
+                    pass
+
 @login_required()
 def edit_factura_compra(request, id):
     factCompra = FacturaCompra.objects.get(id=id)
@@ -216,7 +353,6 @@ def edit_factura_compra(request, id):
     data = {}
     mensaje = ""
     if request.method == 'POST' and request.is_ajax():
-        print("entro aca")
         try:        
             factura_dict = json.loads(request.POST['factura'])
             try:
@@ -231,6 +367,9 @@ def edit_factura_compra(request, id):
                 factura.total_iva = int(factura_dict['total_iva'])
                 factura.total = int(factura_dict['total_factura'])                
                 factura.save()
+                pedido_cabecera = PedidoCabecera.objects.get(id=factura.id_pedido_cabecera.id)
+                pedido_cabecera.is_active = 'N'
+                pedido_cabecera.save()
                 detailFact = FacturaDet.objects.filter(id_factura=id)
                 detailFact.delete()
                 for i in factura_dict['products']:
@@ -269,12 +408,13 @@ def get_detalle_factura(id):
 
 @login_required()
 def list_factura_compra(request):
+    add_factura_compra()
     return render(request, 'compras/factura/list_facturas.html')
 
 def list_facturas_ajax(request):
     query = request.GET.get('busqueda')
     if query != "":
-        factCompra = FacturaCompra.objects.exclude(is_active="N").filter(Q(nro_factura__icontains=query) | Q(id_proveedor__nombre_proveedor__icontains=query)).order_by('-last_modified')
+        factCompra = FacturaCompra.objects.exclude(is_active="N").filter(Q(nro_factura__icontains=query) | Q(nro_timbrado__icontains=query) | Q(id_proveedor__nombre_proveedor__icontains=query)).order_by('-last_modified')
     else:
         factCompra = FacturaCompra.objects.exclude(is_active="N").order_by('-last_modified')
 
@@ -289,10 +429,15 @@ def list_facturas_ajax(request):
         per_page = length
 
         factCompra = factCompra[start:start + length]
-
-    data = [{'id': fc.id,'nro_factura': fc.nro_factura, 'fecha_emision': fc.fecha_emision, 'fecha_vencimiento': fc.fecha_vencimiento, 
-    'proveedor': fc.id_proveedor.nombre_proveedor, 'im_total': fc.total} for fc in factCompra]
-
+    
+    for fc in factCompra:
+        try:
+            data = [{'id': fc.id,'nro_factura': fc.nro_factura, 'nro_timbrado': fc.nro_timbrado, 'fecha_emision': fc.fecha_emision, 'fecha_vencimiento': fc.fecha_vencimiento, 
+            'proveedor': fc.id_proveedor.nombre_proveedor, 'im_total': fc.total}]
+        except Exception as e:
+            data = [{'id': fc.id, 'nro_factura': '-', 'nro_timbrado': '-', 'fecha_emision': '-', 'fecha_vencimiento': '-', 
+            'proveedor': '-', 'im_total': '-'}]      
+            
     response = {
         'data': data,
         'recordsTotal': total,
@@ -312,10 +457,8 @@ def search_pediddos_factura(request):
             for p in prods:
                 item = p.obtener_dict()
                 item['id'] = p.id
-                producto_desc = '%s %s %s %s' % ('Nº Pedido: ' + str(p.id),
-                                        'Producto: ' + p.id_producto.nombre_producto, 
-                                        'Descripción: ' + p.id_producto.descripcion,
-                                        'Cantidad a Pedir: ' + p.cantidad_pedido)
+                producto_desc = '%s %s' % ('Producto: ' + p.id_producto.nombre_producto, 
+                                        'Descripción: ' + p.id_producto.descripcion)
                 item['text'] = producto_desc
                 data.append(item)
     except Exception as e:
@@ -323,72 +466,24 @@ def search_pediddos_factura(request):
 
     return JsonResponse(data, safe=False)
 
-#Refactor de pedidos
-@login_required()
-def list_pedido_compra(request):
-    add_pedido()
-    return render(request, 'compras/pedidos/list_pedidos_compras.html')
-
-def list_pedido_compra_ajax(request):
-    query = request.GET.get('busqueda')
-    if query != "":
-        pedidoDetalle = PedidoCabecera.objects.exclude(is_active="N").filter(Q(id__icontains=query)).order_by('-last_modified')
-    else:
-        pedidoDetalle = PedidoCabecera.objects.exclude(is_active="N").order_by('-last_modified')
-
-    total = pedidoDetalle.count()
-
-    _start = request.GET.get('start')
-    _length = request.GET.get('length')
-    if _start and _length:
-        start = int(_start)
-        length = int(_length)
-        page = math.ceil(start / length) + 1
-        per_page = length
-
-        pedidoDetalle = pedidoDetalle[start:start + length]
-
-    data = [{'id': pc.id, 'fecha_pedido': pc.fecha_alta, 'pedido_cargado':pc.pedido_cargado} for pc in pedidoDetalle]
-
-    response = {
-        'data': data,
-        'recordsTotal': total,
-        'recordsFiltered': total,
-    }
-    return JsonResponse(response)
-
-@login_required()
-def add_pedido_compra(request):
-    print(request.method)
-    print(request.is_ajax())
-    print("entro 2")
-    data = {}
-    mensaje = ""
-    if request.method == 'POST' and request.is_ajax():    
-        print("entro 2")
-        try:        
-            pedido_dict = json.loads(request.POST['pedido'])
-            try:
-                pedidoCabecera = PedidoCabecera()
-                pedidoCabecera.save()
-                pedido_cabecera_id = PedidoCabecera.objects.get(id=pedidoCabecera.id)
-                for i in pedido_dict['products']:
-                    pedido_detalle = PedidoDetalle()
-                    pedido_detalle.id_pedido_cabecera = pedido_cabecera_id                   
-                    pedido_detalle_id = Pedido.objects.get(id=i['codigo_producto'])
-                    pedido_detalle.id_pedido =pedido_detalle_id
-                    pedido_detalle.cantidad = int(i['cantidad'])
-                    pedido_detalle.descripcion = i['description']
-                    pedido_detalle.save()
-                response = {'mensaje':mensaje }
-                return JsonResponse(response)
-            except Exception as e:
-                mensaje = 'error'
-                response = {'mensaje':mensaje }
-                return JsonResponse(response)
-        except Exception as e:
-            mensaje = 'error'
-            response = {'mensaje':mensaje }
-        return JsonResponse(response)
-    context = {'accion': 'A'}
-    return render(request, 'compras/pedidos/add_pedido_compra.html', context)
+def reporte_compra_pdf(request, id):
+#Indicamos el tipo de contenido a devolver, en este caso un pdf
+    response = HttpResponse(content_type='application/pdf')
+    #La clase io.BytesIO permite tratar un array de bytes como un fichero binario, se utiliza como almacenamiento temporal
+    buffer = BytesIO()
+    #Canvas nos permite hacer el reporte con coordenadas X y Y
+    pdf = canvas.Canvas(buffer)
+    #Llamo al método cabecera donde están definidos los datos que aparecen en la cabecera del reporte.
+    #self.cabecera(pdf)
+    #Con show page hacemos un corte de página para pasar a la siguiente
+    #Establecemos el tamaño de letra en 16 y el tipo de letra Helvetica
+    pdf.setFont("Helvetica", 16)
+    #Dibujamos una cadena en la ubicación X,Y especificada
+    pdf.drawString(230, 790, u"Orden de Compra")
+    pdf.setFont("Helvetica", 14)
+    pdf.showPage()
+    pdf.save()
+    pdf = buffer.getvalue()
+    buffer.close()
+    response.write(pdf)
+    return response

@@ -148,9 +148,6 @@
 <script src="/static/project_static/vendors/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
 <script src="/static/project_static/vendors/datatables.net-responsive-bs/js/responsive.bootstrap.js"></script>
 <script src="/static/project_static/vendors/datatables.net-scroller/js/dataTables.scroller.min.js"></script>
-<script src="/static/project_static/vendors/jszip/dist/jszip.min.js"></script>
-<script src="/static/project_static/vendors/pdfmake/build/pdfmake.min.js"></script>
-<script src="/static/project_static/vendors/pdfmake/build/vfs_fonts.js"></script>
 
 <script>
     $(function () {
@@ -199,9 +196,16 @@
                         name: 'Accion',
                         data: 'id',
                         render: function (data) {
-                            return '<button class="btn btn-warning" onclick="abrir_modal_edicion(\'/compra/editPedido/' + data + '/\');">\
-                                                        Editar\
-                                                    </button>';
+                            return '<button class="btn btn-warning">\
+                                        <a href="/compra/editPedidoCompra/' + data + '/" style="color: black">\
+                                            Editar\
+                                        </a>\
+                                    </button>\
+                                    <button class="btn btn-primary">\
+                                        <a href="/compra/reporteCompra/' + data + '/" style="color: white">\
+                                            Generar PDF\
+                                        </a>\
+                                    </button>';                                                   
                             /*<button class="btn btn-danger" onclick="abrir_modal_eliminacion();">\
                                 Baja\
                             </button>*/

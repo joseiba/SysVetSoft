@@ -107,10 +107,10 @@ ESTADOS_FACTURA = [
 ]        
 
 class FacturaCompra(models.Model):
-    nro_factura = models.CharField(max_length=500)
-    nro_timbrado = models.CharField(max_length=500)
-    fecha_emision = models.CharField(max_length=200)
-    fecha_vencimiento = models.CharField(max_length=200)
+    nro_factura = models.CharField(max_length=500, null=True)
+    nro_timbrado = models.CharField(max_length=500, null=True)
+    fecha_emision = models.CharField(max_length=200, null=True)
+    fecha_vencimiento = models.CharField(max_length=200, null=True)
     tipo_factura = models.BooleanField(default=True)
     estado = models.CharField(max_length=12, choices=ESTADOS_FACTURA, default=ESTADOS_FACTURA[0])
     total_iva = models.IntegerField(default=0)
@@ -118,7 +118,8 @@ class FacturaCompra(models.Model):
     factura_cargada_producto = models.CharField(max_length=2, default="N", blank=True, null=True)
     last_modified = models.DateTimeField(auto_now=True, blank=True)
     is_active = models.CharField(max_length=2, default="S", blank=True, null=True)
-    id_proveedor = models.ForeignKey('Proveedor', on_delete=models.CASCADE)
+    id_proveedor = models.ForeignKey('Proveedor', on_delete=models.CASCADE, null=True)
+    id_pedido_cabecera = models.ForeignKey('PedidoCabecera', on_delete=models.CASCADE, null=True)
 
     def __str__(self):
         return 'Factura Compra: %s - Proveedor: %s' % (self.nro_factura, self.id_proveedor)

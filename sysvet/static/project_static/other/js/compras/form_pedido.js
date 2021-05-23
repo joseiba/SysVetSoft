@@ -43,19 +43,11 @@ var pedido = {
                 },                
                 {
                     targets: [3],
-                    width: "20%",
+                    width: "10%",
                     class: "text-center",
                     orderable: false,  
                     render: function (data, type, row) {
-                        if(action == "A"){
-                            if(row.cantidad_pedido === "-"){
-                                return '<input type="text" name="cantidad" class="form-control form-control-sm input-sm" autocomplete="off" value="' + row.cantidad + '">';
-                            }else{
-                                return '<input type="text" name="cantidad" class="form-control form-control-sm input-sm" autocomplete="off" value="' + row.cantidad_pedido + '">';
-                            }    
-                        }else{  
-                            return '<input type="text" name="cantidad" class="form-control form-control-sm input-sm" autocomplete="off" value="' + row.cantidad_pedido + '">';
-                        }                                            
+                        return '<input type="text" name="cantidad" class="form-control form-control-sm input-sm" autocomplete="off" value="' + row.cantidad + '">';
                     }                 
                 },
                 {
@@ -138,16 +130,26 @@ $(function () {
         pedido.items.products[tr.row].cantidad = cant;
     });
 
-    $('form').on('submit', function (e) {       
+    $('form').on('submit', function (e) {
+        e.preventDefault();       
         var parameters = new FormData();
         console.log(pedido.items)
-        parameters.append('pedido', JSON.stringify(pedido.items));
-        var csrf = $('input[name="csrfmiddlewaretoken"]').val();
-        parameters.append('csrfmiddlewaretoken', csrf);
-        console.log(parameters)
-        submit_with_ajax(window.location.pathname, 'Noticicación', '¿Desea registrar este pedido?', parameters, function () {
-            location.href = "/compra/addPedidoCompra/"
-        });
+        if(pedido.items.products.length == 0){
+            swal({
+                title: "Notificación",
+                text: "Debe cargar al menos un producto para el pedido!",
+                icon: "warning",
+                button: "Ok",
+            })
+        }else{
+            parameters.append('pedido', JSON.stringify(pedido.items));
+            var csrf = $('input[name="csrfmiddlewaretoken"]').val();
+            parameters.append('csrfmiddlewaretoken', csrf);
+            console.log(parameters)
+            submit_with_ajax(window.location.pathname, 'Noticicación', '¿Desea registrar este pedido?', parameters, function () {
+                location.href = "/compra/listPedidosCompra/"
+            });
+        }        
     });
 });
 

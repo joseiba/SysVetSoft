@@ -1,0 +1,191 @@
+{% extends "home/base_site.html" %}
+
+{% block title %} Editar Pedido{% endblock title %}
+{% block stylesheets %}
+{{ block.super }}
+<link href="/static/project_static/other/js/select2/select2.css" rel="stylesheet" />
+<link href="/static/project_static/vendors/datatables.net-bs/css/dataTables.bootstrap.min.css" rel="stylesheet">
+<link href="/static/project_static/vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css" rel="stylesheet">
+<link href="/static/project_static/vendors/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.min.css"
+    rel="stylesheet">
+<link href="/static/project_static/vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css"
+    rel="stylesheet">
+<link href="/static/project_static/vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet"
+    href="/static/project_static/other/js/bootstrap-touchspin-master/dist/jquery.bootstrap-touchspin.css">
+<link rel="stylesheet"
+    href="/static/project_static/other/js/jquery-ui-themes-1.12.1/jquery-ui-themes-1.12.1/jquery-ui.min.css">
+<style>
+    .dataTables_info {
+        width: 0 !important;
+    }
+</style>
+{% endblock stylesheets %}
+{% block content %}
+<div class="right_col" role="main">
+    <div class="">
+        <div class="page-title">
+            <div class="title_left">
+                <h3>Editar Pedido</h3>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+        <div class="row">
+            <div class="col-md-12 col-sm-12">
+                <div class="x_panel">
+                    <div class="x_title">
+                        <h2>Realizar Pedido</h2>
+                        <ul class="nav navbar-right panel_toolbox">
+                            <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                            </li>
+                            <li><a class="close-link"><i class="fa fa-close"></i></a>
+                            </li>
+                        </ul>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="x_content">
+                        <form method="POST">
+                            {% csrf_token %}
+                            <div class="tile mb-4">
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <div class="card">
+                                            <h6 class="card-header">Detalle Pedido</h6>
+                                            <div class="card-body">
+                                                <div class="form-group" style="width: 100%;">
+                                                    <label> <strong> Buscar Producto:</strong> </label>
+                                                        <span class="input-group-append">
+                                                            <select class="form-control" id="search">                                                                                      
+                                                            </select>
+                                                        </span>                                                    
+                                                </div>
+                                                <div class="table-responsive">
+                                                    <button type="button"
+                                                        class="mb-2 py-0 btn btn-danger btn-sm btnRemoveAll"
+                                                        style="height: 20px; align-content: center">
+                                                        <label>Eliminar todo</label>
+                                                    </button>
+                                                    <table class="table table-bordered" id="tblPedido"
+                                                        style="width: 100%;">
+                                                        <thead>
+                                                            <tr>
+                                                                <td class="text-center">Cod</td>
+                                                                <td class="text-center">Nombre Producto</td>
+                                                                <td class="text-center">Descripción</td>
+                                                                <td class="text-center">Cantidad</td>
+                                                                <td>Eliminar</td>
+                                                            </tr>
+                                                        </thead>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="tile-footer mt-3">
+                                    <button type="" class="btn btn-primary" style="color: white"><i
+                                            class="fa fa-fw fa-lg fa-check-circle"></i>Editar Pedido
+                                    </button>&nbsp;&nbsp;&nbsp;
+                                    <a class="btn btn-secondary" href="{% url 'list_pedido_compra' %}">
+                                        <i class="fa fa-fw fa-lg fa-times-circle"></i>Volver</a>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+{% block javascripts %}
+{{ block.super }}
+<!-- validator -->
+<script src="/static/project_static/other/js/jquery-ui-1.12.1/jquery-ui-1.12.1/jquery-ui.js"></script>
+<script src="/static/project_static/vendors/datatables.net/js/jquery.dataTables.min.js"></script>
+<script src="/static/project_static/vendors/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+<script src="/static/project_static/vendors/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
+<script src="/static/project_static/vendors/datatables.net-buttons-bs/js/buttons.bootstrap.min.js"></script>
+<script src="/static/project_static/vendors/datatables.net-buttons/js/buttons.flash.min.js"></script>
+<script src="/static/project_static/vendors/datatables.net-buttons/js/buttons.html5.min.js"></script>
+<script src="/static/project_static/vendors/datatables.net-buttons/js/buttons.print.min.js"></script>
+<script src="/static/project_static/vendors/datatables.net-fixedheader/js/dataTables.fixedHeader.min.js"></script>
+<script src="/static/project_static/vendors/datatables.net-keytable/js/dataTables.keyTable.min.js"></script>
+<script src="/static/project_static/vendors/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
+<script src="/static/project_static/vendors/datatables.net-responsive-bs/js/responsive.bootstrap.js"></script>
+<script src="/static/project_static/vendors/datatables.net-scroller/js/dataTables.scroller.min.js"></script>
+<script src="/static/project_static/other/js/select2/select2.js"></script>
+<script src="/static/project_static/other/js/sweetalert.min.js"></script>
+<script src="/static/project_static/other/js/bootstrap-touchspin-master/dist/jquery.bootstrap-touchspin.js"></script>
+<script src="/static/project_static/other/js/functions/functions.js"></script>
+<script src="/static/project_static/other/js/compras/form_pedido.js"></script>
+<script>
+    var action = '{{ accion|safe }}';
+
+    $(function () {       
+
+        $('form input').on("cut copy paste", function (e) {
+            e.preventDefault();
+        })
+
+        $('#tblPedido').DataTable({
+            ordering: false,
+            language: {
+                decimal: "",
+                emptyTable: "No hay información",
+                info: "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
+                infoEmpty: "Mostrando 0 to 0 de 0 Entradas",
+                infoFiltered: "(Filtrado de _MAX_ total entradas)",
+                infoPostFix: "",
+                thousands: ",",
+                lengthMenu: "Mostrar _MENU_ Entradas",
+                loadingRecords: "Cargando...",
+                processing: "Procesando...",
+                search: "Buscar:",
+                zeroRecords: "Sin resultados encontrados",
+                paginate: {
+                    first: "Primero",
+                    last: "Ultimo",
+                    next: "Siguiente",
+                    previous: "Anterior",
+                },
+            },
+        });
+
+        $('#search').select2({
+            ajax: {
+                type: 'POST',
+                url: '/compra/get_pedido_factura/',
+                delay: 250,
+                data: function (params) {
+                    return {
+                        term: params.term,
+                        action: 'search_products'
+                    };
+                },
+                processResults: function (data) {
+                    return {
+                        results: data
+                    }
+                },
+            },
+            language: {
+                inputTooShort: function () {
+                    return '';
+                },
+                searching: function () {
+                    return 'Buscando...'
+                },
+                noResults: function(){
+                    return 'No se ha encontrado ningún resultado'
+                }
+            }
+        })
+
+        pedido.items.products = {{ det|safe }};
+        pedido.list();
+    })
+
+</script>
+{% endblock javascripts %}

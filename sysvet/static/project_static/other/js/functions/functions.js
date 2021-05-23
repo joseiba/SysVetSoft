@@ -26,7 +26,6 @@ function alert_delete(title, content, callback) {
 *Para enviar datos del formulario con ajax
 * */
 function submit_with_ajax(url, title, content, parameters, callback) {
-    console.log("test")
     swal({
         title: title,
         text: content,
@@ -50,7 +49,7 @@ function submit_with_ajax(url, title, content, parameters, callback) {
                             text: 'Se ha Registrado Correctamente',
                             icon: 'success'
                         });
-                        //callback();
+                        callback();
                     }
                     else
                     {
@@ -59,7 +58,7 @@ function submit_with_ajax(url, title, content, parameters, callback) {
                             text: 'ha ocurrido un error, intenlo de nuevo',
                             icon: 'error'
                         });
-                        //callback();
+                        callback();
 
                     }                                     
                 },

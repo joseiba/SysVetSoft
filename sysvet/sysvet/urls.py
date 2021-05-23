@@ -42,7 +42,8 @@ confi_inicial)
 
 from apps.compras.views import (add_proveedor, edit_proveedor, list_proveedor_ajax, delete_proveedor, list_proveedor,
 list_pedido, list_pedido_ajax, edit_pedido, list_factura_compra, list_facturas_ajax, add_factura_compra, 
-search_pediddos_factura, edit_factura_compra, list_pedido_compra, list_pedido_compra_ajax, add_pedido_compra)
+search_pediddos_factura, edit_factura_compra, list_pedido_compra, list_pedido_compra_ajax, add_pedido_compra, edit_pedido_compra,
+reporte_compra_pdf)
 
 urlpatterns = [
     # Login and logout   
@@ -148,7 +149,10 @@ urlpatterns = [
     path('compra/get_pedido_factura/', search_pediddos_factura, name="search_pediddos_factura"),
     path('compra/listPedidosCompra/', list_pedido_compra, name="list_pedido_compra"),
     path('compra/list_pedido_compra_ajax/', list_pedido_compra_ajax, name="list_pedido_compra_ajax"),
-    path('compra/addPedidoCompra/', add_pedido_compra, name="add_pedido_compra"),    
+    path('compra/addPedidoCompra/', add_pedido_compra, name="add_pedido_compra"),
+    path('compra/editPedidoCompra/<int:id>/', edit_pedido_compra, name="edit_pedido_compra"),
+    path('compra/reporteCompra/<int:id>/', reporte_compra_pdf, name="reporte_compra_pdf"),
+    
 ]
 
 

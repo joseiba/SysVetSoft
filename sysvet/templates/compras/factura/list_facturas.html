@@ -68,9 +68,9 @@
                         <div class="clearfix"></div>
                     </div>                    
                     <div>
-                        <button type="submit" class="btn btn-primary float-right">
+                        <!--<button type="submit" class="btn btn-primary float-right">
                             <a href="{% url 'add_factura_compra' %}" style="color: white;">Agregar nueva factura</a>
-                        </button>
+                        </button>-->
 
                         <div class="float-left">
                             <div class="wrap">
@@ -78,8 +78,8 @@
                                     <div class="d-inline-flex">
                                         <input type="search" class="searchTerm" id="searchTerm"
                                             data-toggle="tooltip" data-placement="top"
-                                            title="Busca por nº de factura o nombre del proveedor"
-                                            placeholder="Busca por nº de factura o nombre del proveedor"
+                                            title="Busca por nº de factura, nº timbrado o nombre del proveedor"
+                                            placeholder="Busca por nº de factura, nº timbrado o nombre del proveedor"
                                             onkeyup="replaceDirection(this)">
                                         <button type="button" id="busqueda" class="searchButton">
                                             <i class="fa fa-search"></i>
@@ -99,8 +99,9 @@
                                         <thead>
                                             <tr class="" style="background-color: #2a3f54; font-size: medium;">
                                                 <th style="color: white;">Nº Factura</th>
-                                                <th style="color: white;">Fecha Emisión</th>
-                                                <th style="color: white;">Fecha Vencimiento</th>
+                                                <th style="color: white;">Nº Timbrado</th>
+                                                <th style="color: white;">Fecha Inicio</th>
+                                                <th style="color: white;">Fecha Fin</th>
                                                 <th style="color: white;">Proveedor</th>
                                                 <th style="color: white;">Importe Total</th>
                                                 <th style="color: white;">Acción</th>                   
@@ -184,6 +185,10 @@
                         data: 'nro_factura',
                     },
                     {
+                        name: 'Nº Timbrado',
+                        data: 'nro_timbrado',
+                    },
+                    {
                         name: 'Fecha Emisión',
                         data: 'fecha_emision',
                     },
@@ -216,7 +221,7 @@
 
                 ],
                 columnDefs: [{
-                    targets: [5], // column index (start from 0)
+                    targets: [6], // column index (start from 0)
                     orderable: false, // set orderable false for selected columns
                 }],
                 serverSide: false,
