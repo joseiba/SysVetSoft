@@ -245,6 +245,7 @@ def list_pedido_compra_ajax(request):
 
 @login_required()
 def add_pedido_compra(request):
+    pedidos = Pedido.objects.exclude(pedido_cargado='S').all()    
     data = {}
     mensaje = ""
     if request.method == 'POST' and request.is_ajax():    
@@ -272,7 +273,7 @@ def add_pedido_compra(request):
             mensaje = 'error'
             response = {'mensaje':mensaje }
         return JsonResponse(response)
-    context = {'accion': 'A'}
+    context = {'accion': 'A', 'pedidos': json.dumps(get_pedido_list())}
     return render(request, 'compras/pedidos/add_compra_pedido.html', context)
 
 @login_required()
@@ -307,6 +308,20 @@ def edit_pedido_compra(request, id):
     context = {'det': json.dumps(get_detalle_pedido_compra(id)), 'accion': 'E'}
     return render(request, 'compras/pedidos/edit_pedido_compra.html', context)   
     
+def get_pedido_list():
+    data = []
+    pedidos = Pedido.objects.exclude(pedido_cargado='S').all()
+    for i in pedidos:
+        item = i.obtener_dict()
+        item['id'] = i.id
+        producto_desc = '%s %s' % ('Producto: ' + i.id_producto.nombre_producto, 
+                                'Descripción: ' + i.id_producto.descripcion)
+        item['text'] = producto_desc
+
+        data.append(item) 
+    return data       
+
+
 def get_detalle_pedido_compra(id):
     data = []
     try:
@@ -328,10 +343,11 @@ def add_factura_compra():
         for pediCabecera in pedido_cabecera:
             try: 
                 factura = FacturaCompra.objects.get(id_pedido_cabecera=pediCabecera.id)
+                print("hola 2")
             except Exception as e:
                 try:        
                     factura = FacturaCompra()
-                    factura.id_pedido_cabecera = pediCabecera             
+                    factura.id_pedido_cabecera = pediCabecera
                     factura.save()
                     factura_id = FacturaCompra.objects.get(id=factura.id)
                     pedido_detalle = PedidoDetalle.objects.filter(id_pedido_cabecera=pediCabecera.id)
@@ -343,7 +359,9 @@ def add_factura_compra():
                         detalle.cantidad = i.cantidad
                         detalle.descripcion = i.descripcion
                         detalle.save()
+                        print("hola 1")
                 except Exception as e:
+                    print(e)
                     pass
 
 @login_required()
@@ -430,20 +448,22 @@ def list_facturas_ajax(request):
 
         factCompra = factCompra[start:start + length]
     
-    for fc in factCompra:
-        try:
-            data = [{'id': fc.id,'nro_factura': fc.nro_factura, 'nro_timbrado': fc.nro_timbrado, 'fecha_emision': fc.fecha_emision, 'fecha_vencimiento': fc.fecha_vencimiento, 
-            'proveedor': fc.id_proveedor.nombre_proveedor, 'im_total': fc.total}]
-        except Exception as e:
-            data = [{'id': fc.id, 'nro_factura': '-', 'nro_timbrado': '-', 'fecha_emision': '-', 'fecha_vencimiento': '-', 
-            'proveedor': '-', 'im_total': '-'}]      
-            
+    data= [{'id': fc.id,'nro_factura': fc.nro_factura, 'nro_timbrado': fc.nro_timbrado, 'fecha_emision': fc.fecha_emision, 'fecha_vencimiento': fc.fecha_vencimiento, 
+            'proveedor': try_exception(fc.id_proveedor.id), 'im_total': fc.total}for fc in factCompra]     
+
     response = {
         'data': data,
         'recordsTotal': total,
         'recordsFiltered': total,
     }
     return JsonResponse(response)
+
+def try_exception(id):
+    try:
+        pro = Proveedor.objects.get(id=id)
+        return 'Nombre: ' + pro.nombre_proveedor + '</br> ' + 'Ruc: ' + pro.ruc_proveedor
+    except Exception as e:
+        return '-'
 
 @login_required()
 @csrf_exempt
@@ -467,7 +487,8 @@ def search_pediddos_factura(request):
     return JsonResponse(data, safe=False)
 
 def reporte_compra_pdf(request, id):
-#Indicamos el tipo de contenido a devolver, en este caso un pdf
+    pedido_cabecera = PedidoCabecera.objects.get(id=id)
+    #Indicamos el tipo de contenido a devolver, en este caso un pdf
     response = HttpResponse(content_type='application/pdf')
     #La clase io.BytesIO permite tratar un array de bytes como un fichero binario, se utiliza como almacenamiento temporal
     buffer = BytesIO()
@@ -477,13 +498,63 @@ def reporte_compra_pdf(request, id):
     #self.cabecera(pdf)
     #Con show page hacemos un corte de página para pasar a la siguiente
     #Establecemos el tamaño de letra en 16 y el tipo de letra Helvetica
-    pdf.setFont("Helvetica", 16)
+    pdf.setFont("Helvetica", 18)
     #Dibujamos una cadena en la ubicación X,Y especificada
-    pdf.drawString(230, 790, u"Orden de Compra")
-    pdf.setFont("Helvetica", 14)
+    pdf.drawString(210, 790, u"Orden de Compra")
+    pdf.setFont("Helvetica", 12)
+    pdf.drawString(30, 760, u"Nombre: Veterinaria Ohana")
+    pdf.drawString(30, 740, u"Direccion: Las Palmas")
+    pdf.drawString(30, 720, u"Cuidad: Lambare")
+    pdf.drawString(300, 760, u"Fecha Pedido: " + pedido_cabecera.fecha_alta)
+    pdf.drawString(300, 740, u"Nº Pedido: " + str(pedido_cabecera.id))
+    y = 700
+    tabla_report(pdf, y, id)
+
     pdf.showPage()
     pdf.save()
     pdf = buffer.getvalue()
     buffer.close()
     response.write(pdf)
     return response
+
+def tabla_report(pdf, y, id):
+    #Creamos una tupla de encabezados para neustra tabla
+    encabezados = ('Codigo', 'Producto', 'Descripción', 'Cantidad', 'Precio \n Unitario', 'Total')
+
+    pedido_detalle = PedidoDetalle.objects.filter(id_pedido_cabecera=id).order_by('last_modified')
+
+    count_detalle = 2
+    #Creamos una lista de tuplas que van a contener a las personas
+    detalles = [(pedi.id_pedido.id_producto.codigo_producto, pedi.id_pedido.id_producto.nombre_producto, 
+                pedi.id_pedido.id_producto.descripcion, pedi.cantidad, '', '') for pedi in pedido_detalle]
+
+    detalles_extras = [('', '', '', '', '', '') for i in range(count_detalle)]
+
+    detalle_orden =  Table([encabezados] + detalles + detalles_extras, colWidths=[2.5 * cm, 3 * cm, 7* cm, 2 * cm, 3 * cm, 3 * cm])
+        #Aplicamos estilos a las celdas de la tabla
+    detalle_orden.setStyle(TableStyle(
+        [
+            #La primera fila(encabezados) va a estar centrada
+            ('ALIGN',(0,0),(3,0),'CENTER'),
+            #Los bordes de todas las celdas serán de color negro y con un grosor de 1
+            ('GRID', (0, 0), (-1, -1), 1, colors.black), 
+            #El tamaño de las letras de cada una de las celdas será de 10
+            ('FONTSIZE', (0, 0), (-1, -1), 10),
+        ]
+    ))
+
+    position = int(((pedido_detalle.count() + count_detalle) * 50 ) / (2))
+    print(position)
+    pdf.setFont("Helvetica", 12)
+    pdf.drawString(480, ((680 - position)) , u"Total: ",)
+    #Establecemos el tamaño de la hoja que ocupará la tabla 
+    detalle_orden.wrapOn(pdf, 800, 600)
+    #Definimos la coordenada donde se dibujará la tabla
+    detalle_orden.drawOn(pdf, 10, 700 - position)
+
+
+
+
+
+
+

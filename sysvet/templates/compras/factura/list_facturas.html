@@ -176,29 +176,52 @@
                     data: {'busqueda': busqueda},
                     error: function (data) {
                         $.fn.DataTable.ext.errorMode = 'none'
-
                     }
                 },
                 columns: [                      
                     {
                         name: 'Nº Factura',
                         data: 'nro_factura',
+                        render: function(data){
+                            if(data == null){
+                                return '-';
+                            }
+                            return data;
+                        }
                     },
                     {
                         name: 'Nº Timbrado',
                         data: 'nro_timbrado',
+                        render: function(data){
+                            if(data == null){
+                                return '-';
+                            }
+                            return data;
+                        }
                     },
                     {
                         name: 'Fecha Emisión',
                         data: 'fecha_emision',
+                        render: function(data){
+                            if(data == null){
+                                return '-';
+                            }
+                            return data;
+                        }
                     },
                     {
                         name: 'Fecha Vencimiento',
                         data: 'fecha_vencimiento',
+                        render: function(data){
+                            if(data == null){
+                                return '-';
+                            }
+                            return data;
+                        }
                     },
                     {
                         name: 'Proveedor',
-                        data: 'proveedor',
+                        data: 'proveedor',                        
                     },
                     {
                         name: 'Importe Total',

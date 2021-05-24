@@ -277,10 +277,10 @@ def list_producto(request):
                         prod = Producto.objects.get(id=factDet.id_pedido.id_producto.id)
                         prod.fecha_compra = factCom.fecha_emision
                         prod.precio_compra = factDet.id_pedido.id_producto.precio_compra
-                        prod.stock = prod.stock + factDet.cantidad 
+                        prod.stock = prod.stock + factDet.cantidad
                         prod.save()
                     except Exception as e:
-                        print(e)
+                        pass
     producDetalle = ProductoStock.objects.all()
     productos = Producto.objects.exclude(is_active='N').order_by('-last_modified')
     paginator = Paginator(productos, 10)

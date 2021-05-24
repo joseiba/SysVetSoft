@@ -43,7 +43,7 @@ var pedido = {
                 },                
                 {
                     targets: [3],
-                    width: "10%",
+                    width: "20%",
                     class: "text-center",
                     orderable: false,  
                     render: function (data, type, row) {

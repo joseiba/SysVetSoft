@@ -90,7 +90,7 @@ def list_client_ajax(request):
 
     data = [{'id': clie.id, 'nombre': clie.nombre_cliente, 'apellido': clie.apellido_cliente, 
         'cedula': clie.cedula, 'telefono': clie.telefono, 'direccion': clie.direccion, 'ciudad': clie.id_ciudad.nombre_ciudad } for clie in clientes]        
-
+        
     response = {
         'data': data,
         'recordsTotal': total,
