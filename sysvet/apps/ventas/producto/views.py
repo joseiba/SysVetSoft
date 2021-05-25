@@ -302,3 +302,17 @@ def search_producto(request):
     page_obj = paginator.get_page(page_number)
     context = { 'page_obj': page_obj}
     return render(request, "ventas/producto/list_producto.html", context)
+
+def mover_producto_detalle_general(request, id):
+    try:
+        pedido_trasladado = ProductoStock.objects.get(id=id)
+        producto_general = Producto.objects.get(id=pedido_trasladado.id_producto.id)
+        producto_general.stock = producto_general.stock + pedido_trasladado.producto_stock
+        producto_general.save()
+        pedido_trasladado.delete()
+        messages.add_message(request, messages.SUCCESS, 'El producto se ha movido correctamente a la lista general!')
+        return redirect('/producto/list/')
+    except Exception as e:
+        print(e)
+        messages.add_message(request, messages.SUCCESS, 'ha ocurrido un error inesperado, intente más tarde!')        
+        return redirect('/producto/list/')
