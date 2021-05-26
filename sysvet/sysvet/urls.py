@@ -45,6 +45,8 @@ list_pedido, list_pedido_ajax, edit_pedido, list_factura_compra, list_facturas_a
 search_pediddos_factura, edit_factura_compra, list_pedido_compra, list_pedido_compra_ajax, add_pedido_compra, edit_pedido_compra,
 reporte_compra_pdf)
 
+from apps.ventas.factura.views import (list_factura_ventas, list_facturas__ventas_ajax, add_factura_venta)
+
 urlpatterns = [
     # Login and logout   
     path('admin/', admin.site.urls),
@@ -154,6 +156,12 @@ urlpatterns = [
     path('compra/addPedidoCompra/', add_pedido_compra, name="add_pedido_compra"),
     path('compra/editPedidoCompra/<int:id>/', edit_pedido_compra, name="edit_pedido_compra"),
     path('compra/reporteCompra/<int:id>/', reporte_compra_pdf, name="reporte_compra_pdf"),
+
+    #Ventas/Facturas
+    path('factura/listFacturasVentas/', list_factura_ventas, name="list_factura_ventas"),
+    path('factura/get_list_facturas_ventas/', list_facturas__ventas_ajax, name="list_facturas__ventas_ajax"),
+    path('factura/addFacturaVenta/', add_factura_venta , name="add_factura_venta"),
+
     
 ]
 

@@ -8,8 +8,16 @@ class ConfiEmpresa(models.Model):
     """
     Clase que define la la configuracion de la empresa
     """
-    apertura_caja_inicial = models.CharField(max_length=200, blank=True, null=True, default="-")
-    ubicacion_deposito_inicial =  models.CharField(max_length=200, blank=True, null=True, default="-")
+    apertura_caja_inicial = models.CharField(max_length=200, blank=True, null=True)
+    ubicacion_deposito_inicial =  models.CharField(max_length=200, blank=True, null=True)
+    nombre_empresa = models.CharField(max_length=500, blank=True, null=True)
+    direccion = models.CharField(max_length=500, blank=True, null=True)
+    cuidad = models.CharField(max_length=500, blank=True, null=True)
+    telefono = models.CharField(max_length=500, blank=True, null=True)
+    nro_timbrado =  models.CharField(max_length=500, blank=True, null=True)
+    fecha_inicio_timbrado = models.CharField(max_length=500, blank=True, null=True)
+    fecha_fin_timbrado = models.CharField(max_length=500, blank=True, null=True)
+    ruc_empresa = models.CharField(max_length=500, blank=True, null=True)
 
     class Meta:
         verbose_name = "Configuracion Empresa"
@@ -17,7 +25,7 @@ class ConfiEmpresa(models.Model):
 
     def __str__(self):
         """Formato de configurcion"""
-        return '{0}'.format(self.id_confi)
+        return '{0}'.format(self.id)
 
     # Create your models here.
 class Servicio(models.Model):
