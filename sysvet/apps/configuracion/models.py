@@ -52,6 +52,15 @@ class Servicio(models.Model):
         """Retorna el URL para acceder a una instancia de una ciudad en particular."""
         return reverse('servicio-detail', args=[str(self.id)])
 
+    def obtener_dict(self):
+        dict = {}
+        dict['codigo_producto'] = self.id
+        dict['nombre'] = self.nombre_servicio
+        dict['description'] = self.nombre_servicio
+        dict['precio'] = self.precio_servicio
+        dict['tipo'] = 'S'
+        return dict
+
 class Empleado(models.Model):
     nombre_emp = models.CharField(max_length=200)
     apellido_emp = models.CharField(max_length=200)

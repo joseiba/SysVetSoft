@@ -77,6 +77,15 @@ class Producto (models.Model):
         """Retorna el URL para acceder a una instancia de un producto en particular."""
         return reverse('producto-detail', args=[str(self.id)])
 
+    def obtener_dict(self):
+        dict = {}
+        dict['codigo_producto'] = self.id
+        dict['nombre'] = self.nombre_producto
+        dict['description'] = self.descripcion
+        dict['precio'] = self.precio_venta
+        dict['tipo'] = 'P'
+        return dict
+
 
 class ProductoStock (models.Model):
     """

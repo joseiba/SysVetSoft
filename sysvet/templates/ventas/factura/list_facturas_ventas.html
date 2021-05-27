@@ -69,7 +69,7 @@
                     </div>                    
                     <div>
                         <button type="submit" class="btn btn-primary float-right">
-                            <a href="" style="color: white;">Agregar nueva factura</a>
+                            <a href="{% url 'add_factura_venta' %}" style="color: white;">Agregar nueva factura</a>
                         </button>
 
                         <div class="float-left">
@@ -213,7 +213,7 @@
                         data: 'id',
                         render: function (data) {
                             return '<button class="btn btn-warning">\
-                                                        <a href="/compra/editFacturaCompra/' + data + '/" style="color: black">\
+                                                        <a href="/factura/editFacturaVenta/' + data + '/" style="color: black">\
                                                             Editar\
                                                         </a>\
                                                     </button>';                                                                                                   

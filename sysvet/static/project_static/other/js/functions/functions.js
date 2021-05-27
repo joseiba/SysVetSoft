@@ -49,7 +49,6 @@ function submit_with_ajax(url, title, content, parameters, callback) {
                             text: 'Se ha Registrado Correctamente',
                             icon: 'success'
                         });
-                        callback();
                     }
                     else
                     {
@@ -58,8 +57,6 @@ function submit_with_ajax(url, title, content, parameters, callback) {
                             text: 'ha ocurrido un error, intenlo de nuevo',
                             icon: 'error'
                         });
-                        callback();
-
                     }                                     
                 },
                 error: function (xhr, ajaxOptions, thrownError) {

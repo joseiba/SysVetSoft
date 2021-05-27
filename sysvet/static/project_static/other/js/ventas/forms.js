@@ -1,16 +1,33 @@
-var tblPedido;
+var tblFactura;
 
-// Estructura para el detalle de pedidos
-var pedido = {
-    items: {    
+// Estructura para el detalle de facturas
+var factura = {
+    items: {
+        cliente: '',
+        nro_factura: '',
+        nro_timbrado: '',
+        total_iva: 0,
+        total_factura: 0,
         products: []
+    },
+    calc_invoice: function () {
+        var subtotal = 0
+        $.each(this.items.products, function (pos, dict) {
+            dict.subtotal = dict.cantidad * parseFloat(dict.precio);
+            subtotal += dict.subtotal;
+        })
+        this.items.total_factura = Math.round(subtotal);
+        this.items.total_iva = Math.round(subtotal/11);
+        $('#totalIva').val(this.items.total_iva); // el iva en el template
+        $('#total').val(this.items.total_factura); // para el total
     },
     add: function (item) {
         this.items.products.push(item);
         this.list();
     },
     list: function () {
-        tblPedido = $('#tblPedido').DataTable({
+        this.calc_invoice()
+        tblFactura = $('#tblFacturaVenta').DataTable({
             responsive: true,
             destroy: true,
             data: this.items.products,
@@ -19,7 +36,9 @@ var pedido = {
                 {"data": "codigo_producto"},
                 {"data": "nombre"},
                 {"data": "description"},
+                {"data": "precio"},
                 {"data": "cantidad"},
+                {"data": "subtotal"},
                 {"data": "id"},
             ],
             columnDefs: [
@@ -29,29 +48,39 @@ var pedido = {
                     width: "10%",
                     orderable: false,
                 },
+                
                 {
                     targets: [1],
-                    class: "text-center",
+                    class: "",
                     width: "20%",
                     orderable: false,                
                 },
                 {
                     targets: [2],
-                    class: "text-center",
-                    width: "30%",
-                    orderable: false,                
-                },                
-                {
-                    targets: [3],
+                    class: "",
                     width: "20%",
+                    orderable: false,                
+                },
+                {
+                    targets: [3, 5],
+                    class: "text-center my-0 ",
+                    width: "15%",
+                    orderable: false,
+                    render: function (data, type, row) {
+                        return 'Gs. ' + parseFloat(data);
+                    }
+                },
+                {
+                    targets: [4],
+                    width: "15%",
                     class: "text-center",
                     orderable: false,  
                     render: function (data, type, row) {
                         return '<input type="text" name="cantidad" class="form-control form-control-sm input-sm" autocomplete="off" value="' + row.cantidad + '">';
-                    }                 
+                    }            
                 },
                 {
-                    targets: [4],
+                    targets: [6],
                     class: "text-center",
                     width: "5%",
                     orderable: false,
@@ -98,42 +127,41 @@ var pedido = {
 $(function () {
     $('#search').on('select2:select', function (e) {
         var data = e.params.data;
-        if(data.cantidad_pedido === "-"){
-                data['cantidad'] = 1;
-        }else{
-                data['cantidad'] = parseInt(data.cantidad_pedido);
-            }
-        
-        //data['subtotal'] = 0;
-        //se agrega los datos a la estructura
-        pedido.add(data)
+
+        data['cantidad'] = 1
+                //se agrega los datos a la estructura
+        factura.add(data)
         // borra luego de la seleccion
         $(this).val('').trigger('change.select2');
     });
 
     $('.btnRemoveAll').on('click', function () {
-        if (pedido.items.products.length === 0) return false;
-        alert_delete('Notificación', '¿Estás seguro de eliminar todos los detalles del pedido', function () {
-            pedido.items.products = [];
-            pedido.list();
+        if (factura.items.products.length === 0) return false;
+        alert_delete('Notificación', '¿Estás seguro de eliminar todos los detalles de la factura', function () {
+            factura.items.products = [];
+            factura.list();
         });
     });
 
-    $('#tblPedido').on('click', 'a[rel="remove"]', function () {
-        var tr = tblPedido.cell($(this).closest('td, li')).index();
-        pedido.items.products.splice(tr.row, 1);
-        pedido.list();
+    $('#tblFacturaVenta').on('click', 'a[rel="remove"]', function () {
+        var tr = tblFactura.cell($(this).closest('td, li')).index();
+        factura.items.products.splice(tr.row, 1);
+        factura.list();
     }).on('change', 'input[name="cantidad"]', function () {
-        console.clear();
         var cant = parseInt($(this).val());
-        var tr = tblPedido.cell($(this).closest('td, li')).index();
-        pedido.items.products[tr.row].cantidad = cant;
+        var tr = tblFactura.cell($(this).closest('td, li')).index();
+        factura.items.products[tr.row].cantidad = cant;
+        factura.calc_invoice();
+        // el 5 es el lugar donde tiene que estar el subtotal
+        $('td:eq(5)', tblFactura.row(tr.row).node()).html('Gs.' + Math.round(factura.items.products[tr.row].subtotal));
+    }).on('change', 'input[name="descripcion"]', function (){
+        var descripcion = $(this).val();
+        var tr = tblFactura.cell($(this).closest('td, li')).index();
+        factura.items.products[tr.row].description = descripcion;
     });
 
     $('form').on('submit', function (e) {
-        e.preventDefault();       
-        var parameters = new FormData();
-        if(pedido.items.products.length == 0){
+        if(factura.items.products.length == 0){
             swal({
                 title: "Notificación",
                 text: "Debe cargar al menos un producto para el pedido!",
@@ -141,14 +169,19 @@ $(function () {
                 button: "Ok",
             })
         }else{
-            parameters.append('pedido', JSON.stringify(pedido.items));
+            e.preventDefault();
+            factura.items.cliente = $('select[name="id_cliente"]').val();
+            factura.items.nro_factura = $('input[name="nro_factura"]').val();
+            factura.items.nro_timbrado = $('input[name="nro_timbrado"]').val();
+            var parameters = new FormData();
+            parameters.append('factura', JSON.stringify(factura.items));
             var csrf = $('input[name="csrfmiddlewaretoken"]').val();
             parameters.append('csrfmiddlewaretoken', csrf);
-            console.log(parameters)
-            submit_with_ajax(window.location.pathname, 'Noticicación', '¿Desea registrar este pedido?', parameters, function () {
-                location.href = "/compra/listPedidosCompra/"
+            submit_with_ajax(window.location.pathname, 'Noticicación', '¿Desea registrar esta factura?', parameters, function () {
+                location.href = "/factura/listFacturasVentas/"
             });
-        }        
+        }
+        
     });
 });
 

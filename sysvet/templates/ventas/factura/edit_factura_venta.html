@@ -1,6 +1,6 @@
 {% extends "home/base_site.html" %}
 
-{% block title %} Agregar Factura Venta{% endblock title %}
+{% block title %} Editar Factura Venta{% endblock title %}
 {% block stylesheets %}
 {{ block.super }}
 <link href="/static/project_static/other/js/select2/select2.css" rel="stylesheet" />
@@ -26,7 +26,7 @@
     <div class="">
         <div class="page-title">
             <div class="title_left">
-                <h3>Agregar Factura Venta</h3>
+                <h3>Editar Factura Venta</h3>
             </div>
         </div>
         <div class="clearfix"></div>
@@ -152,7 +152,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="tile-footer mt-3">
+                                <div class="tile-footer">
                                     <button type="submit" class="btn btn-primary" style="color: white"><i
                                             class="fa fa-fw fa-lg fa-check-circle"></i>Registrar Factura
                                     </button>&nbsp;&nbsp;&nbsp;
@@ -245,10 +245,9 @@
         $('form input').on("cut copy paste", function (e) {
             e.preventDefault();
         });
-        console.log("entro")
+
         var seleccionCheckbox = ''
         $("input[name='seleccionS'], input[name='seleccionP']").change(function(){
-            console.log("entro")
             var seleS = $("input[name='seleccionS']").val()
             var seleP = $("input[name='seleccionP']").val()
 
@@ -261,8 +260,6 @@
             }
             
         });
-        $('#total').val(0);
-        $('#totalIva').val(0);
 
         $('#tblFacturaVenta').DataTable({
             ordering: false,
@@ -303,6 +300,7 @@
                 }
             }
         });
+
         $('#search').select2({
             ajax: {
                 type: 'POST',
@@ -333,6 +331,9 @@
                 }
             }
         })
+
+        factura.items.products = {{ det|safe }};
+        factura.list();
     })
 
 </script>

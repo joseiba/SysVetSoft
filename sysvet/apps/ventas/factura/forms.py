@@ -7,8 +7,8 @@ class FacturaCabeceraVentaForm(forms.ModelForm):
         model = FacturaCabeceraVenta
         exclude = ['is_active', 'estado']
         widgets = {
-			'nro_factura': forms.TextInput(attrs={'class': 'form-control', 'autocomplete': 'off','name':'nro_factura','placeholder': 'Escriba el nro de factura','required':'required','onkeyup':'replaceABC(this)'}),
-            'nro_timbrado': forms.HiddenInput(),
+			'nro_factura': forms.TextInput(attrs={'class': 'form-control', 'autocomplete': 'off','name':'nro_factura','placeholder': 'Escriba el nro de timbrado','required':'required','onkeyup':'replaceABC(this)'}),
+            'nro_timbrado': forms.TextInput(attrs={'class': 'form-control', 'autocomplete': 'off','name':'nro_factura','placeholder': 'Escriba el nro de factura','required':'required','onkeyup':'replaceABC(this)'}),
             'id_cliente' : forms.Select(attrs={'class':'form-control', 'id': 'cliente_select' ,'name':'id_cliente'}),
             'fecha_inicio_timbrado': forms.HiddenInput(),
             'fecha_fin_timbrado': forms.HiddenInput(),
@@ -19,8 +19,7 @@ class FacturaCabeceraVentaForm(forms.ModelForm):
 class FacturaDetalleVentaForm(forms.ModelForm):
     class Meta:
         model = FacturaDetalleVenta
-        fields = ['id_producto_servicio', 'cantidad']
+        fields = ['cantidad']
         widgets = {
-            'id_producto_servicio': forms.Select(attrs={'class': 'form-control'}),
             'cantidad': forms.NumberInput(attrs={'class': 'form-control'})
         }
