@@ -343,7 +343,6 @@ def add_factura_compra():
         for pediCabecera in pedido_cabecera:
             try: 
                 factura = FacturaCompra.objects.get(id_pedido_cabecera=pediCabecera.id)
-                print("hola 2")
             except Exception as e:
                 try:        
                     factura = FacturaCompra()
@@ -359,9 +358,7 @@ def add_factura_compra():
                         detalle.cantidad = i.cantidad
                         detalle.descripcion = i.descripcion
                         detalle.save()
-                        print("hola 1")
                 except Exception as e:
-                    print(e)
                     pass
 
 @login_required()
@@ -448,8 +445,8 @@ def list_facturas_ajax(request):
 
         factCompra = factCompra[start:start + length]
     
-    data= [{'id': fc.id,'nro_factura': fc.nro_factura, 'nro_timbrado': fc.nro_timbrado, 'fecha_emision': fc.fecha_emision, 'fecha_vencimiento': fc.fecha_vencimiento, 
-            'proveedor': try_exception(fc.id_proveedor.id), 'im_total': fc.total}for fc in factCompra]     
+    data= [{'id_pedido': fc.id_pedido_cabecera.id,'id': fc.id,'nro_factura': fc.nro_factura, 'nro_timbrado': fc.nro_timbrado, 'fecha_emision': fc.fecha_emision, 'fecha_vencimiento': fc.fecha_vencimiento, 
+            'proveedor': try_exception(fc.id_proveedor), 'im_total': fc.total} for fc in factCompra]     
 
     response = {
         'data': data,
@@ -460,9 +457,10 @@ def list_facturas_ajax(request):
 
 def try_exception(id):
     try:
-        pro = Proveedor.objects.get(id=id)
+        pro = Proveedor.objects.get(id=id.id)
         return 'Nombre: ' + pro.nombre_proveedor + '</br> ' + 'Ruc: ' + pro.ruc_proveedor
     except Exception as e:
+        print(e)
         return '-'
 
 @login_required()

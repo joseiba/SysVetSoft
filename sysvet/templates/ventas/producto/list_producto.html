@@ -115,7 +115,7 @@
 
                                             {% for producto in page_obj %}
                                             <tr style="font-size: medium;">
-                                                <td>{{ producto.codigo_producto}}</td>
+                                                <td>{{ producto.id}}</td>
                                                 <td>{{ producto.nombre_producto}}</td>
                                                 <td>{{ producto.descripcion}}</td>
                                                 <td>{{ producto.stock}}</td>
@@ -203,7 +203,7 @@
 
                                             {% for productoDetalle in producDetalle %}
                                             <tr style="font-size: medium;">
-                                                <td>{{ productoDetalle.id_producto.codigo_producto}}</td>
+                                                <td>{{ productoDetalle.id_producto.id}}</td>
                                                 <td>{{ productoDetalle.id_producto.nombre_producto}}</td>
                                                 <td>{{ productoDetalle.id_producto.descripcion}}</td>
                                                 <td>{{ productoDetalle.producto_stock}}</td>

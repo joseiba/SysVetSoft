@@ -16,7 +16,7 @@ var pedido = {
             data: this.items.products,
             ordering: false,
             columns: [
-                {"data": "codigo_producto"},
+                {"data": "codigo_real"},
                 {"data": "nombre"},
                 {"data": "description"},
                 {"data": "cantidad"},
@@ -38,12 +38,12 @@ var pedido = {
                 {
                     targets: [2],
                     class: "text-center",
-                    width: "30%",
+                    width: "20%",
                     orderable: false,                
                 },                
                 {
                     targets: [3],
-                    width: "20%",
+                    width: "8%",
                     class: "text-center",
                     orderable: false,  
                     render: function (data, type, row) {

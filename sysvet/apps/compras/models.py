@@ -47,6 +47,7 @@ class Pedido(models.Model):
     def obtener_dict(self):
         dict = {}
         dict['codigo_producto'] = self.id
+        dict['codigo_real'] = self.id_producto.id
         dict['nombre'] = self.id_producto.nombre_producto
         dict['description'] = self.id_producto.descripcion
         dict['precio'] = self.id_producto.precio_compra

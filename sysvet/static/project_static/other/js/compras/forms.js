@@ -35,13 +35,12 @@ var factura = {
             data: this.items.products,
             ordering: false,
             columns: [
-                {"data": "codigo_producto"},
+                {"data": "codigo_real"},
                 {"data": "nombre"},
                 {"data": "description"},
                 {"data": "precio"},
                 {"data": "cantidad"},
                 {"data": "subtotal"},
-                /*{"data": "id"},*/
             ],
             columnDefs: [
                 {

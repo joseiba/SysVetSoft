@@ -268,7 +268,7 @@ def list_producto(request):
     facturaCompra = FacturaCompra.objects.all()
     if facturaCompra is not None:
         for factCom in facturaCompra:
-            if(factCom.factura_cargada_producto != 'S'):
+            if(factCom.factura_cargada_producto == 'N'):
                 factCom.factura_cargada_producto = 'S'
                 factCom.save()
                 facDe = FacturaDet.objects.filter(id_factura=factCom)

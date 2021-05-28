@@ -78,8 +78,8 @@
                                     <div class="d-inline-flex">
                                         <input type="search" class="searchTerm" id="searchTerm"
                                             data-toggle="tooltip" data-placement="top"
-                                            title="Busca por nº de factura, nº timbrado o nombre del proveedor"
-                                            placeholder="Busca por nº de factura, nº timbrado o nombre del proveedor"
+                                            title="Buscar por nº de factura, nº timbrado o nombre del proveedor"
+                                            placeholder="Buscar por nº pedido, nº de factura, nº timbrado o nombre del proveedor"
                                             onkeyup="replaceDirection(this)">
                                         <button type="button" id="busqueda" class="searchButton">
                                             <i class="fa fa-search"></i>
@@ -98,6 +98,7 @@
                                     <table id="list_factura" class="table table-striped table-bordered" style="width:100%">
                                         <thead>
                                             <tr class="" style="background-color: #2a3f54; font-size: medium;">
+                                                <th style="color: white;">Nº Pedido</th>
                                                 <th style="color: white;">Nº Factura</th>
                                                 <th style="color: white;">Nº Timbrado</th>
                                                 <th style="color: white;">Fecha Inicio</th>
@@ -178,7 +179,11 @@
                         $.fn.DataTable.ext.errorMode = 'none'
                     }
                 },
-                columns: [                      
+                columns: [ 
+                {
+                        name: 'Nº Pedido',
+                        data: 'id_pedido',                        
+                    },                     
                     {
                         name: 'Nº Factura',
                         data: 'nro_factura',
