@@ -118,6 +118,7 @@ class FacturaCompra(models.Model):
     total_iva = models.IntegerField(default=0)
     total = models.FloatField(default=0)
     factura_cargada_producto = models.CharField(max_length=2, default="N", blank=True, null=True)
+    factura_cargada_pedido = models.CharField(max_length=2, default="N", blank=True, null=True)
     last_modified = models.DateTimeField(auto_now=True, blank=True)
     is_active = models.CharField(max_length=2, default="S", blank=True, null=True)
     id_proveedor = models.ForeignKey('Proveedor', on_delete=models.CASCADE, null=True)

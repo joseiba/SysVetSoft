@@ -198,8 +198,10 @@ def add_producto(request):
         depo = Deposito.objects.get(descripcion=confiEm.ubicacion_deposito_inicial)
         if request.method == 'POST':
             form = ProductoForm(request.POST or None)
-            if form.is_valid():
-                form.save()
+            if form.is_valid():                            
+                pro = form.save(commit=False)                
+                pro.stock_total = request.POST.get('stock')
+                pro.save()
                 messages.add_message(request, messages.SUCCESS, 'Producto agregado correctamente!')
                 return redirect('/producto/add')  
     except:
@@ -223,7 +225,7 @@ def edit_producto(request, id):
             producto = form.save(commit=False)
             producto.save()
             messages.add_message(request, messages.SUCCESS, 'El producto se ha editado correctamente!')
-            return redirect('/producto/edit/' + str(id) )
+            return redirect('/producto/edit/' + str(id))
 
     context = {'form': form, 'producto': producto}
     return render(request, 'ventas/producto/edit_producto.html', context)
@@ -249,7 +251,7 @@ def mover_producto(request, id):
         producto_moved.save()
         messages.add_message(request, messages.SUCCESS, 'El producto se ha movido correctamente!')
 
-        return redirect('/producto/list/')
+        return redirect('/producto/listDetalle/' + str(id))
 
     context = {'form': form, 'producto': producto}
     return render(request, 'ventas/producto/mover_producto.html', context)
@@ -263,30 +265,49 @@ def delete_producto(request, id):
     return redirect('/producto/list/')
 
 #Metodo para listar todos los productos
-@login_required()
-def list_producto(request):
+def add_factura_to_producto():
     facturaCompra = FacturaCompra.objects.all()
     if facturaCompra is not None:
         for factCom in facturaCompra:
             if(factCom.factura_cargada_producto == 'N'):
                 factCom.factura_cargada_producto = 'S'
                 factCom.save()
-                facDe = FacturaDet.objects.filter(id_factura=factCom)
+                facDe = FacturaDet.objects.filter(id_factura=factCom.id)
                 for factDet in facDe:
-                    try:
+                    try:                        
                         prod = Producto.objects.get(id=factDet.id_pedido.id_producto.id)
                         prod.fecha_compra = factCom.fecha_emision
                         prod.precio_compra = factDet.id_pedido.id_producto.precio_compra
                         prod.stock = prod.stock + factDet.cantidad
+                        print(prod.stock)
+                        prod.stock_total = prod.stock_total + factDet.cantidad
+                        print(prod.stock_total)
                         prod.save()
                     except Exception as e:
+                        print(e)
                         pass
-    producDetalle = ProductoStock.objects.all()
-    productos = Producto.objects.exclude(is_active='N').order_by('-last_modified')
-    paginator = Paginator(productos, 10)
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
-    context = {'page_obj' : page_obj, 'producDetalle': producDetalle}
+
+@login_required()
+def list_producto(request,id):
+    data = []
+    data_detalle = []
+
+    try:
+        product = Producto.objects.filter(id=id)
+
+        data =[{'id': p.id, 'nombre': p.nombre_producto, 'descripcion': p.descripcion, 'stock_actual': p.stock, 
+            'deposito': p.id_deposito.descripcion} for p in product]        
+    except Exception as e:
+        pass
+
+    try:
+        producto_detalle = ProductoStock.objects.filter(id_producto=id)
+        data_detalle =[{'id': p.id, 'codigo': p.id_producto.id ,'nombre': p.id_producto.nombre_producto, 'descripcion': p.id_producto.descripcion, 
+        'stock_movido': p.producto_stock, 'deposito': p.id_deposito.descripcion} for p in producto_detalle]
+    except Exception as e:
+        pass   
+
+    context = {'producto_detalle': data, 'producto_movido': data_detalle}
     return render(request, "ventas/producto/list_producto.html", context)
 
 #Metodo para la busqueda de productos
@@ -311,8 +332,42 @@ def mover_producto_detalle_general(request, id):
         producto_general.save()
         pedido_trasladado.delete()
         messages.add_message(request, messages.SUCCESS, 'El producto se ha movido correctamente a la lista general!')
-        return redirect('/producto/list/')
+        return redirect('/producto/listDetalle/' + str(pedido_trasladado.id_producto.id))
     except Exception as e:
-        print(e)
         messages.add_message(request, messages.SUCCESS, 'ha ocurrido un error inesperado, intente más tarde!')        
-        return redirect('/producto/list/')
+        return redirect('/producto/listGeneral/')
+
+    
+def list_productos_general(request):
+    add_factura_to_producto()
+    return render(request, "ventas/producto/list_producto_general.html")
+
+
+@login_required()
+def list_producto_general_ajax(request):
+    query = request.GET.get('busqueda')
+    if query != "":
+        productos = Producto.objects.exclude(is_active="N").filter(Q(nombre_producto__icontains=query) | Q(codigo_producto__icontains=query) | Q(id_deposito__descripcion__icontains=query)).order_by('-last_modified')
+    else:
+        productos = Producto.objects.exclude(is_active="N").order_by('-last_modified')
+
+    total = productos.count()
+
+    _start = request.GET.get('start')
+    _length = request.GET.get('length')
+    if _start and _length:
+        start = int(_start)
+        length = int(_length)
+        page = math.ceil(start / length) + 1
+        per_page = length
+
+        productos = productos[start:start + length]
+
+    data =[{'id': p.id, 'nombre': p.nombre_producto, 'descripcion': p.descripcion, 'stock_total': p.stock_total} for p in productos]        
+        
+    response = {
+        'data': data,
+        'recordsTotal': total,
+        'recordsFiltered': total,
+    }
+    return JsonResponse(response)

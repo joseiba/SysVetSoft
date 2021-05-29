@@ -27,7 +27,8 @@ list_client_ajax, list_client_ajax)
 
 from apps.ventas.producto.views import (add_tipo_producto, list_tipo_producto, edit_tipo_producto, search_tipo_producto, 
 baja_tipo_producto, alta_tipo_producto, vence_si_no, add_deposito, list_deposito, edit_deposito, search_deposito, 
-add_producto, edit_producto, list_producto, delete_producto, search_producto, mover_producto, mover_producto_detalle_general)
+add_producto, edit_producto, list_producto, delete_producto, search_producto, mover_producto, mover_producto_detalle_general,
+list_productos_general, list_producto_general_ajax)
 
 from apps.ventas.mascota.views import (list_mascotas, add_mascota, edit_mascota, list_especie, add_especie, 
 edit_especie,search_especie, list_raza, add_raza, edit_raza, search_raza,search_mascota, 
@@ -76,7 +77,9 @@ urlpatterns = [
 
     #Urls producto
     path('producto/add/', add_producto, name="add_producto"),
-    path('producto/list/', list_producto, name="list_producto"),
+    path('producto/listDetalle/<int:id>/', list_producto, name="list_producto"),
+    path('producto/listGeneral/', list_productos_general, name="list_productos_general"),
+    path('producto/list_general_ajax/', list_producto_general_ajax, name="list_producto_general_ajax"),
     path('producto/edit/<int:id>/', edit_producto, name="edit_producto"),
     path('producto/mover/<int:id>/', mover_producto, name="mover_producto"),
     path('producto/search/', search_producto, name="search_producto"),

@@ -343,6 +343,19 @@ def add_factura_compra():
         for pediCabecera in pedido_cabecera:
             try: 
                 factura = FacturaCompra.objects.get(id_pedido_cabecera=pediCabecera.id)
+                factura_id = FacturaCompra.objects.get(id=factura.id)
+                if factura.factura_cargada_pedido == 'N':
+                    factDetalle = FacturaDet.objects.filter(id_factura=factura.id)
+                    factDetalle.delete()
+                    pedido_detalle = PedidoDetalle.objects.filter(id_pedido_cabecera=pediCabecera.id)
+                    for i in pedido_detalle:
+                        detalle = FacturaDet()
+                        detalle.id_factura = factura_id                  
+                        pedido_id = Pedido.objects.get(id=i.id_pedido.id)           
+                        detalle.id_pedido =pedido_id
+                        detalle.cantidad = i.cantidad
+                        detalle.descripcion = i.descripcion
+                        detalle.save()
             except Exception as e:
                 try:        
                     factura = FacturaCompra()
@@ -380,7 +393,8 @@ def edit_factura_compra(request, id):
                 factura.fecha_vencimiento = factura_dict['fecha_vencimiento']
                 factura.estado = 'PENDIENTE'
                 factura.total_iva = int(factura_dict['total_iva'])
-                factura.total = int(factura_dict['total_factura'])                
+                factura.total = int(factura_dict['total_factura'])  
+                factura.factura_cargada_pedido = 'S'              
                 factura.save()
                 pedido_cabecera = PedidoCabecera.objects.get(id=factura.id_pedido_cabecera.id)
                 pedido_cabecera.is_active = 'N'
@@ -414,6 +428,7 @@ def get_detalle_factura(id):
         detalles = FacturaDet.objects.filter(id_factura=id)
         for i in detalles:
             item = i.id_pedido.obtener_dict()
+            print(i.id_pedido.id)
             item['description'] = i.descripcion
             item['cantidad'] = i.cantidad
             data.append(item)
@@ -429,7 +444,8 @@ def list_factura_compra(request):
 def list_facturas_ajax(request):
     query = request.GET.get('busqueda')
     if query != "":
-        factCompra = FacturaCompra.objects.exclude(is_active="N").filter(Q(nro_factura__icontains=query) | Q(nro_timbrado__icontains=query) | Q(id_proveedor__nombre_proveedor__icontains=query)).order_by('-last_modified')
+        factCompra = FacturaCompra.objects.exclude(is_active="N").filter(Q(nro_factura__icontains=query) | Q(nro_timbrado__icontains=query) 
+                    | Q(id_proveedor__nombre_proveedor__icontains=query) | Q(id_pedido_cabecera__icontains=query)).order_by('last_modified')
     else:
         factCompra = FacturaCompra.objects.exclude(is_active="N").order_by('-last_modified')
 
