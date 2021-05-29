@@ -110,6 +110,34 @@
                             <form action="{% url 'confi_inicial' %}" method="post">
                                 {% csrf_token %}
                                 <div class="field item form-group mt-3">
+                                    <label class="col-form-label col-md-3 col-sm-3  label-align">Nombre Empresa<span
+                                            class="required">*</span></label>
+                                    <div class="col-md-6 col-sm-6">
+                                        {{form.nombre_empresa}}
+                                    </div>
+                                </div>   
+                                <div class="field item form-group mt-3">
+                                    <label class="col-form-label col-md-3 col-sm-3  label-align">Direccion<span
+                                            class="required">*</span></label>
+                                    <div class="col-md-6 col-sm-6">
+                                        {{form.direccion}}
+                                    </div>
+                                </div>   
+                                <div class="field item form-group mt-3">
+                                    <label class="col-form-label col-md-3 col-sm-3  label-align">Ciudad<span
+                                            class="required">*</span></label>
+                                    <div class="col-md-6 col-sm-6">
+                                        {{form.cuidad}}
+                                    </div>
+                                </div>   
+                                <div class="field item form-group mt-3">
+                                    <label class="col-form-label col-md-3 col-sm-3  label-align">Telefono<span
+                                            class="required">*</span></label>
+                                    <div class="col-md-6 col-sm-6">
+                                        {{form.telefono}}
+                                    </div>
+                                </div>   
+                                <div class="field item form-group mt-3">
                                     <label class="col-form-label col-md-3 col-sm-3  label-align">Monto Inicial Caja(Gs.)<span
                                             class="required">*</span></label>
                                     <div class="col-md-6 col-sm-6">

@@ -78,8 +78,8 @@
                                     <div class="d-inline-flex">
                                         <input type="search" class="searchTerm" id="searchTerm"
                                             data-toggle="tooltip" data-placement="top"
-                                            title="Buscar por nº pedido, nº de factura, nº timbrado o nombre del proveedor"
-                                            placeholder="Buscar por nº pedido, nº de factura, nº timbrado o nombre del proveedor"
+                                            title="Buscar por nº de factura, nº timbrado o nombre del proveedor"
+                                            placeholder="Buscar por  nº de factura, nº timbrado o nombre del proveedor"
                                             onkeyup="replaceDirection(this)">
                                         <button type="button" id="busqueda" class="searchButton">
                                             <i class="fa fa-search"></i>
@@ -100,9 +100,7 @@
                                             <tr class="" style="background-color: #2a3f54; font-size: medium;">
                                                 <th style="color: white;">Nº Pedido</th>
                                                 <th style="color: white;">Nº Factura</th>
-                                                <th style="color: white;">Nº Timbrado</th>
-                                                <th style="color: white;">Fecha Inicio</th>
-                                                <th style="color: white;">Fecha Fin</th>
+                                                <th style="color: white;">Nº Timbrado</th>                                               
                                                 <th style="color: white;">Proveedor</th>
                                                 <th style="color: white;">Importe Total</th>
                                                 <th style="color: white;">Acción</th>                   
@@ -155,6 +153,8 @@
 <script src="/static/project_static/vendors/jszip/dist/jszip.min.js"></script>
 <script src="/static/project_static/vendors/pdfmake/build/pdfmake.min.js"></script>
 <script src="/static/project_static/vendors/pdfmake/build/vfs_fonts.js"></script>
+<script src="/static/project_static/other/js/compras/forms.js"></script>
+
 
 <script>
     $(function () {
@@ -180,7 +180,7 @@
                     }
                 },
                 columns: [ 
-                {
+                    {
                         name: 'Nº Pedido',
                         data: 'id_pedido',                        
                     },                     
@@ -205,26 +205,6 @@
                         }
                     },
                     {
-                        name: 'Fecha Emisión',
-                        data: 'fecha_emision',
-                        render: function(data){
-                            if(data == null){
-                                return '-';
-                            }
-                            return data;
-                        }
-                    },
-                    {
-                        name: 'Fecha Vencimiento',
-                        data: 'fecha_vencimiento',
-                        render: function(data){
-                            if(data == null){
-                                return '-';
-                            }
-                            return data;
-                        }
-                    },
-                    {
                         name: 'Proveedor',
                         data: 'proveedor',                        
                     },
@@ -232,7 +212,7 @@
                         name: 'Importe Total',
                         data: 'im_total',
                         render: function(data){
-                            return data + ' Gs.'
+                            return ' Gs.'  + add_miles(data)
                         }
                     },
                     {
@@ -249,7 +229,7 @@
 
                 ],
                 columnDefs: [{
-                    targets: [6], // column index (start from 0)
+                    targets: [5], // column index (start from 0)
                     orderable: false, // set orderable false for selected columns
                 }],
                 serverSide: false,

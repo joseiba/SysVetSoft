@@ -7,6 +7,10 @@ class ConfiEmpresaForm(forms.ModelForm):
         model = ConfiEmpresa
         exclude = ['id_confi']
         widgets = {
+            'nombre_empresa' : forms.TextInput(attrs={'class':'form-control', 'autocomplete': 'off','name': 'nombre_empresa', 'placeholder': 'Nombre de la empresa', 'required': 'required','onkeyup':'replaceDirection(this)'}),
+            'direccion' : forms.TextInput(attrs={'class':'form-control', 'autocomplete': 'off','name': 'direccion', 'placeholder': 'Direccion de la empresa', 'required': 'required','onkeyup':'replaceDirection(this)'}),
+            'cuidad' : forms.TextInput(attrs={'class':'form-control', 'autocomplete': 'off','name': 'cuidad', 'placeholder': 'Cuidad de la empresa', 'required': 'required','onkeyup':'replaceDirection(this)'}),
+            'telefono' : forms.TextInput(attrs={'class':'form-control', 'autocomplete': 'off','name': 'telefono', 'placeholder': 'Telefono de la empresa', 'required': 'required','onkeyup':'replaceABC(this)'}),
             'apertura_caja_inicial' : forms.TextInput(attrs={'class':'form-control', 'autocomplete': 'off','name': 'apertura_caja_inicial', 'placeholder': 'Ingrese el monto inicial de la caja', 'required': 'required','onkeyup':'replaceABC(this)'}),
 			'ubicacion_deposito_inicial' : forms.TextInput(attrs={'class':'form-control', 'autocomplete': 'off','name': 'ubicacion_deposito_inicial', 'placeholder': 'Deposito inicial', 'required': 'required','onkeyup':'replaceDiretion(this)'}),			
 		}

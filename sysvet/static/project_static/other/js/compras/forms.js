@@ -15,13 +15,20 @@ var factura = {
     calc_invoice: function () {
         var subtotal = 0
         $.each(this.items.products, function (pos, dict) {
-            dict.subtotal = dict.cantidad * parseFloat(dict.precio);
+            var dic_precio_format = dict.precio.split('.')
+            var dic_sum = "";
+
+            for (let index = 0; index < dic_precio_format.length; index++) {
+                dic_sum += dic_precio_format[index];                
+            }
+            dict.subtotal = dict.cantidad * parseFloat(dic_sum);
             subtotal += dict.subtotal;
         })
+        var value_formated = add_miles(subtotal)
         this.items.total_factura = Math.round(subtotal);
         this.items.total_iva = Math.round(subtotal/11);
         $('#totalIva').val(this.items.total_iva); // el iva en el template
-        $('#total').val(this.items.total_factura); // para el total
+        $('#total').val(value_formated); // para el total
     },
     add: function (item) {
         this.items.products.push(item);
@@ -67,7 +74,8 @@ var factura = {
                     class: "text-center my-0 ",
                     orderable: false,
                     render: function (data, type, row) {
-                        return 'Gs. ' + parseFloat(data);
+                        var amount_formated = add_miles(data)
+                        return 'Gs. ' + amount_formated
                     }
                 },
                 {
@@ -215,4 +223,10 @@ function validate_form_text(type, event, regex) {
         return regex;
     }
     return true;
+}
+
+function add_miles(value){
+    return value.toString().replace(/\D/g, "")
+                        .replace(/([0-9])([0-9]{3})$/, '$1.$2')
+                        .replace(/\B(?=(\d{3})+(?!\d)\.?)/g, ".");
 }

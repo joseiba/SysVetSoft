@@ -279,12 +279,9 @@ def add_factura_to_producto():
                         prod.fecha_compra = factCom.fecha_emision
                         prod.precio_compra = factDet.id_pedido.id_producto.precio_compra
                         prod.stock = prod.stock + factDet.cantidad
-                        print(prod.stock)
                         prod.stock_total = prod.stock_total + factDet.cantidad
-                        print(prod.stock_total)
                         prod.save()
                     except Exception as e:
-                        print(e)
                         pass
 
 @login_required()

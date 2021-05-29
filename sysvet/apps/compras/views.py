@@ -18,6 +18,7 @@ from reportlab.lib import colors
 from apps.compras.models import Proveedor, Pedido, FacturaCompra, FacturaDet, Pago, PedidoCabecera, PedidoDetalle
 from apps.compras.forms import ProveedorForm, PedidoForm, FacturaCompraForm, FacturaDetalleForm
 from apps.ventas.producto.models import Producto
+from apps.configuracion.models import ConfiEmpresa
 
 
 # Create your views here.
@@ -443,9 +444,9 @@ def list_factura_compra(request):
 
 def list_facturas_ajax(request):
     query = request.GET.get('busqueda')
+    print(query)
     if query != "":
-        factCompra = FacturaCompra.objects.exclude(is_active="N").filter(Q(nro_factura__icontains=query) | Q(nro_timbrado__icontains=query) 
-                    | Q(id_proveedor__nombre_proveedor__icontains=query) | Q(id_pedido_cabecera__icontains=query)).order_by('last_modified')
+        factCompra = FacturaCompra.objects.exclude(is_active="N").filter(Q(nro_factura__icontains=query) | Q(nro_timbrado__icontains=query) | Q(id_proveedor__nombre_proveedor__icontains=query)).order_by('last_modified')
     else:
         factCompra = FacturaCompra.objects.exclude(is_active="N").order_by('-last_modified')
 
@@ -502,6 +503,7 @@ def search_pediddos_factura(request):
 
 def reporte_compra_pdf(request, id):
     pedido_cabecera = PedidoCabecera.objects.get(id=id)
+    confi = ConfiEmpresa.objects.get(id=1)
     #Indicamos el tipo de contenido a devolver, en este caso un pdf
     response = HttpResponse(content_type='application/pdf')
     #La clase io.BytesIO permite tratar un array de bytes como un fichero binario, se utiliza como almacenamiento temporal
@@ -516,9 +518,9 @@ def reporte_compra_pdf(request, id):
     #Dibujamos una cadena en la ubicación X,Y especificada
     pdf.drawString(210, 790, u"Orden de Compra")
     pdf.setFont("Helvetica", 12)
-    pdf.drawString(30, 760, u"Nombre: Veterinaria Ohana")
-    pdf.drawString(30, 740, u"Direccion: Las Palmas")
-    pdf.drawString(30, 720, u"Cuidad: Lambare")
+    pdf.drawString(30, 760, u"Nombre: " + confi.nombre_empresa)
+    pdf.drawString(30, 740, u"Direccion: " + confi.direccion)
+    pdf.drawString(30, 720, u"Cuidad: " + confi.cuidad)
     pdf.drawString(300, 760, u"Fecha Pedido: " + pedido_cabecera.fecha_alta)
     pdf.drawString(300, 740, u"Nº Pedido: " + str(pedido_cabecera.id))
     y = 700
