@@ -16,8 +16,13 @@
                 <div class="col-md-6 col-sm-6">
                     {{ form.nombre_tipo}}
                 </div>
-                <div id="alert_nombre_especie">
-
+            </div>
+            <div class="field item form-group">
+                <label class="col-form-label col-md-3 col-sm-3  label-align">Vence
+                    <span class="required">*</span>
+                </label>
+                <div class="col-md-6 col-sm-6">
+                    {{ form.vence}}
                 </div>
             </div>
             <div class="modal-footer">
@@ -28,29 +33,39 @@
     </div>
 </div>
 
-<script>
-    $('#nombre_tipo').change(function () {
-        var nombre = $("#nombre_tipo").val()
-        if (nombre !== "") 
-        {
-            $('#alert_nombre_tipo').empty()
-        } 
-        else {
-            if (nombre !== "") 
-            {
-                $('#alert_nombre_tipo').empty()
-            }
-            else 
-            {
-                $("#alert_nombre_tipo").html('<div class="alert" style="opacity: 1; white-space: inherit">\
-                                    Complete este campo\
-                                </div>');
-            }
+<!-- validator -->
+<script src="/static/project_static/vendors/validator/validator.js"></script>
+<script src="/static/project_static/vendors/validator/multifield.js"></script>
+<script src="/static/project_static/other/js/main.js"></script>
 
-        }
+
+<script>
+    $(function () {
+        // initialize a validator instance from the "FormValidator" constructor.
+        // A "<form>" element is optionally passed as an argument, but is not a must
+        var validator = new FormValidator({
+            "events": ['blur', 'input', 'change']
+        }, document.forms[0]);
+        // on form "submit" event
+        document.forms[0].onsubmit = function (e) {
+            var submit = true,
+                validatorResult = validator.checkAll(this);
+            return !!validatorResult.valid;
+        };
+        // on form "reset" event
+        document.forms[0].onreset = function (e) {
+            validator.reset();
+        };
+        // stuff related ONLY for this demo page:
+        $('.toggleValidationTooltips').change(function () {
+            validator.settings.alerts = !this.checked;
+            if (this.checked)
+                $('form .alert').remove();
+        }).prop('checked', false);
+
+        $('form input').on("cut copy paste", function (e) {
+            e.preventDefault();
+        });
     })
 
-    $('form input').on("cut copy paste",function(e) {
-        e.preventDefault();
-    });
 </script>

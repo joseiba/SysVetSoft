@@ -67,6 +67,15 @@
                         </ul>
                         <div class="clearfix"></div>
                     </div>
+                    <div class="clearfix"></div>
+                    {% if messages %}
+                    <div class="alert alert-success alert-dismissible" role="alert">
+                        {% for message in messages %}
+                            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                            {{ message }}
+                        {% endfor %}
+                    </div>
+                    {% endif %}
                     <div>
                         <button type="submit" class="btn btn-primary float-right">
                             <a style="color: white;" href="{% url 'add_cliente' %}">Agregar nuevo cliente</a>
@@ -197,7 +206,7 @@
             $("#list_cliente").DataTable({
                 destroy: true,
                 dom: 'Bfrtip',
-                buttons: ['excel', 'pdf'],
+                buttons: ['pdf'],
                 searching: false,
                 pageLength: 10,
                 ajax: {

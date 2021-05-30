@@ -27,8 +27,6 @@ $.fn.setNow = function (onlyBlank) {
 	return this;
 }
 
-
-
 function abrir_modal_edicion(url) {
 	$('#edicion').load(url, function () {
 		$(this).modal('show');

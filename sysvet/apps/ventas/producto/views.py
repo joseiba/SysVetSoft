@@ -8,8 +8,10 @@ from datetime import datetime
 import json
 from django.http import JsonResponse
 
-from .forms import TipoProductoForm, DepositoForm, ProductoForm
-from .models import TipoProducto, Deposito, Producto
+from apps.ventas.producto.forms import TipoProductoForm, DepositoForm, ProductoForm
+from apps.ventas.producto.models import TipoProducto, Deposito, Producto, ProductoStock
+from apps.compras.models import FacturaCompra, FacturaDet
+from apps.configuracion.models import ConfiEmpresa
 
 date = datetime.now()
 
@@ -19,8 +21,6 @@ def add_tipo_producto(request):
     form = TipoProductoForm
     if request.method == 'POST':
         form = TipoProductoForm(request.POST or None)
-        fecha_baja = request.POST.get('fecha_baja')
-        print('baja:' + str(fecha_baja))
         if form.is_valid():
             form.save()
             messages.add_message(request, messages.SUCCESS, 'Tipo de producto agregado correctamente!')
@@ -132,10 +132,6 @@ def vence_si_no(request):
 
     return JsonResponse(response)
 
-
-# def order_tipo_producto(request):
-
-
 #Metodo para agregar deposito
 @login_required()
 def add_deposito(request):
@@ -183,9 +179,9 @@ def list_deposito(request):
 def search_deposito(request):
     query = request.GET.get('q')
     if query:
-        depositos = Deposito.objects.filter(Q(descripcion__icontains=query))
+        depositos = Deposito.objects.filter(Q(descripcion__icontains=query)).order_by('-last_modified')
     else:
-        depositos = Deposito.objects.all()
+        depositos = Deposito.objects.all().order_by('-last_modified')
     paginator = Paginator(depositos, 10)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
@@ -197,20 +193,22 @@ def search_deposito(request):
 @login_required()
 def add_producto(request):
     form = ProductoForm
-    if request.method == 'POST':
-        print('POST')
-        form = ProductoForm(request.POST or None)
-        lote = request.POST.get('lote')
-        print('lote:' + lote)
-        fecha_vencimiento = request.POST.get('fecha_vencimiento')
-        print('vencimiento:' + fecha_vencimiento)
-        if form.is_valid():
-            form.save()
-            messages.add_message(request, messages.SUCCESS, 'Producto agregado correctamente!')
-            return redirect('/producto/list')
-    tipoproducto = TipoProducto.objects.all()
-    deposito = Deposito.objects.all()    
-    context = {'form' : form, 'tipoproducto' : tipoproducto, 'deposito' : deposito}
+    try:
+        confiEm = ConfiEmpresa.objects.get(id=1)
+        depo = Deposito.objects.get(descripcion=confiEm.ubicacion_deposito_inicial)
+        if request.method == 'POST':
+            form = ProductoForm(request.POST or None)
+            if form.is_valid():                            
+                pro = form.save(commit=False)                
+                pro.stock_total = request.POST.get('stock')
+                pro.save()
+                messages.add_message(request, messages.SUCCESS, 'Producto agregado correctamente!')
+                return redirect('/producto/add')  
+    except:
+        messages.add_message(request, messages.SUCCESS, 'Se debe agrega primeramente un deposito en configuraciones iniciales!')
+        context = {'form' : form}
+        return render(request, 'ventas/producto/add_producto.html', context)
+    context = {'form' : form, 'deposito_inicial': depo.id}
     return render(request, 'ventas/producto/add_producto.html', context)
 
 # Metodo para editar Productos
@@ -222,46 +220,38 @@ def edit_producto(request, id):
         form = ProductoForm(request.POST, instance=producto)
         if not form.has_changed():
             messages.info(request, "No ha hecho ningun cambio")
-            return redirect('/producto/list/')
+            return redirect('/producto/edit/' + str(id))
         if form.is_valid():
             producto = form.save(commit=False)
             producto.save()
             messages.add_message(request, messages.SUCCESS, 'El producto se ha editado correctamente!')
-            return redirect('/producto/list/')
+            return redirect('/producto/edit/' + str(id))
 
-    context = {'form': form}
+    context = {'form': form, 'producto': producto}
     return render(request, 'ventas/producto/edit_producto.html', context)
 
 # Metodo para editar Productos
 @login_required()
 def mover_producto(request, id):
     producto_movido = Producto()
+    producto_moved = ProductoStock()
     producto = Producto.objects.get(id=id)
     form = ProductoForm(instance=producto)
     if request.method == 'POST':
         nombre_deposito = request.POST.get('id_deposito')
         cantidad = request.POST.get('stock')
+        deposito = Deposito.objects.get(id=nombre_deposito)
+
         producto.stock = producto.stock - int(cantidad)
         producto.save() 
-        deposito = Deposito.objects.get(id=nombre_deposito)
-        producto_movido.nombre_producto = producto.nombre_producto
-        producto_movido.codigo_producto = producto.codigo_producto
-        producto_movido.descripcion = producto.descripcion
-        producto_movido.fecha_baja = producto.fecha_baja
-        producto_movido.fecha_compra = producto.fecha_compra
-        producto_movido.fecha_movimiento = producto.fecha_movimiento
-        producto_movido.fecha_vencimiento = producto.fecha_vencimiento
-        producto_movido.id_deposito = deposito
-        producto_movido.is_active = producto.is_active
-        producto_movido.lote = producto.lote
-        producto_movido.precio_compra = producto.precio_compra
-        producto_movido.precio_venta = producto.precio_venta
-        producto_movido.stock = cantidad
-        producto_movido.stock_minimo = producto.stock_minimo
-        producto_movido.tipo_producto = producto.tipo_producto
-        producto_movido.save()
 
-        return redirect('/producto/list/')
+        producto_moved.producto_stock = int(cantidad)
+        producto_moved.id_deposito = deposito
+        producto_moved.id_producto = producto
+        producto_moved.save()
+        messages.add_message(request, messages.SUCCESS, 'El producto se ha movido correctamente!')
+
+        return redirect('/producto/listDetalle/' + str(id))
 
     context = {'form': form, 'producto': producto}
     return render(request, 'ventas/producto/mover_producto.html', context)
@@ -275,13 +265,46 @@ def delete_producto(request, id):
     return redirect('/producto/list/')
 
 #Metodo para listar todos los productos
+def add_factura_to_producto():
+    facturaCompra = FacturaCompra.objects.all()
+    if facturaCompra is not None:
+        for factCom in facturaCompra:
+            if(factCom.factura_cargada_producto == 'N'):
+                factCom.factura_cargada_producto = 'S'
+                factCom.save()
+                facDe = FacturaDet.objects.filter(id_factura=factCom.id)
+                for factDet in facDe:
+                    try:                        
+                        prod = Producto.objects.get(id=factDet.id_pedido.id_producto.id)
+                        prod.fecha_compra = factCom.fecha_emision
+                        prod.precio_compra = factDet.id_pedido.id_producto.precio_compra
+                        prod.stock = prod.stock + factDet.cantidad
+                        prod.stock_total = prod.stock_total + factDet.cantidad
+                        prod.save()
+                    except Exception as e:
+                        pass
+
 @login_required()
-def list_producto(request):
-    productos = Producto.objects.all()
-    paginator = Paginator(productos, 10)
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
-    context = {'page_obj' : page_obj}
+def list_producto(request,id):
+    data = []
+    data_detalle = []
+
+    try:
+        product = Producto.objects.filter(id=id)
+
+        data =[{'id': p.id, 'nombre': p.nombre_producto, 'descripcion': p.descripcion, 'stock_actual': p.stock, 
+            'deposito': p.id_deposito.descripcion} for p in product]        
+    except Exception as e:
+        pass
+
+    try:
+        producto_detalle = ProductoStock.objects.filter(id_producto=id)
+        data_detalle =[{'id': p.id, 'codigo': p.id_producto.id ,'nombre': p.id_producto.nombre_producto, 'descripcion': p.id_producto.descripcion, 
+        'stock_movido': p.producto_stock, 'deposito': p.id_deposito.descripcion} for p in producto_detalle]
+    except Exception as e:
+        pass   
+
+    context = {'producto_detalle': data, 'producto_movido': data_detalle}
     return render(request, "ventas/producto/list_producto.html", context)
 
 #Metodo para la busqueda de productos
@@ -289,14 +312,59 @@ def list_producto(request):
 def search_producto(request):
     query = request.GET.get('q')
     if query:
-        productos = Producto.objects.filter(Q(nombre_producto__icontains=query))
+        productos = Producto.objects.filter(Q(nombre_producto__icontains=query) | Q(codigo_producto__icontains=query) | Q(id_deposito__descripcion__icontains=query)).order_by('-last_modified')
     else:
-        productos = Producto.objects.all()
+        productos = Producto.objects.all().order_by('-last_modified')
     paginator = Paginator(productos, 10)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     context = { 'page_obj': page_obj}
     return render(request, "ventas/producto/list_producto.html", context)
 
+def mover_producto_detalle_general(request, id):
+    try:
+        pedido_trasladado = ProductoStock.objects.get(id=id)
+        producto_general = Producto.objects.get(id=pedido_trasladado.id_producto.id)
+        producto_general.stock = producto_general.stock + pedido_trasladado.producto_stock
+        producto_general.save()
+        pedido_trasladado.delete()
+        messages.add_message(request, messages.SUCCESS, 'El producto se ha movido correctamente a la lista general!')
+        return redirect('/producto/listDetalle/' + str(pedido_trasladado.id_producto.id))
+    except Exception as e:
+        messages.add_message(request, messages.SUCCESS, 'ha ocurrido un error inesperado, intente más tarde!')        
+        return redirect('/producto/listGeneral/')
 
-# def order_producto(request):
+    
+def list_productos_general(request):
+    add_factura_to_producto()
+    return render(request, "ventas/producto/list_producto_general.html")
+
+
+@login_required()
+def list_producto_general_ajax(request):
+    query = request.GET.get('busqueda')
+    if query != "":
+        productos = Producto.objects.exclude(is_active="N").filter(Q(nombre_producto__icontains=query) | Q(codigo_producto__icontains=query) | Q(id_deposito__descripcion__icontains=query)).order_by('-last_modified')
+    else:
+        productos = Producto.objects.exclude(is_active="N").order_by('-last_modified')
+
+    total = productos.count()
+
+    _start = request.GET.get('start')
+    _length = request.GET.get('length')
+    if _start and _length:
+        start = int(_start)
+        length = int(_length)
+        page = math.ceil(start / length) + 1
+        per_page = length
+
+        productos = productos[start:start + length]
+
+    data =[{'id': p.id, 'nombre': p.nombre_producto, 'descripcion': p.descripcion, 'stock_total': p.stock_total} for p in productos]        
+        
+    response = {
+        'data': data,
+        'recordsTotal': total,
+        'recordsFiltered': total,
+    }
+    return JsonResponse(response)

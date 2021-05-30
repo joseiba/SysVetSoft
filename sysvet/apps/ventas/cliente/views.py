@@ -1,3 +1,5 @@
+import json
+import math
 from django.shortcuts import render, redirect, HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -11,9 +13,6 @@ from reportlab.platypus import SimpleDocTemplate, Table, TableStyle
 from reportlab.lib.units import cm
 from reportlab.lib import colors
 from django.http import JsonResponse
-import json
-import math
-
 
 from .forms import ClienteForm
 from .models import Cliente, Ciudad
@@ -66,19 +65,14 @@ def delete_cliente(request, id):
 
 #Metodo para listar todos los clientes
 @login_required()
-def list_clientes(request):
-    clientes = Cliente.objects.exclude(is_active="N").order_by('-last_modified')
-    paginator = Paginator(clientes, 10)
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
-    context = {'page_obj' : page_obj}
-    return render(request, "ventas/cliente/list_cliente.html", context)
+def list_clientes(request):    
+    return render(request, "ventas/cliente/list_cliente.html")
 
 @login_required()
 def list_client_ajax(request):
     query = request.GET.get('busqueda')
     if query != "":
-        clientes = Cliente.objects.exclude(is_active="N").filter(Q(nombre_cliente__icontains=query) | Q(cedula__icontains=query) | Q(id_ciudad__nombre_ciudad__icontains=query))
+        clientes = Cliente.objects.exclude(is_active="N").filter(Q(nombre_cliente__icontains=query) | Q(cedula__icontains=query) | Q(id_ciudad__nombre_ciudad__icontains=query)).order_by('last_modified')
     else:
         clientes = Cliente.objects.exclude(is_active="N").order_by('-last_modified')
 
@@ -96,7 +90,7 @@ def list_client_ajax(request):
 
     data = [{'id': clie.id, 'nombre': clie.nombre_cliente, 'apellido': clie.apellido_cliente, 
         'cedula': clie.cedula, 'telefono': clie.telefono, 'direccion': clie.direccion, 'ciudad': clie.id_ciudad.nombre_ciudad } for clie in clientes]        
-
+        
     response = {
         'data': data,
         'recordsTotal': total,

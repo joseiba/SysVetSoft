@@ -2,12 +2,19 @@
 
 {% block title %} Editar Producto {% endblock title %}
 
+{% block stylesheets %}
+{{ block.super }}
+<link rel="stylesheet"
+    href="/static/project_static/other/js/jquery-ui-themes-1.12.1/jquery-ui-themes-1.12.1/jquery-ui.min.css">
+
+{% endblock stylesheets %}
+
 {% block content %}
 <div class="right_col" role="main">
     <div class="">
         <div class="page-title">
             <div class="title_left">
-                <h3>Modificar Producto</h3>
+                <h3>Editar Producto</h3>
             </div>
         </div>
         <div class="clearfix"></div>
@@ -16,7 +23,7 @@
             <div class="col-md-12 col-sm-12">
                 <div class="x_panel">
                     <div class="x_title">
-                        <h2>Información del Producto <small>Producto</small></h2>
+                        <h2>Información del Producto</h2>
                         <ul class="nav navbar-right panel_toolbox">
                             <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
                             </li>
@@ -25,9 +32,33 @@
                         </ul>
                         <div class="clearfix"></div>
                     </div>
+                    <div class="clearfix"></div>
+                    {% if messages %}
+                    <div class="alert alert-success alert-dismissible" role="alert">
+                        {% for message in messages %}
+                            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                            {{ message }}
+                        {% endfor %}
+                    </div>
+                    {% endif %}
                     <div class="x_content">
-                        <form class="" method="POST">
+                        <form class="" method="POST" action="{% url 'edit_producto' producto.id %}">
                             {% csrf_token %}
+                            <div class="form-group field item">
+                                <label class="col-form-label col-md-3 col-sm-3  label-align">Tipo
+                                    <span class="required">*</span>
+                                </label>
+                                <div class="col-md-6 col-sm-6">
+                                    {{ form.tipo_producto}}
+                                </div>
+                            </div>
+                            <div class="field item form-group">
+                                <label class="col-form-label col-md-3 col-sm-3  label-align">Codigo Producto<span
+                                        class="required">*</span></label>
+                                <div class="col-md-6 col-sm-6">
+                                    {{ form.codigo_producto }}
+                                </div>
+                            </div>
                             <div class="field item form-group">
                                 <label class="col-form-label col-md-3 col-sm-3  label-align">Nombre Producto<span
                                         class="required">*</span></label>
@@ -43,59 +74,70 @@
                                 </div>
                             </div>
                             <div class="field item form-group">
-                                <label class="col-form-label col-md-3 col-sm-3  label-align">Fecha de vencimiento</label>
-                                <div class="col-sm-10">
+                                <label class="col-form-label col-md-3 col-sm-3  label-align">Fecha de
+                                    vencimiento</label>
+                                <div class="col-md-6 col-sm-6">
                                     {{ form.fecha_vencimiento }}
                                 </div>
                             </div>
                             <div class="field item form-group">
-                                <label class="col-form-label col-md-3 col-sm-3  label-align">Fecha de baja</label>
-                                <div class="col-sm-10">
-                                    {{ form.fecha_baja }}
-                                </div>
-                            </div>
-                            <div class="field item form-group">
-                                <label class="col-form-label col-md-3 col-sm-3  label-align">Fecha de movimiento</label>
-                                <div class="col-sm-10">
-                                    {{ form.fecha_movimiento }}
-                                </div>
-                            </div>
-                            <div class="field item form-group">
-                                <label class="col-form-label col-md-3 col-sm-3  label-align">Fecha de compra</label>
-                                <div class="col-sm-10">
-                                    {{ form.fecha_compra }}
-                                </div>
-                            </div>
-                            <div class="field item form-group">
                                 <label class="col-form-label col-md-3 col-sm-3  label-align">Precio compra
+                                    <span class="required">*</span>
                                 </label>
-                                <div class="col-sm-10">
+                                <div class="col-md-6 col-sm-6">
                                     {{ form.precio_compra }}
                                 </div>
                             </div>
                             <div class="field item form-group">
                                 <label class="col-form-label col-md-3 col-sm-3  label-align">Precio venta
+                                    <span class="required">*</span>
                                 </label>
-                                <div class="col-sm-10">
+                                <div class="col-md-6 col-sm-6">
                                     {{ form.precio_venta }}
                                 </div>
                             </div>
                             <div class="field item form-group">
-                                <label class="col-form-label col-md-3 col-sm-3  label-align">Stock minimo
+                                <label class="col-form-label col-md-3 col-sm-3  label-align">Lote
                                 </label>
-                                <div class="col-sm-10">
+                                <div class="col-md-6 col-sm-6">
+                                    {{ form.lote }}
+
+                                </div>
+                            </div>
+                            <div class="field item form-group">
+                                <label class="col-form-label col-md-3 col-sm-3  label-align">Stock
+                                    <span class="required">*</span>
+                                </label>
+                                <div class="col-md-6 col-sm-6">
+                                    {{ form.stock }}
+                                </div>
+                            </div>
+                            <div class="field item form-group">
+                                <label class="col-form-label col-md-3 col-sm-3  label-align">Stock minimo
+                                    <span class="required">*</span>
+                                </label>
+                                <div class="col-md-6 col-sm-6">
                                     {{ form.stock_minimo }}
+
+                                </div>
+                            </div>
+                            <div class="form-group field item">
+                                <label class="col-form-label col-md-3 col-sm-3  label-align">Deposito
+                                    <span class="required">*</span>
+                                </label>
+                                <div class="col-md-6 col-sm-6">
+                                    {{ form.id_deposito}}
                                 </div>
                             </div>
                             <div class="ln_solid">
                                 <div class="form-group">
                                     <div class="col-md-6 offset-md-3" style="margin-top: 1rem;">
                                         <button type='submit' class="btn btn-primary">Actualizar</button>
-                                        <button' class="btn btn-success">
-                                            <a style="color: white; cursor: pointer;" href="{% url  'list_producto'%}">
+                                        <button class="btn btn-success">
+                                            <a style="color: white; cursor: pointer;" href="{% url  'list_productos_general'%}">
                                                 Volver
                                             </a>
-                                            </button>
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -111,50 +153,115 @@
 {% block javascripts %}
 {{ block.super }}
 <!-- validator -->
-<script src="/static/project_static/vendors/validator/multifield.js"></script>
+<script src="/static/project_static/other/js/jquery-ui-1.12.1/jquery-ui-1.12.1/jquery-ui.js"></script>
 <script src="/static/project_static/vendors/validator/validator.js"></script>
+<script src="/static/project_static/vendors/validator/multifield.js"></script>
+<script src="/static/project_static/other/js/sweetalert.min.js"></script>
+
 <script>
-    /*function hideshow() {
-      var password = document.getElementById("password1");
-      var slash = document.getElementById("slash");
-      var eye = document.getElementById("eye");
-  
-      if (password.type === 'password') {
-        password.type = "text";
-        slash.style.display = "block";
-        eye.style.display = "none";
-      }
-      else {
-        password.type = "password";
-        slash.style.display = "none";
-        eye.style.display = "block";
-      }
-  
-    }*/
+    $.datepicker.regional['es'] = {
+        closeText: 'Cerrar',
+        prevText: '< Ant',
+        nextText: 'Sig >',
+        currentText: 'Hoy',
+        monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+        monthNamesShort: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+        dayNames: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
+        dayNamesShort: ['Dom', 'Lun', 'Mar', 'Mié', 'Juv', 'Vie', 'Sáb'],
+        dayNamesMin: ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sá'],
+        weekHeader: 'Sm',
+        dateFormat: 'dd/mm/yy',
+        firstDay: 1,
+        isRTL: false,
+        showMonthAfterYear: false,
+        yearSuffix: ''
+    };
+    $.datepicker.setDefaults($.datepicker.regional['es']);
+
 </script>
 <script>
-    /*// initialize a validator instance from the "FormValidator" constructor.
-    // A "<form>" element is optionally passed as an argument, but is not a must
-    var validator = new FormValidator({
-      "events": ['blur', 'input', 'change']
-    }, document.forms[0]);
-    // on form "submit" event
-    document.forms[0].onsubmit = function (e) {
-      var submit = true,
-        validatorResult = validator.checkAll(this);
-      console.log(validatorResult);
-      return !!validatorResult.valid;
-    };
-    // on form "reset" event
-    document.forms[0].onreset = function (e) {
-      validator.reset();
-    };
-    // stuff related ONLY for this demo page:
-    $('.toggleValidationTooltips').change(function () {
-      validator.settings.alerts = !this.checked;
-      if (this.checked)
-        $('form .alert').remove();
-    }).prop('checked', false);*/
+    $(function () {
+        var validator = new FormValidator({
+            "events": ['blur', 'input', 'change']
+        }, document.forms[0]);
+        // on form "submit" event
+        document.forms[0].onsubmit = function (e) {
+            var submit = true,
+                validatorResult = validator.checkAll(this);
+            console.log(validatorResult);
+            return !!validatorResult.valid;
+        };
+        // on form "reset" event
+        document.forms[0].onreset = function (e) {
+            validator.reset();
+        };
+        // stuff related ONLY for this demo page:
+        $('.toggleValidationTooltips').change(function () {
+            validator.settings.alerts = !this.checked;
+            if (this.checked)
+                $('form .alert').remove();
+        }).prop('checked', false);
+
+        $("#datepicker").datepicker({
+            minDate: "+0D",
+        });
+
+        $("input[name='precio_venta'], input[name='precio_compra']").change(function () {
+            var precio_venta = $("input[name='precio_venta']").val()
+            var p_venta = precio_venta.split('.')
+            var p_v_concat = ""
+            for (let index = 0; index < p_venta.length; index++) {
+                p_v_concat += p_venta[index];                
+            }
+
+            var precio_compra = $("input[name='precio_compra']").val()
+            var p_compra = precio_compra.split('.')
+            var p_c_concat = ""
+            for (let index = 0; index < p_compra.length; index++) {
+                p_c_concat += p_compra[index];                
+            }
+            if (precio_compra != "" && precio_venta) {
+                if (parseFloat(p_c_concat) > parseFloat(p_v_concat)) {
+                    swal({
+                        title: "Notificacion",
+                        text: "El precio de venta no puede ser menor al de compra",
+                        icon: "warning",
+                        buttons: true,
+                        dangerMode: true,
+                    })
+                }
+            }
+        })
+        $('form input').on("cut copy paste", function (e) {
+            e.preventDefault();
+        });
+
+        $("input[name='precio_compra']").on({
+            "focus": function (event) {
+                $(event.target).select();
+            },
+            "keyup": function (event) {
+                $(event.target).val(function (index, value) {
+                    return value.replace(/\D/g, "")
+                        .replace(/([0-9])([0-9]{3})$/, '$1.$2')
+                        .replace(/\B(?=(\d{3})+(?!\d)\.?)/g, ".");
+                });
+            }
+        });
+        $("input[name='precio_venta']").on({
+            "focus": function (event) {
+                $(event.target).select();
+            },
+            "keyup": function (event) {
+                $(event.target).val(function (index, value) {
+                    return value.replace(/\D/g, "")
+                        .replace(/([0-9])([0-9]{3})$/, '$1.$2')
+                        .replace(/\B(?=(\d{3})+(?!\d)\.?)/g, ".");
+                });
+            }
+        });
+
+    });
 
 </script>
 {% endblock javascripts %}

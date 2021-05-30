@@ -63,6 +63,15 @@
                         </ul>
                         <div class="clearfix"></div>
                     </div>
+                    <div class="clearfix"></div>
+                    {% if messages %}
+                    <div class="alert alert-success alert-dismissible" role="alert">
+                        {% for message in messages %}
+                            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                            {{ message }}
+                        {% endfor %}
+                    </div>
+                    {% endif %}
                     <div>
                         <button type="submit" class="btn btn-primary float-right" onclick="abrir_modal_creacion('/deposito/add/')">
                             Agregar nuevo deposito
@@ -73,21 +82,12 @@
                                 <div class="search">
                                     <form action="{% url 'search_deposito' %}" method="GET" class="d-inline-flex">
                                         <input type="search" class="searchTerm" name="q" value="{{ request.GET.q }}"
-                                            placeholder="Buscá por nombre">
+                                            placeholder="Buscar por descripcion" autocomplete="off">
                                         <button type="submit" class="searchButton">
                                             <i class="fa fa-search"></i>
                                         </button>
                                     </form>
                                 </div>
-                            </div>
-                        </div>
-
-                        <div>
-                            <div class="d-flex">
-                                <p>Ordenar por:</p>
-                                <select class="form-select form-select-lg mb-3" aria-label="Default select example">
-                                    <option selected value="">descripcion</option>
-                                </select>
                             </div>
                         </div>
                     </div>
@@ -167,7 +167,9 @@
 
 <script>
     $(function () {
-
+        $('form input').on("cut copy paste", function (e) {
+            e.preventDefault();
+        });
     })
 </script>
 

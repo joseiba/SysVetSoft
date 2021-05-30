@@ -177,9 +177,7 @@ def get_mascota_cliente(request):
 def get_min_service(request):
     servicio = request.GET.get('servicio')
     emp = Empleado.objects.filter(id_servicio=servicio)
-    print("test")
     listEmpleado = [{'id': empleado.id, 'nombre': empleado.nombre_emp + " " + empleado.apellido_emp} for empleado in emp]
-    print("test1")
 
     listJsonEmpleado= json.dumps(listEmpleado)
     isFalse = True

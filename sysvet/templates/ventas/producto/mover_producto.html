@@ -41,6 +41,17 @@
 </div>
 
 <script>
+    var stock_inicial = $('#stock').val()
+    console.log('entro')
+    var stock = $("#stock").val()
+    if ( parseInt(stock_inicial) < parseInt(stock))
+    {
+        $('#form_edicion').find('#submitbtn').addClass('d-none')
+    }
+    else
+    {
+        $('#form_edicion').find('#submitbtn').removeClass('d-none')
+    }
     $('#id_deposito').change(function () {
         var deposito = $("#id_deposito").val()
         if (deposito !== "") 
@@ -62,9 +73,7 @@
         }
     })
 
-    var stock_inicial = $('#stock').val()
-
-    $('#stock').change(function () {
+    $("input[name='stock']").change(function () {
         var stock = $("#stock").val()
         if (parseInt(stock_inicial) < parseInt(stock))
         {

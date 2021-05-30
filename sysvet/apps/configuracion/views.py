@@ -7,10 +7,44 @@ from django.http import JsonResponse
 import json
 import math
 
-from .models import Servicio, Empleado
-from .forms import ServicioForm, EmpleadoForm
+from apps.configuracion.models import Servicio, Empleado, ConfiEmpresa
+from apps.configuracion.forms import ServicioForm, EmpleadoForm, ConfiEmpresaForm
+from apps.ventas.producto.models import Deposito
 
 # Create your views here.
+
+#Configuraciones iniciales
+@login_required()
+def confi_inicial(request):
+    try:
+        confi = ConfiEmpresa.objects.get(id=1) 
+        confiUbi = ConfiEmpresa.objects.get(id=1)    
+        form = ConfiEmpresaForm(instance=confi)
+        if request.method == 'POST':
+            form = ConfiEmpresaForm(request.POST, instance=confi)
+            if not form.has_changed():
+                messages.info(request, "No has hecho ningun cambio!")
+                return redirect('/configuracion/confiInicial/')
+            if form.is_valid():
+                confi = form.save(commit=False)
+                confi.save() 
+                try:
+                    depo = Deposito.objects.get(descripcion=confiUbi.ubicacion_deposito_inicial)   
+                    depo.descripcion =  request.POST.get('ubicacion_deposito_inicial')     
+                    depo.save()
+                except:                                              
+                    depo = Deposito()
+                    depo.descripcion = request.POST.get('ubicacion_deposito_inicial')
+                    depo.save()
+
+                messages.success(request, 'Se ha editado correctamente!')
+                return redirect('/configuracion/confiInicial/')
+    except Exception as e:
+        pass
+    context = {'form' : form}
+    return render(request, 'configuraciones/generales/confi_inicial.html', context)   
+
+#Servicios
 @login_required()
 def add_servicio(request):
     form = ServicioForm    

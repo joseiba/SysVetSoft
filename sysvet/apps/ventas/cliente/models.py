@@ -33,7 +33,7 @@ class Cliente (models.Model):
     apellido_cliente = models.CharField(max_length = 200, help_text = "Ingrese apellido del cliente")
     direccion = models.CharField(max_length = 200, help_text = "Ingrese apellido del cliente")
     cedula = models.CharField(max_length = 200, help_text = "Ingrese cedula del cliente")
-    ruc = models.CharField(max_length = 200, help_text = "Ingrese ruc del cliente", null=True, blank=True, default=cedula)
+    ruc = models.CharField(max_length = 200, help_text = "Ingrese ruc del cliente", null=True, blank=True)
     telefono = models.CharField(max_length = 200, help_text = "Ingrese telefono del cliente")
     email = models.EmailField(max_length = 200, help_text = "Ingrese email del cliente", null=True, blank=True, default="-")
     last_modified = models.DateTimeField(auto_now=True, blank=True)
@@ -43,8 +43,13 @@ class Cliente (models.Model):
 
     def __str__(self):
         """Formato del cliente"""
-        return '{0}  {1}  {2}'.format(self.nombre_cliente, self.apellido_cliente, self.cedula)
+        if self.ruc == None:
+            return 'Cliente: %s - cedula: %s' % (self.nombre_cliente, self.cedula)
+        return  'Cliente: %s - ruc: %s' % (self.nombre_cliente, self.ruc)
+        
 
     def get_absolute_url(self):
         """Retorna el URL para acceder a una instancia de un cliente en particular."""
         return reverse('cliente-detail', args=[str(self.id)])
+    class Meta:
+        ordering = ['last_modified']      

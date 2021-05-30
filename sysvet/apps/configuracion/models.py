@@ -6,12 +6,18 @@ HORAS_SER = []
 # Create your models here.
 class ConfiEmpresa(models.Model):
     """
-    Clase que define la estructura de una ciudad
+    Clase que define la la configuracion de la empresa
     """
-    semana = models.CharField(max_length = 200)
-    apertura = models.CharField(max_length = 200)
-    cierre = models.CharField(max_length=200)
-
+    apertura_caja_inicial = models.CharField(max_length=200, blank=True, null=True)
+    ubicacion_deposito_inicial =  models.CharField(max_length=200, blank=True, null=True)
+    nombre_empresa = models.CharField(max_length=500, blank=True, null=True)
+    direccion = models.CharField(max_length=500, blank=True, null=True)
+    cuidad = models.CharField(max_length=500, blank=True, null=True)
+    telefono = models.CharField(max_length=500, blank=True, null=True)
+    nro_timbrado =  models.CharField(max_length=500, blank=True, null=True)
+    fecha_inicio_timbrado = models.CharField(max_length=500, blank=True, null=True)
+    fecha_fin_timbrado = models.CharField(max_length=500, blank=True, null=True)
+    ruc_empresa = models.CharField(max_length=500, blank=True, null=True)
 
     class Meta:
         verbose_name = "Configuracion Empresa"
@@ -19,16 +25,12 @@ class ConfiEmpresa(models.Model):
 
     def __str__(self):
         """Formato de configurcion"""
-        return '{0}'.format(self.semana)
-
-    def get_absolute_url(self):
-        """Retorna el URL para acceder a una instancia de una ciudad en particular."""
-        return reverse('configuracion-detail', args=[str(self.id)])
+        return '{0}'.format(self.id)
 
     # Create your models here.
 class Servicio(models.Model):
     """
-    Clase que define la estructura de una ciudad
+    Clase que define la estructura de un Servicio
     """
     cod_serv = models.CharField(max_length=200)
     nombre_servicio = models.CharField(max_length = 200, help_text = "Ingrese nombre del servicio")
@@ -49,6 +51,15 @@ class Servicio(models.Model):
     def get_absolute_url(self):
         """Retorna el URL para acceder a una instancia de una ciudad en particular."""
         return reverse('servicio-detail', args=[str(self.id)])
+
+    def obtener_dict(self):
+        dict = {}
+        dict['codigo_producto'] = self.id
+        dict['nombre'] = self.nombre_servicio
+        dict['description'] = self.nombre_servicio
+        dict['precio'] = self.precio_servicio
+        dict['tipo'] = 'S'
+        return dict
 
 class Empleado(models.Model):
     nombre_emp = models.CharField(max_length=200)

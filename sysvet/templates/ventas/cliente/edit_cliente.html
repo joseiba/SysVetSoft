@@ -13,10 +13,10 @@
     <div class="clearfix"></div>
     {% if messages %}
     <div class="alert alert-success alert-dismissible" role="alert">
-        {% for message in messages %}
-        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-        {{ message }}
-        {% endfor %}
+      {% for message in messages %}
+      <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+      {{ message }}
+      {% endfor %}
     </div>
     {% endif %}
     <div class="clearfix"></div>
@@ -41,36 +41,35 @@
                 <label class="col-form-label col-md-3 col-sm-3  label-align">Nombre<span
                     class="required">*</span></label>
                 <div class="col-md-6 col-sm-6">
-                  {{ form.nombre_cliente }}                 
+                  {{ form.nombre_cliente }}
                 </div>
               </div>
               <div class="field item form-group">
                 <label class="col-form-label col-md-3 col-sm-3  label-align">Apellido<span
                     class="required">*</span></label>
                 <div class="col-md-6 col-sm-6">
-                  {{ form.apellido_cliente }} 
+                  {{ form.apellido_cliente }}
                 </div>
               </div>
               <div class="field item form-group">
                 <label class="col-form-label col-md-3 col-sm-3  label-align">Dirección
-                  <span
-                    class="required">*</span>
+                  <span class="required">*</span>
                 </label>
                 <div class="col-md-6 col-sm-6">
-                  {{ form.direccion }} 
+                  {{ form.direccion }}
                 </div>
               </div>
               <div class="field item form-group">
                 <label class="col-form-label col-md-3 col-sm-3  label-align">Nro. Cédula<span
                     class="required">*</span></label>
                 <div class="col-md-6 col-sm-6">
-                  {{ form.cedula }} 
+                  {{ form.cedula }}
                 </div>
               </div>
               <div class="field item form-group">
                 <label class="col-form-label col-md-3 col-sm-3  label-align">Nro. RUC</label>
                 <div class="col-md-6 col-sm-6">
-                  {{ form.ruc }} 
+                  {{ form.ruc }}
                 </div>
               </div>
               <div class="field item form-group">
@@ -88,11 +87,10 @@
               </div>
               <div class="form-group field item">
                 <label class="col-form-label col-md-3 col-sm-3  label-align">Cuidad
-                  <span
-                    class="required">*</span>
+                  <span class="required">*</span>
                 </label>
                 <div class="col-md-6 col-sm-6">
-                    {{ form.id_ciudad}}
+                  {{ form.id_ciudad}}
                 </div>
                 <div id="alert_cuidad">
 
@@ -103,8 +101,8 @@
                   <div class="col-md-6 offset-md-3" style="margin-top: 1rem;">
                     <button type='submit' class="btn btn-primary">Actualizar</button>
                     <button class="btn btn-success">
-                      <a style="color: white; cursor: pointer;" href="{% url  'list_cliente'%}">    
-                        Volver                    
+                      <a style="color: white; cursor: pointer;" href="{% url  'list_cliente'%}">
+                        Volver
                       </a>
                     </button>
                   </div>
@@ -125,45 +123,45 @@
 <script src="/static/project_static/vendors/validator/multifield.js"></script>
 <script src="/static/project_static/vendors/validator/validator.js"></script>
 <script>
-  // initialize a validator instance from the "FormValidator" constructor.
-  // A "<form>" element is optionally passed as an argument, but is not a must
-  var validator = new FormValidator({
-    "events": ['blur', 'input', 'change']
-  }, document.forms[0]);
-  // on form "submit" event
-  document.forms[0].onsubmit = function (e) {
-    var submit = true,
-      validatorResult = validator.checkAll(this);
-    console.log(validatorResult);
-    return !!validatorResult.valid;
-  };
-  // on form "reset" event
-  document.forms[0].onreset = function (e) {
-    validator.reset();
-  };
-  // stuff related ONLY for this demo page:
-  $('.toggleValidationTooltips').change(function () {
-    validator.settings.alerts = !this.checked;
-    if (this.checked)
-      $('form .alert').remove();
-  }).prop('checked', false);
+  $(function () {
+    // initialize a validator instance from the "FormValidator" constructor.
+    // A "<form>" element is optionally passed as an argument, but is not a must
+    var validator = new FormValidator({
+      "events": ['blur', 'input', 'change']
+    }, document.forms[0]);
+    // on form "submit" event
+    document.forms[0].onsubmit = function (e) {
+      var submit = true,
+        validatorResult = validator.checkAll(this);
+      console.log(validatorResult);
+      return !!validatorResult.valid;
+    };
+    // on form "reset" event
+    document.forms[0].onreset = function (e) {
+      validator.reset();
+    };
+    // stuff related ONLY for this demo page:
+    $('.toggleValidationTooltips').change(function () {
+      validator.settings.alerts = !this.checked;
+      if (this.checked)
+        $('form .alert').remove();
+    }).prop('checked', false);
 
-  $(function(){
-    $("#id_cuidad").change(function() {
-        var cuidad = $("#id_cuidad").val()
-        var cuidad_empty = cuidad.replace("Seleccione una Cuidad", "")
+    $("#id_cuidad").change(function () {
+      var cuidad = $("#id_cuidad").val()
+      var cuidad_empty = cuidad.replace("Seleccione una Cuidad", "")
 
-        if(cuidad_empty === ""){
-            $("#alert_cuidad").html('<div class="alert" style="opacity: 1; white-space: inherit; left: 0">\
+      if (cuidad_empty === "") {
+        $("#alert_cuidad").html('<div class="alert" style="opacity: 1; white-space: inherit; left: 0">\
                                     Seleccione una opción\
                                 </div>');
-        }
+      }
     })
-    $('form input').on("cut copy paste",function(e) {
+    $('form input').on("cut copy paste", function (e) {
       e.preventDefault();
-   });
+    });
 
-})
+  })
 
 
 </script>
