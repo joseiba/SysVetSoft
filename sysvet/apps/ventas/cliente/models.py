@@ -51,3 +51,5 @@ class Cliente (models.Model):
     def get_absolute_url(self):
         """Retorna el URL para acceder a una instancia de un cliente en particular."""
         return reverse('cliente-detail', args=[str(self.id)])
+    class Meta:
+        ordering = ['last_modified']      

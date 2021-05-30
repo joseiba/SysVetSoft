@@ -38,6 +38,7 @@ var factura = {
         this.calc_invoice()
         tblFactura = $('#tblFactura').DataTable({
             responsive: true,
+            searching: false,
             destroy: true,
             data: this.items.products,
             ordering: false,

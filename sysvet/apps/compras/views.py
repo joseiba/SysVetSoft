@@ -274,7 +274,7 @@ def add_pedido_compra(request):
             mensaje = 'error'
             response = {'mensaje':mensaje }
         return JsonResponse(response)
-    context = {'accion': 'A', 'pedidos': json.dumps(get_pedido_list())}
+    context = {'accion': 'A', 'pedidos': json.dumps(get_pedido_list()), 'pedidos_list': pedidos}
     return render(request, 'compras/pedidos/add_compra_pedido.html', context)
 
 @login_required()
@@ -306,7 +306,7 @@ def edit_pedido_compra(request, id):
             mensaje = 'error'
             response = {'mensaje':mensaje }
         return JsonResponse(response)
-    context = {'det': json.dumps(get_detalle_pedido_compra(id)), 'accion': 'E'}
+    context = {'det': json.dumps(get_detalle_pedido_compra(id)), 'accion': 'E', 'pedidos': json.dumps(get_pedido_list())}
     return render(request, 'compras/pedidos/edit_pedido_compra.html', context)   
     
 def get_pedido_list():
@@ -446,7 +446,7 @@ def list_facturas_ajax(request):
     query = request.GET.get('busqueda')
     print(query)
     if query != "":
-        factCompra = FacturaCompra.objects.exclude(is_active="N").filter(Q(nro_factura__icontains=query) | Q(nro_timbrado__icontains=query) | Q(id_proveedor__nombre_proveedor__icontains=query)).order_by('last_modified')
+        factCompra = FacturaCompra.objects.exclude(is_active="N").filter(Q(nro_factura__icontains=query) | Q(id_proveedor__ruc_proveedor__icontains=query) | Q(id_proveedor__nombre_proveedor__icontains=query)).order_by('last_modified')
     else:
         factCompra = FacturaCompra.objects.exclude(is_active="N").order_by('-last_modified')
 

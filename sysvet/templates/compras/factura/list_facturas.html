@@ -78,8 +78,8 @@
                                     <div class="d-inline-flex">
                                         <input type="search" class="searchTerm" id="searchTerm"
                                             data-toggle="tooltip" data-placement="top"
-                                            title="Buscar por nº de factura, nº timbrado o nombre del proveedor"
-                                            placeholder="Buscar por  nº de factura, nº timbrado o nombre del proveedor"
+                                            title="Buscar por nº de factura, nombre del proveedor o ruc"
+                                            placeholder="Buscar  por nº de factura, nombre del proveedor o ruc"
                                             onkeyup="replaceDirection(this)">
                                         <button type="button" id="busqueda" class="searchButton">
                                             <i class="fa fa-search"></i>
@@ -100,7 +100,6 @@
                                             <tr class="" style="background-color: #2a3f54; font-size: medium;">
                                                 <th style="color: white;">Nº Pedido</th>
                                                 <th style="color: white;">Nº Factura</th>
-                                                <th style="color: white;">Nº Timbrado</th>                                               
                                                 <th style="color: white;">Proveedor</th>
                                                 <th style="color: white;">Importe Total</th>
                                                 <th style="color: white;">Acción</th>                   
@@ -158,8 +157,7 @@
 
 <script>
     $(function () {
-
-        $('form input').on("cut copy paste", function (e) {
+        $('#searchTerm').on("cut copy paste", function (e) {
             e.preventDefault();
         });        
 
@@ -195,16 +193,6 @@
                         }
                     },
                     {
-                        name: 'Nº Timbrado',
-                        data: 'nro_timbrado',
-                        render: function(data){
-                            if(data == null){
-                                return '-';
-                            }
-                            return data;
-                        }
-                    },
-                    {
                         name: 'Proveedor',
                         data: 'proveedor',                        
                     },
@@ -229,7 +217,7 @@
 
                 ],
                 columnDefs: [{
-                    targets: [5], // column index (start from 0)
+                    targets: [4], // column index (start from 0)
                     orderable: false, // set orderable false for selected columns
                 }],
                 serverSide: false,

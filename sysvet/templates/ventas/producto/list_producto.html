@@ -200,6 +200,8 @@ $(function () {
         searching: false,
         data: list_producto.detalle,
         pageLength: 10,
+        paging: false,
+        bPaginate: false,
         columns: [
             {
                 name: 'Codigo',
@@ -241,7 +243,7 @@ $(function () {
             decimal: "",
             emptyTable: "No hay información",
             info: "",
-            infoEmpty: "Mostrando 0 to 0 de 0 Entradas",
+            infoEmpty: "",
             infoFiltered: "(Filtrado de _MAX_ total entradas)",
             infoPostFix: "",
             thousands: ",",
@@ -251,23 +253,22 @@ $(function () {
             search: "Buscar:",
             zeroRecords: "Sin resultados encontrados",
             paginate: {
-                first: "",
-                last: "",
-                next: "",
-                previous: "",
+                first: "Primero",
+                last: "Ultimo",
+                next: "Siguiente",
+                previous: "Anterior",
             },
-        },
-
+        },        
     })
 
 
     $("#list_producto_movido").DataTable({        
         destroy: true,
         dom: 'Bfrtip',
-        buttons: ['pdf'],
+        buttons: [],
         searching: false,
         data: producto_movido.detalle,
-        pageLength: 10,
+        pageLength: 10,        
         columns: [
             {
                 name: 'Codigo',
@@ -311,7 +312,7 @@ $(function () {
             decimal: "",
             emptyTable: "No hay información",
             info: "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
-            infoEmpty: "Mostrando 0 to 0 de 0 Entradas",
+            infoEmpty: "Mostrando 0 de 0 Entradas",
             infoFiltered: "(Filtrado de _MAX_ total entradas)",
             infoPostFix: "",
             thousands: ",",
