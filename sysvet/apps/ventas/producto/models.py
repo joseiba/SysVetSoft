@@ -57,7 +57,7 @@ class Producto (models.Model):
     fecha_vencimiento = models.CharField(max_length = 200,null = True, blank = True)
     fecha_baja = models.CharField(max_length = 200, default = '-', null = True, blank = True)
     fecha_movimiento = models.CharField(max_length = 200, default ="-", blank = True)
-    tipo_producto = models.ForeignKey('TipoProducto', on_delete=models.CASCADE, null=False)
+    tipo_producto = models.ForeignKey('TipoProducto', on_delete=models.CASCADE, null=True)
     fecha_compra = models.CharField(max_length = 200, default = date.strftime("%d/%m/%Y"), editable = False)
     precio_compra = models.CharField(max_length = 500,help_text = 'Ingrese precio de compra')
     precio_venta = models.CharField(max_length = 500, help_text = 'Ingrese precio de venta')
@@ -66,9 +66,11 @@ class Producto (models.Model):
     stock = models.IntegerField(help_text = 'Ingrese stock minimo')
     stock_total = models.IntegerField(null=True, blank=True)
     stock_movido = models.IntegerField(blank = True, null=True, default=0)
+    servicio_o_producto = models.CharField(max_length=2, default="P", blank=True, null=True)
+    id_servicio = models.IntegerField(blank = True, null=True)
     last_modified = models.DateTimeField(auto_now=True, blank=True)
     is_active = models.CharField(max_length=2, default="S", blank=True, null=True)
-    id_deposito = models.ForeignKey('Deposito', on_delete=models.CASCADE, null=False)
+    id_deposito = models.ForeignKey('Deposito', on_delete=models.CASCADE, null=True)
 
     def __str__(self):
         """Formato del producto"""
@@ -84,7 +86,7 @@ class Producto (models.Model):
         dict['nombre'] = self.nombre_producto
         dict['description'] = self.descripcion
         dict['precio'] = self.precio_venta
-        dict['tipo'] = 'P'
+        dict['tipo'] = self.servicio_o_producto
         return dict
 
 

@@ -19,6 +19,9 @@
     .dataTables_info {
         width: 0 !important;
     }
+    #tblFacturaVenta_filter{
+        display: none;
+    }
 </style>
 {% endblock stylesheets %}
 {% block content %}
@@ -51,32 +54,20 @@
                                     <div class="col-lg-9">
                                         <div class="card">
                                             <h6 class="card-header">Detalle Factura</h6>
-                                            <div class="card-body"> 
-                                                <div class="form-group">
-                                                    <label> <strong>Buscar Productos o Servicios: </strong> </label>
-                                                    <div class="d-flex">
-                                                        <div class="d-flex">
-                                                            <label class="mr-1"> <strong>Productos: </strong> </label>
-                                                            <input type="checkbox" value="P" name="seleccionP">
-                                                        </div>
-                                                        <div class="d-flex ml-2">
-                                                            <label class="mr-1"> <strong>Servicios: </strong> </label>
-                                                            <input type="checkbox" value="S" name="seleccionS">
-                                                        </div>
-                                                    </div>
-
+                                            <div class="card-body">
+                                                <!--<div class="form-group">
                                                     <label> <strong> Buscar:</strong> </label>
-                                                        <span class="input-group-append">
-                                                            <select class="form-control" id="search">                                                                                      
-                                                            </select>
-                                                        </span>                                                    
-                                                </div>
+                                                    <span class="input-group-append">
+                                                        <select class="form-control" id="search">
+                                                        </select>
+                                                    </span>
+                                                </div>-->
                                                 <div class="table-responsive">
-                                                    <button type="button"
+                                                    <!--<button type="button"
                                                         class="mb-2 py-0 btn btn-danger btn-sm btnRemoveAll"
                                                         style="height: 20px; align-content: center">
                                                         <label>Eliminar todo</label>
-                                                    </button>
+                                                    </button>-->
                                                     <table class="table table-bordered" id="tblFacturaVenta"
                                                         style="width: 100%;">
                                                         <thead>
@@ -87,7 +78,7 @@
                                                                 <td>Precio</td>
                                                                 <td>Cantidad</td>
                                                                 <td>SubTotal</td>
-                                                                <td>Eliminar</td>
+                                                                <td class="d-none">Eliminar</td>
                                                             </tr>
                                                         </thead>
                                                     </table>
@@ -101,26 +92,55 @@
                                             <div class="card-body">
                                                 <div class="form-group">
                                                     <label><strong>Timbrado:</strong></label>
-                                                    <div class="field item"> 
-                                                        {{ form.nro_timbrado }}
+                                                    <div class="field item">
+                                                        <input class="form-control" type="text"
+                                                            value="{{confi.nro_timbrado}}" id="nro_timbrado"
+                                                            readonly="readonly" disabled="disabled">
                                                     </div>
-                                                    
+
+                                                </div>
+                                                <div class="form-group">
+                                                    <label><strong>Fecha Inicio Timbrado:</strong></label>
+                                                    <div class="field item">
+                                                        <input class="form-control" type="text"
+                                                            value="{{confi.fecha_inicio_timbrado}}"
+                                                            id="fecha_inicio_timbrado" readonly="readonly"
+                                                            disabled="disabled">
+                                                    </div>
+
+                                                </div>
+                                                <div class="form-group">
+                                                    <label><strong>Fecha Fin Timbrado:</strong></label>
+                                                    <div class="field item">
+                                                        <input class="form-control" type="text"
+                                                            value="{{confi.fecha_fin_timbrado}}" id="fecha_fin_timbrado"
+                                                            readonly="readonly" disabled="disabled">
+                                                    </div>
+
+                                                </div>
+                                                <div class="form-group">
+                                                    <label><strong>Ruc Empresa:</strong></label>
+                                                    <div class="field item">
+                                                        <input class="form-control" type="text"
+                                                            value="{{confi.ruc_empresa}}" id="ruc_empresa"
+                                                            readonly="readonly" disabled="disabled">
+                                                    </div>
                                                 </div>
                                                 <div class="form-group">
                                                     <label><strong>Número Factura:</strong></label>
 
-                                                    <div class="field item"> 
+                                                    <div class="field item">
                                                         {{ form.nro_factura }}
                                                     </div>
-                                                    
+
                                                 </div>
                                                 <div class="form-group">
                                                     <label><strong>Cliente:</strong></label>
-                                                    <div class="field item"> 
+                                                    <div class="field item">
                                                         {{ form.id_cliente }}
                                                     </div>
-                                                    
-                                                </div>                                                
+
+                                                </div>
                                                 <fieldset disabled>
                                                     <div class="form-group d-none">
                                                         <label><strong>Total Iva: </strong></label>
@@ -218,7 +238,7 @@
     $.datepicker.setDefaults($.datepicker.regional['es']);
 
     $(function () {
-         // initialize a validator instance from the "FormValidator" constructor.
+        // initialize a validator instance from the "FormValidator" constructor.
         // A "<form>" element is optionally passed as an argument, but is not a must
         var validator = new FormValidator({
             "events": ['blur', 'input', 'change']
@@ -232,7 +252,6 @@
         };
         // on form "reset" event
         document.forms[0].onreset = function (e) {
-            $('#alert_email').empty();
             validator.reset();
         };
         // stuff related ONLY for this demo page:
@@ -246,28 +265,14 @@
             e.preventDefault();
         });
 
-        var seleccionCheckbox = ''
-        $("input[name='seleccionS'], input[name='seleccionP']").change(function(){
-            var seleS = $("input[name='seleccionS']").val()
-            var seleP = $("input[name='seleccionP']").val()
-
-            if(seleS != ''){
-                seleccionCheckbox = seleS
-            }
-            
-            if(seleP != ''){
-                seleccionCheckbox = seleP
-            }
-            
-        });
-
         $('#tblFacturaVenta').DataTable({
             ordering: false,
+            searching: false,
             language: {
                 decimal: "",
                 emptyTable: "No hay información",
                 info: "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
-                infoEmpty: "Mostrando 0 to 0 de 0 Entradas",
+                infoEmpty: "Mostrando 0 de 0 Entradas",
                 infoFiltered: "(Filtrado de _MAX_ total entradas)",
                 infoPostFix: "",
                 thousands: ",",
@@ -283,7 +288,37 @@
                     previous: "Anterior",
                 },
             },
-        });    
+        });
+
+        var fecha_inicio = $("#fecha_inicio_timbrado").val()
+        var fecha_fin = $("#fecha_fin_timbrado").val()
+        var nro_tim = $("#nro_timbrado").val()
+        var nro_ruc = $("#ruc_empresa").val()
+
+
+        if (fecha_inicio != "" && fecha_fin != "" && nro_tim != "" && nro_ruc != "") {
+            if (!compareDate(fecha_inicio, fecha_fin)) {
+                swal({
+                    title: "Notificación",
+                    text: "La fecha inicio y fin del timbrado ha caducado!",
+                    icon: "warning",
+                    button: "Ok",
+                })
+                $('form').find('#button_registrar').addClass('d-none')
+            } else {
+                $('form').find('#button_registrar').removeClass('d-none')
+            }
+        }
+        else {
+            swal({
+                title: "Notificación",
+                text: "Agregue los datos de la factura en configuraciones iniciales! ",
+                icon: "warning",
+                button: "Ok",
+            })
+            $("form").find("#button_registrar").addClass("d-none")
+        }
+
 
         $('#cliente_select').select2({
             placeholder: 'Seleccione un Cliente',
@@ -295,7 +330,7 @@
                 searching: function () {
                     return 'Buscando...'
                 },
-                noResults: function(){
+                noResults: function () {
                     return 'No se ha encontrado ningún resultado'
                 }
             }
@@ -309,7 +344,6 @@
                 data: function (params) {
                     return {
                         term: params.term,
-                        seleccion: seleccionCheckbox,
                         action: 'search_products'
                     };
                 },
@@ -326,15 +360,29 @@
                 searching: function () {
                     return 'Buscando...'
                 },
-                noResults: function(){
+                noResults: function () {
                     return 'No se ha encontrado ningún resultado'
                 }
             }
         })
 
-        factura.items.products = {{ det|safe }};
+        factura.items.products = {{ det | safe }};
         factura.list();
     })
+
+    function compareDate(fecha_emision, fecha_vencimiento) {
+        var d1 = fecha_emision.split("/");
+        var d2 = fecha_vencimiento.split("/");
+        var c = new Date();
+
+        var from = new Date(d1[2], parseInt(d1[1]) - 1, d1[0]);  // -1 because months are from 0 to 11
+        var to = new Date(d2[2], parseInt(d2[1]) - 1, d2[0]);
+        var check = new Date(c.getFullYear(), c.getMonth(), c.getDate());
+        if (check >= from && check <= to) {
+            return true
+        }
+        return false
+    }
 
 </script>
 {% endblock javascripts %}

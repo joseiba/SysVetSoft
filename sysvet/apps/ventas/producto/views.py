@@ -11,6 +11,7 @@ from django.http import JsonResponse
 from apps.ventas.producto.forms import TipoProductoForm, DepositoForm, ProductoForm
 from apps.ventas.producto.models import TipoProducto, Deposito, Producto, ProductoStock
 from apps.compras.models import FacturaCompra, FacturaDet
+from apps.ventas.factura.models import FacturaCabeceraVenta, FacturaDetalleVenta
 from apps.configuracion.models import ConfiEmpresa
 
 date = datetime.now()
@@ -223,6 +224,7 @@ def edit_producto(request, id):
             return redirect('/producto/edit/' + str(id))
         if form.is_valid():
             producto = form.save(commit=False)
+            producto.stock_total = request.POST.get('stock')
             producto.save()
             messages.add_message(request, messages.SUCCESS, 'El producto se ha editado correctamente!')
             return redirect('/producto/edit/' + str(id))
@@ -276,12 +278,33 @@ def add_factura_to_producto():
                 for factDet in facDe:
                     try:                        
                         prod = Producto.objects.get(id=factDet.id_pedido.id_producto.id)
-                        prod.fecha_compra = factCom.fecha_emision
+                        prod.fecha_compra = date.strftime("%d/%m/%Y")
                         prod.precio_compra = factDet.id_pedido.id_producto.precio_compra
                         prod.stock = prod.stock + factDet.cantidad
                         prod.stock_total = prod.stock_total + factDet.cantidad
                         prod.save()
                     except Exception as e:
+                        print(e)
+                        pass
+
+def rest_factura_venta_to_producto():
+    factVenta = FacturaCabeceraVenta.objects.all()
+    if factVenta is not None:
+        for fv in factVenta:
+            if(fv.factura_cargada == 'N'):
+                fv.factura_cargada = 'S'
+                fv.save()
+                facDe = FacturaDetalleVenta.objects.filter(id_factura_venta=fv.id)
+                for factDet in facDe:
+                    try:
+                        if factDet.tipo == 'P':
+                            prod = Producto.objects.get(id=factDet.id_producto.id)
+                            prod.fecha_compra = date.strftime("%d/%m/%Y")
+                            prod.stock = prod.stock - factDet.cantidad
+                            prod.stock_total = prod.stock_total - factDet.cantidad
+                            prod.save()
+                    except Exception as e:
+                        print(e)
                         pass
 
 @login_required()
@@ -337,6 +360,7 @@ def mover_producto_detalle_general(request, id):
     
 def list_productos_general(request):
     add_factura_to_producto()
+    rest_factura_venta_to_producto()
     return render(request, "ventas/producto/list_producto_general.html")
 
 
@@ -344,9 +368,11 @@ def list_productos_general(request):
 def list_producto_general_ajax(request):
     query = request.GET.get('busqueda')
     if query != "":
-        productos = Producto.objects.exclude(is_active="N").filter(Q(nombre_producto__icontains=query) | Q(codigo_producto__icontains=query) | Q(id_deposito__descripcion__icontains=query)).order_by('-last_modified')
+        productos = Producto.objects.exclude(is_active="N").filter(Q(nombre_producto__icontains=query) | Q(codigo_producto__icontains=query)).order_by('-last_modified')        
+        productos = productos.exclude(servicio_o_producto="S")
     else:
         productos = Producto.objects.exclude(is_active="N").order_by('-last_modified')
+        productos = productos.exclude(servicio_o_producto="S")
 
     total = productos.count()
 

@@ -61,7 +61,6 @@ class FacturaCabeceraVenta(models.Model):
 class FacturaDetalleVenta(models.Model):
     id_factura_venta = models.ForeignKey('FacturaCabeceraVenta', on_delete=models.CASCADE)
     id_producto = models.ForeignKey(Producto, on_delete=models.CASCADE, null=True)
-    id_servicio = models.ForeignKey(Servicio, on_delete=models.CASCADE, null=True)
     tipo = models.CharField(max_length=100, blank=True, null=True)
     cantidad = models.IntegerField()
     descripcion = models.CharField(max_length=800, blank=True)

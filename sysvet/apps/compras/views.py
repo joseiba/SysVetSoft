@@ -99,10 +99,17 @@ def delete_proveedor(request, id):
 
 def add_pedido():
     producto = Producto.objects.exclude(is_active='N').all()
+    producto = producto.exclude(servicio_o_producto="S")
     for pro in producto:
         pe = pro.id
         try:
             pedi = Pedido.objects.get(id_producto=pe)
+            if pro.stock_minimo <= pro.stock:
+                pedi.is_active = "N"
+                pedi.save()
+            if pro.stock_minimo >= pro.stock:
+                pedi.is_active = "S"
+                pedi.save()                
         except:
             if pro.stock_minimo >= pro.stock:
                 pedido = Pedido()
@@ -312,6 +319,7 @@ def edit_pedido_compra(request, id):
 def get_pedido_list():
     data = []
     pedidos = Pedido.objects.exclude(pedido_cargado='S').all()
+    pedidos = pedidos.exclude(is_active="N")
     for i in pedidos:
         item = i.obtener_dict()
         item['id'] = i.id
@@ -477,7 +485,6 @@ def try_exception(id):
         pro = Proveedor.objects.get(id=id.id)
         return 'Nombre: ' + pro.nombre_proveedor + '</br> ' + 'Ruc: ' + pro.ruc_proveedor
     except Exception as e:
-        print(e)
         return '-'
 
 @login_required()

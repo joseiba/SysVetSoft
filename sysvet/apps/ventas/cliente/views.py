@@ -43,12 +43,10 @@ def edit_cliente(request, id):
         form = ClienteForm(request.POST, instance=cliente)
         if not form.has_changed():
             messages.info(request, "No has hecho ningun cambio!")
-            strId = str(id)
             return redirect('/cliente/edit/'+ strId)
         if form.is_valid():
             cliente = form.save(commit=False)
             cliente.save()
-            strId = str(id)
             messages.success(request, 'Se ha editado correctamente!')
             return redirect('/cliente/edit/'+ strId)
 
