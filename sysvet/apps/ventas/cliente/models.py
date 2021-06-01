@@ -44,8 +44,8 @@ class Cliente (models.Model):
     def __str__(self):
         """Formato del cliente"""
         if self.ruc == None:
-            return 'Cliente: %s - cedula: %s' % (self.nombre_cliente, self.cedula)
-        return  'Cliente: %s - ruc: %s' % (self.nombre_cliente, self.ruc)
+            return 'Cliente: %s %s- cedula: %s' % (self.nombre_cliente, self.apellido_cliente, self.cedula)
+        return  'Cliente: %s %s - ruc: %s' % (self.nombre_cliente, self.apellido_cliente, self.ruc)
         
 
     def get_absolute_url(self):
