@@ -271,7 +271,7 @@
             if ((fecha != "" && fecha != null && fecha != undefined) && (servicio != "" && servicio != null && servicio != undefined) && (hora != "" && hora != null && hora != undefined) && (id_cliente != "" && id_cliente != null && id_cliente != undefined) && (id_mascota != "" && id_mascota != null && id_mascota != undefined) && (empleado != "" && empleado != null && empleado != undefined)) {
                 var urlValidate = "/reserva/validarDatos/"
                 $.ajax({
-                    data: { 'fecha': fecha, 'servicio': servicio, 'hora': hora, 'id_cliente': id_cliente, 'id_mascota': id_mascota, 'empleado': empleado },
+                    data: { 'fecha': fecha, 'servicio': servicio, 'hora': hora, 'id_cliente': id_cliente, 'id_mascota': id_mascota, 'empleado': empleado, 'action': 'A' },
                     url: urlValidate,
                     success: function (response) {
                         console.log(response)
