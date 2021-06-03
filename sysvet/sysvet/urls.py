@@ -49,12 +49,21 @@ reporte_compra_pdf)
 from apps.ventas.factura.views import (list_factura_ventas, list_facturas__ventas_ajax, add_factura_venta, 
 get_producto_servicio_factura, edit_factura_venta)
 
+from apps.usuario.views import (list_usuarios, list_usuarios_ajax, add_usuario, edit_usuario, add_rol)
+
 urlpatterns = [
     # Login and logout   
     path('admin/', admin.site.urls),
     path('', home_user, name="index"),
     path('accounts/login/', Login.as_view(), name='login'),
     path('logout/', logoutUser, name="logout"),
+
+    #Usuarios
+    path('usuario/listUsuarios/', list_usuarios, name="list_usuarios"),
+    path('usuario/list_usuarios_ajax/', list_usuarios_ajax, name="list_usuarios_ajax"),
+    path('usuario/add/', add_usuario , name="add_usuario"),
+    path('usuario/edit/<int:id>/', edit_usuario, name="edit_usuario"),
+    path('usuario/addRol/', add_rol , name="add_rol"),
 
     #Urls clientes
     path('cliente/add/',add_cliente , name="add_cliente"),

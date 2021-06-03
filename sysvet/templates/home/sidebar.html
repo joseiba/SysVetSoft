@@ -61,6 +61,12 @@
                         <li><a href="{% url 'list_factura_compra' %}">Lista de Facturas Compra</a></li>
                     </ul>
                 </li>
+                <li><a><i class="glyphicon glyphicon-cog fa-lg" style="color: white; width: 26px;"></i> Usuarios <span class="fa fa-chevron-down"></span></a>
+                    <ul class="nav child_menu">
+                        <li><a href="{% url 'list_usuarios' %}">Lista de Usuarios</a></li>
+                        <li><a href="{% url 'add_rol' %}">Agregar Roles</a></li>
+                    </ul>
+                </li>
                 <li><a><i class="glyphicon glyphicon-cog fa-lg" style="color: white; width: 26px;"></i> Configuraciones <span class="fa fa-chevron-down"></span></a>
                     <ul class="nav child_menu">
                         <li><a href="{% url 'list_servicio' %}">Lista de Servicios</a></li>

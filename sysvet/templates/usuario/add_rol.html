@@ -1,0 +1,212 @@
+{% extends "home/base_site.html" %}
+
+{% block title %} Agregar Rol{% endblock title %}
+{% block stylesheets %}
+{{ block.super }}
+<link href="/static/project_static/other/js/select2/select2.css" rel="stylesheet" />
+<link href="/static/project_static/vendors/datatables.net-bs/css/dataTables.bootstrap.min.css" rel="stylesheet">
+<link href="/static/project_static/vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css" rel="stylesheet">
+<link href="/static/project_static/vendors/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.min.css"
+    rel="stylesheet">
+<link href="/static/project_static/vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css"
+    rel="stylesheet">
+<link href="/static/project_static/vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet"
+    href="/static/project_static/other/js/bootstrap-touchspin-master/dist/jquery.bootstrap-touchspin.css">
+<link rel="stylesheet"
+    href="/static/project_static/other/js/jquery-ui-themes-1.12.1/jquery-ui-themes-1.12.1/jquery-ui.min.css">
+<style>
+    .dataTables_info {
+        width: 0 !important;
+    }
+</style>
+{% endblock stylesheets %}
+{% block content %}
+<div class="right_col" role="main">
+    <div class="">
+        <div class="page-title">
+            <div class="title_left">
+                <h3>Agregar Roles</h3>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+        {% if messages %}
+        <div class="alert alert-success alert-dismissible" role="alert">
+            {% for message in messages %}
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            {{ message }}
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <div class="clearfix"></div>
+
+        <div class="row">
+            <div class="col-md-12 col-sm-12">
+                <div class="x_panel">
+                    <div class="x_title">
+                        <h2>Cargar Roles</h2>
+                        <ul class="nav navbar-right panel_toolbox">
+                            <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                            </li>
+                            <li><a class="close-link"><i class="fa fa-close"></i></a>
+                            </li>
+                        </ul>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="x_content">
+                        <div class="col-md-5">
+                            <div class="tile">
+                                <h3 class="tile-title">Roles</h3>
+                                <div class="tile-body">
+                                    <form method="POST" action="{% url 'add_rol' %}">
+                                        {% csrf_token %}
+                                        <div class="form-group">
+                                            <label class="control-label">Nombre</label>
+                                            {{ form.name }}
+                                        </div>
+                                        <div class="overflow-auto" style="height: 200px">
+                                            <ul class="list-unstyled">
+                                                {% for check in form.permissions %}
+                                                    <li>
+                                                        {{ check.tag }}
+                                                        {{ check.choice_label }}
+                                                    </li>
+                                                {% endfor %}
+                                            </ul>
+                                        </div>
+                                        <div class="tile-footer mt-4">
+                                            <button class="btn btn-primary" type="submit">
+                                                Registrar
+                                            </button>&nbsp;&nbsp;&nbsp;
+                                            <button class="btn btn-secondary" type="reset">
+                                                Reset
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+            
+                            </div>
+                        </div>
+                        <div class="col-md-7">
+                            <div class="tile">
+                                <div class="tile-body">
+                                    <div class="table-responsive">
+                                        <h3 class="tile-title">Lista de Roles</h3>
+                                        <table class="table table-hover table-bordered" id="Table">
+                                            <thead>
+                                            <tr>
+                                                <th style="width: 15%">Id</th>
+                                                <th style="width: 65%">Rol</th>
+                                                <th style="width: 20%">Acciones</th>
+                                            </tr>
+                                            </thead>
+
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+{% block javascripts %}
+{{ block.super }}
+<!-- validator -->
+<script src="/static/project_static/vendors/datatables.net/js/jquery.dataTables.min.js"></script>
+<script src="/static/project_static/vendors/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+<script src="/static/project_static/vendors/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
+<script src="/static/project_static/vendors/datatables.net-buttons-bs/js/buttons.bootstrap.min.js"></script>
+<script src="/static/project_static/vendors/datatables.net-buttons/js/buttons.flash.min.js"></script>
+<script src="/static/project_static/vendors/datatables.net-buttons/js/buttons.html5.min.js"></script>
+<script src="/static/project_static/vendors/datatables.net-buttons/js/buttons.print.min.js"></script>
+<script src="/static/project_static/vendors/datatables.net-fixedheader/js/dataTables.fixedHeader.min.js"></script>
+<script src="/static/project_static/vendors/datatables.net-keytable/js/dataTables.keyTable.min.js"></script>
+<script src="/static/project_static/vendors/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
+<script src="/static/project_static/vendors/datatables.net-responsive-bs/js/responsive.bootstrap.js"></script>
+<script src="/static/project_static/vendors/datatables.net-scroller/js/dataTables.scroller.min.js"></script>
+<script src="/static/project_static/vendors/jszip/dist/jszip.min.js"></script>
+<script src="/static/project_static/vendors/pdfmake/build/pdfmake.min.js"></script>
+<script src="/static/project_static/vendors/pdfmake/build/vfs_fonts.js"></script>
+<script src="/static/project_static/vendors/validator/multifield.js"></script>
+<script src="/static/project_static/vendors/validator/validator.js"></script>
+<script src="/static/project_static/other/js/select2/select2.js"></script>
+<script src="/static/project_static/other/js/sweetalert.min.js"></script>
+
+<script>  
+    $(function () {
+        // initialize a validator instance from the "FormValidator" constructor.
+        // A "<form>" element is optionally passed as an argument, but is not a must
+        var validator = new FormValidator({
+            "events": ['blur', 'input', 'change']
+        }, document.forms[0]);
+        // on form "submit" event
+        document.forms[0].onsubmit = function (e) {
+            var submit = true,
+                validatorResult = validator.checkAll(this);
+            return !!validatorResult.valid;
+        };
+        // on form "reset" event
+        document.forms[0].onreset = function (e) {
+            validator.reset();
+        };
+        // stuff related ONLY for this demo page:
+        $('.toggleValidationTooltips').change(function () {
+            validator.settings.alerts = !this.checked;
+            if (this.checked)
+                $('form .alert').remove();
+        }).prop('checked', false);
+
+        $('form input').on("cut copy paste", function (e) {
+            e.preventDefault();
+        });
+        $('#Table').DataTable({
+            ordering: false,
+            language: {
+                decimal: "",
+                emptyTable: "No hay información",
+                info: "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
+                infoEmpty: "Mostrando 0 to 0 de 0 Entradas",
+                infoFiltered: "(Filtrado de _MAX_ total entradas)",
+                infoPostFix: "",
+                thousands: ",",
+                lengthMenu: "Mostrar _MENU_ Entradas",
+                loadingRecords: "Cargando...",
+                processing: "Procesando...",
+                search: "Buscar:",
+                zeroRecords: "Sin resultados encontrados",
+                paginate: {
+                    first: "Primero",
+                    last: "Ultimo",
+                    next: "Siguiente",
+                    previous: "Anterior",
+                },
+            },
+        });
+
+
+        $('#group_select').select2({
+            placeholder: 'Seleccione un Rol de Permisos',
+            language: "es",
+            language: {
+                inputTooShort: function () {
+                    return '';
+                },
+                searching: function () {
+                    return 'Buscando...'
+                },
+                noResults: function(){
+                    return 'No se ha encontrado ningún resultado'
+                }
+            }
+        });
+
+    })
+
+</script>
+{% endblock javascripts %}
