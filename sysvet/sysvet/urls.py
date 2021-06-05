@@ -49,7 +49,7 @@ reporte_compra_pdf)
 from apps.ventas.factura.views import (list_factura_ventas, list_facturas__ventas_ajax, add_factura_venta, 
 get_producto_servicio_factura, edit_factura_venta)
 
-from apps.usuario.views import (list_usuarios, list_usuarios_ajax, add_usuario, edit_usuario, add_rol)
+from apps.usuario.views import (list_usuarios, list_usuarios_ajax, add_usuario, edit_usuario, add_rol, get_group_list, change_password)
 
 urlpatterns = [
     # Login and logout   
@@ -64,6 +64,8 @@ urlpatterns = [
     path('usuario/add/', add_usuario , name="add_usuario"),
     path('usuario/edit/<int:id>/', edit_usuario, name="edit_usuario"),
     path('usuario/addRol/', add_rol , name="add_rol"),
+    path('usuario/get_group_list/', get_group_list , name="get_group_list"),
+    path('usuario/editPassword/<int:id>/', change_password , name="change_password"),
 
     #Urls clientes
     path('cliente/add/',add_cliente , name="add_cliente"),

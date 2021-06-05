@@ -11,9 +11,10 @@ from django.contrib import messages
 from datetime import time, datetime
 from django.db.models import Q
 from django.contrib.auth.models import Group
+from django.contrib.auth.forms import PasswordChangeForm
 import json
 
-from apps.usuario.forms import FormLogin, UserForm, UserFormChange, GroupForm, GroupChangeForm
+from apps.usuario.forms import FormLogin, UserForm, UserFormChange, GroupForm, GroupChangeForm, ContraseñaChangeForm
 from apps.usuario.models import User
 
 
@@ -116,8 +117,10 @@ def list_usuarios_ajax(request):
 @login_required()
 def add_usuario(request):
     form = UserForm()
+    group = Group.objects.all()
     if request.method == 'POST':
         form = UserForm(request.POST)
+        print(form)
         if form.is_valid():
             form.save()
             messages.success(request, "Se ha agregado correctamente!")
@@ -138,7 +141,6 @@ def edit_usuario(request, id):
             return redirect('/usuario/edit/' + str(id))
         if form.is_valid():
             form.save()
-            # messages.success(request, "El cliente ha sido editado correctamente!")
             messages.add_message(request, messages.SUCCESS, 'Se ha editado correctamente!')
             return redirect('/usuario/edit/' + str(id))
         else:
@@ -147,7 +149,51 @@ def edit_usuario(request, id):
     context = {'form': form, 'usuario': usuario}
     return render(request, 'usuario/edit_usuario.html', context)
 
+@login_required()
+def change_password(request, id):
+    form = ContraseñaChangeForm(request.user)
+    if request.method == 'POST':
+        form = ContraseñaChangeForm(request.user, request.POST)
+        if form.is_valid():
+            user = form.save()
+            update_session_auth_hash(request, user)
+            messages.add_message(request, messages.SUCCESS, 'Se ha editado correctamente!')
+            return redirect('/usuario/editPassword/' + str(id))
+        else:
+            messages.error(request, form.errors)
+    
+    context = {'form': form, 'id': id}
+    return render(request, 'usuario/edit_password.html', context)
+
 #Roles
+def get_group_list(request):
+    query = request.GET.get('busqueda')
+    if query != "":
+        group = Group.objects.filter(Q(name__icontains=query))
+    else:
+        group = Group.objects.all()
+
+    total = group.count()
+
+    _start = request.GET.get('start')
+    _length = request.GET.get('length')
+    if _start and _length:
+        start = int(_start)
+        length = int(_length)
+        page = math.ceil(start / length) + 1
+        per_page = length
+
+        group = group[start:start + length]
+
+    data = [{'id': g.id,'rol': g.name} for g in group]        
+        
+    response = {
+        'data': data,
+        'recordsTotal': total,
+        'recordsFiltered': total,
+    }
+    return JsonResponse(response)
+
 @login_required()
 def add_rol(request):
     form = GroupForm()

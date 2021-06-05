@@ -1,7 +1,7 @@
-from django.contrib.auth.forms import AuthenticationForm,  UserCreationForm, UserChangeForm
+from django.contrib.auth.forms import AuthenticationForm,  UserCreationForm, UserChangeForm, PasswordChangeForm
 from django.contrib.auth.models import Group, Permission
 from django.forms import *
-
+from django import forms
 
 from apps.usuario.models import User
 
@@ -16,7 +16,7 @@ class FormLogin(AuthenticationForm):
 
 class UserForm(UserCreationForm):
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs):        
         super().__init__(*args, **kwargs)
         self.fields['password1'].widget.attrs['class'] = 'form-control'
         self.fields['password2'].widget.attrs['class'] = 'form-control'
@@ -25,27 +25,28 @@ class UserForm(UserCreationForm):
         model = User
         fiels = ("first_name", "last_name", "email", "username", "groups", "password1", "password2")
         widgets = {
-            'first_name': TextInput(
+            'first_name': forms.TextInput(
                 attrs={
                     'class': 'form-control','name': 'first_name', 'placeholder': 'Ingrese el nombre del usuario','onkeyup':'replaceDirection(this)', 'required': 'required', 'autocomplete':"off"
                 }
             ),
-            'last_name': TextInput(
+            'last_name': forms.TextInput(
                 attrs={
                     'class': 'form-control','name': 'last_name', 'placeholder': 'Ingrese el apellido del usuario','onkeyup':'replaceDirection(this)', 'required': 'required', 'autocomplete':"off"
                 }
             ),
-            'email': TextInput(
+            'email': forms.TextInput(
                 attrs={
                     'class':'form-control optional', 'placeholder': 'Email','name':'email', 'type':'email', 'id':'email', 'autocomplete':"off"
                 }
             ),
-            'username': TextInput(
+            'username': forms.TextInput(
                 attrs={
                     'class': 'form-control','name': 'username', 'placeholder': 'Nombre de usuario','onkeyup':'replaceDirection(this)', 'required': 'required', 'autocomplete':"off"
                 }
             ),
-            'groups' : Select(attrs={'class':'form-control', 'id': 'group_select' ,'name':'groups', 'required': 'required'})
+            'groups' : forms.TextInput(attrs={'class':'form-control', 'id': 'groups_selected','required':'required' ,'name':'groups'})
+
         }
         exclude = ['user_permissions', 'last_login', 'date_joined', 'is_superuser', 'is_active', 'is_staff', 'password']
 
@@ -60,59 +61,38 @@ class UserForm(UserCreationForm):
 
 class UserFormChange(UserChangeForm):
 
-    password1 = CharField(required=False,label="Contraseña",
-                                widget=PasswordInput(attrs={
-                                    'class':'form-control',
-                                },))
-    password2 = CharField(required=False,label="Confirmar Contraseña",
-                                widget=PasswordInput(attrs={
-                                        'class': 'form-control',
-                                    }
-                                ),
-                                help_text="Ingrese la misma contraseña que la anterior, para verificación.")
     class Meta:
         model = User
-        fields = ("first_name", "last_name", "email", "username","profile","groups")
+        fields = ("first_name", "last_name", "email", "username","groups")
         widgets = {
-            'first_name': TextInput(
+            'first_name': forms.TextInput(
                 attrs={
                     'class': 'form-control','name': 'first_name', 'placeholder': 'Ingrese el nombre del usuario','onkeyup':'replaceDirection(this)', 'required': 'required', 'autocomplete':"off"
                 }
             ),
-            'last_name': TextInput(
+            'last_name': forms.TextInput(
                 attrs={
                     'class': 'form-control','name': 'last_name', 'placeholder': 'Ingrese el apellido del usuario','onkeyup':'replaceDirection(this)', 'required': 'required', 'autocomplete':"off"
                 }
             ),
-            'email': TextInput(
+            'email': forms.TextInput(
                 attrs={
                     'class':'form-control optional', 'placeholder': 'Email','name':'email', 'type':'email', 'id':'email', 'autocomplete':"off"
                 }
             ),
-            'username': TextInput(
+            'username': forms.TextInput(
                 attrs={
                     'class': 'form-control','name': 'username', 'placeholder': 'Nombre de usuario','onkeyup':'replaceDirection(this)', 'required': 'required', 'autocomplete':"off"
                 }
             ),
-            'groups' : Select(attrs={'class':'form-control', 'id': 'group_select' ,'name':'groups'})
-        }
+            'groups' : forms.TextInput(attrs={'class':'form-control', 'id': 'groups_selected','required':'required' ,'name':'groups'})
 
-    def clean_password2(self):
-        password1 = self.cleaned_data.get("password1")
-        password2 = self.cleaned_data.get("password2")
-        if password1 and password2 and password1 != password2:
-            raise ValidationError("La contraseñas no coinciden")
-        return password2
+        }
 
     def save(self, commit=True):
         form = super()
         if form.is_valid():
             user = form.save(commit=False)
-            if self.cleaned_data['password1'] != '':
-                user.set_password(self.cleaned_data["password1"])
-            if commit:
-                user.save()
-            user.groups.clear()
             for grupo in self.cleaned_data['groups']:
                 user.groups.add(grupo)
             return user
@@ -158,10 +138,10 @@ class GroupForm(ModelForm):
         model = Group
         fields = ('name', 'permissions')
         widgets = {
-            'name': TextInput(attrs={
+            'name': forms.TextInput(attrs={
                 'class':'form-control'
             }),
-            'permissions': CheckboxSelectMultiple(),
+            'permissions': forms.CheckboxSelectMultiple(),
         }
 
 
@@ -171,8 +151,30 @@ class GroupChangeForm(ModelForm):
         model = Group
         fields = ('name', 'permissions')
         widgets = {
-            'name': TextInput(attrs={
+            'name': forms.TextInput(attrs={
                 'class':'form-control'
             }),
-            'permissions': CheckboxSelectMultiple(),
+            'permissions': forms.CheckboxSelectMultiple(),
         }
+
+
+class ContraseñaChangeForm(PasswordChangeForm):
+
+    def __init__(self , user, *args, **kwargs):
+        self.user = user
+        super().__init__(user, *args, **kwargs)
+        self.fields['old_password'].widget.attrs['class'] = 'form-control'
+        self.fields['new_password1'].widget.attrs['class'] = 'form-control'
+        self.fields['new_password2'].widget.attrs['class'] = 'form-control'
+        self.fields['old_password'].widget.attrs['required'] = 'required'
+        self.fields['new_password1'].widget.attrs['required'] = 'required'
+        self.fields['new_password2'].widget.attrs['required'] = 'required'
+
+    def clean_old_password(self):
+        """
+        Validate that the old_password field is correct.
+        """
+        old_password = self.cleaned_data["old_password"]
+        if not self.user.check_password(old_password):
+            raise ValidationError("La contraseña actual no coinciden!", code="Contrasena Actual", params=[] )
+        return old_password

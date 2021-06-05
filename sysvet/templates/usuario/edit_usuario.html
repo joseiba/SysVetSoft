@@ -45,13 +45,18 @@
             <div class="col-md-12 col-sm-12">
                 <div class="x_panel">
                     <div class="x_title">
-                        <h2>Información Personal</h2>
+                        <h2>Información Personal</h2>                        
                         <ul class="nav navbar-right panel_toolbox">
                             <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
                             </li>
                             <li><a class="close-link"><i class="fa fa-close"></i></a>
                             </li>
                         </ul>
+                        <button type='button' class="btn btn-success float-right">
+                            <a href="{% url 'change_password' usuario.id %}" style="color: white;">
+                                Cambiar Contraseña
+                            </a>
+                        </button>
                         <div class="clearfix"></div>
                     </div>
                     <div class="x_content">
@@ -90,23 +95,6 @@
                                 </label>
                                 <div class="col-md-6 col-sm-6">
                                     {{ form.groups }}
-                                </div>
-                            </div>
-                            <div class="form-group field item">
-                                <label class="col-form-label col-md-3 col-sm-3  label-align">Contraseña
-                                    <span class="required">*</span>
-                                </label>
-                                <div class="col-md-6 col-sm-6">
-                                    {{ form.password1 }}
-
-                                </div>
-                            </div>
-                            <div class="form-group field item">
-                                <label class="col-form-label col-md-3 col-sm-3  label-align">Confirmar Contraseña
-                                    <span class="required">*</span>
-                                </label>
-                                <div class="col-md-6 col-sm-6">
-                                    {{ form.password2 }}
                                 </div>
                             </div>
                             <div class="ln_solid">
@@ -167,7 +155,8 @@
             e.preventDefault();
         });
 
-        $('#group_select').select2({
+
+        $('#groups_selected').select2({
             placeholder: 'Seleccione un Rol de Permisos',
             language: "es",
             language: {
