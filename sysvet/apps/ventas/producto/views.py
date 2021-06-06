@@ -78,7 +78,7 @@ def baja_tipo_producto(request, id):
 
 # Metodo para dar de alta tipo producto
 @login_required()
-@permission_required('configuracion.add_confiempresa')
+@permission_required('configuracion.change_confiempresa')
 def alta_tipo_producto(request, id):
     tipo_producto = TipoProducto.objects.get(id=id)
     if request.method == 'POST':
@@ -98,21 +98,43 @@ def alta_tipo_producto(request, id):
 @login_required()
 @permission_required('configuracion.view_confiempresa')
 def list_tipo_producto(request):
-    tipos_productos = TipoProducto.objects.all()
-    paginator = Paginator(tipos_productos, 10)
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
-    context = {'page_obj' : page_obj}
-    return render(request, "ventas/producto/list_tipo_producto.html", context)
+    return render(request, "ventas/producto/list_tipo_producto.html")
+
+
+@login_required()
+def get_list_tipo_producto(request):
+    query = request.GET.get('busqueda')
+    if query:
+        tipos_productos = TipoProducto.objects.filter(Q(nombre_tipo__icontains=query))
+    else:
+        tipos_productos = TipoProducto.objects.all()
+
+    total = tipos_productos.count()
+
+    _start = request.GET.get('start')
+    _length = request.GET.get('length')
+    if _start and _length:
+        start = int(_start)
+        length = int(_length)
+        page = math.ceil(start / length) + 1
+        per_page = length
+
+        tipos_productos = tipos_productos[start:start + length]
+
+    data = [{'id': tp.id, 'nombre_tipo': tp.nombre_tipo, 'fecha_alta': tp.fecha_alta, 'fecha_baja': tp.fecha_baja } for tp in tipos_productos]        
+
+    response = {
+        'data': data,
+        'recordsTotal': total,
+        'recordsFiltered': total,
+    }
+    return JsonResponse(response) 
 
 #Metodo para la busqueda de tipo de producto
 @login_required()
 def search_tipo_producto(request):
     query = request.GET.get('q')
-    if query:
-        tipos_productos = TipoProducto.objects.filter(Q(nombre_tipo__icontains=query))
-    else:
-        tipos_productos = TipoProducto.objects.all()
+    
     paginator = Paginator(tipos_productos, 10)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
@@ -176,12 +198,37 @@ def edit_deposito(request, id):
 @login_required()
 @permission_required('configuracion.view_confiempresa')
 def list_deposito(request):
-    depositos = Deposito.objects.all()
-    paginator = Paginator(depositos, 10)
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
-    context = {'page_obj' : page_obj}
-    return render(request, "ventas/producto/list_deposito.html", context)
+    return render(request, "ventas/producto/list_deposito.html")
+
+
+@login_required()
+def get_list_deposito(request):
+    query = request.GET.get('busqueda')
+    if query:
+        depositos = Deposito.objects.filter(Q(descripcion__icontains=query)).order_by('-last_modified')
+    else:
+        depositos = Deposito.objects.all().order_by('-last_modified')
+
+    total = depositos.count()
+
+    _start = request.GET.get('start')
+    _length = request.GET.get('length')
+    if _start and _length:
+        start = int(_start)
+        length = int(_length)
+        page = math.ceil(start / length) + 1
+        per_page = length
+
+        depositos = depositos[start:start + length]
+
+    data = [{'id': de.id, 'descripcion': de.descripcion } for de in depositos]        
+
+    response = {
+        'data': data,
+        'recordsTotal': total,
+        'recordsFiltered': total,
+    }
+    return JsonResponse(response) 
 
 #Metodo para la busqueda de deposito
 @login_required()

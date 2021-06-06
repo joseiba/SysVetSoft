@@ -83,13 +83,15 @@
                         <div class="float-left">
                             <div class="wrap">
                                 <div class="search">
-                                    <form action="{% url 'search_deposito' %}" method="GET" class="d-inline-flex">
-                                        <input type="search" class="searchTerm" name="q" value="{{ request.GET.q }}"
-                                            placeholder="Buscar por descripcion" autocomplete="off">
-                                        <button type="submit" class="searchButton">
+                                    <div class="d-inline-flex">
+                                        <input type="search" class="searchTerm" id="searchTerm"
+                                        placeholder="Buscar por descripcion"
+                                        data-toggle="tooltip" data-placement="top"
+                                        title="Buscar por descripcion" onkeyup="replaceCaratect(this)">
+                                        <button type="button" id="busqueda" class="searchButton">
                                             <i class="fa fa-search"></i>
                                         </button>
-                                    </form>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -99,38 +101,21 @@
                         <div class="row">
                             <div class="col-sm-12">
                                 <div class="card-box table-responsive" style="text-align: center;">
-                                    <table id="" class="table table-striped table-bordered" style="width:50%; margin: auto;">
+                                    <table id="list_deposito" class="table table-striped table-bordered" style="width:50%; margin: auto;">
                                         <thead>
                                             <tr class="" style="background-color: #2a3f54; font-size: medium;">
                                                 <th style="color: white;">Nº</th>
                                                 <th style="color: white;">Descripcion</th>
-                                                <th style="color: white;">Accion</th>
+                                                <th style="color: white;">Acción</th>
                                             </tr>
                                         </thead>
-                                        <tbody>
-
-                                            {% for deposito in page_obj %}
-                                            <tr style="font-size: medium;">
-                                                <td>{{ deposito.id}}</td>
-                                                <td>{{ deposito.descripcion}}</td>
-                                                <td style="width: 26px !important;">
-                                                    <button class="btn btn-warning"
-                                                        onclick="abrir_modal_edicion('/deposito/edit/' + '{{ deposito.id }}' + '/');">
-                                                        Editar
-                                                    </button>
-                                                </td>
-                                            </tr>
-                                            {% endfor %}
+                                        <tbody>                                            
                                         </tbody>
                                     </table>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="clearfix"></div>
-                    {% block pagination %}
-                    {% include 'home/pagination.html' %}
-                    {% endblock pagination %}
                 </div>
 
             </div>
@@ -173,6 +158,98 @@
         $('form input').on("cut copy paste", function (e) {
             e.preventDefault();
         });
+
+        var get_list = function (busqueda) {
+            $("#list_deposito").DataTable({
+                destroy: true,
+                dom: 'Bfrtip',
+                buttons: ['pdf'],
+                searching: false,
+                pageLength: 10,
+                ajax: {
+                    url: "/deposito/get_list_deposito/",
+                    type: 'GET',
+                    datatype: 'json',
+                    data: {'busqueda': busqueda},
+                    error: function (data) {
+                        $.fn.DataTable.ext.errorMode = 'none'
+
+                    }
+                },
+                columns: [
+                    {
+                        name: 'Nº',
+                        data: 'id',
+                    },
+                    {
+                        name: 'Descripcion',
+                        data: 'descripcion',
+                    },                    
+                    {
+                        name: 'Acción',
+                        data: 'id',
+                        render: function (data) {
+                            {% if perms.configuracion.change_confiempresa %}
+                                return '<button class="btn btn-warning" onclick="abrir_modal_edicion(\'/deposito/edit/' + data + '/\');">\
+                                                        Editar\
+                                                    </button>';
+                            {% endif %}
+
+                            return "-";
+                            
+                        }
+                    }
+
+                ],
+                columnDefs: [{
+                    targets: [2], // column index (start from 0)
+                    orderable: false, // set orderable false for selected columns
+                }],
+                serverSide: false,
+                language: {                    
+                    decimal: "",
+                    emptyTable: "Sin resultados encontrados",
+                    info: "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
+                    infoEmpty: "Mostrando 0 de 0 Entradas",
+                    infoFiltered: "(Filtrado de _MAX_ total entradas)",
+                    infoPostFix: "",
+                    thousands: ",",
+                    lengthMenu: "Mostrar _MENU_ Entradas",
+                    loadingRecords: "Cargando...",
+                    processing: "Procesando...",
+                    search: "Buscar:",
+                    zeroRecords: "Sin resultados encontrados",
+                    paginate: {
+                        first: "Primero",
+                        last: "Ultimo",
+                        next: "Siguiente",
+                        previous: "Anterior",
+                    },
+                },
+
+            })
+        }
+
+        var query = ""
+        
+        get_list(query);
+
+        $("#searchTerm").change(function(){
+            var busqueda = $("#searchTerm").val()
+            sessionStorage.setItem("busqueda", busqueda)
+        })
+
+        $("#busqueda").click(function(){
+            var busqueda = sessionStorage.getItem("busqueda")
+            if(busqueda == "" || busqueda == undefined || busqueda == null){
+                busqueda = "";
+                get_list(busqueda)
+            }
+            else{
+                get_list(busqueda)
+            }
+        }) 
+
     })
 </script>
 
