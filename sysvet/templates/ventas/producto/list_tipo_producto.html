@@ -77,10 +77,13 @@
                     </div>
                     {% endif %}
                     <div>
-                        <button class="btn btn-primary float-right"
-                        onclick="abrir_modal_creacion('/tipoProducto/add/');">
-                            Agregar nuevo tipo de producto
-                        </button>
+                        
+                        {% if perms.configuracion.add_confiempresa %}
+                            <button class="btn btn-primary float-right"
+                            onclick="abrir_modal_creacion('/tipoProducto/add/');">
+                                Agregar nuevo tipo de producto
+                            </button>
+                        {% endif %}
 
                         <div class="float-left">
                             <div class="wrap">

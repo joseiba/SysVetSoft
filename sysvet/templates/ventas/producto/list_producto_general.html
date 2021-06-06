@@ -77,9 +77,12 @@
                     </div>
                     {% endif %}
                     <div>
-                        <button type="submit" class="btn btn-primary float-right">
-                            <a style="color: white;" href="{% url 'add_producto' %}">Agregar nuevo producto</a>
-                        </button>
+                        
+                        {% if perms.producto.add_producto %}
+                            <button type="submit" class="btn btn-primary float-right">
+                                <a style="color: white;" href="{% url 'add_producto' %}">Agregar nuevo producto</a>
+                            </button>
+                        {% endif %}
 
                         <div class="float-left">
                             <div class="wrap">
@@ -235,22 +238,34 @@
                         name: 'Acciones',
                         data: 'id',
                         render: function (data) {
-                            return '<button class="btn btn-warning">\
+                            var buttons = "";
+                            {% if perms.producto.change_producto %}
+                                buttons += '<button class="btn btn-warning">\
                                                         <a href="/producto/edit/' + data + '/" style="color: black">\
                                                             Editar\
                                                         </a>\
-                                                    </button>\
-                                    <button class="btn btn-danger">\
+                                                    </button>';
+                            {% endif %}
+
+                            {% if perms.producto.delete_producto %}
+                                buttons += ' <button class="btn btn-danger">\
                                         <a class="confirm-delete pointer" data-id="' + data + '"\
                                             data-toggle="modal" data-target="#confirmDeleteModal">\
                                             Dar de baja\
                                         </a>\
-                                    </button>\
-                                    <button class="btn btn-primary" >\
-                                        <a href="/producto/listDetalle/' + data + '/" style="color: white">\
-                                            Ver Detalle\
-                                        </a>\
-                                    </button >';
+                                    </button>';
+                            {% endif %}
+
+                            {% if perms.producto.view_producto %}
+                                    buttons += '<button class="btn btn-primary" >\
+                                            <a href="/producto/listDetalle/' + data + '/" style="color: white">\
+                                                Ver Detalle\
+                                            </a>\
+                                        </button >';
+                            {% endif %}
+
+
+                            return buttons;
     }
                     }
 

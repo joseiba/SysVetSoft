@@ -73,9 +73,12 @@
                     </div>
                     {% endif %}
                     <div>
-                        <button type="submit" class="btn btn-primary float-right" onclick="abrir_modal_creacion('/deposito/add/')">
-                            Agregar nuevo deposito
-                        </button>
+                        
+                        {% if perms.configuracion.add_confiempresa %}
+                            <button type="submit" class="btn btn-primary float-right" onclick="abrir_modal_creacion('/deposito/add/')">
+                                Agregar nuevo deposito
+                            </button>
+                        {% endif %}
 
                         <div class="float-left">
                             <div class="wrap">

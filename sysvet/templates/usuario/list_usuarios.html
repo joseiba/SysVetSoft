@@ -77,10 +77,13 @@
                     </div>
                     {% endif %}
                     <div>
-                        <button type="submit" class="btn btn-primary float-right">
-                            <a style="color: white;" href="{% url 'add_usuario' %}">Agregar nuevo usuario</a>
-                        </button>
-
+                        
+                        {% if perms.usuario.add_user %}
+                            <button type="submit" class="btn btn-primary float-right">
+                                <a style="color: white;" href="{% url 'add_usuario' %}">Agregar nuevo usuario</a>
+                            </button>
+                        {% endif %}
+                                                
                         <div class="float-left">
                             <div class="wrap">
                                 <div class="search">
@@ -278,13 +281,22 @@
                         name: 'Acciones',
                         data: 'id',
                         render: function (data) {
-                            return '<button class="btn btn-warning">\
+                            var buttons = ""
+
+                            {% if perms.usuario.change_user %}
+                                buttons += '<button class="btn btn-warning">\
                                                         <a href="/usuario/edit/' + data + '/" style="color: black">\
                                                             Editar\
                                                         </a>\
-                                                    </button>\
-                                    <button class="btn btn-danger del" onclick="abrir_modal_edicion(\'/usuario/darBajaUsuario/' + data + '/\');">\
-                                        Dar de Baja</button>';
+                                                    </button>';
+                            {% endif %}
+
+                            {% if perms.usuario.delete_user %}
+                                buttons += '<button class="btn btn-danger del" onclick="abrir_modal_edicion(\'/usuario/darBajaUsuario/' + data + '/\');">\
+                                            Dar de Baja</button>';
+                            {% endif %}
+
+                            return buttons;
                         }
                     }
 
@@ -395,11 +407,15 @@
                         name: 'Accion',
                         data: 'id',
                         render: function (data) {
-                            return '<button class="btn btn-danger">\
-                                                        <a href="/usuario/altaUsuarios/' + data + '/" style="color: white">\
-                                                            Dar de Alta\
-                                                        </a>\
-                                                    </button>';
+                            {% if perms.usuario.add_user %}
+                                return '<button class="btn btn-danger">\
+                                                            <a href="/usuario/altaUsuarios/' + data + '/" style="color: white">\
+                                                                Dar de Alta\
+                                                            </a>\
+                                                        </button>';
+                            {% endif %}
+
+                            return "-";
                         }
                     }
 

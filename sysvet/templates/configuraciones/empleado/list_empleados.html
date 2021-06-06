@@ -77,10 +77,14 @@
                     </div>
                     {% endif %}
                     <div>
-                        <button type="submit" class="btn btn-primary float-right"
-                            onclick="abrir_modal_creacion('/configuracion/addEmpleado/')">
-                            Agregar nuevo empleado
-                        </button>
+                        
+                        {% if perms.configuracion.add_empleado %}
+                            <button type="submit" class="btn btn-primary float-right"
+                                onclick="abrir_modal_creacion('/configuracion/addEmpleado/')">
+                                Agregar nuevo empleado
+                            </button>
+                        {% endif %}
+                            
                         <div class="float-left">
                             <div class="wrap">
                                 <div class="search">
@@ -213,9 +217,13 @@
                         name: 'Acción',
                         data: 'id',
                         render: function (data) {
-                            return '<button class="btn btn-warning" onclick="abrir_modal_edicion(\'/configuracion/editEmpleado/' + data + '/\');">\
+                            {% if perms.configuracion.change_empleado %}
+                                return '<button class="btn btn-warning" onclick="abrir_modal_edicion(\'/configuracion/editEmpleado/' + data + '/\');">\
                                                         Editar\
                                                     </button>';
+                            {% endif %}
+
+                            return "-";
                         }
                     }
 

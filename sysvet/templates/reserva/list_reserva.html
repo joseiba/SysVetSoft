@@ -79,34 +79,52 @@
                 // leemos las fechas de inicio de evento y hoy
                 var check = moment(info.dateStr).format('YYYY-MM-DD');
                 var today = moment(new Date()).format('YYYY-MM-DD');
-
-                // si el inicio de evento ocurre hoy o en el futuro mostramos el modal
-                if (check >= today) {
-                    var url = '/reserva/addReserva/'
-                    var today = info.dateStr;
-                    sessionStorage.setItem('fecha_seleccionada', today)
-                    $('#creacion').load(url, today, function () {
-                        $(this).modal('show');
-                    });
-                    calendar.unselect()                   
-                }
-                // si no, mostramos una alerta de error
-                else {
-                    swal({
-                                title: "Notificación",
-                                text: "No se pueden crear eventos en fechas pasadas!",
-                                icon: "warning",
-                                button: "Ok",
-                            })
-                }
-
+                {% if perms.reserva.add_reserva %}
+                    if (check >= today) {
+                        var url = '/reserva/addReserva/'
+                        var today = info.dateStr;
+                        sessionStorage.setItem('fecha_seleccionada', today)
+                        $('#creacion').load(url, today, function () {
+                            $(this).modal('show');
+                        });
+                        calendar.unselect()                   
+                    }
+                    // si no, mostramos una alerta de error
+                    else {
+                            swal({
+                                    title: "Notificación",
+                                    text: "No se pueden crear eventos en fechas pasadas!",
+                                    icon: "warning",
+                                    button: "Ok",
+                                })
                 
+                        }
+                {% else %}
+                            swal({
+                                    title: "Notificación",
+                                    text: "No tienes permisos para agregar nuevos eventos!",
+                                    icon: "warning",
+                                    button: "Ok",
+                                })
+                {% endif %}
+
             },
             eventClick: function (arg) {
-                var url = '/reserva/editReserva/' + arg.event.groupId;
-                $('#edicion').load(url, function () {
-                    $(this).modal('show');
-                });
+                {% if perms.reserva.change_reserva %}
+
+                    var url = '/reserva/editReserva/' + arg.event.groupId;
+                    $('#edicion').load(url, function () {
+                        $(this).modal('show');
+                    });
+                {% else %}
+                            swal({
+                                    title: "Notificación",
+                                    text: "No tienes permisos para editar los eventos!",
+                                    icon: "warning",
+                                    button: "Ok",
+                                })
+                {% endif %}
+
             },
             events: [
                 {% for reserva in page_obj %}
@@ -121,7 +139,6 @@
         });
     calendar.render();
     $(document).on("click", "#menu_toggle", function () {
-        console.log("entro toglle")
         calendar.render();
     })
     });

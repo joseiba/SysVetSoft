@@ -77,9 +77,12 @@
                     </div>
                     {% endif %}
                     <div>
-                        <button type="submit" class="btn btn-primary float-right">
-                            <a style="color: white;" href="{% url 'add_cliente' %}">Agregar nuevo cliente</a>
-                        </button>
+                        
+                        {% if perms.cliente.add_cliente %}
+                            <button type="submit" class="btn btn-primary float-right">
+                                <a style="color: white;" href="{% url 'add_cliente' %}">Agregar nuevo cliente</a>
+                            </button>
+                        {% endif %}                        
 
                         <div class="float-left">
                             <div class="wrap">
@@ -248,17 +251,26 @@
                         name: 'Acciones',
                         data: 'id',
                         render: function (data) {
-                            return '<button class="btn btn-warning">\
+
+                            var buttons = "";
+                            {% if perms.cliente.change_cliente %}
+                                buttons +=  '<button class="btn btn-warning">\
                                                         <a href="/cliente/edit/' + data + '/" style="color: black">\
                                                             Editar\
                                                         </a>\
-                                                    </button>\
-                                                    <button class="btn btn-danger">\
+                                                    </button>';
+                            {% endif %}
+
+                            {% if perms.cliente.delete_cliente %}
+                                buttons += '<button class="btn btn-danger">\
                                                         <a class="confirm-delete pointer" data-id="' + data + '" data-name-cliente="' + data + '"\
                                                             data-toggle="modal" data-target="#confirmDeleteModal">\
                                                             Baja\
                                                         </a>\
                                                     </button>';
+                            {% endif %}
+
+                            return buttons;
                         }
                     }
 

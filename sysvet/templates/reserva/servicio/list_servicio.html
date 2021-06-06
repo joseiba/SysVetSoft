@@ -78,9 +78,13 @@
                     </div>
                     {% endif %}
                     <div>
-                        <button type="submit" class="btn btn-primary float-right" onclick="abrir_modal_creacion('/reserva/addServicio/')">
-                            Agregar nuevo servicio
-                        </button>
+                        
+                        {% if perms.configuracion.add_servicio %}                                                        
+                            <button type="submit" class="btn btn-primary float-right" onclick="abrir_modal_creacion('/reserva/addServicio/')">
+                                Agregar nuevo servicio
+                            </button>
+
+                        {% endif %}
 
                         <div class="float-left">
                             <div class="wrap">
@@ -203,12 +207,21 @@
                         name: 'Acción',
                         data: 'id',
                         render: function (data) {
-                            return ' <button class="btn btn-warning" onclick="abrir_modal_edicion(\'/reserva/editServicio/' + data  + '/\');">\
+                            var buttons = ""
+
+                            {% if perms.configuracion.change_servicio %}
+                                buttons += ' <button class="btn btn-warning" onclick="abrir_modal_edicion(\'/reserva/editServicio/' + data  + '/\');">\
                                                         Editar\
-                                                    </button>\
-                                                    <button class="btn btn-danger" onclick="abrir_modal_eliminacion(\'/reserva/bajaServicio/' + data + '/\');">\
+                                                    </button>';
+                            {% endif %}
+
+                            {% if perms.configuracion.delete_servicio %}
+                                buttons += '<button class="btn btn-danger" onclick="abrir_modal_eliminacion(\'/reserva/bajaServicio/' + data + '/\');">\
                                                         Baja\
                                                     </button>';
+                            {% endif %}
+
+                            return buttons;
                         }
                     }
 

@@ -357,6 +357,7 @@ def search_producto(request):
     context = { 'page_obj': page_obj}
     return render(request, "ventas/producto/list_producto.html", context)
 
+@permission_required('producto.add_producto')
 def mover_producto_detalle_general(request, id):
     try:
         pedido_trasladado = ProductoStock.objects.get(id=id)

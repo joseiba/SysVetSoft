@@ -68,9 +68,12 @@
                         <div class="clearfix"></div>
                     </div>
                     <div>
-                        <button type="submit" class="btn btn-primary float-right">
-                            <a style="color: white;" href="{%url 'add_pedido_compra' %}">Agregar nuevo pedido</a>
-                        </button>
+                        
+                        {% if perms.compras.add_pedidocabecera %}                                                        
+                            <button type="submit" class="btn btn-primary float-right">
+                                <a style="color: white;" href="{%url 'add_pedido_compra' %}">Agregar nuevo pedido</a>
+                            </button>
+                        {% endif %}
 
                         <div class="float-left">
                             <div class="wrap">
@@ -100,7 +103,6 @@
                                                 <th style="color: white;">Nº Pedido</th>
                                                 <th style="color: white;">Fecha Pedido</th>
                                                 <th style="color: white;">Pedido Cargado Factura</th>
-                                                <!--<th style="color: white;">Cantidad a Pedir</th>-->
                                                 <th style="color: white;">Accion</th>
                                             </tr>
                                         </thead>
@@ -196,12 +198,20 @@
                         name: 'Accion',
                         data: 'id',
                         render: function (data) {
+                            {% if perms.compras.change_pedidocabecera %}
                             return '<button class="btn btn-warning">\
                                         <a href="/compra/editPedidoCompra/' + data + '/" style="color: black">\
                                             Editar\
                                         </a>\
                                     </button>\
                                     <button class="btn btn-primary">\
+                                        <a href="/compra/reporteCompra/' + data + '/" style="color: white" target="blank">\
+                                            Generar PDF\
+                                        </a>\
+                                    </button>';
+                            {% endif %}
+
+                            return '<button class="btn btn-primary">\
                                         <a href="/compra/reporteCompra/' + data + '/" style="color: white" target="blank">\
                                             Generar PDF\
                                         </a>\

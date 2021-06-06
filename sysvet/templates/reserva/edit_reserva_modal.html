@@ -107,8 +107,12 @@
 
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-danger" id="confirmDeleteButtonModal" data-dismiss="modal"
+                
+                {% if perms.reserva.delete_reserva %}
+                    <button type="button" class="btn btn-danger" id="confirmDeleteButtonModal" data-dismiss="modal"
                     data-id-reserva="{{reserva.id}}">Eliminar</button>
+                {% endif %}
+                    
                 <button type="submit" class="btn btn-warning" id="edit_button" style="color: #fff;">Editar</button>
             </div>
         </form>

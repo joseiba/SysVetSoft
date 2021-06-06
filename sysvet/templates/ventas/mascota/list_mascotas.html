@@ -128,10 +128,13 @@
                         <div class="clearfix"></div>
                     </div>
                     <div>
-                        <button type="submit" class="btn btn-primary float-right">
-                            <a style="color: white;" href="{% url 'add_mascota' %}">Agregar nueva mascota</a>
-                        </button>
-
+                        
+                        {% if perms.mascota.add_mascota %}
+                            <button type="submit" class="btn btn-primary float-right">
+                                <a style="color: white;" href="{% url 'add_mascota' %}">Agregar nueva mascota</a>
+                            </button>
+                        {% endif %}
+                            
                         <div class="float-left">
                             <div class="wrap">
                                 <div class="search">
@@ -191,13 +194,21 @@
                                     </div>
 
                                     <div class="d-contents" style="display: contents;">
-                                        <a class="btn btn-outline-primary ml-3 mr-3"
+                                        
+                                        {% if perms.mascota.change_mascota %}
+                                            <a class="btn btn-outline-primary ml-3 mr-3"
                                             href="{% url 'edit_mascota' mascota.id %}">Editar Mascota
                                         </a>
-                                        <a class="btn btn-outline-warning ml-3 mr-3"
-                                            href="{% url 'edit_ficha_medica' mascota.id %}">Actualizar Ficha
-                                            Médica
-                                        </a>
+                                        {% endif %}
+                                            
+                                        {% if perms.mascota.view_mascota %}
+
+                                            <a class="btn btn-outline-warning ml-3 mr-3"
+                                                href="{% url 'edit_ficha_medica' mascota.id %}">Actualizar Ficha
+                                                Médica
+                                            </a>
+                                        {% endif %}
+
                                     </div>
                                 </div>
                             </div>

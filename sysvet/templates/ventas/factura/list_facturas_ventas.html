@@ -68,10 +68,14 @@
                         <div class="clearfix"></div>
                     </div>                    
                     <div>
-                        <button type="submit" class="btn btn-primary float-right">
-                            <a href="{% url 'add_factura_venta' %}" style="color: white;">Agregar nueva factura</a>
-                        </button>
+                        
+                        {% if perms.factura.add_facturacabeceraventa %}
+                            <button type="submit" class="btn btn-primary float-right">
+                                <a href="{% url 'add_factura_venta' %}" style="color: white;">Agregar nueva factura</a>
+                            </button>
 
+                        {% endif %}
+                        
                         <div class="float-left">
                             <div class="wrap">
                                 <div class="search">
@@ -203,11 +207,22 @@
                         name: 'Acción',
                         data: 'id',
                         render: function (data) {
-                            return '<button class="btn btn-warning">\
+                            var buttons = ""
+
+                            {% if perms.factura.change_facturacabeceraventa %}
+                                buttons += '<button class="btn btn-warning">\
                                                         <a href="/factura/editFacturaVenta/' + data + '/" style="color: black">\
                                                             Editar\
                                                         </a>\
-                                                    </button>';                                                                                                   
+                                                    </button>'
+                            {% endif %}
+
+                            {% if perms.factura.delete_facturacabeceraventa %}
+                                buttons += '<button class="btn btn-warning">Anular\
+                                                    </button>'
+                            {% endif %}
+                            
+                            return buttons;                                                                                                   
                         }
                     }
 
