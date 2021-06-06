@@ -56,6 +56,7 @@ class FacturaCabeceraVenta(models.Model):
     total_iva = models.IntegerField(default=0)
     total = models.FloatField(default=0)
     factura_cargada = models.CharField(max_length=2, default="N", blank=True, null=True)
+    factura_anulada = models.CharField(max_length=2, default="N", blank=True, null=True) 
     id_cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE, null=True)
     last_modified = models.DateTimeField(auto_now=True, blank=True)
     is_active = models.CharField(max_length=2, default="S", blank=True, null=True)

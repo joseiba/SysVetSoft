@@ -161,6 +161,18 @@ def edit_factura_venta(request, id):
     context = {'form': form, 'det': json.dumps(get_detalle_factura(id)), 'accion': 'E', 'confi': confi}
     return render(request, 'ventas/factura/edit_factura_venta.html', context)
 
+@login_required()
+@permission_required('factura.delete_facturacabeceraventa')
+def anular_factura_venta(request, id):
+    factVenta = FacturaCabeceraVenta.objects.get(id=id)
+    if request.POST == 'POST':
+        factVenta.is_active = "N"
+        factVenta.save()
+        return redirect("/factura/listFacturasVentas/")
+    context = {"facturaVenta": factVenta}
+    return render(request, "ventas/anular_factura_venta_modal.html", context)
+
+
 def get_detalle_factura(id):
     data = []
     try:

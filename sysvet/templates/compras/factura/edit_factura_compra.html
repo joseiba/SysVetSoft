@@ -111,14 +111,21 @@
                                                     
                                                 </div>
                                                 <div class="form-group">
-                                                    <label><strong>Fecha Emision:</strong></label>
+                                                    <label><strong>Fecha Emisión:</strong></label>
+
+                                                    <div class="field item"> 
+                                                        {{ form.fecha_emision_factura }}
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label><strong>Fecha Inicio Timbrado:</strong></label>
 
                                                     <div class="field item"> 
                                                         {{ form.fecha_emision }}
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
-                                                    <label><strong>Fecha Vencimiento:</strong></label>
+                                                    <label><strong>Fecha Fin Timbrado:</strong></label>
 
                                                     <div class="field item"> 
                                                         {{ form.fecha_vencimiento }}
@@ -272,6 +279,11 @@
                 },
             },
         });
+
+        $('#datePick-emision-factura').datepicker({
+            format: "dd/mm/yyyy",
+            autoclose: true,
+        }).datepicker("setDate", new Date());;
 
         $('#datePick-emision').datepicker({
             format: "dd/mm/yyyy",

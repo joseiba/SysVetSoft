@@ -392,7 +392,7 @@ def add_factura_compra():
                     pass
 
 @login_required()
-@permission_required('compras.edit_facturacompra')
+@permission_required('compras.change_facturacompra')
 def edit_factura_compra(request, id):
     factCompra = FacturaCompra.objects.get(id=id)
     form = FacturaCompraForm(instance=factCompra)

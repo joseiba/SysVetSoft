@@ -137,6 +137,7 @@ ESTADOS_FACTURA = [
 class FacturaCompra(models.Model):
     nro_factura = models.CharField(max_length=500, null=True)
     nro_timbrado = models.CharField(max_length=500, null=True)
+    fecha_emision_factura = models.CharField(max_length=500, null=True)
     fecha_emision = models.CharField(max_length=500, null=True)
     fecha_vencimiento = models.CharField(max_length=500, null=True)
     tipo_factura = models.BooleanField(default=True)

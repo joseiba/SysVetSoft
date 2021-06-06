@@ -302,10 +302,16 @@ def mover_producto(request, id):
         cantidad = request.POST.get('stock')
         deposito = Deposito.objects.get(id=nombre_deposito)
 
-        producto.stock = producto.stock - int(cantidad)
+        if producto.stock - int(cantidad) >= 0:
+            producto.stock = producto.stock - int(cantidad)
+        else:
+            producto.stock = 0
         producto.save() 
 
-        producto_moved.producto_stock = int(cantidad)
+        if int(cantidad) >= 0:
+            producto_moved.producto_stock = int(cantidad)
+        else:
+            producto_moved.producto_stock = 0
         producto_moved.id_deposito = deposito
         producto_moved.id_producto = producto
         producto_moved.save()
@@ -342,6 +348,7 @@ def add_factura_to_producto():
                         prod.stock = prod.stock + factDet.cantidad
                         prod.stock_total = prod.stock_total + factDet.cantidad
                         prod.save()
+                        print("entro")
                     except Exception as e:
                         print(e)
                         pass
@@ -359,13 +366,42 @@ def rest_factura_venta_to_producto():
                         if factDet.tipo == 'P':
                             prod = Producto.objects.get(id=factDet.id_producto.id)
                             prod.fecha_compra = date.strftime("%d/%m/%Y")
-                            prod.stock = prod.stock - factDet.cantidad
-                            prod.stock_total = prod.stock_total - factDet.cantidad
+                            if prod.stock - factDet.cantidad >= 0:
+                                prod.stock = prod.stock - factDet.cantidad
+                            else:
+                                prod.stock = 0
+
+                            if prod.stock_total - factDet.cantidad >= 0:
+                                prod.stock_total = prod.stock_total - factDet.cantidad
+                            else:
+                                prod.stock_total = 0
+                            
                             prod.save()
                     except Exception as e:
                         print(e)
                         pass
 
+
+
+def sum_anular_factura_venta_to_producto():
+    factVenta = FacturaCabeceraVenta.objects.exclude(is_active="S").all()
+    if factVenta is not None:
+        for fv in factVenta:
+            if(fv.factura_anulada == 'N'):
+                fv.factura_anulada = "S"
+                fv.save()
+                facDe = FacturaDetalleVenta.objects.filter(id_factura_venta=fv.id)
+                for factDet in facDe:
+                    try:
+                        if factDet.tipo == 'P':
+                            prod = Producto.objects.get(id=factDet.id_producto.id)
+                            prod.fecha_compra = date.strftime("%d/%m/%Y")
+                            prod.stock = prod.stock + factDet.cantidad
+                            prod.stock_total = prod.stock_total + factDet.cantidad                            
+                            prod.save()
+                    except Exception as e:
+                        print(e)
+                        pass
 @login_required()
 @permission_required('producto.view_producto')
 def list_producto(request,id):
@@ -410,6 +446,7 @@ def mover_producto_detalle_general(request, id):
         pedido_trasladado = ProductoStock.objects.get(id=id)
         producto_general = Producto.objects.get(id=pedido_trasladado.id_producto.id)
         producto_general.stock = producto_general.stock + pedido_trasladado.producto_stock
+        producto_general.stock_total = producto_general.stock
         producto_general.save()
         pedido_trasladado.delete()
         messages.add_message(request, messages.SUCCESS, 'El producto se ha movido correctamente a la lista general!')

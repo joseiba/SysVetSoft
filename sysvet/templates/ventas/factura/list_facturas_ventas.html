@@ -125,6 +125,10 @@
     </div>
 </div>
 
+<div class="modal fade" id="edicion" role="dialog">
+
+</div>
+
 {% endblock content %}
 
 {% block javascripts %}
@@ -218,7 +222,7 @@
                             {% endif %}
 
                             {% if perms.factura.delete_facturacabeceraventa %}
-                                buttons += '<button class="btn btn-warning">Anular\
+                                buttons += '<button class="btn btn-danger" style="color: white" onclick="abrir_modal_edicion(\'/factura/anularFacturaVenta/' + data + '/\');">Anular\
                                                     </button>'
                             {% endif %}
                             
