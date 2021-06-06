@@ -1,7 +1,7 @@
 import json
 import math
 from django.shortcuts import render, redirect, HttpResponse
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib import messages
 from django.db.models import Q
 from django.core.paginator import Paginator
@@ -22,6 +22,7 @@ from apps.ventas.producto.views import Producto
 from apps.ventas.cliente.models import Cliente
 # Create your views here.
 @login_required()
+@permission_required('factura.view_facturacabeceraventa')
 def list_factura_ventas(request):
     return render(request, 'ventas/factura/list_facturas_ventas.html')
 
@@ -67,6 +68,7 @@ def try_exception_cliente(id):
         return '-'
 
 @login_required()
+@permission_required('factura.add_facturacabeceraventa')
 def add_factura_venta(request):
     form = FacturaCabeceraVentaForm()
     confi = get_confi()
@@ -112,6 +114,7 @@ def add_factura_venta(request):
     return render(request, 'ventas/factura/add_factura_ventas.html', context)
 
 @login_required()
+@permission_required('factura.change_facturacabeceraventa')
 def edit_factura_venta(request, id):
     factVenta = FacturaCabeceraVenta.objects.get(id=id)
     form = FacturaCabeceraVentaForm(instance=factVenta)

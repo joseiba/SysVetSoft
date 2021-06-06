@@ -14,3 +14,10 @@ class User(AbstractUser):
     class Meta:
         verbose_name = 'Usuario'
         verbose_name_plural = 'Usuarios'
+        default_permissions =  ()
+        permissions = (
+            ('add_user', 'Agregar Usuario'),
+            ('change_user', 'Editar Usuario'),
+            ('delete_user', 'Eliminar Usuario'),
+            ('view_user', 'Listar Usuarios'))                 
+        

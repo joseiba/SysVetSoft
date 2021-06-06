@@ -49,7 +49,8 @@ reporte_compra_pdf)
 from apps.ventas.factura.views import (list_factura_ventas, list_facturas__ventas_ajax, add_factura_venta, 
 get_producto_servicio_factura, edit_factura_venta)
 
-from apps.usuario.views import (list_usuarios, list_usuarios_ajax, add_usuario, edit_usuario, add_rol, get_group_list, change_password)
+from apps.usuario.views import (list_usuarios, list_usuarios_ajax, add_usuario, edit_usuario, add_rol, get_group_list, 
+change_password, edit_rol, delete_rol, baja_usuario, list_usuarios_baja_ajax, alta_usuario)
 
 urlpatterns = [
     # Login and logout   
@@ -61,9 +62,14 @@ urlpatterns = [
     #Usuarios
     path('usuario/listUsuarios/', list_usuarios, name="list_usuarios"),
     path('usuario/list_usuarios_ajax/', list_usuarios_ajax, name="list_usuarios_ajax"),
+    path('usuario/list_usuarios_baja_ajax/', list_usuarios_baja_ajax, name="list_usuarios_baja_ajax"),
     path('usuario/add/', add_usuario , name="add_usuario"),
     path('usuario/edit/<int:id>/', edit_usuario, name="edit_usuario"),
+    path('usuario/darBajaUsuario/<int:id>/', baja_usuario, name="baja_usuario"),
+    path('usuario/altaUsuarios/<int:id>/', alta_usuario, name="alta_usuario"),
     path('usuario/addRol/', add_rol , name="add_rol"),
+    path('usuario/editRol/<int:id>/', edit_rol , name="edit_rol"),
+    path('usuario/eliminarRol/<int:id>/', delete_rol , name="delete_rol"),
     path('usuario/get_group_list/', get_group_list , name="get_group_list"),
     path('usuario/editPassword/<int:id>/', change_password , name="change_password"),
 

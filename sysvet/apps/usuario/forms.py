@@ -20,6 +20,10 @@ class UserForm(UserCreationForm):
         super().__init__(*args, **kwargs)
         self.fields['password1'].widget.attrs['class'] = 'form-control'
         self.fields['password2'].widget.attrs['class'] = 'form-control'
+        self.fields['groups'].widget.attrs['class'] = 'group_select'
+        self.fields['groups'].widget.attrs['required'] = 'required'
+        self.fields['groups'].widget.attrs['style'] = 'width: 100%'
+
 
     class Meta():
         model = User
@@ -45,8 +49,6 @@ class UserForm(UserCreationForm):
                     'class': 'form-control','name': 'username', 'placeholder': 'Nombre de usuario','onkeyup':'replaceDirection(this)', 'required': 'required', 'autocomplete':"off"
                 }
             ),
-            'groups' : forms.TextInput(attrs={'class':'form-control', 'id': 'groups_selected','required':'required' ,'name':'groups'})
-
         }
         exclude = ['user_permissions', 'last_login', 'date_joined', 'is_superuser', 'is_active', 'is_staff', 'password']
 
@@ -60,6 +62,13 @@ class UserForm(UserCreationForm):
 
 
 class UserFormChange(UserChangeForm):
+
+    def __init__(self, *args, **kwargs):        
+        super().__init__(*args, **kwargs)
+        self.fields['groups'].widget.attrs['class'] = 'group_select'
+        self.fields['groups'].widget.attrs['required'] = 'required'
+        self.fields['groups'].widget.attrs['style'] = 'width: 100%'
+    
 
     class Meta:
         model = User
@@ -85,49 +94,33 @@ class UserFormChange(UserChangeForm):
                     'class': 'form-control','name': 'username', 'placeholder': 'Nombre de usuario','onkeyup':'replaceDirection(this)', 'required': 'required', 'autocomplete':"off"
                 }
             ),
-            'groups' : forms.TextInput(attrs={'class':'form-control', 'id': 'groups_selected','required':'required' ,'name':'groups'})
-
         }
 
     def save(self, commit=True):
         form = super()
         if form.is_valid():
             user = form.save(commit=False)
+            user.groups.clear()
             for grupo in self.cleaned_data['groups']:
                 user.groups.add(grupo)
             return user
 
 
 queryset = ["user",
-"deposito",
 "producto",
-"tipoproducto",
-"productostock",
 "ciudad",
-"cliente",
 "especie",
-"fichamedica",
-"historicofichamedica",
-"vacuna",
 "raza",
+"cliente",
 "mascota",
-"consulta",
-"antiparasitario",
 "reserva",
 "confiempresa",
 "servicio",
 "empleado",
 "facturacompra",
-"pago",
 "proveedor",
-"pedido",
-"facturadet",
 "pedidocabecera",
-"pedidodetalle",
-"facturacabeceraventa",
-"pagoventa",
-"productoservicios",
-"facturadetalleventa"]
+"facturacabeceraventa"]
 
 class GroupForm(ModelForm):
     def __init__(self, *args, **kwargs):
@@ -146,7 +139,10 @@ class GroupForm(ModelForm):
 
 
 class GroupChangeForm(ModelForm):
-
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['permissions'].queryset = Permission.objects.filter(content_type__model__in=queryset)
+    
     class Meta:
         model = Group
         fields = ('name', 'permissions')

@@ -30,6 +30,12 @@ class Reserva(models.Model):
     class Meta:
         verbose_name = "Reserva"
         verbose_name_plural = "Reservas"
+        default_permissions =  ()
+        permissions = (
+            ('add_reserva', 'Agregar Reserva'),
+            ('change_reserva', 'Editar Reserva'),
+            ('delete_reserva', 'Eliminar Reserva'),
+            ('view_reserva', 'Listar Reservas'))         
 
     def __str__(self):
         """Formato de reserva"""

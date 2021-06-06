@@ -10,11 +10,11 @@
                     <img src="/static/project_static/other/images/ohana_perfil.jpeg" alt=""> {{ user.username}}
                 </a>
                 <div class="dropdown-menu dropdown-usermenu pull-right" aria-labelledby="navbarDropdown">
-                    <a class="dropdown-item" href="javascript:;">Perfil</a>
-                    <a class="dropdown-item" href="javascript:;">
-                        <span>Configuraciones</span>
-                    </a>
-                    <a class="dropdown-item" href="javascript:;">Help</a>
+                    
+                    {% if perms.usuario.change_user %}
+                        <a class="dropdown-item" href="{% url 'edit_usuario' user.id %}">Perfil</a>
+                        <a class="dropdown-item" href="{% url 'change_password' user.id %}">Cambiar Contraseña</a>
+                    {% endif %}
                     <a class="dropdown-item" href="{% url 'logout' %}"><i class="fa fa-sign-out pull-right"></i> Cerrar Sesión</a>
                 </div>
             </li>

@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, HttpResponse
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib import messages
 from django.db.models import Q
 from django.core.paginator import Paginator
@@ -20,6 +20,7 @@ hora_salida_sab = "15:00"
 
 #Reservas
 @login_required()
+@permission_required('reserva.add_reserva')
 def add_reserva(request):
     form = ReservaForm
     servicios = Servicio.objects.exclude(is_active="N").order_by('-last_modified')
@@ -33,6 +34,7 @@ def add_reserva(request):
     return render(request, 'reserva/add_reserva_modal.html', context)
 
 @login_required()
+@permission_required('reserva.change_reserva')
 def edit_reserva(request, id):
     reserva = Reserva.objects.get(id=id)
     form = ReservaForm(instance=reserva)
@@ -53,6 +55,7 @@ def edit_reserva(request, id):
     return render(request, 'reserva/edit_reserva_modal.html', context)
 
 @login_required()
+@permission_required('reserva.view_reserva')
 def list_reserva(request):
     reserva = Reserva.objects.all()
     paginator = Paginator(reserva, 10)
@@ -63,6 +66,7 @@ def list_reserva(request):
 
 #Metodo para eliminar servicio
 @login_required()
+@permission_required('reserva.delete_reserva')
 def delete_reserva(request, id):
     reserva = Reserva.objects.get(id=id)
     reserva.delete()

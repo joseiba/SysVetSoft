@@ -14,6 +14,15 @@ class ProductoServicios(models.Model):
     def _str_(self):
         """Formato del ProductoServicios"""
         return '{0}'.format(self.id)
+    
+
+    class Meta:
+        default_permissions =  ()
+        permissions = (
+            ('add_productoservicios', 'Agregar Producto Servicios'),
+            ('change_productoservicios', 'Editar Producto Servicios'),
+            ('delete_productoservicios', 'Eliminar Producto Servicios'),
+            ('view_productoservicios', 'Listar Productos y Servicios'))  
 
 class PagoVenta(models.Model):
     """[summary]
@@ -57,6 +66,12 @@ class FacturaCabeceraVenta(models.Model):
     class Meta:
         verbose_name = 'Factura Venta'
         verbose_name_plural = 'Facturas Ventas'
+        default_permissions =  ()
+        permissions = (
+            ('add_facturacabeceraventa', 'Agregar Factura Venta'),
+            ('change_facturacabeceraventa', 'Editar Factura Venta'),
+            ('delete_facturacabeceraventa', 'Anular Factura Venta'),
+            ('view_facturacabeceraventa', 'Listar Facturas Ventas'))          
 
 class FacturaDetalleVenta(models.Model):
     id_factura_venta = models.ForeignKey('FacturaCabeceraVenta', on_delete=models.CASCADE)

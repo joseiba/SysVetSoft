@@ -92,7 +92,7 @@
                             <div class="tile">
                                 <h3 class="tile-title">Roles</h3>
                                 <div class="tile-body">
-                                    <form method="POST" action="{% url 'add_rol' %}">
+                                    <form method="POST">
                                         {% csrf_token %}
                                         <div class="form-group">
                                             <label class="control-label">Nombre</label>
@@ -263,12 +263,12 @@
                         data: 'id',
                         render: function (data) {
                             return '<button class="btn btn-warning">\
-                                                        <a href="/usuario/edit/' + data + '/" style="color: black">\
+                                                        <a href="/usuario/editRol/' + data + '/" style="color: black">\
                                                             Editar\
                                                         </a>\
                                                     </button>\
                                     <button class="btn btn-danger">\
-                                        <a href="/usuario/edit/' + data + '/" style="color: white">\
+                                        <a href="/usuario/eliminarRol/' + data + '/" style="color: white">\
                                             Eliminar\
                                         </a>\
                                     </button>';

@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, HttpResponse
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib import messages
 from django.db.models import Q
 from django.core.paginator import Paginator
@@ -16,6 +16,7 @@ from apps.ventas.producto.models import Producto
 
 #Configuraciones iniciales
 @login_required()
+@permission_required('configuracion.add_confiempresa')
 def confi_inicial(request):
     try:
         confi = ConfiEmpresa.objects.get(id=1) 
@@ -47,6 +48,7 @@ def confi_inicial(request):
 
 #Servicios
 @login_required()
+@permission_required('configuracion.add_servicio')
 def add_servicio(request):
     form = ServicioForm    
     if request.method == 'POST':
@@ -71,6 +73,7 @@ def add_servicio(request):
     return render(request, 'reserva/servicio/add_servicio_modal.html', context)
 
 @login_required()
+@permission_required('configuracion.change_servicio')
 def edit_servicio(request, id):
     servicios = Servicio.objects.get(id=id)
     form = ServicioForm(instance=servicios)
@@ -96,6 +99,7 @@ def edit_servicio(request, id):
     return render(request, 'reserva/servicio/edit_servicio_modal.html', context)
 
 @login_required()
+@permission_required('configuracion.view_servicio')
 def list_servicio(request):
     servicios = Servicio.objects.exclude(is_active="N").order_by('-last_modified')
     paginator = Paginator(servicios, 10)
@@ -136,6 +140,7 @@ def list_servicio_ajax(request):
 
 #Metodo para eliminar servicio
 @login_required()
+@permission_required('configuracion.delete_servicio')
 def delete_servicio(request, id):
     servicio = Servicio.objects.get(id=id)
     if request.method == 'POST':
@@ -162,6 +167,7 @@ def search_servicio(request):
 
 #Empleados 
 @login_required()
+@permission_required('configuracion.add_empleado')
 def add_empleado(request):
     form = EmpleadoForm    
     if request.method == 'POST':
@@ -174,6 +180,7 @@ def add_empleado(request):
     return render(request, 'configuraciones/empleado/add_empleado_modal.html', context)
 
 @login_required()
+@permission_required('configuracion.change_empleado')
 def edit_empleado(request, id):
     emp = Empleado.objects.get(id=id)
     form = EmpleadoForm(instance=emp)
@@ -192,6 +199,7 @@ def edit_empleado(request, id):
 
 
 @login_required()
+@permission_required('configuracion.view_empleado')
 def list_empleado(request):
     emp = Empleado.objects.exclude(is_active="N").order_by('-last_modified')
     paginator = Paginator(emp, 10)
@@ -232,6 +240,7 @@ def get_list_empleados_ajax(request):
     return JsonResponse(response)
 
 @login_required()
+@permission_required('configuracion.delete_empleado')
 def delete_empleado(request, id):
     emp = Empleado.objects.get(id=id)
     if request.method == 'POST':

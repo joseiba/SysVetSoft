@@ -19,6 +19,9 @@
     .dataTables_info {
         width: 0 !important;
     }
+    .select2-container--default .select2-selection--multiple .select2-selection__choice__remove{
+        position: initial !important;
+    }
 </style>
 {% endblock stylesheets %}
 {% block content %}
@@ -85,7 +88,7 @@
                                 </div>
                             </div>
                             <div class="form-group field item">
-                                <label class="col-form-label col-md-3 col-sm-3  label-align">Grupos
+                                <label class="col-form-label col-md-3 col-sm-3  label-align">Roles
                                     <span class="required">*</span>
                                 </label>
                                 <div class="col-md-6 col-sm-6">
@@ -167,20 +170,12 @@
             e.preventDefault();
         });
 
-        $('#groups_selected').select2({
-            placeholder: 'Seleccione un Rol de Permisos',
+        $("#id_username").removeAttr("autofocus")
+
+        $('.group_select').select2({
+            placeholder: 'Seleccione los Permisos',
             language: "es",
-            language: {
-                inputTooShort: function () {
-                    return '';
-                },
-                searching: function () {
-                    return 'Buscando...'
-                },
-                noResults: function(){
-                    return 'No se ha encontrado ningún resultado'
-                }
-            }
+            multiple: true,        
         });
 
     })

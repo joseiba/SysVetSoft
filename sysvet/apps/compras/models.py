@@ -23,6 +23,13 @@ class Proveedor(models.Model):
     class Meta:
         verbose_name = "Proveedor"
         verbose_name_plural = "Proveedores"
+        default_permissions =  ()
+        permissions = (
+            ('add_proveedor', 'Agregar Proveedor'),
+            ('change_proveedor', 'Editar Proveedor'),
+            ('delete_proveedor', 'Eliminar Proveedor'),
+            ('view_proveedor', 'Listar Proveedores'))
+
 
     def __str__(self):
         return  'Proveedor: %s - ruc: %s' % (self.nombre_proveedor, self.ruc_proveedor)
@@ -43,6 +50,12 @@ class Pedido(models.Model):
     class Meta:
         verbose_name = "Proveedor"
         verbose_name_plural = "Proveedores"
+        default_permissions =  ()
+        permissions = (
+            ('add_pedido', 'Agregar Pedido'),
+            ('change_pedido', 'Editar Pedido'),
+            ('delete_pedido', 'Eliminar Pedido'),
+            ('view_pedido', 'Listar Pedido'))
 
     def obtener_dict(self):
         dict = {}
@@ -64,9 +77,16 @@ class PedidoCabecera(models.Model):
     last_modified = models.DateTimeField(auto_now=True, blank=True)
     is_active = models.CharField(max_length=2, default="S", blank=True, null=True)
 
+
     class Meta:
         verbose_name = "Pedido Cabecera"
         verbose_name_plural = "Pedido Cabeceras"
+        default_permissions =  ()
+        permissions = (
+            ('add_pedidocabecera', 'Agregar Pedido'),
+            ('change_pedidocabecera', 'Editar Pedido'),
+            ('delete_pedidocabecera', 'Eliminar Pedido'),
+            ('view_pedidocabecera', 'Listar Pedido'))
 
     def __str__(self):
         return self.fecha_alta
@@ -83,6 +103,12 @@ class PedidoDetalle(models.Model):
 
         verbose_name = 'Pedido Detalle'
         verbose_name_plural = 'Pedido Detalle'
+        default_permissions =  ()
+        permissions = (
+            ('add_pedidodetalle', 'Agregar Pedido'),
+            ('change_pedidodetalle', 'Editar Pedido'),
+            ('delete_pedidodetalle', 'Eliminar Pedido'),
+            ('view_pedidodetalle', 'Listar Pedido'))
 
     def __str__(self):
         """Unicode representation of Pedido Detalle."""
@@ -130,13 +156,26 @@ class FacturaCompra(models.Model):
     class Meta:
         verbose_name = 'Factura Compra'
         verbose_name_plural = 'Facturas Compras'
+        default_permissions =  ()
+        permissions = (
+            ('add_facturacompra', 'Agregar Factura Compra'),
+            ('change_facturacompra', 'Editar Factura Compra'),
+            ('delete_facturacompra', 'Eliminar Factura Compra'),
+            ('view_facturacompra', 'Listar Factura Compra'))
 
 class FacturaDet(models.Model):
     id_factura = models.ForeignKey('FacturaCompra', on_delete=models.CASCADE)
     id_pedido = models.ForeignKey('Pedido', on_delete=models.CASCADE)
     cantidad = models.IntegerField()
     descripcion = models.CharField(max_length=800, blank=True)
+
     
 
     class Meta:
-        ordering = ['id']      
+        ordering = ['id']
+        default_permissions =  ()
+        permissions = (
+            ('add_facturadet', 'Agregar Factura Compra'),
+            ('change_facturadet', 'Editar Factura Compra'),
+            ('delete_facturadet', 'Eliminar Factura Compra'),
+            ('view_facturadet', 'Listar Factura Compra'))
