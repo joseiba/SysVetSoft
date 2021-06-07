@@ -56,6 +56,37 @@ def list_facturas__ventas_ajax(request):
     }
     return JsonResponse(response)
 
+
+def list_facturas_anuladas_ventas_ajax(request):
+    query = request.GET.get('busqueda')
+    if query != "":
+        factVenta = FacturaCabeceraVenta.objects.exclude(is_active="S").filter(Q(nro_factura__icontains=query) | Q(nro_timbrado__icontains=query) | Q(id_cliente__nombre_cliente__icontains=query) 
+            | Q(id_cliente__cedula__icontains=query) | Q(id_cliente__ruc__icontains=query)).order_by('-last_modified')
+    else:
+        factVenta = FacturaCabeceraVenta.objects.exclude(is_active="S").order_by('-last_modified')
+
+    total = factVenta.count()
+
+    _start = request.GET.get('start')
+    _length = request.GET.get('length')
+    if _start and _length:
+        start = int(_start)
+        length = int(_length)
+        page = math.ceil(start / length) + 1
+        per_page = length
+
+        factVenta = factVenta[start:start + length]
+    
+    data= [{'id': fv.id,'nro_factura': fv.nro_factura, 'nro_timbrado': fv.nro_timbrado, 'fecha_emision': fv.fecha_emision, 
+            'cliente': try_exception_cliente(fv.id_cliente), 'im_total': fv.total}for fv in factVenta]     
+
+    response = {
+        'data': data,
+        'recordsTotal': total,
+        'recordsFiltered': total,
+    }
+    return JsonResponse(response)
+
 def try_exception_cliente(id):
     try:
         cli = Cliente.objects.get(id=id.id)
@@ -161,16 +192,27 @@ def edit_factura_venta(request, id):
     context = {'form': form, 'det': json.dumps(get_detalle_factura(id)), 'accion': 'E', 'confi': confi}
     return render(request, 'ventas/factura/edit_factura_venta.html', context)
 
+
+@login_required()
+@permission_required('factura.view_facturacabeceraventa')
+def ver_factura_anulada_venta(request, id):
+    factVenta = FacturaCabeceraVenta.objects.get(id=id)
+    form = FacturaCabeceraVentaForm(instance=factVenta)
+    confi = get_confi()
+    mensaje = ""
+    context = {'form': form, 'det': json.dumps(get_detalle_factura(id)), 'accion': 'ANU', 'confi': confi, 'factVenta': factVenta}
+    return render(request, 'ventas/factura/ver_factura_anulada_venta.html', context)
+
 @login_required()
 @permission_required('factura.delete_facturacabeceraventa')
 def anular_factura_venta(request, id):
     factVenta = FacturaCabeceraVenta.objects.get(id=id)
-    if request.POST == 'POST':
+    if request.method == 'POST':
         factVenta.is_active = "N"
         factVenta.save()
         return redirect("/factura/listFacturasVentas/")
-    context = {"facturaVenta": factVenta}
-    return render(request, "ventas/anular_factura_venta_modal.html", context)
+    context = {"id": id}
+    return render(request, "ventas/factura/anular_factura_venta_modal.html", context)
 
 
 def get_detalle_factura(id):
@@ -216,3 +258,30 @@ def get_confi():
     except Exception as e:
         pass
         return ""
+
+
+def validate_producto_stock(request):
+    data = []
+    mensaje = ""
+    if request.method == 'POST' and request.is_ajax():
+        try:
+            factura_dict = json.loads(request.POST['factura'])
+            for i in factura_dict['products']:
+                if i['tipo'] == "P":
+                    producto_id = Producto.objects.get(id=i['codigo_producto'])
+                    if producto_id.stock_total < int(i['cantidad']):
+                        data.append(producto_id.nombre_producto)
+            if len(data) > 0:
+                print("F")
+                mensaje = "F"
+                response = {'mensaje':mensaje, 'data': json.dumps(data)}
+                return JsonResponse(response)
+            else:
+                mensaje = "OK"
+                response = {'mensaje':mensaje}
+                return JsonResponse(response)
+        except Exception as e:
+            print(e)
+            mensaje = 'error'
+            response = {'mensaje':mensaje }
+            return JsonResponse(response)

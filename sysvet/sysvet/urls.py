@@ -47,7 +47,8 @@ search_pediddos_factura, edit_factura_compra, list_pedido_compra, list_pedido_co
 reporte_compra_pdf)
 
 from apps.ventas.factura.views import (list_factura_ventas, list_facturas__ventas_ajax, add_factura_venta, 
-get_producto_servicio_factura, edit_factura_venta, anular_factura_venta)
+get_producto_servicio_factura, edit_factura_venta, anular_factura_venta, list_facturas_anuladas_ventas_ajax,
+ver_factura_anulada_venta, validate_producto_stock)
 
 from apps.usuario.views import (list_usuarios, list_usuarios_ajax, add_usuario, edit_usuario, add_rol, get_group_list, 
 change_password, edit_rol, delete_rol, baja_usuario, list_usuarios_baja_ajax, alta_usuario)
@@ -190,6 +191,10 @@ urlpatterns = [
     path('factura/get_producto_servicio_factura/', get_producto_servicio_factura, name="get_producto_servicio_factura"),
     path('factura/editFacturaVenta/<int:id>/', edit_factura_venta, name="edit_factura_venta"),
     path('factura/anularFacturaVenta/<int:id>/', anular_factura_venta, name="anular_factura_venta"),
+    path('factura/get_list_facturas_anulas_ventas/', list_facturas_anuladas_ventas_ajax, name="list_facturas_anuladas_ventas_ajax"),
+    path('factura/verDetalleFacturaAnulada/<int:id>/', ver_factura_anulada_venta, name="ver_factura_anulada_venta"),
+    path('factura/validate_producto_stock/', validate_producto_stock , name="validate_producto_stock"),
+
 
 ]
 

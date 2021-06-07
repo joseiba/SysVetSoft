@@ -395,13 +395,13 @@ def sum_anular_factura_venta_to_producto():
                     try:
                         if factDet.tipo == 'P':
                             prod = Producto.objects.get(id=factDet.id_producto.id)
-                            prod.fecha_compra = date.strftime("%d/%m/%Y")
                             prod.stock = prod.stock + factDet.cantidad
                             prod.stock_total = prod.stock_total + factDet.cantidad                            
                             prod.save()
                     except Exception as e:
-                        print(e)
                         pass
+
+
 @login_required()
 @permission_required('producto.view_producto')
 def list_producto(request,id):
@@ -460,6 +460,7 @@ def mover_producto_detalle_general(request, id):
 def list_productos_general(request):
     add_factura_to_producto()
     rest_factura_venta_to_producto()
+    sum_anular_factura_venta_to_producto()
     return render(request, "ventas/producto/list_producto_general.html")
 
 

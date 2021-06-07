@@ -196,12 +196,53 @@ $(function () {
             parameters.append('factura', JSON.stringify(factura.items));
             var csrf = $('input[name="csrfmiddlewaretoken"]').val();
             parameters.append('csrfmiddlewaretoken', csrf);
-            submit_with_ajax(window.location.pathname, 'Noticicación', '¿Desea registrar esta factura?', parameters, function () {
-                location.href = "/factura/listFacturasVentas/"
-            });
+            validate_producto_stock(parameters);
         }
         
     });
+
+    var validate_producto_stock = function(parameters){
+        $.ajax({
+            url: "/factura/validate_producto_stock/",
+            type: 'POST',
+            data: parameters,
+            dataType: 'json',
+            processData: false,
+            contentType: false,
+            success: function (response) {  
+                console.log(response)
+                if(response.mensaje == "OK"){                
+                    submit_with_ajax(window.location.pathname, 'Noticicación', '¿Desea registrar esta factura?', parameters, function () {
+                        location.href = "/factura/listFacturasVentas/"
+                    });
+                }
+                else if(response.mensaje == "F")
+                {      
+                    var product_falta_list = JSON.parse(response.data);
+                    var products = "La cantidad ingresada supera el stock de estos productos: \n"
+                    $.each(product_falta_list, function (i, data) {
+                        products += data + "\n";
+                    })
+
+                    products += "\n¿Desea igualmente registrar esta factura?";
+
+                    submit_with_ajax(window.location.pathname, 'Noticicación', products, parameters, function () {
+                        location.href = "/factura/listFacturasVentas/"
+                    });
+                }
+                else{
+                    swal({
+                        title: 'Notificación',
+                        text: 'ha ocurrido un error, intenlo de nuevo',
+                        icon: 'error'
+                    });
+                }                                     
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                swal("Error", xhr + ' ' + ajaxOptions + ' ' + thrownError, "error");
+            }
+        });
+    }
 });
 
 // validar entrada
@@ -236,3 +277,4 @@ function add_miles(value){
                         .replace(/([0-9])([0-9]{3})$/, '$1.$2')
                         .replace(/\B(?=(\d{3})+(?!\d)\.?)/g, ".");
 }
+
