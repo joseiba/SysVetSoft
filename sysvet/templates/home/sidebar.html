@@ -138,6 +138,15 @@
                         </ul>
                     </li>
                 {% endif %}
+                <!--{% if perms.configuracion.add_confiempresa %}-->
+                <li><a><i class="fas fa-cash-register fa-lg" style="color: white; width: 26px;"></i> Caja <span class="fa fa-chevron-down"></span></a>
+                    <ul class="nav child_menu">                                                                            
+                        <!--{% if perms.configuracion.add_confiempresa %}-->
+                        <li><a href="">Apertura de Caja</a></li>
+                        <!--{% endif %}-->
+                    </ul>
+                </li>
+                <!--{% endif %}-->
                 
                 
                 {% if perms.configuracion.add_confiempresa %}
@@ -161,9 +170,7 @@
                                 
                         </ul>
                     </li>
-                {% endif %}
-                    
-
+                {% endif %}                    
             </ul>
         </div>
 

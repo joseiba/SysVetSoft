@@ -50,7 +50,7 @@ class FacturaCabeceraVenta(models.Model):
     fecha_inicio_timbrado = models.CharField(max_length=500, null=True)
     fecha_fin_timbrado = models.CharField(max_length=500, null=True)
     ruc_empresa = models.CharField(max_length=500, null=True)
-    fecha_emision = models.CharField(max_length=500, default = date.strftime("%d/%m/%Y"), null=True)
+    fecha_emision = models.CharField(max_length=500, default = date.strftime("%d/%m/%Y %H:%M:%S hs"), null=True)
     tipo_factura = models.BooleanField(default=True)
     estado = models.CharField(max_length=500, choices=ESTADOS_FACTURA, default=ESTADOS_FACTURA[0])
     total_iva = models.IntegerField(default=0)
