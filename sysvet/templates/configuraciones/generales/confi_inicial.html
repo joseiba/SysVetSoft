@@ -40,16 +40,6 @@
             </div>
         </div>
         <div class="clearfix"></div>
-        {% if messages %}
-        <div class="alert alert-success alert-dismissible" role="alert">
-            {% for message in messages %}
-            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-            {{ message }}
-            {% endfor %}
-        </div>
-        {% endif %}
-
-        <div class="clearfix"></div>       
         <div class="row">
             <div class="col-md-12 col-sm-12">
                 <div class="x_panel">
@@ -61,8 +51,24 @@
                             <li><a class="close-link"><i class="fa fa-close"></i></a>
                             </li>
                         </ul>
-                        <div class="clearfix"></div>
+                        {% if perms.configuracion.view_confiempresa %}
+                        <button type="submit" class="btn btn-primary float-right">
+                            <a style="color: white;" href="{% url 'list_historial_timbrado' %}">Ver Historial Timbrado</a>
+                        </button>
+                        {% endif %}
+                        <div class="clearfix"></div>  
+
                     </div>
+                    {% if messages %}
+                    <div class="alert alert-success alert-dismissible" role="alert">
+                        {% for message in messages %}
+                            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                            {{ message }}
+                        {% endfor %}
+                    </div>
+                    {% endif %}            
+                    <div class="clearfix"></div>  
+
                     <div class="x_content">
                         <div class="row">
                             <form action="{% url 'confi_inicial' %}" method="post">
@@ -149,7 +155,7 @@
                                     <button type="button" class="btn btn-secondary" data-dismiss="modal">
                                         <a href="{% url 'index'%}" style="color: white;">volver</a>
                                     </button>
-                                    <button type="submit" class="btn btn-primary">Agregar</button>
+                                    <button type="submit" class="btn btn-primary" id="button_registrar">Agregar</button>
                                 </div>
                             </form>
                         </div>
@@ -168,6 +174,7 @@
 <script src="/static/project_static/vendors/validator/validator.js"></script>
 <script src="/static/project_static/vendors/mjolnic-bootstrap-colorpicker/dist/js/bootstrap-colorpicker.js"></script>
 <script src="/static/project_static/other/js/jquery-ui-1.12.1/jquery-ui-1.12.1/jquery-ui.js"></script>
+<script src="/static/project_static/other/js/sweetalert.min.js"></script>
 
 
 <script>
@@ -228,6 +235,77 @@
             todayHighlight: true,
         });
 
+        var fecha_inicio = $("#datePick-emision").val()
+        var fecha_fin = $("#datePick-vencimiento").val()
+        var nro_timbrado = $("#nro_timbrado").val()
+
+        if (fecha_inicio != "" && fecha_fin != "" && nro_timbrado != "") {
+            if (!compareDate(fecha_inicio, fecha_fin)) {
+                swal({
+                    title: "Notificación",
+                    text: "La fecha inicio y fin del timbrado ha caducado!",
+                    icon: "warning",
+                    button: "Ok",
+                })
+                $.ajax({
+                    url : "/utiles/poner_vencido_timbrado/",
+                    data: {'nro_timbrado': nro_timbrado},
+                    success: function(response){
+                        if(response.mensaje == "OK"){                
+                            $("form").find("#button_registrar").addClass("d-none")
+
+                        }
+                        else{
+                            $('form').find('#button_registrar').removeClass('d-none') 
+                        }
+                    }
+                })
+            } 
+            else
+            {
+                $("form").find("#button_registrar").removeClass("d-none")
+            }
+        }
+
+        $("input[name='nro_timbrado']").keyup(function(){
+            var nro_timbrado = $("input[name='nro_timbrado']").val()
+            if(nro_timbrado != ""){
+                $.ajax({
+                    url : "/utiles/validate_nro_timbrado/",
+                    data: {'nro_timbrado': nro_timbrado},
+                    success: function(response){
+                        if(response.mensaje == "OK"){
+                            swal({
+                                title: "Notificación",
+                                text: "El Timbrado introducido ya ha vencido!",
+                                icon: "warning",
+                                button: "Ok",
+                            })
+                            $('form').find('#button_registrar').addClass('d-none')
+                        }
+                        else{
+                            $("form").find("#button_registrar").removeClass("d-none")
+                        }
+                    }
+                })
+            }
+
+        })
+
     });
+
+    function compareDate(fecha_emision, fecha_vencimiento) {
+        var d1 = fecha_emision.split("/");
+        var d2 = fecha_vencimiento.split("/");
+        var c = new Date();
+
+        var from = new Date(d1[2], parseInt(d1[1]) - 1, d1[0]);  // -1 because months are from 0 to 11
+        var to = new Date(d2[2], parseInt(d2[1]) - 1, d2[0]);
+        var check = new Date(c.getFullYear(), c.getMonth(), c.getDate());
+        if (check >= from && check <= to) {
+            return true
+        }
+        return false
+    }
 </script>
 {% endblock javascripts %}

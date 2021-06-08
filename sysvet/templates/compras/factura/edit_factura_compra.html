@@ -342,11 +342,10 @@
             }
         })
         $("input[name='fecha_emision'], input[name='fecha_vencimiento']").change(function () {
-            console.log("fechas")
             var fecha_emision = $("input[name='fecha_emision']").val()
 
             var fecha_vencimiento = $("input[name='fecha_vencimiento']").val()
-            if (fecha_vencimiento != "" && fecha_vencimiento != "") {
+            if (fecha_emision != "" && fecha_vencimiento != "") {
                 if(!compareDate(fecha_emision, fecha_vencimiento)){
                     swal({
                         title: "Notificación",

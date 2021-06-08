@@ -23,7 +23,7 @@ class ConfiEmpresaForm(forms.ModelForm):
                                             'name':'fecha_fin_timbrado',
                                             'autocomplete': 'off',
                                             'required': 'required'}),
-            'nro_timbrado': forms.TextInput(attrs={'class': 'form-control', 'name': 'nro_timbrado','autocomplete': 'off','placeholder': 'Escriba el nro del timbrado','required':'required','onkeyup':'replaceABC(this)'}),
+            'nro_timbrado': forms.TextInput(attrs={'class': 'form-control', 'name': 'nro_timbrado','id':'nro_timbrado','autocomplete': 'off','placeholder': 'Escriba el nro del timbrado','required':'required','onkeyup':'replaceABC(this)'}),
             'ruc_empresa': forms.TextInput(attrs={'class': 'form-control', 'name': 'ruc_empresa','autocomplete': 'off','placeholder': 'Escriba el RUC','required':'required','onkeyup':'replaceABC(this)'}),
             'apertura_caja_inicial' : forms.TextInput(attrs={'class':'form-control', 'autocomplete': 'off','name': 'apertura_caja_inicial', 'placeholder': 'Ingrese el monto inicial de la caja', 'required': 'required','onkeyup':'replaceABC(this)'}),
 			'ubicacion_deposito_inicial' : forms.TextInput(attrs={'class':'form-control', 'autocomplete': 'off','name': 'ubicacion_deposito_inicial', 'placeholder': 'Deposito inicial', 'required': 'required','onkeyup':'replaceDiretion(this)'}),			

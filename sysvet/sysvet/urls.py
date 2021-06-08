@@ -39,7 +39,7 @@ validar_fecha_hora, get_mascota_cliente, get_min_service, get_mascota_selected)
 
 from apps.configuracion.views import (add_servicio, edit_servicio, delete_servicio, list_servicio, search_servicio, 
 add_empleado, edit_empleado, list_empleado, delete_empleado, search_empleado, list_servicio_ajax, get_list_empleados_ajax,
-confi_inicial)
+confi_inicial, list_historial_timbrado, get_historial_timbrado_ajax)
 
 from apps.compras.views import (add_proveedor, edit_proveedor, list_proveedor_ajax, delete_proveedor, list_proveedor,
 list_pedido, list_pedido_ajax, edit_pedido, list_factura_compra, list_facturas_ajax, add_factura_compra, 
@@ -52,6 +52,8 @@ ver_factura_anulada_venta, validate_producto_stock)
 
 from apps.usuario.views import (list_usuarios, list_usuarios_ajax, add_usuario, edit_usuario, add_rol, get_group_list, 
 change_password, edit_rol, delete_rol, baja_usuario, list_usuarios_baja_ajax, alta_usuario)
+
+from apps.utiles.views import (poner_vencido_timbrado, validate_nro_timbrado)
 
 urlpatterns = [
     # Login and logout   
@@ -161,7 +163,8 @@ urlpatterns = [
     path('configuracion/bajaEmpleado/<int:id>/', delete_empleado, name="delete_empleado"),
     path('configuracion/get_list_empleados_ajax/', get_list_empleados_ajax, name="get_list_empleados_ajax"),
     path('configuracion/confiInicial/', confi_inicial, name="confi_inicial"),
-
+    path('configuracion/listHistorialTimbrado/', list_historial_timbrado , name="list_historial_timbrado"),
+    path('configuracion/get_historial_timbrado_ajax/', get_historial_timbrado_ajax , name="get_historial_timbrado_ajax"),
 
     #Urls compras
     path('compra/addProveedor/', add_proveedor , name="add_proveedor"),
@@ -195,6 +198,9 @@ urlpatterns = [
     path('factura/verDetalleFacturaAnulada/<int:id>/', ver_factura_anulada_venta, name="ver_factura_anulada_venta"),
     path('factura/validate_producto_stock/', validate_producto_stock , name="validate_producto_stock"),
 
+    #Utiles
+    path('utiles/poner_vencido_timbrado/', poner_vencido_timbrado, name="poner_vencido_timbrado"),
+    path('utiles/validate_nro_timbrado/', validate_nro_timbrado, name="validate_nro_timbrado"),
 
 ]
 

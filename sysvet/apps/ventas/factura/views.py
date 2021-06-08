@@ -20,6 +20,7 @@ from apps.ventas.factura.forms import FacturaDetalleVentaForm, FacturaCabeceraVe
 from apps.configuracion.models import ConfiEmpresa, Servicio
 from apps.ventas.producto.views import Producto
 from apps.ventas.cliente.models import Cliente
+from apps.utiles.views import reset_nro_timbrado
 # Create your views here.
 @login_required()
 @permission_required('factura.view_facturacabeceraventa')
@@ -105,6 +106,7 @@ def add_factura_venta(request):
     confi = get_confi()
     data = {}
     mensaje = ""
+    confi_initial = ConfiEmpresa.objects.get(id=1) 
     if request.method == 'POST' and request.is_ajax():
         try:
             confi = ConfiEmpresa.objects.get(id=1) 
@@ -140,8 +142,8 @@ def add_factura_venta(request):
             mensaje = 'error'
             response = {'mensaje':mensaje }
         return JsonResponse(response)
-    context = {'form': form,  'calc_iva': 5, 'accion': 'A', 'confi': confi}
-
+    nro_factura_initial = reset_nro_timbrado(confi_initial.nro_timbrado)
+    context = {'form': form,  'calc_iva': 5, 'accion': 'A', 'confi': confi, 'nro_factura': str(nro_factura_initial)}
     return render(request, 'ventas/factura/add_factura_ventas.html', context)
 
 @login_required()
@@ -285,3 +287,5 @@ def validate_producto_stock(request):
             mensaje = 'error'
             response = {'mensaje':mensaje }
             return JsonResponse(response)
+
+
