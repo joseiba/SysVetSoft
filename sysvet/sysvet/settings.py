@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'apps.configuracion',
     'apps.compras',
     'apps.ventas.factura',
+    'apps.utiles',
 ]
 
 MIDDLEWARE = [
@@ -76,6 +77,9 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'sysvet.wsgi.application'
+
+AUTH_USER_MODEL = 'usuario.User'
+
 
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases

@@ -1,7 +1,13 @@
 <link rel="stylesheet" href="/static/project_static/other/commons/shared.css">
+<link rel="stylesheet"
+    href="/static/project_static/other/js/jquery-ui-themes-1.12.1/jquery-ui-themes-1.12.1/themes/base/jquery-ui.css">
+<link rel="stylesheet" href="/static/project_static/other/js/jquery-timepicker-1.3.5/jquery.timepicker.min.css">
 <style>
     .alert {
         display: none;
+    }
+    .ui-timepicker-container.ui-timepicker-standard{
+        position: absolute;
     }
 </style>
 
@@ -9,7 +15,7 @@
     <div class="modal-content" style="box-shadow: 0 10px 20px 0 rgba(0,0,0,.05);">
         <div class="modal-header no_borders">
             <h5 class="modal-title" id="exampleModalLabel">Editar Reserva</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <button type="button" class="close" data-dismiss="modal" id="close_x" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
@@ -91,19 +97,23 @@
             {{ form.fecha_reserva}}
 
             <input type="hidden" id="hora_reserva_id" value="{{ reserva.hora_reserva }}">
-            <input type="hidden" id="empleado_selected" value="{{ reserva.id_empleado }}">
+            <input type="hidden" id="empleado_selected" value="{{ reserva.id_empleado.id }}">
             <input type="hidden" id="id_cliente_selected" value="{{ reserva.id_cliente.id }}">
             <input type="hidden" id="servicio_selected" value="{{ reserva.id_servicio.id }}">
-
-
+            <input type="hidden" id="id_reserva_selected" value="{{ reserva.id }}">
+            <input type="hidden" id="id_mascota_selected" value="{{ reserva.id_mascota.id }}"/>
 
             <div id="estado_color_reserva">
 
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-danger" id="confirmDeleteButtonModal" data-dismiss="modal"
+                
+                {% if perms.reserva.delete_reserva %}
+                    <button type="button" class="btn btn-danger" id="confirmDeleteButtonModal" data-dismiss="modal"
                     data-id-reserva="{{reserva.id}}">Eliminar</button>
-                <button type="submit" class="btn btn-warning" style="color: #fff;">Editar</button>
+                {% endif %}
+                    
+                <button type="submit" class="btn btn-warning" id="edit_button" style="color: #fff;">Editar</button>
             </div>
         </form>
     </div>
@@ -114,12 +124,15 @@
 <script src="/static/project_static/vendors/validator/multifield.js"></script>
 <script src="/static/project_static/other/js/main.js"></script>
 <script src="/static/project_static/other/js/jquery-timepicker-1.3.5/jquery.timepicker.min.js"></script>
-
 <script src="/static/project_static/other/js/jquery-ui-1.12.1/jquery-ui-1.12.1/jquery-ui.js"></script>
+<script src="/static/project_static/other/js/sweetalert.min.js"></script>
 
 
-<script>
-    // initialize a validator instance from the "FormValidator" constructor.
+
+<script>   
+    $(function () {
+        var entro_ser = 0;
+         // initialize a validator instance from the "FormValidator" constructor.
     // A "<form>" element is optionally passed as an argument, but is not a must
     var validator = new FormValidator({
         "events": ['blur', 'input', 'change']
@@ -141,7 +154,6 @@
             $('form .alert').remove();
     }).prop('checked', false);
 
-    $(function () {
         $("#estado_re").change(function () {
             var estado = $("#estado_re").val()
             var color = "";
@@ -175,11 +187,15 @@
         var fecha_reserva = $("#fecha_reserva").val()
         var servicio = $("#servicio_selected").val()
         var empleado = $("#empleado_selected").val()
-
-        console.log(id_seleted_cliente)
+        var id_reserva = $("#id_reserva_selected").val()
+        var id_mascota_selected = $("#id_mascota_selected").val()
+        sessionStorage.setItem("id_empleado", empleado)
+        sessionStorage.setItem("id_mascota", id_mascota_selected)
+        console.log(id_mascota_selected)
 
         if (id_seleted_cliente !== "" && id_seleted_cliente != null) {
                 var urlValidate = "/reserva/getMascotaSelected"
+                sessionStorage.setItem("id_cliente", id_seleted_cliente)
                 $.ajax({
                     data: { 'id_cliente': id_seleted_cliente, 'hora_reserva': hora_reserva, "fecha_reserva": fecha_reserva, 'servicio':servicio},
                     url: urlValidate,
@@ -219,12 +235,6 @@
                         }
                     },
                     error: function (response) {
-                        /*<select class="form-control" required='required' name="id_ciudad" id="id_cuidad">
-                                        <option required='required'>Seleccione una Cuidad</option>
-                                        {% for cui in cuidad %}
-                                        <option required="required" value={{ cui.id}}>{{ cui.nombre_ciudad }}</option>
-                                        {% endfor %}
-                                    </select>  */
                     }
                 })
             }
@@ -240,8 +250,8 @@
                     success: function (response) {
                         var mascotas = JSON.parse(response.mascota);
                         if (response.mensaje != "") {
-                            var selectMascota = '<select class="form-control" required="required" name="id_mascota" id="id_mascota">\
-                                                    <option>Seleccione la mascota</option>';
+                            var selectMascota = '<select class="form-control" required="required" name="id_mascota" id="id_mascota_new">\
+                                                    <option required="required">Seleccione la mascota</option>';
                             $.each(mascotas, function (i, data) {
                                 selectMascota += "<option required='required' value='" + data.id + "'>" + data.nombre + "</option>";
                             });
@@ -252,18 +262,19 @@
                             $("#list_mascota_edit").html(selectMascota)
                         }
                         else {
+                            swal({
+                                title: "Notificación",
+                                text: "Este Cliente no tiene ninguna mascota asignada!",
+                                icon: "warning",
+                                button: "Ok",
+                            });
+                            $("#form").find("#edit_button").addClass("d-none")  
                             $("#form").find("#id_list_mascota_edit").addClass("d-none")
                             $("#form").find("#id_mascota_cliente").addClass("d-none")
 
                         }
                     },
                     error: function (response) {
-                        /*<select class="form-control" required='required' name="id_ciudad" id="id_cuidad">
-                                        <option required='required'>Seleccione una Cuidad</option>
-                                        {% for cui in cuidad %}
-                                        <option required="required" value={{ cui.id}}>{{ cui.nombre_ciudad }}</option>
-                                        {% endfor %}
-                                    </select>  */
                     }
                 })
             }else{
@@ -274,6 +285,7 @@
 
         if (servicio !== "" && servicio != null) {
                 var urlValidate = "/reserva/getTimeServices"
+                sessionStorage.setItem("servicio", servicio)
                 $.ajax({
                     data: { 'servicio': servicio },
                     url: urlValidate,
@@ -325,6 +337,7 @@
                     url: urlValidate,
                     success: function (response) {
                         if (response.mensaje != "") {
+                            entro_ser++
                             var inputHora = '<input class="form-control timepicker" type="text" name="hora_reserva" id="hora_reserva" required="required">';
                             $("#form").find("#id_reserva_hora").removeClass("d-none");
                             $("#form").find("#id_reserva_hora_edit").addClass("d-none")
@@ -344,7 +357,7 @@
                             });
 
                             var empleados = JSON.parse(response.empleado);
-                            var selectEmp = '<select class="form-control" required="required" name="id_empleado" id="id_empleado">\
+                            var selectEmp = '<select class="form-control" required="required" name="id_empleado" id="id_emleado_new">\
                                                     <option>Seleccione un empleado</option>';
                             $.each(empleados, function (i, data) {
                                 selectEmp += "<option required='required' value='" + data.id + "'>" + data.nombre + "</option>";
@@ -366,13 +379,15 @@
                     }
                 })
                 var id_cliente = sessionStorage.getItem("id_cliente")
-                var hora = $(".timepicker").val()
+                var hora = entro_ser > 1 ? $(".timepicker").val() : "08:00";
                 var id_mascota = sessionStorage.getItem("id_mascota")
                 var empleado = sessionStorage.getItem("id_empleado")
 
                 validar_reserva(fecha_reserva, servicio, hora, id_cliente, id_mascota,empleado)
             }
             else{
+                sessionStorage.removeItem("id_empleado")
+                $("#form").find("#edit_button").addClass("d-none")
                 $("#form").find("#id_reserva_hora").addClass("d-none")
                 $("#form").find("#id_reserva_hora_edit").addClass("d-none")
                 $("#form").find("#id_empleado_edit").addClass("d-none")
@@ -385,17 +400,74 @@
             var fecha = fecha_reserva;
             var servicio = sessionStorage.getItem("servicio")
             var hora = $(".timepicker").val()
-            var id_mascota = $("#id_mascota").val()
+            var id_mascota = $("#id_mascota").val() == "Seleccione la mascota" ? "" : $("#id_mascota").val();
             var empleado = sessionStorage.getItem("id_empleado")
             sessionStorage.setItem("id_mascota", id_mascota)
 
             validar_reserva(fecha, servicio, hora, id_cliente, id_mascota, empleado)
+            
 
         })
+
+        $(document).on("change", "#id_mascota_new", function () {
+            console.log("este nuevo")
+            var id_cliente = sessionStorage.getItem("id_cliente")
+            var fecha = fecha_reserva;
+            var servicio = sessionStorage.getItem("servicio")
+            var hora = $(".timepicker").val()
+            var id_mascota = $("#id_mascota_new").val() == "Seleccione la mascota" ? "" : $("#id_mascota_new").val();
+            var empleado = sessionStorage.getItem("id_empleado")
+            sessionStorage.setItem("id_mascota", id_mascota)
+
+            if(id_mascota === ""){
+                $("#form").find("#edit_button").addClass("d-none")
+            }else{
+                validar_reserva(fecha, servicio, hora, id_cliente, id_mascota, empleado)
+            }
+
+        })
+
         $(document).on('change',"#id_empleado", function() {
             var empleado = $("#id_empleado").val()
+            var id_cliente = sessionStorage.getItem("id_cliente")
+            var fecha = fecha_reserva;
+            var servicio = sessionStorage.getItem("servicio")
+            var hora = $(".timepicker").val()
+            var id_mascota = sessionStorage.getItem("id_mascota")
             sessionStorage.setItem("id_empleado", empleado)
+            validar_reserva(fecha, servicio, hora, id_cliente, id_mascota, empleado)
+
         })
+
+        $(document).on('change',"#id_emleado_new", function() {
+            console.log("4")
+            var empleado = $("#id_emleado_new").val() == "Seleccione un empleado" ? "" : $("#id_emleado_new").val();
+            var id_cliente = sessionStorage.getItem("id_cliente")
+            var fecha = fecha_reserva;
+            var servicio = sessionStorage.getItem("servicio")
+            var hora = $(".timepicker").val()
+            var id_mascota = sessionStorage.getItem("id_mascota")
+            sessionStorage.setItem("id_empleado", empleado)
+            if(empleado === "" ){
+                $("#form").find("#edit_button").addClass("d-none")
+            }else{
+                validar_reserva(fecha, servicio, hora, id_cliente, id_mascota, empleado)
+            }
+
+        })
+
+
+        $(document).on('click', '.ui-menu-item', function(){
+            var id_cliente = sessionStorage.getItem("id_cliente")
+            var fecha = fecha_reserva;
+            var servicio = sessionStorage.getItem("servicio")
+            var hora = $(".timepicker").val()
+            var id_mascota = sessionStorage.getItem("id_mascota")
+            var empleado = sessionStorage.getItem("id_empleado")
+            sessionStorage.setItem("id_mascota", id_mascota)
+
+            validar_reserva(fecha, servicio, hora, id_cliente, id_mascota, empleado)
+        });
         
 
         var validar_reserva = function (fecha, servicio, hora, id_cliente, id_mascota, empleado) {
@@ -403,16 +475,20 @@
             if ((fecha != "" && fecha != null && fecha != undefined) && (servicio != "" && servicio != null && servicio != undefined) && (hora != "" && hora != null && hora != undefined) && (id_cliente != "" && id_cliente != null && id_cliente != undefined) && (id_mascota != "" && id_mascota != null && id_mascota != undefined) && (empleado != "" && empleado != null && empleado != undefined)) {
                 var urlValidate = "/reserva/validarDatos/"
                 $.ajax({
-                    data: { 'fecha': fecha, 'servicio': servicio, 'hora': hora, 'id_cliente': id_cliente, 'id_mascota': id_mascota, 'empleado': empleado },
+                    data: { 'fecha': fecha, 'servicio': servicio, 'hora': hora, 'id_cliente': id_cliente, 'id_mascota': id_mascota, 'empleado': empleado, 'id_reserva': id_reserva,'action': 'E'},
                     url: urlValidate,
                     success: function (response) {
                         console.log(response)
                         if (response.mensaje != "") {
-                            $("#id_mensaje_alert").html('<div>' + response.mensaje + '</div>');
-                            $('#mensaje').modal('show');
-                            $("#form").find("#button_add").addClass("d-none")
+                            swal({
+                                title: "Notificación",
+                                text: response.mensaje,
+                                icon: "warning",
+                                button: "Ok",
+                            })
+                            $("#form").find("#edit_button").addClass("d-none")
                         } else {
-                            $("#form").find("#button_add").removeClass("d-none")
+                            $("#form").find("#edit_button").removeClass("d-none")
                         }
                     },
                     error: function (response) {

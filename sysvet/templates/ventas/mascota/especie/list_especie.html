@@ -77,9 +77,12 @@
                     </div>
                     {% endif %}
                     <div>
-                        <button type="submit" class="btn btn-primary float-right" onclick="abrir_modal_creacion('/mascota/addEspecie/')">
-                            Agregar nueva especie
-                        </button>
+                        
+                        {% if perms.mascota.add_especie %}
+                            <button type="submit" class="btn btn-primary float-right" onclick="abrir_modal_creacion('/mascota/addEspecie/')">
+                                Agregar nueva especie
+                            </button>
+                        {% endif %}                    
 
                         <div class="float-left">
                             <div class="wrap">
@@ -189,9 +192,14 @@
                         name: 'Acción',
                         data: 'id',
                         render: function (data) {
-                            return '<button class="btn btn-warning" onclick="abrir_modal_edicion(\'/mascota/editEspecie/' + data + '/\');">\
+                            {% if perms.mascota.change_especie %}
+                                return '<button class="btn btn-warning" onclick="abrir_modal_edicion(\'/mascota/editEspecie/' + data + '/\');">\
                                                         Editar\
                                                     </button>';
+                            {% endif %}
+
+                            return "-";
+                            
                         }
                     }
 

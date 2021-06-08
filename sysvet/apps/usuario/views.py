@@ -5,11 +5,19 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_protect
 from django.contrib.auth import login, logout, authenticate
-from django.http import HttpResponseRedirect
-from django.contrib.auth.decorators import login_required
+from django.http import HttpResponseRedirect, JsonResponse
+from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib import messages
+from datetime import time, datetime
+from django.db.models import Q
+from django.contrib.auth.models import Group
+from django.contrib.auth.forms import PasswordChangeForm
+import json
 
-from .forms import FormLogin
+from apps.usuario.forms import FormLogin, UserForm, UserFormChange, GroupForm, GroupChangeForm, ContraseñaChangeForm
+from apps.usuario.models import User
+from apps.configuracion.models import ConfiEmpresa
+
 
 # Create your views here.
 
@@ -42,6 +50,11 @@ class Login(FormView):
 
     def form_valid(self,form):
         login(self.request,form.get_user())
+        confi = ConfiEmpresa.objects.filter()
+        if confi.count() == 0:
+            confi_initial = ConfiEmpresa()
+            confi_initial.id = 1
+            confi_initial.save()
         return super(Login,self).form_valid(form)
 
 @login_required()
@@ -70,6 +83,236 @@ def home_user(request):
             Se utiliza el metodo render, con los campos del request, y directorio
             de donde se encuentra el template            
         ]
-    """    
+        """    
     return render(request, "home/index.html")    
+
+
+@login_required()
+@permission_required('usuario.view_user')
+def list_usuarios(request):    
+    return render(request, "usuario/list_usuarios.html")
+
+@login_required()
+def list_usuarios_ajax(request):
+    query = request.GET.get('busqueda')
+    if query != "":
+        usuario = User.objects.exclude(is_active=False).filter(Q(first_name__icontains=query) | Q(last_name__icontains=query) | Q(username__icontains=query))
+    else:
+        usuario = User.objects.exclude(is_active=False).all()
+
+    total = usuario.count()
+
+    _start = request.GET.get('start')
+    _length = request.GET.get('length')
+    if _start and _length:
+        start = int(_start)
+        length = int(_length)
+        page = math.ceil(start / length) + 1
+        per_page = length
+
+        usuario = usuario[start:start + length]
+
+    data = [{'id': usu.id,'nombre': usu.first_name, 'apellido': usu.last_name, 'email': usu.email, 'username': usu.username} for usu in usuario]        
+        
+    response = {
+        'data': data,
+        'recordsTotal': total,
+        'recordsFiltered': total,
+    }
+    return JsonResponse(response)
+
+
+@login_required()
+def list_usuarios_baja_ajax(request):
+    query = request.GET.get('busqueda')
+    if query != "":
+        usuario = User.objects.exclude(is_active=True).filter(Q(first_name__icontains=query) | Q(last_name__icontains=query) | Q(username__icontains=query))
+    else:
+        usuario = User.objects.exclude(is_active=True).all()
+
+    total = usuario.count()
+
+    _start = request.GET.get('start')
+    _length = request.GET.get('length')
+    if _start and _length:
+        start = int(_start)
+        length = int(_length)
+        page = math.ceil(start / length) + 1
+        per_page = length
+
+        usuario = usuario[start:start + length]
+
+    data = [{'id': usu.id,'nombre': usu.first_name, 'apellido': usu.last_name, 'email': usu.email, 'username': usu.username} for usu in usuario]        
+        
+    response = {
+        'data': data,
+        'recordsTotal': total,
+        'recordsFiltered': total,
+    }
+    return JsonResponse(response)
+
+@login_required()
+@permission_required('usuario.add_user')
+def add_usuario(request):
+    form = UserForm()
+    group = Group.objects.all()
+    if request.method == 'POST':
+        form = UserForm(request.POST)
+        print(form)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Se ha agregado correctamente!")
+            return redirect('/usuario/add/')
+        else:
+            messages.error(request, form.errors)
+    context = {'form': form}
+    return render(request, 'usuario/add_usuario.html', context)
+
+@login_required()
+@permission_required('usuario.change_user')
+def edit_usuario(request, id):
+    usuario = User.objects.get(id=id)
+    form = UserFormChange(instance=usuario)
+    if request.method == 'POST':
+        form = UserFormChange(request.POST, instance=usuario)        
+        if not form.has_changed():
+            messages.info(request, "No ha hecho ningun cambio")
+            return redirect('/usuario/edit/' + str(id))
+        if form.is_valid():
+            form.save()
+            messages.add_message(request, messages.SUCCESS, 'Se ha editado correctamente!')
+            return redirect('/usuario/edit/' + str(id))
+        else:
+            print(form.errors)
+            print(request)
+            messages.error(request, form.errors)
+
+    context = {'form': form, 'usuario': usuario}
+    return render(request, 'usuario/edit_usuario.html', context)
+
+@login_required()
+@permission_required('usuario.delete_user')
+def baja_usuario(request, id):
+    user = User.objects.get(id=id)
+    confirm = True
+    if request.method == 'POST':
+        if request.user == user:
+            messages.error(request, "¡No puedes eliminar este usuario! intentelo mas tarde.")
+            confirm = False
+            return redirect('/usuario/listUsuarios/')
+        else:
+            user.is_active = False
+            user.save()
+            messages.error(request, "Se ha dado de baja correctamente!.")    
+            return redirect('/usuario/listUsuarios/')
+
+    context = {"user": user}
+    return render(request, 'usuario/dar_baja_usuario_modal.html', context)
+
+@login_required()
+@permission_required('usuario.delete_user')
+def alta_usuario(request, id):
+    user = User.objects.get(id=id)
+    if request.user == user:
+        messages.error(request, "¡No puedes eliminar este usuario! intentelo mas tarde.")
+        return redirect('/usuario/listUsuarios/')
+    else:
+        user.is_active = True
+        user.save()
+        messages.error(request, "Se ha dado de alta correctamente!.")    
+        return redirect('/usuario/listUsuarios/')
+
+
+
+
+@login_required()
+@permission_required('usuario.change_user')
+def change_password(request, id):
+    form = ContraseñaChangeForm(request.user)
+    if request.method == 'POST':
+        form = ContraseñaChangeForm(request.user, request.POST)
+        if form.is_valid():
+            user = form.save()
+            update_session_auth_hash(request, user)
+            messages.add_message(request, messages.SUCCESS, 'Se ha editado correctamente!')
+            return redirect('/usuario/editPassword/' + str(id))
+        else:
+            messages.error(request, form.errors)
+    
+    context = {'form': form, 'id': id}
+    return render(request, 'usuario/edit_password.html', context)
+
+#Roles
+def get_group_list(request):
+    query = request.GET.get('busqueda')
+    if query != "":
+        group = Group.objects.filter(Q(name__icontains=query))
+    else:
+        group = Group.objects.all()
+
+    total = group.count()
+
+    _start = request.GET.get('start')
+    _length = request.GET.get('length')
+    if _start and _length:
+        start = int(_start)
+        length = int(_length)
+        page = math.ceil(start / length) + 1
+        per_page = length
+
+        group = group[start:start + length]
+
+    data = [{'id': g.id,'rol': g.name} for g in group]        
+        
+    response = {
+        'data': data,
+        'recordsTotal': total,
+        'recordsFiltered': total,
+    }
+    return JsonResponse(response)
+
+@login_required()
+@permission_required('usuario.add_user')
+def add_rol(request):
+    form = GroupForm()
+    if request.method == 'POST':
+        form = GroupForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Se ha agregado correctamente!")
+            return redirect('/usuario/addRol/')
+        else:
+            messages.error(request, form.errors)
+
+    context = {'form': form,'groups': Group.objects.all()}
+    return render(request, 'usuario/add_rol.html', context)
+
+@login_required()
+@permission_required('usuario.add_user')
+def edit_rol(request, id):
+    group = Group.objects.get(id=id)
+    form = GroupChangeForm(instance=group)
+    if request.method == 'POST':
+        form = GroupChangeForm(request.POST, instance=group)
+        if not form.has_changed():
+            messages.info(request, "No ha hecho ningun cambio")
+            return redirect('/usuario/addRol/')
+        if form.is_valid():
+            form.save()
+            messages.add_message(request, messages.SUCCESS, 'Se ha editado correctamente!')
+            return redirect('/usuario/addRol/')
+        else:
+            messages.error(request, form.errors)
+
+    context = {'form': form,'groups': Group.objects.all()}
+
+    return render(request, 'usuario/add_rol.html', context)
+
+@login_required()
+@permission_required('usuario.delete_user')
+def delete_rol(request, id):
+    group = Group.objects.get(id=id)
+    group.delete()
+    return redirect('/usuario/addRol/')
+
 

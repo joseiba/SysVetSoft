@@ -1,7 +1,7 @@
 import json
 import math
 from django.shortcuts import render, redirect, HttpResponse
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib import messages
 from django.db.models import Q
 from django.core.paginator import Paginator
@@ -20,15 +20,18 @@ from apps.ventas.factura.forms import FacturaDetalleVentaForm, FacturaCabeceraVe
 from apps.configuracion.models import ConfiEmpresa, Servicio
 from apps.ventas.producto.views import Producto
 from apps.ventas.cliente.models import Cliente
+from apps.utiles.views import reset_nro_timbrado
 # Create your views here.
 @login_required()
+@permission_required('factura.view_facturacabeceraventa')
 def list_factura_ventas(request):
     return render(request, 'ventas/factura/list_facturas_ventas.html')
 
 def list_facturas__ventas_ajax(request):
     query = request.GET.get('busqueda')
     if query != "":
-        factVenta = FacturaCabeceraVenta.objects.exclude(is_active="N").filter(Q(nro_factura__icontains=query) | Q(nro_timbrado__icontains=query) | Q(id_cliente__nombre_cliente__icontains=query)).order_by('-last_modified')
+        factVenta = FacturaCabeceraVenta.objects.exclude(is_active="N").filter(Q(nro_factura__icontains=query) | Q(nro_timbrado__icontains=query) | Q(id_cliente__nombre_cliente__icontains=query) 
+            | Q(id_cliente__cedula__icontains=query) | Q(id_cliente__ruc__icontains=query)).order_by('-last_modified')
     else:
         factVenta = FacturaCabeceraVenta.objects.exclude(is_active="N").order_by('-last_modified')
 
@@ -45,7 +48,7 @@ def list_facturas__ventas_ajax(request):
         factVenta = factVenta[start:start + length]
     
     data= [{'id': fv.id,'nro_factura': fv.nro_factura, 'nro_timbrado': fv.nro_timbrado, 'fecha_emision': fv.fecha_emision, 
-            'cliente': fv.id_cliente.nombre_cliente, 'im_total': fv.total}for fv in factVenta]     
+            'cliente': try_exception_cliente(fv.id_cliente), 'im_total': fv.total}for fv in factVenta]     
 
     response = {
         'data': data,
@@ -54,11 +57,56 @@ def list_facturas__ventas_ajax(request):
     }
     return JsonResponse(response)
 
+
+def list_facturas_anuladas_ventas_ajax(request):
+    query = request.GET.get('busqueda')
+    if query != "":
+        factVenta = FacturaCabeceraVenta.objects.exclude(is_active="S").filter(Q(nro_factura__icontains=query) | Q(nro_timbrado__icontains=query) | Q(id_cliente__nombre_cliente__icontains=query) 
+            | Q(id_cliente__cedula__icontains=query) | Q(id_cliente__ruc__icontains=query)).order_by('-last_modified')
+    else:
+        factVenta = FacturaCabeceraVenta.objects.exclude(is_active="S").order_by('-last_modified')
+
+    total = factVenta.count()
+
+    _start = request.GET.get('start')
+    _length = request.GET.get('length')
+    if _start and _length:
+        start = int(_start)
+        length = int(_length)
+        page = math.ceil(start / length) + 1
+        per_page = length
+
+        factVenta = factVenta[start:start + length]
+    
+    data= [{'id': fv.id,'nro_factura': fv.nro_factura, 'nro_timbrado': fv.nro_timbrado, 'fecha_emision': fv.fecha_emision, 
+            'cliente': try_exception_cliente(fv.id_cliente), 'im_total': fv.total}for fv in factVenta]     
+
+    response = {
+        'data': data,
+        'recordsTotal': total,
+        'recordsFiltered': total,
+    }
+    return JsonResponse(response)
+
+def try_exception_cliente(id):
+    try:
+        cli = Cliente.objects.get(id=id.id)
+        if cli.ruc is None:
+            ruc_cedula = cli.cedula
+        else:
+            ruc_cedula = cli.ruc
+        return 'Nombre: ' + cli.nombre_cliente + " " + cli.apellido_cliente  +'</br> ' + 'Ruc/Cédula: ' + ruc_cedula
+    except Exception as e:
+        return '-'
+
 @login_required()
+@permission_required('factura.add_facturacabeceraventa')
 def add_factura_venta(request):
     form = FacturaCabeceraVentaForm()
+    confi = get_confi()
     data = {}
     mensaje = ""
+    confi_initial = ConfiEmpresa.objects.get(id=1) 
     if request.method == 'POST' and request.is_ajax():
         try:
             confi = ConfiEmpresa.objects.get(id=1) 
@@ -66,10 +114,10 @@ def add_factura_venta(request):
             try:
                 factura = FacturaCabeceraVenta()
                 factura.nro_factura = factura_dict['nro_factura']
-                factura.nro_timbrado = factura_dict['nro_timbrado']
-                factura.ruc_empresa =  "123235" """confi.ruc_empresa"""
-                factura.fecha_inicio_timbrado = "123235"  """confi.fecha_inicio_timbrado"""
-                factura.fecha_fin_timbrado = "123235"  """confi.fecha_fin_timbrado"""
+                factura.nro_timbrado = confi.nro_timbrado
+                factura.ruc_empresa = confi.ruc_empresa
+                factura.fecha_inicio_timbrado = confi.fecha_inicio_timbrado
+                factura.fecha_fin_timbrado = confi.fecha_fin_timbrado
                 cliente_id = Cliente.objects.get(id=factura_dict['cliente'])
                 factura.id_cliente = cliente_id
                 factura.total_iva = int(factura_dict['total_iva'])
@@ -78,12 +126,8 @@ def add_factura_venta(request):
                 for i in factura_dict['products']:
                     detalle = FacturaDetalleVenta()
                     detalle.id_factura_venta = factura
-                    if i['tipo'] == 'P':
-                        producto_id = Producto.objects.get(id=i['codigo_producto'])
-                        detalle.id_producto = producto_id
-                    else: 
-                        servicio_id = Servicio.objects.get(id=i['codigo_producto'])
-                        detalle.id_servicio = servicio_id
+                    producto_id = Producto.objects.get(id=i['codigo_producto'])
+                    detalle.id_producto = producto_id
                     detalle.tipo = i['tipo']
                     detalle.cantidad = int(i['cantidad'])
                     detalle.descripcion = i['description']
@@ -91,23 +135,23 @@ def add_factura_venta(request):
                 response = {'mensaje':mensaje }
                 return JsonResponse(response)
             except Exception as e:
-                print(e)
                 mensaje = 'error'
                 response = {'mensaje':mensaje }
                 return JsonResponse(response)
         except Exception as e:
-            print(e)
             mensaje = 'error'
             response = {'mensaje':mensaje }
         return JsonResponse(response)
-    context = {'form': form,  'calc_iva': 5, 'accion': 'E'}
-
+    nro_factura_initial = reset_nro_timbrado(confi_initial.nro_timbrado)
+    context = {'form': form,  'calc_iva': 5, 'accion': 'A', 'confi': confi, 'nro_factura': str(nro_factura_initial)}
     return render(request, 'ventas/factura/add_factura_ventas.html', context)
 
 @login_required()
+@permission_required('factura.change_facturacabeceraventa')
 def edit_factura_venta(request, id):
     factVenta = FacturaCabeceraVenta.objects.get(id=id)
     form = FacturaCabeceraVentaForm(instance=factVenta)
+    confi = get_confi()
     data = {}
     mensaje = ""
     if request.method == 'POST' and request.is_ajax():
@@ -116,13 +160,13 @@ def edit_factura_venta(request, id):
             try:
                 factura = FacturaCabeceraVenta.objects.get(id=id)
                 factura.nro_factura = factura_dict['nro_factura']
-                factura.nro_timbrado = factura_dict['nro_timbrado']
                 cliente_id = Cliente.objects.get(id=factura_dict['cliente'])
                 factura.id_cliente = cliente_id
                 factura.estado = 'PENDIENTE'
-                factura.ruc_empresa =  "123235" """confi.ruc_empresa"""
-                factura.fecha_inicio_timbrado = "123235"  """confi.fecha_inicio_timbrado"""
-                factura.fecha_fin_timbrado = "123235"  """confi.fecha_fin_timbrado"""
+                factura.nro_timbrado = confi.nro_timbrado
+                factura.ruc_empresa = confi.ruc_empresa
+                factura.fecha_inicio_timbrado = confi.fecha_inicio_timbrado
+                factura.fecha_fin_timbrado = confi.fecha_fin_timbrado
                 factura.total_iva = int(factura_dict['total_iva'])
                 factura.total = int(factura_dict['total_factura'])                
                 factura.save()
@@ -131,12 +175,8 @@ def edit_factura_venta(request, id):
                 for i in factura_dict['products']:
                     detalle = FacturaDetalleVenta()
                     detalle.id_factura_venta = factura
-                    if i['tipo'] == 'P':
-                        producto_id = Producto.objects.get(id=i['codigo_producto'])
-                        detalle.id_producto = producto_id
-                    else: 
-                        servicio_id = Servicio.objects.get(id=i['codigo_producto'])
-                        detalle.id_servicio = servicio_id
+                    producto_id = Producto.objects.get(id=i['codigo_producto'])
+                    detalle.id_producto = producto_id
                     detalle.tipo = i['tipo']
                     detalle.cantidad = int(i['cantidad'])
                     detalle.descripcion = i['description']
@@ -144,35 +184,50 @@ def edit_factura_venta(request, id):
                 response = {'mensaje':mensaje }
                 return JsonResponse(response)
             except Exception as e:
-                print(e)
                 mensaje = 'error'
                 response = {'mensaje':mensaje }
                 return JsonResponse(response)
         except Exception as e:
-            print(e)
             mensaje = 'error'
             response = {'mensaje':mensaje }
         return JsonResponse(response)
-    context = {'form': form, 'det': json.dumps(get_detalle_factura(id)), 'accion': 'E'}
+    context = {'form': form, 'det': json.dumps(get_detalle_factura(id)), 'accion': 'E', 'confi': confi}
     return render(request, 'ventas/factura/edit_factura_venta.html', context)
+
+
+@login_required()
+@permission_required('factura.view_facturacabeceraventa')
+def ver_factura_anulada_venta(request, id):
+    factVenta = FacturaCabeceraVenta.objects.get(id=id)
+    form = FacturaCabeceraVentaForm(instance=factVenta)
+    confi = get_confi()
+    mensaje = ""
+    context = {'form': form, 'det': json.dumps(get_detalle_factura(id)), 'accion': 'ANU', 'confi': confi, 'factVenta': factVenta}
+    return render(request, 'ventas/factura/ver_factura_anulada_venta.html', context)
+
+@login_required()
+@permission_required('factura.delete_facturacabeceraventa')
+def anular_factura_venta(request, id):
+    factVenta = FacturaCabeceraVenta.objects.get(id=id)
+    if request.method == 'POST':
+        factVenta.is_active = "N"
+        factVenta.save()
+        return redirect("/factura/listFacturasVentas/")
+    context = {"id": id}
+    return render(request, "ventas/factura/anular_factura_venta_modal.html", context)
+
 
 def get_detalle_factura(id):
     data = []
     try:
         detalles = FacturaDetalleVenta.objects.filter(id_factura_venta=id)
         for i in detalles:
-            if i.tipo == 'P':                
-                item = i.id_producto.obtener_dict()
-                item['description'] = i.descripcion
-                item['cantidad'] = i.cantidad
-                data.append(item)
-            else:
-                item = i.id_servicio.obtener_dict()
-                item['description'] = i.descripcion
-                item['cantidad'] = i.cantidad
-                data.append(item)
+            item = i.id_producto.obtener_dict()
+            item['description'] = i.descripcion
+            item['cantidad'] = i.cantidad
+            data.append(item)
+
     except Exception as e:
-        print(e)
         pass
     return data
 
@@ -183,30 +238,54 @@ def get_producto_servicio_factura(request):
     data = {}
     try:
         term = request.POST['term']
-        seleccion = request.POST['seleccion']
-        if seleccion == 'P':
-            if (request.method == 'POST') and (request.POST['action'] == 'search_products'):
-                data = []
-                prods = Producto.objects.exclude(is_active='N').filter(nombre_producto__icontains=term)[0:10]
-                for p in prods:
-                    item = p.obtener_dict()
-                    item['id'] = p.id
-                    producto_desc = '%s %s' % ('Producto: ' + p.nombre_producto, 
-                                            'Descripción: ' + p.descripcion)
-                    item['text'] = producto_desc
-                    data.append(item)
-        else:
-            if (request.method == 'POST') and (request.POST['action'] == 'search_products'):
-                data = []
-                prods = Servicio.objects.exclude(is_active='N').filter(nombre_servicio__icontains=term)[0:10]
-                for p in prods:
-                    item = p.obtener_dict()
-                    item['id'] = p.id
-                    producto_desc = '%s %s' % ('Producto: ' + p.nombre_servicio, 
-                                            'Descripción: ' + p.nombre_servicio)
-                    item['text'] = producto_desc
-                    data.append(item)        
+        if (request.method == 'POST') and (request.POST['action'] == 'search_products'):
+            data = []
+            prods = Producto.objects.exclude(is_active='N').filter(nombre_producto__icontains=term)[0:10]
+            for p in prods:
+                item = p.obtener_dict()
+                item['id'] = p.id
+                producto_desc = '%s %s' % ('Producto: ' + p.nombre_producto, 
+                                        'Descripción: ' + p.descripcion)
+                item['text'] = producto_desc
+                data.append(item)    
     except Exception as e:
         data['error'] = str(e)
-
     return JsonResponse(data, safe=False)
+
+
+def get_confi():
+    try:
+        confi_empresa = ConfiEmpresa.objects.get(id=1)
+        return confi_empresa
+    except Exception as e:
+        pass
+        return ""
+
+
+def validate_producto_stock(request):
+    data = []
+    mensaje = ""
+    if request.method == 'POST' and request.is_ajax():
+        try:
+            factura_dict = json.loads(request.POST['factura'])
+            for i in factura_dict['products']:
+                if i['tipo'] == "P":
+                    producto_id = Producto.objects.get(id=i['codigo_producto'])
+                    if producto_id.stock_total < int(i['cantidad']):
+                        data.append(producto_id.nombre_producto)
+            if len(data) > 0:
+                print("F")
+                mensaje = "F"
+                response = {'mensaje':mensaje, 'data': json.dumps(data)}
+                return JsonResponse(response)
+            else:
+                mensaje = "OK"
+                response = {'mensaje':mensaje}
+                return JsonResponse(response)
+        except Exception as e:
+            print(e)
+            mensaje = 'error'
+            response = {'mensaje':mensaje }
+            return JsonResponse(response)
+
+

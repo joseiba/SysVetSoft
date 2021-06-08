@@ -159,8 +159,8 @@
     $(function () {
         $('#searchTerm').on("cut copy paste", function (e) {
             e.preventDefault();
-        });        
-
+        });
+        
         var get_list = function (busqueda) {
             $("#list_factura").DataTable({
                 destroy: true,
@@ -207,11 +207,14 @@
                         name: 'Acción',
                         data: 'id',
                         render: function (data) {
+                            {% if perms.compras.change_facturacompra %}
                             return '<button class="btn btn-warning">\
                                                         <a href="/compra/editFacturaCompra/' + data + '/" style="color: black">\
                                                             Editar\
                                                         </a>\
-                                                    </button>';                                                                                                   
+                                                    </button>';
+                            {% endif %}
+                            return "-";
                         }
                     }
 

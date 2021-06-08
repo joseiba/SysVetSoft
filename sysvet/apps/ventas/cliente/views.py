@@ -1,7 +1,7 @@
 import json
 import math
 from django.shortcuts import render, redirect, HttpResponse
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib import messages
 from django.db.models import Q
 from django.core.paginator import Paginator
@@ -22,6 +22,7 @@ from sysvet.settings import STATIC_URL, MEDIA_URL
 
 #Metodo para agregar cliente
 @login_required()
+@permission_required('cliente.add_cliente')
 def add_cliente(request):
     form = ClienteForm
     if request.method == 'POST':
@@ -36,6 +37,7 @@ def add_cliente(request):
 
 # Metodo para editar Clientes
 @login_required()
+@permission_required('cliente.change_cliente')
 def edit_cliente(request, id):
     cliente = Cliente.objects.get(id=id)
     form = ClienteForm(instance=cliente)
@@ -43,12 +45,10 @@ def edit_cliente(request, id):
         form = ClienteForm(request.POST, instance=cliente)
         if not form.has_changed():
             messages.info(request, "No has hecho ningun cambio!")
-            strId = str(id)
             return redirect('/cliente/edit/'+ strId)
         if form.is_valid():
             cliente = form.save(commit=False)
             cliente.save()
-            strId = str(id)
             messages.success(request, 'Se ha editado correctamente!')
             return redirect('/cliente/edit/'+ strId)
 
@@ -57,6 +57,7 @@ def edit_cliente(request, id):
 
 #Metodo para eliminar cliente
 @login_required()
+@permission_required('cliente.delete_cliente')
 def delete_cliente(request, id):
     cliente = Cliente.objects.get(id=id)
     cliente.is_active = "N"
@@ -65,6 +66,7 @@ def delete_cliente(request, id):
 
 #Metodo para listar todos los clientes
 @login_required()
+@permission_required('cliente.view_cliente')
 def list_clientes(request):    
     return render(request, "ventas/cliente/list_cliente.html")
 

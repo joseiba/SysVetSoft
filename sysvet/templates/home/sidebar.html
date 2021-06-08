@@ -23,51 +23,147 @@
     <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
         <div class="menu_section">
             <h3>General</h3>
-            <ul class="nav side-menu">                
+            <ul class="nav side-menu">   
+                
+                {% if perms.cliente.view_cliente or perms.mascota.view_mascota or perms.producto.view_producto or perms.factura.view_facturacabeceraventa %}
                 <li><a><i class="fas fa-money-check-alt fa-lg" style="width: 26px;"></i> Ventas <span class="fa fa-chevron-down"></span></a>
-                    <ul class="nav child_menu">
-                        <li><a href="{% url 'list_cliente' %}">Cliente</a></li>
+                    <ul class="nav child_menu">                        
+                        {% if perms.cliente.view_cliente %}
+                            <li><a href="{% url 'list_cliente' %}">Cliente</a></li>
+                        {% endif %}
+                        
+                        
+                        {% if perms.mascota.view_especie or perms.mascota.view_raza or perms.mascota.view_mascota %}
                         <li><a>Mascotas<span class="fa fa-chevron-down"></span></a>
                             <ul class="nav child_menu">
+                                
+                                {% if perms.mascota.view_especie %}
                                 <li class=""><a href="{% url 'list_especie' %}">Lista de Especie</a>
                                 </li>
-                                <li><a href="{% url 'list_raza' %}">Lista de Razas</a>
-                                </li>
+                                {% endif %}
+                                
+                                {% if perms.mascota.view_raza %}                                                                                                        
+                                    <li><a href="{% url 'list_raza' %}">Lista de Razas</a>
+                                    </li>
+                                {% endif %}
+                                
+                                {% if perms.mascota.view_mascota %}
                                 <li><a href="{% url 'list_mascotas' %}">Lista de Mascotas</a>
                                 </li>
+                                {% endif %}                                    
                             </ul>
                         </li>
+                        {% endif %}                    
+                        
+                        {% if perms.producto.view_producto %}
                         <li><a>Producto<span class="fa fa-chevron-down"></span></a>
                             <ul class="nav child_menu">
-                                <!--<li class="sub_menu"><a href="level2.html">Level Two</a></li>-->
+                                
+                                {% if perms.configuracion.view_confiempresa %}
                                 <li><a href="{% url 'list_tipo_producto' %}">Tipo Producto</a></li>
+
+                                {% endif %}
+                                    
+                                
+                                {% if perms.configuracion.view_confiempresa %}
                                 <li><a href="{% url 'list_deposito' %}">Deposito</a></li>
+
+                                {% endif %}
+                                    
+                                
+                                {% if perms.producto.view_producto %}
                                 <li><a href="{% url 'list_productos_general' %}">Producto</a></li>
+
+                                {% endif %}
+                                    
                             </ul>
                         </li>
-                        <li><a href="{% url 'list_factura_ventas' %}">Facturas Ventas</a></li>
+                        {% endif %} 
                         
+                        
+                        {% if perms.factura.view_facturacabeceraventa %}
+                        <li><a href="{% url 'list_factura_ventas' %}">Facturas Ventas</a></li>
+                        {% endif %}                                                
                     </ul>
                 </li>
-                <li><a><i class="fa fa-edit"></i> Reservas <span class="fa fa-chevron-down"></span></a>
+                {% endif %}                                 
+                
+                {% if perms.reserva.view_reserva %}
+                    <li><a><i class="fa fa-edit fa-lg"></i> Reservas <span class="fa fa-chevron-down"></span></a>
+                        <ul class="nav child_menu">
+                            <li><a href="{% url 'list_reserva' %}">Calendario de Reservas</a></li>
+                        </ul>
+                    </li>
+                {% endif %}
+
+                
+                {% if perms.compras.view_proveedor or perms.compras.view_pedidocabecera or perms.compras.view_facturacompra %}
+                <li><a><i class="fas fa-shopping-cart fa-lg" style="width: 26px;"></i> Compras <span class="fa fa-chevron-down"></span></a>
                     <ul class="nav child_menu">
-                        <li><a href="{% url 'list_reserva' %}">Calendario de Reservas</a></li>
-                    </ul>
-                </li>
-                <li><a><i class="fas fa-shopping-cart" style="width: 26px;"></i> Compras <span class="fa fa-chevron-down"></span></a>
-                    <ul class="nav child_menu">
+                        
+                        {% if perms.compras.view_proveedor  %}
                         <li><a href="{% url 'list_proveedor' %}">Lista de Proveedores</a></li>
+
+                        {% endif %}
+
+                        {% if perms.compras.view_pedidocabecera %}
                         <li><a href="{% url 'list_pedido_compra' %}">Lista de Pedidos</a></li>
+
+                        {% endif %}
+                            
+                        {% if perms.compras.view_facturacompra %}
                         <li><a href="{% url 'list_factura_compra' %}">Lista de Facturas Compra</a></li>
+
+                        {% endif %}
+                                
                     </ul>
                 </li>
-                <li><a><i class="glyphicon glyphicon-cog fa-lg" style="color: white; width: 26px;"></i> Configuraciones <span class="fa fa-chevron-down"></span></a>
-                    <ul class="nav child_menu">
-                        <li><a href="{% url 'list_servicio' %}">Lista de Servicios</a></li>
-                        <li><a href="{% url 'list_empleado' %}">Lista de Empleados</a></li>
-                        <li><a href="{% url 'confi_inicial' %}">Configuraciones Iniciales</a></li>
-                    </ul>
-                </li>
+                {% endif %}
+                    
+                
+                {% if perms.usuario.view_user %}
+                    <li><a><i class="fas fa-users-cog fa-lg" style="color: white; width: 30px;"></i> Usuarios <span class="fa fa-chevron-down"></span></a>
+                        <ul class="nav child_menu">
+                            
+                            {% if perms.usuario.view_user %}
+                                <li><a href="{% url 'list_usuarios' %}">Lista de Usuarios</a></li>
+
+                            {% endif %}
+                                
+                            {% if perms.usuario.add_user  %}
+                                <li><a href="{% url 'add_rol' %}">Agregar Roles</a></li>
+
+                            {% endif %}
+                                
+                        </ul>
+                    </li>
+                {% endif %}
+                
+                
+                {% if perms.configuracion.add_confiempresa %}
+                    <li><a><i class="glyphicon glyphicon-cog fa-lg" style="color: white; width: 26px;"></i> Configuraciones <span class="fa fa-chevron-down"></span></a>
+                        <ul class="nav child_menu">
+                            
+                            {% if perms.configuracion.view_servicio %}
+                            <li><a href="{% url 'list_servicio' %}">Lista de Servicios</a></li>
+
+                            {% endif %}
+                                                            
+                            {% if perms.configuracion.view_empleado  %}
+                            <li><a href="{% url 'list_empleado' %}">Lista de Empleados</a></li>
+
+                            {% endif %}
+                                                            
+                            {% if perms.configuracion.add_confiempresa %}
+                            <li><a href="{% url 'confi_inicial' %}">Configuraciones Iniciales</a></li>
+
+                            {% endif %}
+                                
+                        </ul>
+                    </li>
+                {% endif %}
+                    
+
             </ul>
         </div>
 

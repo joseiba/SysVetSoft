@@ -13,13 +13,21 @@ var factura = {
     calc_invoice: function () {
         var subtotal = 0
         $.each(this.items.products, function (pos, dict) {
-            dict.subtotal = dict.cantidad * parseFloat(dict.precio);
+            var dic_precio_format = dict.precio.split('.')
+            var dic_sum = "";
+
+            for (let index = 0; index < dic_precio_format.length; index++) {
+                dic_sum += dic_precio_format[index];                
+            }
+            dict.subtotal = dict.cantidad * parseFloat(dic_sum);
             subtotal += dict.subtotal;
         })
+
+        var value_formated = add_miles(subtotal)
         this.items.total_factura = Math.round(subtotal);
         this.items.total_iva = Math.round(subtotal/11);
         $('#totalIva').val(this.items.total_iva); // el iva en el template
-        $('#total').val(this.items.total_factura); // para el total
+        $('#total').val(value_formated); // para el total
     },
     add: function (item) {
         this.items.products.push(item);
@@ -67,7 +75,8 @@ var factura = {
                     width: "15%",
                     orderable: false,
                     render: function (data, type, row) {
-                        return 'Gs. ' + parseFloat(data);
+                        var amount_formated = add_miles(data)
+                        return 'Gs. ' + amount_formated
                     }
                 },
                 {
@@ -76,7 +85,11 @@ var factura = {
                     class: "text-center",
                     orderable: false,  
                     render: function (data, type, row) {
-                        return '<input type="text" name="cantidad" class="form-control form-control-sm input-sm" autocomplete="off" value="' + row.cantidad + '">';
+                        if(action === "A"){
+                            return '<input type="text" name="cantidad" class="form-control form-control-sm input-sm" autocomplete="off" value="' + row.cantidad + '">';
+                        }else{
+                            return row.cantidad;
+                        }
                     }            
                 },
                 {
@@ -85,7 +98,12 @@ var factura = {
                     width: "5%",
                     orderable: false,
                     render: function (data, type, row) {
-                        return '<a rel="remove" class="btn btn-danger m-0 p-0"><i class="fa fa-trash m-1" style="color: white" aria-hidden="true"></i>\n</i></a>'
+                        if(action === "A"){
+                            return '<a rel="remove" class="btn btn-danger m-0 p-0"><i class="fa fa-trash m-1" style="color: white" aria-hidden="true"></i>\n</i></a>'
+                        }
+                        else{
+                            return "-"
+                        }
                     }
                 },
             ],
@@ -153,7 +171,7 @@ $(function () {
         factura.items.products[tr.row].cantidad = cant;
         factura.calc_invoice();
         // el 5 es el lugar donde tiene que estar el subtotal
-        $('td:eq(5)', tblFactura.row(tr.row).node()).html('Gs.' + Math.round(factura.items.products[tr.row].subtotal));
+        $('td:eq(5)', tblFactura.row(tr.row).node()).html('Gs.' +  add_miles(factura.items.products[tr.row].subtotal));
     }).on('change', 'input[name="descripcion"]', function (){
         var descripcion = $(this).val();
         var tr = tblFactura.cell($(this).closest('td, li')).index();
@@ -168,6 +186,7 @@ $(function () {
                 icon: "warning",
                 button: "Ok",
             })
+            e.preventDefault();
         }else{
             e.preventDefault();
             factura.items.cliente = $('select[name="id_cliente"]').val();
@@ -177,12 +196,53 @@ $(function () {
             parameters.append('factura', JSON.stringify(factura.items));
             var csrf = $('input[name="csrfmiddlewaretoken"]').val();
             parameters.append('csrfmiddlewaretoken', csrf);
-            submit_with_ajax(window.location.pathname, 'Noticicación', '¿Desea registrar esta factura?', parameters, function () {
-                location.href = "/factura/listFacturasVentas/"
-            });
+            validate_producto_stock(parameters);
         }
         
     });
+
+    var validate_producto_stock = function(parameters){
+        $.ajax({
+            url: "/factura/validate_producto_stock/",
+            type: 'POST',
+            data: parameters,
+            dataType: 'json',
+            processData: false,
+            contentType: false,
+            success: function (response) {  
+                console.log(response)
+                if(response.mensaje == "OK"){                
+                    submit_with_ajax(window.location.pathname, 'Noticicación', '¿Desea registrar esta factura?', parameters, function () {
+                        location.href = "/factura/listFacturasVentas/"
+                    });
+                }
+                else if(response.mensaje == "F")
+                {      
+                    var product_falta_list = JSON.parse(response.data);
+                    var products = "La cantidad ingresada supera el stock de estos productos: \n"
+                    $.each(product_falta_list, function (i, data) {
+                        products += data + "\n";
+                    })
+
+                    products += "\n¿Desea igualmente registrar esta factura?";
+
+                    submit_with_ajax(window.location.pathname, 'Noticicación', products, parameters, function () {
+                        location.href = "/factura/listFacturasVentas/"
+                    });
+                }
+                else{
+                    swal({
+                        title: 'Notificación',
+                        text: 'ha ocurrido un error, intenlo de nuevo',
+                        icon: 'error'
+                    });
+                }                                     
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                swal("Error", xhr + ' ' + ajaxOptions + ' ' + thrownError, "error");
+            }
+        });
+    }
 });
 
 // validar entrada
@@ -211,3 +271,10 @@ function validate_form_text(type, event, regex) {
     }
     return true;
 }
+
+function add_miles(value){
+    return value.toString().replace(/\D/g, "")
+                        .replace(/([0-9])([0-9]{3})$/, '$1.$2')
+                        .replace(/\B(?=(\d{3})+(?!\d)\.?)/g, ".");
+}
+

@@ -1,0 +1,184 @@
+{% extends "home/base_site.html" %}
+
+{% block title %} Agregar Usuario{% endblock title %}
+{% block stylesheets %}
+{{ block.super }}
+<link href="/static/project_static/other/js/select2/select2.css" rel="stylesheet" />
+<link href="/static/project_static/vendors/datatables.net-bs/css/dataTables.bootstrap.min.css" rel="stylesheet">
+<link href="/static/project_static/vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css" rel="stylesheet">
+<link href="/static/project_static/vendors/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.min.css"
+    rel="stylesheet">
+<link href="/static/project_static/vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css"
+    rel="stylesheet">
+<link href="/static/project_static/vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet"
+    href="/static/project_static/other/js/bootstrap-touchspin-master/dist/jquery.bootstrap-touchspin.css">
+<link rel="stylesheet"
+    href="/static/project_static/other/js/jquery-ui-themes-1.12.1/jquery-ui-themes-1.12.1/jquery-ui.min.css">
+<style>
+    .dataTables_info {
+        width: 0 !important;
+    }
+    .select2-container--default .select2-selection--multiple .select2-selection__choice__remove{
+        position: initial !important;
+    }
+</style>
+{% endblock stylesheets %}
+{% block content %}
+<div class="right_col" role="main">
+    <div class="">
+        <div class="page-title">
+            <div class="title_left">
+                <h3>Agregar Usuario</h3>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+        {% if messages %}
+        <div class="alert alert-success alert-dismissible" role="alert">
+            {% for message in messages %}
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            {{ message }}
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <div class="clearfix"></div>
+
+        <div class="row">
+            <div class="col-md-12 col-sm-12">
+                <div class="x_panel">
+                    <div class="x_title">
+                        <h2>Información Personal</h2>
+                        <ul class="nav navbar-right panel_toolbox">
+                            <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                            </li>
+                            <li><a class="close-link"><i class="fa fa-close"></i></a>
+                            </li>
+                        </ul>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="x_content">
+                        <form class="" action="{% url 'add_usuario' %}" method="POST">
+                            {% csrf_token %}
+                            <div class="field item form-group">
+                                <label class="col-form-label col-md-3 col-sm-3  label-align">Nombre<span
+                                        class="required">*</span></label>
+                                <div class="col-md-6 col-sm-6">
+                                    {{ form.first_name }}
+                                </div>
+                            </div>
+                            <div class="field item form-group">
+                                <label class="col-form-label col-md-3 col-sm-3  label-align">Apellido<span
+                                        class="required">*</span></label>
+                                <div class="col-md-6 col-sm-6">
+                                    {{ form.last_name }}
+                                </div>
+                            </div>
+                            <div class="field item form-group">
+                                <label class="col-form-label col-md-3 col-sm-3  label-align">Usuario<span
+                                        class="required">*</span></label>
+                                <div class="col-md-6 col-sm-6">
+                                    {{ form.username }}
+                                </div>
+                            </div>
+                            <div class="field item form-group">
+                                <label class="col-form-label col-md-3 col-sm-3  label-align">Email</label>
+                                <div class="col-md-6 col-sm-6">
+                                    {{ form.email }}
+                                </div>
+                            </div>
+                            <div class="form-group field item">
+                                <label class="col-form-label col-md-3 col-sm-3  label-align">Roles
+                                    <span class="required">*</span>
+                                </label>
+                                <div class="col-md-6 col-sm-6">
+                                    {{ form.groups }}
+                                </div>
+                            </div>
+                            <div class="form-group field item">
+                                <label class="col-form-label col-md-3 col-sm-3  label-align">Contraseña
+                                    <span class="required">*</span>
+                                </label>
+                                <div class="col-md-6 col-sm-6">
+                                    {{ form.password1 }}
+
+                                </div>
+                            </div>
+                            <div class="form-group field item">
+                                <label class="col-form-label col-md-3 col-sm-3  label-align">Confirmar Contraseña
+                                    <span class="required">*</span>
+                                </label>
+                                <div class="col-md-6 col-sm-6">
+                                    {{ form.password2 }}
+                                </div>
+                            </div>                                                     
+                            <div class="ln_solid">
+                                <div class="form-group">
+                                    <div class="col-md-6 offset-md-3" style="margin-top: 1rem;">
+                                        <button type='submit' id="test" class="btn btn-primary">Agregar</button>
+                                        <button type='reset' class="btn btn-success">Reset</button>
+                                        <button type='button' class="btn btn-success">
+                                            <a href="{% url 'list_usuarios' %}" style="color: white;">
+                                                volver
+                                            </a>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+{% block javascripts %}
+{{ block.super }}
+<!-- validator -->
+<script src="/static/project_static/vendors/validator/multifield.js"></script>
+<script src="/static/project_static/vendors/validator/validator.js"></script>
+<script src="/static/project_static/other/js/select2/select2.js"></script>
+<script src="/static/project_static/other/js/sweetalert.min.js"></script>
+
+<script>  
+    $(function () {
+        // initialize a validator instance from the "FormValidator" constructor.
+        // A "<form>" element is optionally passed as an argument, but is not a must
+        var validator = new FormValidator({
+            "events": ['blur', 'input', 'change']
+        }, document.forms[0]);
+        // on form "submit" event
+        document.forms[0].onsubmit = function (e) {
+            var submit = true,
+                validatorResult = validator.checkAll(this);
+            return !!validatorResult.valid;
+        };
+        // on form "reset" event
+        document.forms[0].onreset = function (e) {
+            validator.reset();
+        };
+        // stuff related ONLY for this demo page:
+        $('.toggleValidationTooltips').change(function () {
+            validator.settings.alerts = !this.checked;
+            if (this.checked)
+                $('form .alert').remove();
+        }).prop('checked', false);
+
+        $('form input').on("cut copy paste", function (e) {
+            e.preventDefault();
+        });
+
+        $("#id_username").removeAttr("autofocus")
+
+        $('.group_select').select2({
+            placeholder: 'Seleccione los Permisos',
+            language: "es",
+            multiple: true,        
+        });
+
+    })
+
+</script>
+{% endblock javascripts %}

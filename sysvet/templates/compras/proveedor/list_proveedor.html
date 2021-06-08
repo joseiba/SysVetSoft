@@ -77,9 +77,13 @@
                     </div>
                     {% endif %}
                     <div>
-                        <button type="submit" class="btn btn-primary float-right">
-                            <a style="color: white;" onclick="abrir_modal_creacion('/compra/addProveedor/')">Agregar nuevo proveedor</a>
-                        </button>
+                        
+                        {% if perms.compras.add_proveedor %}
+                            <button type="submit" class="btn btn-primary float-right">
+                                <a style="color: white;" onclick="abrir_modal_creacion('/compra/addProveedor/')">Agregar nuevo proveedor</a>
+                            </button>
+
+                        {% endif %}                        
 
                         <div class="float-left">
                             <div class="wrap">
@@ -211,13 +215,21 @@
                     {
                         name: 'Acciones',
                         data: 'id',
-                        render: function (data) {
-                            return '<button class="btn btn-warning" onclick="abrir_modal_edicion(\'/compra/editProveedor/' + data + '/\');">\
+                        render: function (data) {     
+                            var buttons = ""                       
+                            {% if perms.compras.change_proveedor %}
+                                buttons += '<button class="btn btn-warning" onclick="abrir_modal_edicion(\'/compra/editProveedor/' + data + '/\');">\
                                                         Editar\
-                                                    </button>\
-                                                    <button class="btn btn-danger" onclick="abrir_modal_eliminacion(\'/compra/deleteProveedor/' + data + '/\');">\
+                                                    </button>';
+                            {% endif %}
+
+                            {% if perms.compras.delete_proveedor %}
+                                buttons += '<button class="btn btn-danger" onclick="abrir_modal_eliminacion(\'/compra/deleteProveedor/' + data + '/\');">\
                                                         Baja\
-                                                    </button>';                                                                                                   
+                                                    </button>';
+                            {% endif %}
+
+                            return buttons;                                                                                                   
                         }
                     }
 

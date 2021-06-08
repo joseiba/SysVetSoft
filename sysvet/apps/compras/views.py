@@ -1,7 +1,7 @@
 import json
 import math
 from django.shortcuts import render, redirect, HttpResponse
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib import messages
 from django.db.models import Q
 from django.core.paginator import Paginator
@@ -23,6 +23,7 @@ from apps.configuracion.models import ConfiEmpresa
 
 # Create your views here.
 @login_required()
+@permission_required('compras.add_proveedor')
 def add_proveedor(request):
     form = ProveedorForm    
     if request.method == 'POST':
@@ -35,6 +36,7 @@ def add_proveedor(request):
     return render(request, 'compras/proveedor/add_proveedor_modal.html', context)
 
 @login_required()
+@permission_required('compras.change_proveedor')
 def edit_proveedor(request, id):
     proveedor = Proveedor.objects.get(id=id)
     form = ProveedorForm(instance=proveedor)
@@ -52,6 +54,7 @@ def edit_proveedor(request, id):
     return render(request, 'compras/proveedor/edit_proveedor_modal.html', context)
 
 @login_required()
+@permission_required('compras.view_proveedor')
 def list_proveedor(request):
     return render(request, "compras/proveedor/list_proveedor.html")
 
@@ -87,6 +90,7 @@ def list_proveedor_ajax(request):
 
 #Metodo para eliminar servicio
 @login_required()
+@permission_required('compras.delete_proveedor')
 def delete_proveedor(request, id):
     proveedor = Proveedor.objects.get(id=id)
     if request.method == 'POST':
@@ -99,10 +103,17 @@ def delete_proveedor(request, id):
 
 def add_pedido():
     producto = Producto.objects.exclude(is_active='N').all()
+    producto = producto.exclude(servicio_o_producto="S")
     for pro in producto:
         pe = pro.id
         try:
             pedi = Pedido.objects.get(id_producto=pe)
+            if pro.stock_minimo <= pro.stock:
+                pedi.is_active = "N"
+                pedi.save()
+            if pro.stock_minimo >= pro.stock:
+                pedi.is_active = "S"
+                pedi.save()                
         except:
             if pro.stock_minimo >= pro.stock:
                 pedido = Pedido()
@@ -167,6 +178,7 @@ def edit_pedido(request, id):
 
 #Facturas compras
 @login_required()
+@permission_required('compras.add_facturacompra')
 def add_factura_compra(request):
     form = FacturaCompraForm()
     data = {}
@@ -212,6 +224,7 @@ def add_factura_compra(request):
 
 #Refactor de pedidos
 @login_required()
+@permission_required('compras.view_pedidocabecera')
 def list_pedido_compra(request):
     add_pedido()
     return render(request, 'compras/pedidos/list_pedidos_compras.html')
@@ -245,6 +258,7 @@ def list_pedido_compra_ajax(request):
     return JsonResponse(response)
 
 @login_required()
+@permission_required('compras.add_pedidocabecera')
 def add_pedido_compra(request):
     pedidos = Pedido.objects.exclude(pedido_cargado='S').all()    
     data = {}
@@ -278,6 +292,7 @@ def add_pedido_compra(request):
     return render(request, 'compras/pedidos/add_compra_pedido.html', context)
 
 @login_required()
+@permission_required('compras.change_pedidocabecera')
 def edit_pedido_compra(request, id):
     data = {}
     mensaje = ""
@@ -312,6 +327,7 @@ def edit_pedido_compra(request, id):
 def get_pedido_list():
     data = []
     pedidos = Pedido.objects.exclude(pedido_cargado='S').all()
+    pedidos = pedidos.exclude(is_active="N")
     for i in pedidos:
         item = i.obtener_dict()
         item['id'] = i.id
@@ -376,6 +392,7 @@ def add_factura_compra():
                     pass
 
 @login_required()
+@permission_required('compras.change_facturacompra')
 def edit_factura_compra(request, id):
     factCompra = FacturaCompra.objects.get(id=id)
     form = FacturaCompraForm(instance=factCompra)
@@ -438,6 +455,7 @@ def get_detalle_factura(id):
     return data
 
 @login_required()
+@permission_required('compras.view_facturacompra')
 def list_factura_compra(request):
     add_factura_compra()
     return render(request, 'compras/factura/list_facturas.html')
@@ -477,7 +495,6 @@ def try_exception(id):
         pro = Proveedor.objects.get(id=id.id)
         return 'Nombre: ' + pro.nombre_proveedor + '</br> ' + 'Ruc: ' + pro.ruc_proveedor
     except Exception as e:
-        print(e)
         return '-'
 
 @login_required()

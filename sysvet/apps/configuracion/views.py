@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, HttpResponse
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib import messages
 from django.db.models import Q
 from django.core.paginator import Paginator
@@ -10,11 +10,14 @@ import math
 from apps.configuracion.models import Servicio, Empleado, ConfiEmpresa
 from apps.configuracion.forms import ServicioForm, EmpleadoForm, ConfiEmpresaForm
 from apps.ventas.producto.models import Deposito
+from apps.ventas.producto.models import Producto
+from apps.utiles.models import Timbrado
 
 # Create your views here.
 
 #Configuraciones iniciales
 @login_required()
+@permission_required('configuracion.add_confiempresa')
 def confi_inicial(request):
     try:
         confi = ConfiEmpresa.objects.get(id=1) 
@@ -27,6 +30,13 @@ def confi_inicial(request):
                 return redirect('/configuracion/confiInicial/')
             if form.is_valid():
                 confi = form.save(commit=False)
+                timbrado = Timbrado()
+                timbrado_existe = Timbrado.objects.filter(nro_timbrado= request.POST.get('nro_timbrado'))
+                if timbrado_existe.count() == 0:
+                    timbrado.nro_timbrado = request.POST.get('nro_timbrado')
+                    timbrado.fecha_inicio_timbrado = request.POST.get('fecha_inicio_timbrado')
+                    timbrado.fecha_fin_timbrado = request.POST.get('fecha_fin_timbrado')
+                    timbrado.save()
                 confi.save() 
                 try:
                     depo = Deposito.objects.get(descripcion=confiUbi.ubicacion_deposito_inicial)   
@@ -37,7 +47,7 @@ def confi_inicial(request):
                     depo.descripcion = request.POST.get('ubicacion_deposito_inicial')
                     depo.save()
 
-                messages.success(request, 'Se ha editado correctamente!')
+                messages.success(request, 'Se ha agregado correctamente!')
                 return redirect('/configuracion/confiInicial/')
     except Exception as e:
         pass
@@ -46,18 +56,32 @@ def confi_inicial(request):
 
 #Servicios
 @login_required()
+@permission_required('configuracion.add_servicio')
 def add_servicio(request):
     form = ServicioForm    
     if request.method == 'POST':
         form = ServicioForm(request.POST) 
         if form.is_valid():           
-            form.save()
+            ser = form.save(commit=False)
+            ser.save()
+            pro = Producto()
+            pro.codigo_producto = request.POST.get("cod_serv")
+            pro.nombre_producto = request.POST.get("nombre_servicio")
+            pro.descripcion = request.POST.get("nombre_servicio")
+            pro.precio_compra = request.POST.get("precio_servicio")
+            pro.precio_venta = request.POST.get("precio_servicio")
+            pro.stock_minimo = 0
+            pro.stock = 1
+            pro.servicio_o_producto = 'S'
+            pro.id_servicio = ser.id
+            pro.save()
             messages.success(request, 'Se ha agregado correctamente!')
             return redirect('/reserva/listServicio')
     context = {'form' : form}
     return render(request, 'reserva/servicio/add_servicio_modal.html', context)
 
 @login_required()
+@permission_required('configuracion.change_servicio')
 def edit_servicio(request, id):
     servicios = Servicio.objects.get(id=id)
     form = ServicioForm(instance=servicios)
@@ -69,12 +93,21 @@ def edit_servicio(request, id):
         if form.is_valid():
             servicios = form.save(commit=False)
             servicios.save()
+            pro = Producto.objects.get(id_servicio=id)
+            pro.codigo_producto = request.POST.get("cod_serv")
+            pro.nombre_producto = request.POST.get("nombre_servicio")
+            pro.descripcion = request.POST.get("nombre_servicio")
+            pro.precio_compra = request.POST.get("precio_servicio")
+            pro.precio_venta = request.POST.get("precio_servicio")
+            pro.id_servicio = servicios.id
+            pro.save()
             messages.success(request, 'Se ha editado correctamente!')
             return redirect('/reserva/listServicio/')
     context = {'form' : form, 'servicios': servicios}
     return render(request, 'reserva/servicio/edit_servicio_modal.html', context)
 
 @login_required()
+@permission_required('configuracion.view_servicio')
 def list_servicio(request):
     servicios = Servicio.objects.exclude(is_active="N").order_by('-last_modified')
     paginator = Paginator(servicios, 10)
@@ -115,6 +148,7 @@ def list_servicio_ajax(request):
 
 #Metodo para eliminar servicio
 @login_required()
+@permission_required('configuracion.delete_servicio')
 def delete_servicio(request, id):
     servicio = Servicio.objects.get(id=id)
     if request.method == 'POST':
@@ -141,6 +175,7 @@ def search_servicio(request):
 
 #Empleados 
 @login_required()
+@permission_required('configuracion.add_empleado')
 def add_empleado(request):
     form = EmpleadoForm    
     if request.method == 'POST':
@@ -153,6 +188,7 @@ def add_empleado(request):
     return render(request, 'configuraciones/empleado/add_empleado_modal.html', context)
 
 @login_required()
+@permission_required('configuracion.change_empleado')
 def edit_empleado(request, id):
     emp = Empleado.objects.get(id=id)
     form = EmpleadoForm(instance=emp)
@@ -171,6 +207,7 @@ def edit_empleado(request, id):
 
 
 @login_required()
+@permission_required('configuracion.view_empleado')
 def list_empleado(request):
     emp = Empleado.objects.exclude(is_active="N").order_by('-last_modified')
     paginator = Paginator(emp, 10)
@@ -211,6 +248,7 @@ def get_list_empleados_ajax(request):
     return JsonResponse(response)
 
 @login_required()
+@permission_required('configuracion.delete_empleado')
 def delete_empleado(request, id):
     emp = Empleado.objects.get(id=id)
     if request.method == 'POST':
@@ -232,3 +270,41 @@ def search_empleado(request):
     page_obj = paginator.get_page(page_number)
     context = { 'page_obj': page_obj}
     return render(request, "configuraciones/empleado/list_empleados.html", context)
+
+
+@login_required()
+@permission_required('configuracion.view_confiempresa')
+def list_historial_timbrado(request):
+    return render(request,"configuraciones/generales/list_historial_timbrado.html")
+
+@login_required()
+def get_historial_timbrado_ajax(request):
+    query = request.GET.get('busqueda')
+    if query != "":
+        timbra = Timbrado.objects.filter(Q(nro_timbrado__icontains=query))
+        timbra = timbra.order_by('id')
+    else:
+        timbra = Timbrado.objects.all().order_by('id')
+        timbra = timbra.order_by('id')
+
+    total = timbra.count()
+
+    _start = request.GET.get('start')
+    _length = request.GET.get('length')
+    if _start and _length:
+        start = int(_start)
+        length = int(_length)
+        page = math.ceil(start / length) + 1
+        per_page = length
+
+        timbra = timbra[start:start + length]
+
+    data = [{'id': t.id, 'nro_timbrado': t.nro_timbrado, 'fecha_inicio': t.fecha_inicio_timbrado,
+            'fecha_fin': t.fecha_fin_timbrado, 'estado': t.vencido} for t in timbra]        
+
+    response = {
+        'data': data,
+        'recordsTotal': total,
+        'recordsFiltered': total,
+    }
+    return JsonResponse(response)

@@ -22,6 +22,12 @@ class ConfiEmpresa(models.Model):
     class Meta:
         verbose_name = "Configuracion Empresa"
         verbose_name_plural = "Configuraciones Empresas"
+        default_permissions =  ()
+        permissions = (
+            ('add_confiempresa', 'Agregar Configuracion'),
+            ('change_confiempresa', 'Editar Configuracion'),
+            ('delete_confiempresa', 'Eliminar Configuracion'),
+            ('view_confiempresa', 'Listar Configuraciones'))        
 
     def __str__(self):
         """Formato de configurcion"""
@@ -32,7 +38,6 @@ class Servicio(models.Model):
     """
     Clase que define la estructura de un Servicio
     """
-    cod_serv = models.CharField(max_length=200)
     nombre_servicio = models.CharField(max_length = 200, help_text = "Ingrese nombre del servicio")
     precio_servicio = models.CharField(max_length = 200, help_text = "Ingrese el precio del servicio")
     min_serv = models.CharField(max_length = 200)
@@ -43,6 +48,12 @@ class Servicio(models.Model):
     class Meta:
         verbose_name = "Servicio"
         verbose_name_plural = "Servicios"
+        default_permissions =  ()
+        permissions = (
+            ('add_servicio', 'Agregar Servicio'),
+            ('change_servicio', 'Editar Servicio'),
+            ('delete_servicio', 'Eliminar Servicio'),
+            ('view_servicio', 'Listar Servicios'))         
 
     def __str__(self):
         """Formato del servicio"""
@@ -73,6 +84,12 @@ class Empleado(models.Model):
     class Meta:
         verbose_name = "Empleado"
         verbose_name_plural = "Empleados"
+        default_permissions =  ()
+        permissions = (
+            ('add_empleado', 'Agregar Empleado'),
+            ('change_empleado', 'Editar Empleado'),
+            ('delete_empleado', 'Eliminar Empleado'),
+            ('view_empleado', 'Listar Empleados')) 
 
     def __str__(self):
         """Formato del empleado"""

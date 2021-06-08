@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, HttpResponse
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib import messages
 from django.db.models import Q
 from django.core.paginator import Paginator
@@ -13,6 +13,7 @@ from .form import MascotaForm, EspecieForm, RazaForm, FichaMedicaForm, VacunaFor
 
 # Create your views here.
 @login_required()
+@permission_required('mascota.add_mascota')
 def add_mascota(request):
     form = MascotaForm    
     if request.method == 'POST':
@@ -26,6 +27,7 @@ def add_mascota(request):
 
 # Metodo para editar Mascotas
 @login_required()
+@permission_required('mascota.view_mascota')
 def edit_mascota(request, id):
     mascota = Mascota.objects.get(id=id)
     form = MascotaForm(instance=mascota)
@@ -45,6 +47,7 @@ def edit_mascota(request, id):
 
 
 @login_required()
+@permission_required('mascota.view_mascota')
 def list_mascotas(request):
     mascotas = Mascota.objects.all().order_by('-last_modified')
     paginator = Paginator(mascotas, 8)
@@ -73,6 +76,7 @@ def search_mascota(request):
     Functions of Epecies 
     """
 @login_required()
+@permission_required('mascota.add_especie')
 def add_especie(request):
     form = EspecieForm
     if request.method == 'POST':
@@ -86,6 +90,7 @@ def add_especie(request):
 
 
 @login_required()
+@permission_required('mascota.change_especie')
 def edit_especie(request, id):
     especies = Especie.objects.get(id=id)
     form = EspecieForm(instance=especies)
@@ -103,6 +108,7 @@ def edit_especie(request, id):
     return render(request, 'ventas/mascota/especie/edit_especie_modal.html', context)
 
 @login_required()
+@permission_required('mascota.view_especie')
 def list_especie(request):
     especie = Especie.objects.all().order_by('-last_modified')
     paginator = Paginator(especie, 10)
@@ -158,6 +164,7 @@ def search_especie(request):
     Functions of Razas
     """
 @login_required()
+@permission_required('mascota.add_raza')
 def add_raza(request):
     form = RazaForm
     if request.method == 'POST':
@@ -170,6 +177,7 @@ def add_raza(request):
     return render(request, 'ventas/mascota/raza/add_raza_modal.html', context)
 
 @login_required()
+@permission_required('mascota.change_raza')
 def edit_raza(request, id):
     raza = Raza.objects.get(id=id)
     form = RazaForm(instance=raza)
@@ -187,6 +195,7 @@ def edit_raza(request, id):
     return render(request, 'ventas/mascota/raza/edit_raza_modal.html', context)    
 
 @login_required()
+@permission_required('mascota.view_raza')
 def list_raza(request):
     raza = Raza.objects.all().order_by('-last_modified')
     raza_especie = RazaForm
@@ -240,6 +249,7 @@ def search_raza(request):
 
 #Funciones de Ficha Medicas
 @login_required()
+@permission_required('mascota.view_mascota')
 def edit_ficha_medica(request,id):
     mascota = Mascota.objects.get(id=id)
     fichaMedicaGet = FichaMedica.objects.get(id_mascota=id)

@@ -186,8 +186,6 @@ $(function () {
 
         list_producto.detalle = {{ producto_detalle | safe }};
         producto_movido.detalle = {{ producto_movido | safe }};
-        console.log(producto_movido)
-
 
     $('form input').on("cut copy paste", function (e) {
         e.preventDefault();
@@ -227,9 +225,14 @@ $(function () {
                 name: 'Acciones',
                 data: 'id',
                 render: function (data) {
-                    return '<button class="btn btn-warning" onclick="abrir_modal_edicion(\'/producto/mover/' + data + '/\');">\
-                        Mover\
-                                                    </button>';
+                    {% if perms.producto.add_producto %}
+                        return '<button class="btn btn-warning" onclick="abrir_modal_edicion(\'/producto/mover/' + data + '/\');">\
+                            Mover\
+                                </button>';
+                    {% endif %}
+
+                    return "-";
+                    
                 }
             }
 
@@ -294,11 +297,16 @@ $(function () {
                 name: 'Acciones',
                 data: 'id',
                 render: function (data) {
-                    return '<button class="btn btn-warning">\
+                    {% if perms.producto.add_producto %}
+                        return '<button class="btn btn-warning">\
                                                         <a href="/producto/moverGeneral/' + data + '/" style="color: black">\
                                                             Mover al Central\
                                                         </a>\
                                                     </button>';
+                    {% endif %}
+
+                    return "-";
+                    
                 }
             }
 

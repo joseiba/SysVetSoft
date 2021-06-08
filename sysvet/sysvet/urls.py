@@ -28,7 +28,7 @@ list_client_ajax, list_client_ajax)
 from apps.ventas.producto.views import (add_tipo_producto, list_tipo_producto, edit_tipo_producto, search_tipo_producto, 
 baja_tipo_producto, alta_tipo_producto, vence_si_no, add_deposito, list_deposito, edit_deposito, search_deposito, 
 add_producto, edit_producto, list_producto, delete_producto, search_producto, mover_producto, mover_producto_detalle_general,
-list_productos_general, list_producto_general_ajax)
+list_productos_general, list_producto_general_ajax, get_list_deposito, get_list_tipo_producto)
 
 from apps.ventas.mascota.views import (list_mascotas, add_mascota, edit_mascota, list_especie, add_especie, 
 edit_especie,search_especie, list_raza, add_raza, edit_raza, search_raza,search_mascota, 
@@ -39,7 +39,7 @@ validar_fecha_hora, get_mascota_cliente, get_min_service, get_mascota_selected)
 
 from apps.configuracion.views import (add_servicio, edit_servicio, delete_servicio, list_servicio, search_servicio, 
 add_empleado, edit_empleado, list_empleado, delete_empleado, search_empleado, list_servicio_ajax, get_list_empleados_ajax,
-confi_inicial)
+confi_inicial, list_historial_timbrado, get_historial_timbrado_ajax)
 
 from apps.compras.views import (add_proveedor, edit_proveedor, list_proveedor_ajax, delete_proveedor, list_proveedor,
 list_pedido, list_pedido_ajax, edit_pedido, list_factura_compra, list_facturas_ajax, add_factura_compra, 
@@ -47,7 +47,13 @@ search_pediddos_factura, edit_factura_compra, list_pedido_compra, list_pedido_co
 reporte_compra_pdf)
 
 from apps.ventas.factura.views import (list_factura_ventas, list_facturas__ventas_ajax, add_factura_venta, 
-get_producto_servicio_factura, edit_factura_venta)
+get_producto_servicio_factura, edit_factura_venta, anular_factura_venta, list_facturas_anuladas_ventas_ajax,
+ver_factura_anulada_venta, validate_producto_stock)
+
+from apps.usuario.views import (list_usuarios, list_usuarios_ajax, add_usuario, edit_usuario, add_rol, get_group_list, 
+change_password, edit_rol, delete_rol, baja_usuario, list_usuarios_baja_ajax, alta_usuario)
+
+from apps.utiles.views import (poner_vencido_timbrado, validate_nro_timbrado)
 
 urlpatterns = [
     # Login and logout   
@@ -55,6 +61,20 @@ urlpatterns = [
     path('', home_user, name="index"),
     path('accounts/login/', Login.as_view(), name='login'),
     path('logout/', logoutUser, name="logout"),
+
+    #Usuarios
+    path('usuario/listUsuarios/', list_usuarios, name="list_usuarios"),
+    path('usuario/list_usuarios_ajax/', list_usuarios_ajax, name="list_usuarios_ajax"),
+    path('usuario/list_usuarios_baja_ajax/', list_usuarios_baja_ajax, name="list_usuarios_baja_ajax"),
+    path('usuario/add/', add_usuario , name="add_usuario"),
+    path('usuario/edit/<int:id>/', edit_usuario, name="edit_usuario"),
+    path('usuario/darBajaUsuario/<int:id>/', baja_usuario, name="baja_usuario"),
+    path('usuario/altaUsuarios/<int:id>/', alta_usuario, name="alta_usuario"),
+    path('usuario/addRol/', add_rol , name="add_rol"),
+    path('usuario/editRol/<int:id>/', edit_rol , name="edit_rol"),
+    path('usuario/eliminarRol/<int:id>/', delete_rol , name="delete_rol"),
+    path('usuario/get_group_list/', get_group_list , name="get_group_list"),
+    path('usuario/editPassword/<int:id>/', change_password , name="change_password"),
 
     #Urls clientes
     path('cliente/add/',add_cliente , name="add_cliente"),
@@ -74,6 +94,10 @@ urlpatterns = [
     path('tipoProducto/alta/<int:id>/', alta_tipo_producto, name="alta_tipo_producto"),
     path('tipoProducto/search/', search_tipo_producto, name="search_tipo_producto"),
     path('tipoProducto/vence_si_no/', vence_si_no, name="vence_si_no"),
+    path('tipoProducto/get_list_tipo_producto/', get_list_tipo_producto, name="get_list_tipo_producto"),
+
+
+    
 
     #Urls producto
     path('producto/add/', add_producto, name="add_producto"),
@@ -91,6 +115,7 @@ urlpatterns = [
     #Urls deposito
     path('deposito/add/',add_deposito , name="add_deposito"),
     path('deposito/list/', list_deposito, name="list_deposito"),
+    path('deposito/get_list_deposito/', get_list_deposito, name="get_list_deposito"),
     path('deposito/edit/<int:id>/', edit_deposito, name="edit_deposito"),
     path('deposito/search/', search_deposito, name="search_deposito"),
 
@@ -138,7 +163,8 @@ urlpatterns = [
     path('configuracion/bajaEmpleado/<int:id>/', delete_empleado, name="delete_empleado"),
     path('configuracion/get_list_empleados_ajax/', get_list_empleados_ajax, name="get_list_empleados_ajax"),
     path('configuracion/confiInicial/', confi_inicial, name="confi_inicial"),
-
+    path('configuracion/listHistorialTimbrado/', list_historial_timbrado , name="list_historial_timbrado"),
+    path('configuracion/get_historial_timbrado_ajax/', get_historial_timbrado_ajax , name="get_historial_timbrado_ajax"),
 
     #Urls compras
     path('compra/addProveedor/', add_proveedor , name="add_proveedor"),
@@ -167,9 +193,15 @@ urlpatterns = [
     path('factura/addFacturaVenta/', add_factura_venta , name="add_factura_venta"),
     path('factura/get_producto_servicio_factura/', get_producto_servicio_factura, name="get_producto_servicio_factura"),
     path('factura/editFacturaVenta/<int:id>/', edit_factura_venta, name="edit_factura_venta"),
+    path('factura/anularFacturaVenta/<int:id>/', anular_factura_venta, name="anular_factura_venta"),
+    path('factura/get_list_facturas_anulas_ventas/', list_facturas_anuladas_ventas_ajax, name="list_facturas_anuladas_ventas_ajax"),
+    path('factura/verDetalleFacturaAnulada/<int:id>/', ver_factura_anulada_venta, name="ver_factura_anulada_venta"),
+    path('factura/validate_producto_stock/', validate_producto_stock , name="validate_producto_stock"),
 
+    #Utiles
+    path('utiles/poner_vencido_timbrado/', poner_vencido_timbrado, name="poner_vencido_timbrado"),
+    path('utiles/validate_nro_timbrado/', validate_nro_timbrado, name="validate_nro_timbrado"),
 
-    
 ]
 
 

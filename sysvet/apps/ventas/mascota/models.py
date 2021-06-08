@@ -20,6 +20,12 @@ class Especie(models.Model):
     class Meta:
         verbose_name = "Especie"
         verbose_name_plural = "Especies"
+        default_permissions =  ()
+        permissions = (
+            ('add_especie', 'Agregar Especie'),
+            ('change_especie', 'Editar Especie'),
+            ('delete_especie', 'Eliminar Especie'),
+            ('view_especie', 'Listar Especies'))         
 
     def __str__(self):
         return self.nombre_especie
@@ -32,7 +38,13 @@ class Raza(models.Model):
         class Meta:
             verbose_name = "Raza"
             verbose_name_plural = "Razas"
-    
+            default_permissions =  ()
+            permissions = (
+                ('add_raza', 'Agregar Raza'),
+                ('change_raza', 'Editar Raza'),
+                ('delete_raza', 'Eliminar Raza'),
+                ('view_raza', 'Listar Razas'))   
+        
         def __str__(self):
             return self.nombre_raza  
 
@@ -64,6 +76,12 @@ class Mascota(models.Model):
     class Meta:
         verbose_name = "Mascota"
         verbose_name_plural = "Mascotas"
+        default_permissions =  ()
+        permissions = (
+                ('add_mascota', 'Agregar Mascota'),
+                ('change_mascota', 'Editar Mascota'),
+                ('delete_mascota', 'Eliminar Mascota'),
+                ('view_mascota', 'Listar Mascotas'))  
 
     '''def save(self, *args, **kwargs):
         # Opening the uploaded image

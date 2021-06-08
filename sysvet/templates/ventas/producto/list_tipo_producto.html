@@ -77,21 +77,26 @@
                     </div>
                     {% endif %}
                     <div>
-                        <button class="btn btn-primary float-right"
-                        onclick="abrir_modal_creacion('/tipoProducto/add/');">
-                            Agregar nuevo tipo de producto
-                        </button>
+                        
+                        {% if perms.configuracion.add_confiempresa %}
+                            <button class="btn btn-primary float-right"
+                            onclick="abrir_modal_creacion('/tipoProducto/add/');">
+                                Agregar nuevo tipo de producto
+                            </button>
+                        {% endif %}
 
                         <div class="float-left">
                             <div class="wrap">
                                 <div class="search">
-                                    <form action="{% url 'search_tipo_producto' %}" method="GET" class="d-inline-flex">
-                                        <input type="search" class="searchTerm" name="q" value="{{ request.GET.q }}"
-                                            placeholder="Buscar por nombre tipo" autocomplete="off">
-                                        <button type="submit" class="searchButton">
+                                    <div class="d-inline-flex">
+                                        <input type="search" class="searchTerm" id="searchTerm"
+                                        placeholder="Buscar por nombre tipo"
+                                        data-toggle="tooltip" data-placement="top"
+                                        title="Buscar por nombre tipo" onkeyup="replaceCaratect(this)">
+                                        <button type="button" id="busqueda" class="searchButton">
                                             <i class="fa fa-search"></i>
                                         </button>
-                                    </form>
+                                    </div>
                                 </div>
                             </div>
                         </div>    
@@ -101,7 +106,7 @@
                         <div class="row">
                             <div class="col-sm-12">
                                 <div class="card-box table-responsive" style="text-align: center;">
-                                    <table id="" class="table table-striped table-bordered" style="width:90%; margin: auto;">
+                                    <table id="list_tipo" class="table table-striped table-bordered" style="width:90%; margin: auto;">
                                         <thead>
                                             <tr class="" style="background-color: #2a3f54; font-size: medium;">
                                                 <th style="color: white;">Nombre tipo</th>
@@ -111,7 +116,7 @@
                                         </thead>
                                         <tbody>
 
-                                            {% for tipo_producto in page_obj %}
+                                            <!--{% for tipo_producto in page_obj %}
                                             <tr style="font-size: medium;">
                                                 <td>{{ tipo_producto.nombre_tipo}}</td>
                                                 <td>{{ tipo_producto.fecha_alta}}</td>
@@ -133,17 +138,13 @@
                                                     </button>
                                                 </td>
                                             </tr>
-                                            {% endfor %}
+                                            {% endfor %}-->
                                         </tbody>
                                     </table>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="clearfix"></div>
-                    {% block pagination %}
-                    {% include 'home/pagination.html' %}
-                    {% endblock pagination %}
                 </div>
 
             </div>
@@ -192,6 +193,114 @@
         $('form input').on("cut copy paste", function (e) {
             e.preventDefault();
         });
+
+        var get_list = function (busqueda) {
+            $("#list_tipo").DataTable({
+                destroy: true,
+                dom: 'Bfrtip',
+                buttons: ['pdf'],
+                searching: false,
+                pageLength: 10,
+                ajax: {
+                    url: "/tipoProducto/get_list_tipo_producto/",
+                    type: 'GET',
+                    datatype: 'json',
+                    data: {'busqueda': busqueda},
+                    error: function (data) {
+                        $.fn.DataTable.ext.errorMode = 'none'
+
+                    }
+                },
+                columns: [
+                    {
+                        name: 'Nombre tipo',
+                        data: 'nombre_tipo',
+                    },
+                    {
+                        name: 'Fecha alta',
+                        data: 'fecha_alta',
+                    },
+                    {
+                        name: 'Fecha baja',
+                        data: 'fecha_baja',
+                    },                    
+                    {
+                        name: 'Acciones',
+                        data: 'id',
+                        render: function (data) {
+                            var buttons = ""
+                            {% if perms.configuracion.change_confiempresa %}
+                                buttons +=  '<button class="btn btn-warning" onclick="abrir_modal_edicion(\'/tipoProducto/edit/' + data + '/\');">\
+                                                        Editar\
+                                                    </button>';
+                            {% endif %}
+
+                            {% if perms.configuracion.delete_confiempresa %}
+                                buttons +=  '<button class="btn btn-danger" onclick="abrir_modal_eliminacion(\'/tipoProducto/baja/' + data + '/\');">\
+                                                    Baja\
+                                                    </button>';
+                            {% endif %}
+
+                            {% if perms.configuracion.change_confiempresa %}
+                                buttons +=  '<button class="btn btn-success" onclick="abrir_modal_eliminacion(\'/tipoProducto/alta/' + data + '/\');">\
+                                                    Alta\
+                                                    </button>';
+                            {% endif %}
+
+                            return buttons;
+                            
+                        }
+                    }
+
+                ],
+                columnDefs: [{
+                    targets: [3], // column index (start from 0)
+                    orderable: false, // set orderable false for selected columns
+                }],
+                serverSide: false,
+                language: {                    
+                    decimal: "",
+                    emptyTable: "Sin resultados encontrados",
+                    info: "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
+                    infoEmpty: "Mostrando 0 de 0 Entradas",
+                    infoFiltered: "(Filtrado de _MAX_ total entradas)",
+                    infoPostFix: "",
+                    thousands: ",",
+                    lengthMenu: "Mostrar _MENU_ Entradas",
+                    loadingRecords: "Cargando...",
+                    processing: "Procesando...",
+                    search: "Buscar:",
+                    zeroRecords: "Sin resultados encontrados",
+                    paginate: {
+                        first: "Primero",
+                        last: "Ultimo",
+                        next: "Siguiente",
+                        previous: "Anterior",
+                    },
+                },
+
+            })
+        }
+
+        var query = ""
+        
+        get_list(query);
+
+        $("#searchTerm").change(function(){
+            var busqueda = $("#searchTerm").val()
+            sessionStorage.setItem("busqueda", busqueda)
+        })
+
+        $("#busqueda").click(function(){
+            var busqueda = sessionStorage.getItem("busqueda")
+            if(busqueda == "" || busqueda == undefined || busqueda == null){
+                busqueda = "";
+                get_list(busqueda)
+            }
+            else{
+                get_list(busqueda)
+            }
+        }) 
 
     })
 </script>
