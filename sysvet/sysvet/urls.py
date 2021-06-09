@@ -53,6 +53,8 @@ ver_factura_anulada_venta, validate_producto_stock)
 from apps.usuario.views import (list_usuarios, list_usuarios_ajax, add_usuario, edit_usuario, add_rol, get_group_list, 
 change_password, edit_rol, delete_rol, baja_usuario, list_usuarios_baja_ajax, alta_usuario)
 
+from apps.caja.views import (list_caja_ajax, list_cajas, add_caja)
+
 from apps.utiles.views import (poner_vencido_timbrado, validate_nro_timbrado)
 
 urlpatterns = [
@@ -197,6 +199,11 @@ urlpatterns = [
     path('factura/get_list_facturas_anulas_ventas/', list_facturas_anuladas_ventas_ajax, name="list_facturas_anuladas_ventas_ajax"),
     path('factura/verDetalleFacturaAnulada/<int:id>/', ver_factura_anulada_venta, name="ver_factura_anulada_venta"),
     path('factura/validate_producto_stock/', validate_producto_stock , name="validate_producto_stock"),
+
+    #Caja
+    path('caja/listCajas/', list_cajas, name="list_cajas"),
+    path('caja/get_list_caja/', list_caja_ajax, name="list_caja_ajax"),
+    path('caja/add/',add_caja , name="add_caja"),
 
     #Utiles
     path('utiles/poner_vencido_timbrado/', poner_vencido_timbrado, name="poner_vencido_timbrado"),
