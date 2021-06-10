@@ -68,31 +68,29 @@
                         <div class="clearfix"></div>
                     </div>
                     <div class="clearfix"></div>
-                    {% if messages %}
+                    <!--{% if messages %}
                     <div class="alert alert-success alert-dismissible" role="alert">
                         {% for message in messages %}
-                            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                            {{ message }}
+                        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                        {{ message }}
                         {% endfor %}
                     </div>
-                    {% endif %}
+                    {% endif %}-->
                     <div>
-                        
+
                         {% if perms.caja.add_caja %}
-                            <button type="submit" class="btn btn-primary float-right">
-                                <a style="color: white;" href="{% url 'add_caja' %}">Abrir Caja</a>
-                            </button>
-                        {% endif %}                        
+                        <button type="submit" class="btn btn-primary float-right" id="add_caja">
+                            <a style="color: white;" href="{% url 'add_caja' %}">Abrir Caja</a>
+                        </button>
+                        {% endif %}
 
                         <div class="float-left">
                             <div class="wrap">
                                 <div class="search">
                                     <div class="d-inline-flex">
-                                        <input type="search" class="searchTerm" id="searchTerm"
-                                            data-toggle="tooltip" data-placement="top"
-                                            title="Buscar por fecha de creacion"
-                                            placeholder="Buscar por fecha de creacion"
-                                            onkeyup="replaceDirection(this)">
+                                        <input type="search" class="searchTerm" id="searchTerm" data-toggle="tooltip"
+                                            data-placement="top" title="Buscar por fecha de creacion"
+                                            placeholder="Buscar por fecha de creacion" onkeyup="replaceDirection(this)">
                                         <button type="button" id="busqueda" class="searchButton">
                                             <i class="fa fa-search"></i>
                                         </button>
@@ -100,7 +98,7 @@
                                 </div>
                             </div>
                         </div>
-                        
+
                     </div>
 
                     <div class="x_content">
@@ -112,10 +110,11 @@
                                         <thead>
                                             <tr class="" style="background-color: #2a3f54; font-size: medium;">
                                                 <th style="color: white;">Id</th>
-                                                <th style="color: white;">Fecha Creacion</th>
+                                                <th style="color: white;">Fecha Apertura</th>
+                                                <th style="color: white;">Fecha Cierre</th>
                                                 <th style="color: white;">Saldo Inicial</th>
-                                                <th style="color: white;">Total Ingreso</th>
-                                                <th style="color: white;">Total Egreso</th>
+                                                <th style="color: white;">Total Ingreso del Dia</th>
+                                                <th style="color: white;">Total Egreso del Dia</th>
                                                 <th style="color: white;">Saldo a Entregar</th>
                                                 <th style="color: white;">Acción</th>
                                             </tr>
@@ -128,7 +127,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="clearfix"></div>                    
+                    <div class="clearfix"></div>
                 </div>
 
             </div>
@@ -156,13 +155,15 @@
 <script src="/static/project_static/vendors/jszip/dist/jszip.min.js"></script>
 <script src="/static/project_static/vendors/pdfmake/build/pdfmake.min.js"></script>
 <script src="/static/project_static/vendors/pdfmake/build/vfs_fonts.js"></script>
+<script src="/static/project_static/other/js/sweetalert.min.js"></script>
+
 
 <script>
     $(function () {
-    
+
         $('form input').on("cut copy paste", function (e) {
             e.preventDefault();
-        });        
+        });
 
         var get_list = function (busqueda) {
             $("#list_cajas").DataTable({
@@ -175,7 +176,7 @@
                     url: "/caja/get_list_caja/",
                     type: 'GET',
                     datatype: 'json',
-                    data: {'busqueda': busqueda},
+                    data: { 'busqueda': busqueda },
                     error: function (data) {
                         $.fn.DataTable.ext.errorMode = 'none'
 
@@ -187,38 +188,42 @@
                         data: 'id',
                     },
                     {
-                        name: 'Fecha Creacion',
+                        name: 'Fecha Apertura',
                         data: 'fecha_alta',
+                    },
+                    {
+                        name: 'Fecha Cierre',
+                        data: 'fecha_cierre',                    
                     },
                     {
                         name: 'Saldo Inicial',
                         data: 'saldo_inicial',
-                        render: function (data){
-                            return ' Gs.'  + add_miles(data)
+                        render: function (data) {
+                            return ' Gs.' + add_miles(data)
 
                         }
                     },
                     {
-                        name: 'Total Ingreso',
+                        name: 'Total Ingreso del Dia',
                         data: 'total_ingreso',
-                        render: function (data){
-                            return ' Gs.'  + add_miles(data)
+                        render: function (data) {
+                            return ' Gs.' + add_miles(data)
 
                         }
                     },
                     {
-                        name: 'Total Egreso',
+                        name: 'Total Egreso del Dia',
                         data: 'total_egreso',
-                        render: function (data){
-                            return ' Gs.'  + add_miles(data)
+                        render: function (data) {
+                            return ' Gs.' + add_miles(data)
 
                         }
                     },
                     {
                         name: 'Saldo a Entregar',
                         data: 'saldo_entregar',
-                        render: function (data){
-                            return ' Gs.'  + add_miles(data)
+                        render: function (data) {
+                            return ' Gs.' + add_miles(data)
 
                         }
                     },
@@ -228,8 +233,8 @@
                         render: function (data) {
 
                             {% if perms.caja.change_caja %}
-                                return  '<button class="btn btn-warning">\
-                                                        <a href="" style="color: black">\
+                            return '<button class="btn btn-warning">\
+                                                        <a href="/caja/cerrar_caja/' + data + '/" style="color: black">\
                                                             Cerrar Caja\
                                                         </a>\
                                                     </button>';
@@ -241,11 +246,11 @@
 
                 ],
                 columnDefs: [{
-                    targets: [6], // column index (start from 0)
+                    targets: [7], // column index (start from 0)
                     orderable: false, // set orderable false for selected columns
                 }],
                 serverSide: false,
-                language: {                    
+                language: {
                     decimal: "",
                     emptyTable: "No hay información",
                     info: "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
@@ -270,31 +275,64 @@
         }
 
         var query = ""
-        
+
         get_list(query);
 
-        $("#searchTerm").change(function(){
+        $("#searchTerm").change(function () {
             var busqueda = $("#searchTerm").val()
             sessionStorage.setItem("busqueda", busqueda)
         })
 
-        $("#busqueda").click(function(){
+        $("#busqueda").click(function () {
             var busqueda = sessionStorage.getItem("busqueda")
-            if(busqueda == "" || busqueda == undefined || busqueda == null){
+            if (busqueda == "" || busqueda == undefined || busqueda == null) {
                 busqueda = "";
                 get_list(busqueda)
             }
-            else{
+            else {
                 get_list(busqueda)
             }
-        }) 
-    })
+        })
 
-    function add_miles(value){
-    return value.toString().replace(/\D/g, "")
-                        .replace(/([0-9])([0-9]{3})$/, '$1.$2')
-                        .replace(/\B(?=(\d{3})+(?!\d)\.?)/g, ".");
-}
+        /*$("#add_caja").click(function () {
+            var today = new Date();
+            var year = today.getFullYear();
+            var month = today.getMonth().toString().length === 1 ? '0' + (today.getMonth() + 1).toString() : today.getMonth() + 1;
+            var date = today.getDate().toString().length === 1 ? '0' + (today.getDate()).toString() : today.getDate();
+
+            var formattedDate = date + '/' + month + '/' + year; 
+            console.log(formattedDate)
+            $.ajax({
+                url: "/caja/validate_caja_abierta/",
+                type: 'GET',
+                data: { 'fecha': formattedDate },
+                success: function(response){
+
+                },
+                error: function(error){
+
+                },
+            })
+        })*/
+
+        {% if messages %}
+            {% for message in messages %}
+                swal({
+                        title: "Notificación",
+                        text:  "{{ message }}",
+                        icon: "warning",
+                        button: "Ok",
+                    })
+            {% endfor %}
+        {% endif %}
+
+    });
+
+    function add_miles(value) {
+        return value.toString().replace(/\D/g, "")
+            .replace(/([0-9])([0-9]{3})$/, '$1.$2')
+            .replace(/\B(?=(\d{3})+(?!\d)\.?)/g, ".");
+    }
 
 </script>
 

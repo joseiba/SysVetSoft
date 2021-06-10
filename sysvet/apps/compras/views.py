@@ -19,8 +19,10 @@ from apps.compras.models import Proveedor, Pedido, FacturaCompra, FacturaDet, Pa
 from apps.compras.forms import ProveedorForm, PedidoForm, FacturaCompraForm, FacturaDetalleForm
 from apps.ventas.producto.models import Producto
 from apps.configuracion.models import ConfiEmpresa
+from apps.caja.models import Caja
 
-
+date = datetime.now()
+today = date.strftime("%d/%m/%Y")
 # Create your views here.
 @login_required()
 @permission_required('compras.add_proveedor')
@@ -125,8 +127,7 @@ def add_pedido():
 def list_pedido(request):
     add_pedido()
     pedi = Pedido.objects.exclude(pedido_cargado="S").all()
-    context = {'pedidos': pedi}
-    return render(request, "compras/pedidos/list_pedidos.html")
+    return render(request, "compras/pedidos/list_pedidos.html", context)
 
 @login_required()
 def list_pedido_ajax(request):
@@ -227,7 +228,13 @@ def add_factura_compra(request):
 @permission_required('compras.view_pedidocabecera')
 def list_pedido_compra(request):
     add_pedido()
-    return render(request, 'compras/pedidos/list_pedidos_compras.html')
+    caja_abierta = Caja.objects.exclude(apertura_cierre="C").filter(fecha_alta=today)
+    if caja_abierta.count() > 0:
+        abierto = "S"
+    else:
+        abierto = "N"
+    context = {'caja_abierta' : abierto}
+    return render(request, 'compras/pedidos/list_pedidos_compras.html', context)
 
 def list_pedido_compra_ajax(request):
     query = request.GET.get('busqueda')
@@ -260,7 +267,7 @@ def list_pedido_compra_ajax(request):
 @login_required()
 @permission_required('compras.add_pedidocabecera')
 def add_pedido_compra(request):
-    pedidos = Pedido.objects.exclude(pedido_cargado='S').all()    
+    pedidos = Pedido.objects.exclude(pedido_cargado='S').all()
     data = {}
     mensaje = ""
     if request.method == 'POST' and request.is_ajax():    
@@ -288,7 +295,7 @@ def add_pedido_compra(request):
             mensaje = 'error'
             response = {'mensaje':mensaje }
         return JsonResponse(response)
-    context = {'accion': 'A', 'pedidos': json.dumps(get_pedido_list()), 'pedidos_list': pedidos}
+    context = {'accion': 'A', 'pedidos': json.dumps(get_pedido_list()), 'pedidos_list': pedidos, 'caja_abierta' : abierto}
     return render(request, 'compras/pedidos/add_compra_pedido.html', context)
 
 @login_required()
@@ -458,11 +465,16 @@ def get_detalle_factura(id):
 @permission_required('compras.view_facturacompra')
 def list_factura_compra(request):
     add_factura_compra()
-    return render(request, 'compras/factura/list_facturas.html')
+    caja_abierta = Caja.objects.exclude(apertura_cierre="C").filter(fecha_alta=today)
+    if caja_abierta.count() > 0:
+        abierto = "S"
+    else:
+        abierto = "N"
+    context = {'caja_abierta' : abierto}
+    return render(request, 'compras/factura/list_facturas.html', context)
 
 def list_facturas_ajax(request):
     query = request.GET.get('busqueda')
-    print(query)
     if query != "":
         factCompra = FacturaCompra.objects.exclude(is_active="N").filter(Q(nro_factura__icontains=query) | Q(id_proveedor__ruc_proveedor__icontains=query) | Q(id_proveedor__nombre_proveedor__icontains=query)).order_by('last_modified')
     else:

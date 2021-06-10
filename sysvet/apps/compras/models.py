@@ -137,6 +137,7 @@ ESTADOS_FACTURA = [
 class FacturaCompra(models.Model):
     nro_factura = models.CharField(max_length=500, null=True)
     nro_timbrado = models.CharField(max_length=500, null=True)
+    fecha_alta = models.CharField(max_length=500, default = date.strftime("%d/%m/%Y"), null=True)
     fecha_emision_factura = models.CharField(max_length=500, null=True)
     fecha_emision = models.CharField(max_length=500, null=True)
     fecha_vencimiento = models.CharField(max_length=500, null=True)
@@ -146,6 +147,7 @@ class FacturaCompra(models.Model):
     total = models.FloatField(default=0)
     factura_cargada_producto = models.CharField(max_length=2, default="N", blank=True, null=True)
     factura_cargada_pedido = models.CharField(max_length=2, default="N", blank=True, null=True)
+    factura_caja = models.CharField(max_length=2, default="N", blank=True, null=True)
     last_modified = models.DateTimeField(auto_now=True, blank=True)
     is_active = models.CharField(max_length=2, default="S", blank=True, null=True)
     id_proveedor = models.ForeignKey('Proveedor', on_delete=models.CASCADE, null=True)

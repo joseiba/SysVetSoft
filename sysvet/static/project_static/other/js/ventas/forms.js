@@ -6,6 +6,7 @@ var factura = {
         cliente: '',
         nro_factura: '',
         nro_timbrado: '',
+        contado_pos: '',
         total_iva: 0,
         total_factura: 0,
         products: []
@@ -193,6 +194,7 @@ $(function () {
             factura.items.nro_factura = $('input[name="nro_factura"]').val();
             factura.items.nro_timbrado = $('input[name="nro_timbrado"]').val();
             var parameters = new FormData();
+            console.log(factura.items.contado_pos)
             parameters.append('factura', JSON.stringify(factura.items));
             var csrf = $('input[name="csrfmiddlewaretoken"]').val();
             parameters.append('csrfmiddlewaretoken', csrf);

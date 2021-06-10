@@ -160,6 +160,8 @@
         $('#searchTerm').on("cut copy paste", function (e) {
             e.preventDefault();
         });
+
+        var caja_abierta = "{{ caja_abierta }}"
         
         var get_list = function (busqueda) {
             $("#list_factura").DataTable({
@@ -207,7 +209,7 @@
                         name: 'Acción',
                         data: 'id',
                         render: function (data) {
-                            {% if perms.compras.change_facturacompra %}
+                            {% if perms.compras.change_facturacompra and caja_abierta == "S" %}
                             return '<button class="btn btn-warning">\
                                                         <a href="/compra/editFacturaCompra/' + data + '/" style="color: black">\
                                                             Editar\

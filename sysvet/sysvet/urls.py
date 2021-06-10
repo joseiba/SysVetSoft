@@ -28,7 +28,7 @@ list_client_ajax, list_client_ajax)
 from apps.ventas.producto.views import (add_tipo_producto, list_tipo_producto, edit_tipo_producto, search_tipo_producto, 
 baja_tipo_producto, alta_tipo_producto, vence_si_no, add_deposito, list_deposito, edit_deposito, search_deposito, 
 add_producto, edit_producto, list_producto, delete_producto, search_producto, mover_producto, mover_producto_detalle_general,
-list_productos_general, list_producto_general_ajax, get_list_deposito, get_list_tipo_producto)
+list_productos_general, list_producto_general_ajax, get_list_deposito, get_list_tipo_producto, list_producto_vencido_ajax)
 
 from apps.ventas.mascota.views import (list_mascotas, add_mascota, edit_mascota, list_especie, add_especie, 
 edit_especie,search_especie, list_raza, add_raza, edit_raza, search_raza,search_mascota, 
@@ -53,7 +53,7 @@ ver_factura_anulada_venta, validate_producto_stock)
 from apps.usuario.views import (list_usuarios, list_usuarios_ajax, add_usuario, edit_usuario, add_rol, get_group_list, 
 change_password, edit_rol, delete_rol, baja_usuario, list_usuarios_baja_ajax, alta_usuario)
 
-from apps.caja.views import (list_caja_ajax, list_cajas, add_caja)
+from apps.caja.views import (list_caja_ajax, list_cajas, add_caja, cerrar_caja)
 
 from apps.utiles.views import (poner_vencido_timbrado, validate_nro_timbrado)
 
@@ -106,6 +106,7 @@ urlpatterns = [
     path('producto/listDetalle/<int:id>/', list_producto, name="list_producto"),
     path('producto/listGeneral/', list_productos_general, name="list_productos_general"),
     path('producto/list_general_ajax/', list_producto_general_ajax, name="list_producto_general_ajax"),
+    path('producto/list_producto_vencido_ajax/', list_producto_vencido_ajax, name="list_producto_vencido_ajax"),
     path('producto/edit/<int:id>/', edit_producto, name="edit_producto"),
     path('producto/mover/<int:id>/', mover_producto, name="mover_producto"),
     path('producto/search/', search_producto, name="search_producto"),
@@ -204,6 +205,7 @@ urlpatterns = [
     path('caja/listCajas/', list_cajas, name="list_cajas"),
     path('caja/get_list_caja/', list_caja_ajax, name="list_caja_ajax"),
     path('caja/add/',add_caja , name="add_caja"),
+    path('caja/cerrar_caja/<int:id>/',cerrar_caja , name="cerrar_caja"),
 
     #Utiles
     path('utiles/poner_vencido_timbrado/', poner_vencido_timbrado, name="poner_vencido_timbrado"),

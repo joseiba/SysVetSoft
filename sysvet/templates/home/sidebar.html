@@ -25,7 +25,7 @@
             <h3>General</h3>
             <ul class="nav side-menu">   
                 
-                {% if perms.cliente.view_cliente or perms.mascota.view_mascota or perms.producto.view_producto or perms.factura.view_facturacabeceraventa %}
+                {% if perms.cliente.view_cliente or perms.mascota.view_mascota or perms.factura.view_facturacabeceraventa %}
                 <li><a><i class="fas fa-money-check-alt fa-lg" style="width: 26px;"></i> Ventas <span class="fa fa-chevron-down"></span></a>
                     <ul class="nav child_menu">                        
                         {% if perms.cliente.view_cliente %}
@@ -54,32 +54,6 @@
                             </ul>
                         </li>
                         {% endif %}                    
-                        
-                        {% if perms.producto.view_producto %}
-                        <li><a>Producto<span class="fa fa-chevron-down"></span></a>
-                            <ul class="nav child_menu">
-                                
-                                {% if perms.configuracion.view_confiempresa %}
-                                <li><a href="{% url 'list_tipo_producto' %}">Tipo Producto</a></li>
-
-                                {% endif %}
-                                    
-                                
-                                {% if perms.configuracion.view_confiempresa %}
-                                <li><a href="{% url 'list_deposito' %}">Deposito</a></li>
-
-                                {% endif %}
-                                    
-                                
-                                {% if perms.producto.view_producto %}
-                                <li><a href="{% url 'list_productos_general' %}">Producto</a></li>
-
-                                {% endif %}
-                                    
-                            </ul>
-                        </li>
-                        {% endif %} 
-                        
                         
                         {% if perms.factura.view_facturacabeceraventa %}
                         <li><a href="{% url 'list_factura_ventas' %}">Facturas Ventas</a></li>
@@ -119,7 +93,37 @@
                     </ul>
                 </li>
                 {% endif %}
-                    
+                {% if perms.producto.view_producto%}
+                <li><a><i class="fas fa-box-open fa-lg" style="width: 26px;"></i> Inventario <span class="fa fa-chevron-down"></span></a>
+                    <ul class="nav child_menu">                                         
+                        
+                        {% if perms.configuracion.view_confiempresa %}
+                        <li><a href="{% url 'list_tipo_producto' %}">Tipo Producto</a></li>
+
+                        {% endif %}
+                            
+                        
+                        {% if perms.configuracion.view_confiempresa %}
+                        <li><a href="{% url 'list_deposito' %}">Deposito</a></li>
+
+                        {% endif %}
+                            
+                        
+                        {% if perms.producto.view_producto %}
+                        <li><a href="{% url 'list_productos_general' %}">Producto</a></li>
+
+                        {% endif %}
+                    </ul>
+                </li>
+                {% endif %}
+                
+                {% if perms.caja.view_caja %}
+                <li><a><i class="fas fa-cash-register fa-lg" style="color: white; width: 26px;"></i> Caja <span class="fa fa-chevron-down"></span></a>
+                    <ul class="nav child_menu">                                                                            
+                        <li><a href="{% url 'list_cajas' %}">Apertura de Caja</a></li>
+                    </ul>
+                </li>
+                {% endif %}
                 
                 {% if perms.usuario.view_user %}
                     <li><a><i class="fas fa-users-cog fa-lg" style="color: white; width: 30px;"></i> Usuarios <span class="fa fa-chevron-down"></span></a>
@@ -137,13 +141,6 @@
                                 
                         </ul>
                     </li>
-                {% endif %}
-                {% if perms.caja.view_caja %}
-                <li><a><i class="fas fa-cash-register fa-lg" style="color: white; width: 26px;"></i> Caja <span class="fa fa-chevron-down"></span></a>
-                    <ul class="nav child_menu">                                                                            
-                        <li><a href="{% url 'list_cajas' %}">Apertura de Caja</a></li>
-                    </ul>
-                </li>
                 {% endif %}
                 
                 

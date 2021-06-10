@@ -77,26 +77,23 @@
                     </div>
                     {% endif %}
                     <div>
-                        
+
                         {% if perms.producto.add_producto %}
-                            <button type="submit" class="btn btn-primary float-right">
-                                <a style="color: white;" href="{% url 'add_producto' %}">Agregar nuevo producto</a>
-                            </button>
+                        <button type="submit" class="btn btn-primary float-right">
+                            <a style="color: white;" href="{% url 'add_producto' %}">Agregar nuevo producto</a>
+                        </button>
                         {% endif %}
 
                         <div class="float-left">
                             <div class="wrap">
                                 <div class="search">
-                                    <form action="{% url 'search_producto' %}" method="GET" class="d-inline-flex">
-                                        <input type="search" class="searchTerm" name="q" value="{{ request.GET.q }}"
-                                            data-toggle="tooltip" data-placement="top"
-                                            title="Busca por nombre de producto, codigo"
-                                            placeholder="Busca por nombre de producto, codigo"
-                                            autocomplete="off">
-                                        <button type="submit" class="searchButton">
-                                            <i class="fa fa-search"></i>
-                                        </button>
-                                    </form>
+                                    <input type="search" class="searchTerm" id="searchTerm" data-toggle="tooltip"
+                                        data-placement="top" title="Buscar por nombre de producto, codigo"
+                                        placeholder="Busca por nombre de producto, codigo"
+                                        onkeyup="replaceDirection(this)">
+                                    <button type="button" id="busqueda" class="searchButton">
+                                        <i class="fa fa-search"></i>
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -116,6 +113,63 @@
                                                 <th style="color: white;">Descripción</th>
                                                 <th style="color: white;">Stock Total</th>
                                                 <th style="color: white;">Acciones</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+
+                <div class="x_panel">
+                    <div class="x_title">
+                        <h2>Lista de Productos en Vencimiento</h2>
+                        <ul class="nav navbar-right panel_toolbox">
+                            <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                            </li>
+                            <li><a class="close-link"><i class="fa fa-close"></i></a>
+                            </li>
+                        </ul>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="clearfix"></div>
+                    <div>
+
+                        <div class="float-left">
+                            <div class="wrap">
+                                <div class="search">
+                                    <input type="search" class="searchTerm" id="searchTermVencido" data-toggle="tooltip"
+                                        data-placement="top" title="Buscar por nombre de producto, codigo"
+                                        placeholder="Busca por nombre de producto, codigo"
+                                        onkeyup="replaceDirection(this)">
+                                    <button type="button" id="busquedaVencido" class="searchButton">
+                                        <i class="fa fa-search"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="x_content">
+                        <div class="row">
+                            <div class="col-sm-12 p-0">
+                                <div class="card-box table-responsive" style="text-align: center;">
+                                    <table id="list_producto_vencidos" class="table table-striped table-bordered"
+                                        style="width:100%">
+                                        <thead>
+                                            <tr class="" style="background-color: #2a3f54; font-size: medium;">
+                                                <th style="color: white;">Codigo</th>
+                                                <th style="color: white;">Nombre Producto</th>
+                                                <th style="color: white;">Descripción</th>
+                                                <th style="color: white;">Stock Vencido</th>
+                                                <th style="color: white;">Fecha Vencimiento</th>
+                                                <th style="color: white;">Acción</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -240,24 +294,15 @@
                         render: function (data) {
                             var buttons = "";
                             {% if perms.producto.change_producto %}
-                                buttons += '<button class="btn btn-warning">\
+                            buttons += '<button class="btn btn-warning">\
                                                         <a href="/producto/edit/' + data + '/" style="color: black">\
                                                             Editar\
                                                         </a>\
                                                     </button>';
                             {% endif %}
 
-                            {% if perms.producto.delete_producto %}
-                                buttons += ' <button class="btn btn-danger">\
-                                        <a class="confirm-delete pointer" data-id="' + data + '"\
-                                            data-toggle="modal" data-target="#confirmDeleteModal">\
-                                            Dar de baja\
-                                        </a>\
-                                    </button>';
-                            {% endif %}
-
                             {% if perms.producto.view_producto %}
-                                    buttons += '<button class="btn btn-primary" >\
+                            buttons += '<button class="btn btn-primary" >\
                                             <a href="/producto/listDetalle/' + data + '/" style="color: white">\
                                                 Ver Detalle\
                                             </a>\
@@ -266,58 +311,164 @@
 
 
                             return buttons;
-    }
+                        }
                     }
 
                 ],
-        columnDefs: [{
-            targets: [2, 4], // column index (start from 0)
-            orderable: false, // set orderable false for selected columns
-        }],
-        serverSide: false,
-        language: {
-        decimal: "",
-        emptyTable: "No hay información",
-        info: "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
-        infoEmpty: "Mostrando 0 to 0 de 0 Entradas",
-        infoFiltered: "(Filtrado de _MAX_ total entradas)",
-        infoPostFix: "",
-        thousands: ",",
-        lengthMenu: "Mostrar _MENU_ Entradas",
-        loadingRecords: "Cargando...",
-        processing: "Procesando...",
-        search: "Buscar:",
-        zeroRecords: "Sin resultados encontrados",
-        paginate: {
-            first: "Primero",
-            last: "Ultimo",
-            next: "Siguiente",
-            previous: "Anterior",
-        },
-    },
+                columnDefs: [{
+                    targets: [2, 4], // column index (start from 0)
+                    orderable: false, // set orderable false for selected columns
+                }],
+                serverSide: false,
+                language: {
+                    decimal: "",
+                    emptyTable: "No hay información",
+                    info: "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
+                    infoEmpty: "Mostrando 0 to 0 de 0 Entradas",
+                    infoFiltered: "(Filtrado de _MAX_ total entradas)",
+                    infoPostFix: "",
+                    thousands: ",",
+                    lengthMenu: "Mostrar _MENU_ Entradas",
+                    loadingRecords: "Cargando...",
+                    processing: "Procesando...",
+                    search: "Buscar:",
+                    zeroRecords: "Sin resultados encontrados",
+                    paginate: {
+                        first: "Primero",
+                        last: "Ultimo",
+                        next: "Siguiente",
+                        previous: "Anterior",
+                    },
+                },
 
             })
         }
 
-    var query = ""
+        var query = ""
 
-    get_list(query);
+        get_list(query);
 
-    $("#searchTerm").change(function () {
-        var busqueda = $("#searchTerm").val()
-        sessionStorage.setItem("busqueda", busqueda)
-    })
+        $("#searchTerm").change(function () {
+            var busqueda = $("#searchTerm").val()
+            sessionStorage.setItem("busqueda", busqueda)
+        })
 
-    $("#busqueda").click(function () {
-        var busqueda = sessionStorage.getItem("busqueda")
-        if (busqueda == "" || busqueda == undefined || busqueda == null) {
-            busqueda = "";
-            get_list(busqueda)
+        $("#busqueda").click(function () {
+            var busqueda = sessionStorage.getItem("busqueda")
+            if (busqueda == "" || busqueda == undefined || busqueda == null) {
+                busqueda = "";
+                get_list(busqueda)
+            }
+            else {
+                get_list(busqueda)
+            }
+        })
+
+        //productos vencido
+        var get_list_vencidos = function (busqueda) {
+            $("#list_producto_vencidos").DataTable({
+                destroy: true,
+                dom: 'Bfrtip',
+                buttons: [],
+                searching: false,
+                pageLength: 10,
+                ajax: {
+                    url: "/producto/list_producto_vencido_ajax/",
+                    type: 'GET',
+                    datatype: 'json',
+                    data: { 'busqueda': busqueda },
+                    error: function (data) {
+                        $.fn.DataTable.ext.errorMode = 'none'
+
+                    }
+                },
+                columns: [
+                    {
+                        name: 'Codigo',
+                        data: 'id',
+                    },
+                    {
+                        name: 'Nombre Producto',
+                        data: 'nombre',
+                    },
+                    {
+                        name: 'Descripción',
+                        data: 'descripcion',
+                    },
+                    {
+                        name: 'Stock Vencido',
+                        data: 'stock_vencido',
+                    },
+                    {
+                        name: 'Fecha Vencimiento',
+                        data: 'fecha_vencimiento',
+                    },
+                    {
+                        name: 'Acción',
+                        data: 'id',
+                        render: function (data) {
+                            {% if perms.producto.delete_producto %}
+                            return ' <button class="btn btn-danger">\
+                                        <a class="confirm-delete pointer" data-id="' + data + '"\
+                                            data-toggle="modal" data-target="#confirmDeleteModal">\
+                                            Dar de baja\
+                                        </a>\
+                                    </button>';
+                            {% endif %}
+
+                            return "-";
+                        }
+                    }
+
+                ],
+                columnDefs: [{
+                    targets: [5], // column index (start from 0)
+                    orderable: false, // set orderable false for selected columns
+                }],
+                serverSide: false,
+                language: {
+                    decimal: "",
+                    emptyTable: "No hay información",
+                    info: "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
+                    infoEmpty: "Mostrando 0 to 0 de 0 Entradas",
+                    infoFiltered: "(Filtrado de _MAX_ total entradas)",
+                    infoPostFix: "",
+                    thousands: ",",
+                    lengthMenu: "Mostrar _MENU_ Entradas",
+                    loadingRecords: "Cargando...",
+                    processing: "Procesando...",
+                    search: "Buscar:",
+                    zeroRecords: "Sin resultados encontrados",
+                    paginate: {
+                        first: "Primero",
+                        last: "Ultimo",
+                        next: "Siguiente",
+                        previous: "Anterior",
+                    },
+                },
+
+            })
         }
-        else {
-            get_list(busqueda)
-        }
-    }) 
+
+        var query = ""
+
+        get_list_vencidos(query);
+
+        $("#searchTermVencido").change(function () {
+            var busqueda = $("#searchTermVencido").val()
+            sessionStorage.setItem("busquedaVencido", busqueda)
+        })
+
+        $("#busquedaVencido").click(function () {
+            var busqueda = sessionStorage.getItem("busquedaVencido")
+            if (busqueda == "" || busqueda == undefined || busqueda == null) {
+                busqueda = "";
+                get_list_vencidos(busqueda)
+            }
+            else {
+                get_list_vencidos(busqueda)
+            }
+        })
     })
 
 </script>

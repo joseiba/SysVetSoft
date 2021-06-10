@@ -329,7 +329,7 @@ def delete_producto(request, id):
     producto = Producto.objects.get(id=id)
     producto.is_active = "N"
     producto.save()
-    return redirect('/producto/list/')
+    return redirect('/producto/listGeneral/')
 
 #Metodo para listar todos los productos
 def add_factura_to_producto():
@@ -348,9 +348,7 @@ def add_factura_to_producto():
                         prod.stock = prod.stock + factDet.cantidad
                         prod.stock_total = prod.stock_total + factDet.cantidad
                         prod.save()
-                        print("entro")
                     except Exception as e:
-                        print(e)
                         pass
 
 def rest_factura_venta_to_producto():
@@ -461,6 +459,7 @@ def list_productos_general(request):
     add_factura_to_producto()
     rest_factura_venta_to_producto()
     sum_anular_factura_venta_to_producto()
+    poner_vencido_producto()
     return render(request, "ventas/producto/list_producto_general.html")
 
 
@@ -468,11 +467,14 @@ def list_productos_general(request):
 def list_producto_general_ajax(request):
     query = request.GET.get('busqueda')
     if query != "":
-        productos = Producto.objects.exclude(is_active="N").filter(Q(nombre_producto__icontains=query) | Q(codigo_producto__icontains=query)).order_by('-last_modified')        
+        productos = Producto.objects.exclude(is_active="N").filter(Q(id__icontains=query) |Q(nombre_producto__icontains=query)).order_by('-last_modified')        
         productos = productos.exclude(servicio_o_producto="S")
+        productos = productos.exclude(producto_vencido="S")
     else:
         productos = Producto.objects.exclude(is_active="N").order_by('-last_modified')
         productos = productos.exclude(servicio_o_producto="S")
+        productos = productos.exclude(producto_vencido="S")
+
 
     total = productos.count()
 
@@ -494,3 +496,52 @@ def list_producto_general_ajax(request):
         'recordsFiltered': total,
     }
     return JsonResponse(response)
+
+def list_producto_vencido_ajax(request):
+    query = request.GET.get('busqueda')
+    if query != "":
+        productos = Producto.objects.exclude(is_active="N").filter(Q(nombre_producto__icontains=query) | Q(id__icontains=query)).order_by('-last_modified')        
+        productos = productos.exclude(servicio_o_producto="S")
+        productos = productos.exclude(producto_vencido="N")
+    else:
+        productos = Producto.objects.exclude(is_active="N").order_by('-last_modified')
+        productos = productos.exclude(servicio_o_producto="S")
+        productos = productos.exclude(producto_vencido="N")
+
+
+    total = productos.count()
+
+    _start = request.GET.get('start')
+    _length = request.GET.get('length')
+    if _start and _length:
+        start = int(_start)
+        length = int(_length)
+        page = math.ceil(start / length) + 1
+        per_page = length
+
+        productos = productos[start:start + length]
+
+    data =[{'id': p.id, 'nombre': p.nombre_producto, 'descripcion': p.descripcion, 'stock_vencido': p.stock_total, 
+    'fecha_vencimiento': p.fecha_vencimiento} for p in productos]        
+        
+    response = {
+        'data': data,
+        'recordsTotal': total,
+        'recordsFiltered': total,
+    }
+    return JsonResponse(response)
+
+def poner_vencido_producto():
+    produc = Producto.objects.exclude(is_active="N").all()
+    produc = produc.exclude(producto_vencido="S").all()
+    today = datetime.now()
+    fechaDate = datetime(today.year, today.month, today.day)
+    try:
+        for p in produc:
+            fecha_vencimiento_split = p.fecha_vencimiento.split("/")
+            fecha_vencimiento_compare = datetime(int(fecha_vencimiento_split[2]), int(fecha_vencimiento_split[1]), int(fecha_vencimiento_split[0]))
+            if fechaDate > fecha_vencimiento_compare:
+                p.producto_vencido = "S"
+                p.save()
+    except Exception as e:
+        print(e)
