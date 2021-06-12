@@ -114,7 +114,6 @@
                                                 <th style="color: white;">Fecha </br>Cierre</th>
                                                 <th style="color: white;">Saldo Inicial</th>
                                                 <th style="color: white;">Total Ingreso </br> del Dia</th>
-                                                <th style="color: white;">Total Egreso </br>del Dia</th>
                                                 <th style="color: white;">Saldo a Entregar</th>
                                                 <th style="color: white;">Estado</th>
                                                 <th style="color: white;">Acción</th>
@@ -213,14 +212,6 @@
                         }
                     },
                     {
-                        name: 'Total Egreso del Dia',
-                        data: 'total_egreso',
-                        render: function (data) {
-                            return ' Gs.' + add_miles(data)
-
-                        }
-                    },
-                    {
                         name: 'Saldo a Entregar',
                         data: 'saldo_entregar',
                         render: function (data) {
@@ -260,7 +251,7 @@
 
                 ],
                 columnDefs: [{
-                    targets: [8], // column index (start from 0)
+                    targets: [7], // column index (start from 0)
                     orderable: false, // set orderable false for selected columns
                 }],
                 serverSide: false,
@@ -307,27 +298,6 @@
                 get_list(busqueda)
             }
         })
-
-        /*$("#add_caja").click(function () {
-            var today = new Date();
-            var year = today.getFullYear();
-            var month = today.getMonth().toString().length === 1 ? '0' + (today.getMonth() + 1).toString() : today.getMonth() + 1;
-            var date = today.getDate().toString().length === 1 ? '0' + (today.getDate()).toString() : today.getDate();
-
-            var formattedDate = date + '/' + month + '/' + year; 
-            console.log(formattedDate)
-            $.ajax({
-                url: "/caja/validate_caja_abierta/",
-                type: 'GET',
-                data: { 'fecha': formattedDate },
-                success: function(response){
-
-                },
-                error: function(error){
-
-                },
-            })
-        })*/
 
         {% if messages %}
             {% for message in messages %}

@@ -16,7 +16,7 @@ var pedido = {
             data: this.items.products,
             ordering: false,
             columns: [
-                {"data": "codigo_real"},
+                {"data": "codigo_producto"},
                 {"data": "nombre"},
                 {"data": "description"},
                 {"data": "cantidad"},

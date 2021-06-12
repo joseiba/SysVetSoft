@@ -55,8 +55,8 @@
                                                 <div class="form-group" style="width: 100%;">
                                                     <label> <strong> Buscar Producto:</strong> </label>
                                                         <span class="input-group-append">
-                                                            <select class="form-control" id="search"> 
-                                                                <option></option>                                                              
+                                                            <select class="form-control" id="search">
+                                                                <option>Buscar productos</option>
                                                             </select>
                                                         </span>                                                    
                                                 </div>
@@ -125,7 +125,6 @@
     var action = '{{ accion|safe }}';
 
     $(function () {   
-        var list_pedidos = {{ pedidos|safe }};
         
         $('form input').on("cut copy paste", function (e) {
             e.preventDefault();
@@ -156,11 +155,8 @@
         });
 
         $('#search').select2({
-            placeholder: "Seleccione un producto",
-            allowClear: true,
-            data: list_pedidos,
             language: "es",
-           /* ajax: {
+            ajax: {
                 type: 'POST',
                 url: '/compra/get_pedido_factura/',
                 delay: 250,
@@ -175,7 +171,7 @@
                         results: data
                     }
                 },
-            },*/
+            },
             language: {
                 inputTooShort: function () {
                     return '';

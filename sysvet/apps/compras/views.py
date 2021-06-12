@@ -453,7 +453,6 @@ def get_detalle_factura(id):
         detalles = FacturaDet.objects.filter(id_factura=id)
         for i in detalles:
             item = i.id_pedido.obtener_dict()
-            print(i.id_pedido.id)
             item['description'] = i.descripcion
             item['cantidad'] = i.cantidad
             data.append(item)
@@ -517,12 +516,13 @@ def search_pediddos_factura(request):
         term = request.POST['term']
         if (request.method == 'POST') and (request.POST['action'] == 'search_products'):
             data = []
-            prods = Pedido.objects.exclude(pedido_cargado='S').filter(id_producto__nombre_producto__icontains=term)[0:10]
+            prods = Producto.objects.exclude(is_active='N').all()
+            prods = prods.exclude(servicio_o_producto="S").filter(nombre_producto__icontains=term)[0:10]
             for p in prods:
                 item = p.obtener_dict()
                 item['id'] = p.id
-                producto_desc = '%s %s' % ('Producto: ' + p.id_producto.nombre_producto, 
-                                        'Descripción: ' + p.id_producto.descripcion)
+                producto_desc = '%s %s' % ('Producto: ' + p.nombre_producto ,
+                                        'Descripción: ' + p.descripcion)
                 item['text'] = producto_desc
                 data.append(item)
     except Exception as e:
@@ -589,7 +589,6 @@ def tabla_report(pdf, y, id):
     ))
 
     position = int(((pedido_detalle.count() + count_detalle) * 50 ) / (2))
-    print(position)
     pdf.setFont("Helvetica", 12)
     pdf.drawString(480, ((680 - position)) , u"Total: ",)
     #Establecemos el tamaño de la hoja que ocupará la tabla 
