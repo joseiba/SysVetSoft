@@ -295,7 +295,7 @@ def add_pedido_compra(request):
             mensaje = 'error'
             response = {'mensaje':mensaje }
         return JsonResponse(response)
-    context = {'accion': 'A', 'pedidos': json.dumps(get_pedido_list()), 'pedidos_list': pedidos, 'caja_abierta' : abierto}
+    context = {'accion': 'A', 'pedidos': json.dumps(get_pedido_list()), 'pedidos_list': pedidos}
     return render(request, 'compras/pedidos/add_compra_pedido.html', context)
 
 @login_required()

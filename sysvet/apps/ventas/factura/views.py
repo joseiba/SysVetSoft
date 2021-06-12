@@ -31,10 +31,12 @@ today = date.strftime("%d/%m/%Y")
 @permission_required('factura.view_facturacabeceraventa')
 def list_factura_ventas(request):
     caja_abierta = Caja.objects.exclude(apertura_cierre="C").filter(fecha_alta=today)
+    print(caja_abierta.count())
     if caja_abierta.count() > 0:
         abierto = "S"
     else:
         abierto = "N"
+    print(abierto)
     context = {'caja_abierta' : abierto}
     return render(request, 'ventas/factura/list_facturas_ventas.html', context)
 

@@ -536,12 +536,14 @@ def poner_vencido_producto():
     produc = produc.exclude(producto_vencido="S").all()
     today = datetime.now()
     fechaDate = datetime(today.year, today.month, today.day)
-    try:
-        for p in produc:
-            fecha_vencimiento_split = p.fecha_vencimiento.split("/")
-            fecha_vencimiento_compare = datetime(int(fecha_vencimiento_split[2]), int(fecha_vencimiento_split[1]), int(fecha_vencimiento_split[0]))
-            if fechaDate > fecha_vencimiento_compare:
-                p.producto_vencido = "S"
-                p.save()
-    except Exception as e:
-        print(e)
+    if produc is not None:
+        try:
+            for p in produc:
+                fecha_vencimiento_split = p.fecha_vencimiento.split("/")
+                fecha_vencimiento_compare = datetime(int(fecha_vencimiento_split[2]), int(fecha_vencimiento_split[1]), int(fecha_vencimiento_split[0]))
+                if fechaDate > fecha_vencimiento_compare:
+                    p.producto_vencido = "S"
+                    p.save()
+        except Exception as e:
+            print(e)
+            pass

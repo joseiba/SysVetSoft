@@ -136,8 +136,7 @@ def list_servicio_ajax(request):
 
         clientes = clientes[start:start + length]
 
-    data = [{'id': ser.id, 'nombre': ser.nombre_servicio, 'precio': ser.precio_servicio, 
-        'cod_serv': ser.cod_serv } for ser in servicios]        
+    data = [{'id': ser.id, 'nombre': ser.nombre_servicio, 'precio': ser.precio_servicio } for ser in servicios]        
 
     response = {
         'data': data,

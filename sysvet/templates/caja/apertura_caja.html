@@ -110,12 +110,13 @@
                                         <thead>
                                             <tr class="" style="background-color: #2a3f54; font-size: medium;">
                                                 <th style="color: white;">Id</th>
-                                                <th style="color: white;">Fecha Apertura</th>
-                                                <th style="color: white;">Fecha Cierre</th>
+                                                <th style="color: white;">Fecha </br>Apertura</th>
+                                                <th style="color: white;">Fecha </br>Cierre</th>
                                                 <th style="color: white;">Saldo Inicial</th>
-                                                <th style="color: white;">Total Ingreso del Dia</th>
-                                                <th style="color: white;">Total Egreso del Dia</th>
+                                                <th style="color: white;">Total Ingreso </br> del Dia</th>
+                                                <th style="color: white;">Total Egreso </br>del Dia</th>
                                                 <th style="color: white;">Saldo a Entregar</th>
+                                                <th style="color: white;">Estado</th>
                                                 <th style="color: white;">Acción</th>
                                             </tr>
                                         </thead>
@@ -228,6 +229,19 @@
                         }
                     },
                     {
+                        name: 'Estado',
+                        data: 'estado',
+                        render: function (data) {
+                            if( data == "A"){
+                                return "Abierto"
+                            }
+                            else{
+                                return "Cerrado"
+                            }
+
+                        }
+                    },
+                    {
                         name: 'Acción',
                         data: 'id',
                         render: function (data) {
@@ -246,7 +260,7 @@
 
                 ],
                 columnDefs: [{
-                    targets: [7], // column index (start from 0)
+                    targets: [8], // column index (start from 0)
                     orderable: false, // set orderable false for selected columns
                 }],
                 serverSide: false,

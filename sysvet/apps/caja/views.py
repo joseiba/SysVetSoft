@@ -52,7 +52,7 @@ def list_caja_ajax(request):
         caja = caja[start:start + length]
 
     data = [{'id': ca.id, 'fecha_alta': ca.fecha_hora_alta, 'fecha_cierre': ca.fecha_cierre, 'saldo_inicial': ca.saldo_inicial, 
-    'total_ingreso': ca.total_ingreso, 'total_egreso' : ca.total_egreso, 'saldo_entregar': ca.saldo_a_entregar } for ca in caja]        
+    'total_ingreso': ca.total_ingreso, 'total_egreso' : ca.total_egreso, 'saldo_entregar': ca.saldo_a_entregar, 'estado': ca.apertura_cierre } for ca in caja]        
 
     response = {
         'data': data,
@@ -132,10 +132,10 @@ def sum_factura_venta():
         sum_total = 0
         for fac in factura:
             sum_total += fac.total
-            if fac.contado_pos == "C":
+            """if fac.contado_pos == "C":
                 su_efectivo += fac.total
             else:
-                su_pos += fac.total
+                su_pos += fac.total"""
             fac.factura_caja = "S"
             fac.save()
         return sum_total
