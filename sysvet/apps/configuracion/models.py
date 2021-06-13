@@ -108,3 +108,7 @@ class TipoVacuna(models.Model):
             ('change_tipovacuna', 'Editar Vacuna'),
             ('delete_tipovacuna', 'Eliminar Vacuna'),
             ('view_tipovacuna', 'Listar Vacunas')) 
+
+    def __str__(self):
+        """Formato de la vacuna"""
+        return '{0}'.format(self.nombre_vacuna)

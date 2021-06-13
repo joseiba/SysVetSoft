@@ -42,7 +42,7 @@ validar_fecha_hora, get_mascota_cliente, get_min_service, get_mascota_selected)
 from apps.configuracion.views import (add_servicio, edit_servicio, delete_servicio, list_servicio, search_servicio, 
 add_empleado, edit_empleado, list_empleado, delete_empleado, search_empleado, list_servicio_ajax, get_list_empleados_ajax,
 confi_inicial, list_historial_timbrado, get_historial_timbrado_ajax, add_vacuna, edit_vacuna, list_vacunas, 
-get_list_vacunas_ajax)
+get_list_vacunas_ajax, get_periodo_vacunacion)
 
 from apps.compras.views import (add_proveedor, edit_proveedor, list_proveedor_ajax, delete_proveedor, list_proveedor,
 list_pedido, list_pedido_ajax, edit_pedido, list_factura_compra, list_facturas_ajax, add_factura_compra, 
@@ -175,6 +175,9 @@ urlpatterns = [
     path('configuracion/get_list_vacunas_ajax/', get_list_vacunas_ajax , name="get_list_vacunas_ajax"),
     path('configuracion/addVacuna/',  add_vacuna, name="add_vacuna"),
     path('configuracion/editVacuna/<int:id>/', edit_vacuna , name="edit_vacuna"),
+    path('configuracion/get_periodo_vacunacion/', get_periodo_vacunacion , name="get_periodo_vacunacion"),
+
+
 
     #Urls compras
     path('compra/addProveedor/', add_proveedor , name="add_proveedor"),

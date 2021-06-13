@@ -18,8 +18,7 @@ class MascotaForm(forms.ModelForm):
             'edad': forms.TextInput(attrs={'class':'form-control optional', 'name': 'edad', 'placeholder': 'Edad','onkeyup':'replaceDirection(this)'}),
             'sexo' : forms.Select(attrs={'class':'form-control', 'id': 'sexo','required':'required' ,'name':'sexo'}),
             'fecha_nacimiento' : forms.TextInput(attrs={'class':'form-control optional date', 'type': 'date','name':'fecha_nacimiento'}),
-            'peso': forms.TextInput(attrs={'class':'form-control','data-validate-length-range':'20','onkeyup':'replaceABC(this)',
-                'data-validate-words':'1', 'name': 'peso', 'placeholder': 'Peso', 'required': 'required'}),
+            'peso': forms.TextInput(attrs={'class':'form-control','onkeyup':'replaceDirection(this)', 'name': 'peso', 'placeholder': 'Peso', 'required': 'required'}),
             'color_pelaje' : forms.TextInput(attrs={'class':'form-control', 'type': 'color','name':'color_pelaje','placeholder': 'Color Pelaje'}),
             'imagen': forms.FileInput(attrs={'type': 'file', 'name':'imagen', 'id': 'imageInput', 'accept':'image/*'}),
             'id_raza' : forms.Select(attrs={'class':'form-control', 'id': 'id_raza','required':'required' ,'name':'id_raza'}),
@@ -81,9 +80,19 @@ class VacunaForm(forms.ModelForm):
         model = Vacuna
         fields = '__all__'   
         widgets = {
-        'tipo_vacuna': forms.TextInput(attrs={'class':'form-control optional', 'name': 'tipo_vacuna', 'placeholder': 'Tipo de Vacuna','onkeyup':'replaceDirection(this)'}),
-        'vacuna': forms.TextInput(attrs={'class':'form-control optional', 'name': 'vacuna', 'placeholder': 'Vacuna','onkeyup':'replaceDirection(this)'}),
-        'proxima_vacunacion' : forms.TextInput(attrs={'class':'form-control optional','name':'proxima_vacunacion', 'placeholder': 'Proxima Vacuna','onkeyup':'replaceDirection(this)'}),
+        'proxima_vacuna' : forms.Select(attrs={'class':'form-control', 'id': 'id_vacuna','name':'proxima_vacuna'}),
+        'id_vacuna' : forms.Select(attrs={'class':'form-control', 'id': 'id_vacuna','name':'id_vacuna'}),
+        'fecha_aplicacion': forms.TextInput(attrs={'class': 'form-control',
+                                            'id': 'datePick-aplicacion',
+                                            'placeholder': 'Fecha Aplicacion',
+                                            'name':'fecha_aplicacion',
+                                            'autocomplete': 'off'}),
+        'fecha_proxima_aplicacion': forms.TextInput(attrs={'class': 'form-control',
+                                            'id': 'datePick-proxima-aplicacion',
+                                            'placeholder': 'Proxima Aplicacion',
+                                            'name':'fecha_proxima_aplicacion',
+                                            'readonly': "readonly",
+                                            'autocomplete': 'off'}),
         'id_ficha_medica' : forms.HiddenInput(),        
         }
 
@@ -100,8 +109,6 @@ class ConsultaForm(forms.ModelForm):
         'diagnostico': forms.Textarea(attrs={'class':'form-control optional','name': 'diagnostico', 'rows': '2','placeholder': 'Diagnostico','onkeyup':'replaceDirection(this)'}),
         'tratamiento': forms.Textarea(attrs={'class':'form-control optional', 'rows': '2', 'name': 'tratamiento', 'placeholder': 'Tratamiento','onkeyup':'replaceDirection(this)'}),
         'medicamento': forms.Textarea(attrs={'class':'form-control optional', 'rows': '2', 'name': 'medicamento', 'placeholder': 'Medicamento','onkeyup':'replaceDirection(this)'}),
-        'fecha_ultima_consulta' : forms.TextInput(attrs={'class':'form-control optional date', 'type': 'date','name':'fecha_ultima_consulta'}),
-        'fecha_proxima_consulta' : forms.TextInput(attrs={'class':'form-control optional date', 'type': 'date','name':'fecha_proxima_consulta'}),
         'proximo_tratamiento' : forms.Textarea(attrs={'class':'form-control optional', 'rows': '2', 'type': 'text','name':'proximo_tratamiento','onkeyup':'replaceDirection(this)'}),
         'id_ficha_medica' : forms.HiddenInput(),
         }

@@ -4,12 +4,16 @@ from django.contrib import messages
 from django.db.models import Q
 from django.core.paginator import Paginator
 from django.http import JsonResponse
+from datetime import date, datetime
 import json
 import math
 
 
 from .models import Mascota, Especie, Raza, Raza, FichaMedica, Vacuna, Consulta, Antiparasitario, HistoricoFichaMedica
 from .form import MascotaForm, EspecieForm, RazaForm, FichaMedicaForm, VacunaForm, ConsultaForm, AntiparasitarioForm
+from apps.configuracion.models import TipoVacuna
+
+date = datetime.now()
 
 # Create your views here.
 @login_required()
@@ -17,7 +21,9 @@ from .form import MascotaForm, EspecieForm, RazaForm, FichaMedicaForm, VacunaFor
 def add_mascota(request):
     form = MascotaForm    
     if request.method == 'POST':
-        form = MascotaForm(request.POST, request.FILES) 
+        form = MascotaForm(request.POST, request.FILES)
+        print(form)
+        print(form.is_valid())
         if form.is_valid():           
             form.save()
             messages.success(request, 'Se ha agregado correctamente!')
@@ -257,28 +263,34 @@ def edit_ficha_medica(request,id):
     consultaGet = Consulta.objects.get(id_ficha_medica=fichaMedicaGet.id)
     antiparasitarioGet = Antiparasitario.objects.get(id_ficha_medica=fichaMedicaGet.id)
     historicoFichaMedica = HistoricoFichaMedica
+    vacunas = TipoVacuna.objects.all()
+    try:    
+        if request.method == 'POST':
+            formFichaMedica = FichaMedicaForm(request.POST, instance=fichaMedicaGet)
+            formVacuna = VacunaForm(request.POST, instance=vacunaGet)
+            formConsulta = ConsultaForm(request.POST, instance=consultaGet)
+            formAntiparasitario = AntiparasitarioForm(request.POST, instance=antiparasitarioGet)
+            if not formVacuna.has_changed() and not formConsulta.has_changed() and not formAntiparasitario.has_changed():
+                messages.info(request, "No has hecho ningun cambio!")
+                return redirect('/mascota/editFichaMedica/' + str(id))   
+            if formVacuna.is_valid() or formConsulta.is_valid() or formAntiparasitario.is_valid():
+                proxima_vacuna = request.POST.get('proxima_vacunacion')   
+                fecha_proxima_vacuna = request.POST.get('fecha_proxima_aplicacion')
+                print(fecha_proxima_vacuna)                   
+                consulta = formConsulta.save(commit=False)
+                vacuna = formVacuna.save(commit=False)
+                antiparasitario = formAntiparasitario.save(commit=False)
+                fichaMedica = formFichaMedica.save(commit=False)
+                fichaMedica.save()
+                vacuna.save()
+                antiparasitario.save()
+                consulta.save()
+                historicoFichaMedica = create_historico_ficha_medica(id, proxima_vacuna)
 
-    if request.method == 'POST':
-        formFichaMedica = FichaMedicaForm(request.POST, instance=fichaMedicaGet)
-        formVacuna = VacunaForm(request.POST, instance=vacunaGet)
-        formConsulta = ConsultaForm(request.POST, instance=consultaGet)
-        formAntiparasitario = AntiparasitarioForm(request.POST, instance=antiparasitarioGet)
-        if not formVacuna.has_changed() and not formConsulta.has_changed() and not formAntiparasitario.has_changed():
-            messages.info(request, "No has hecho ningun cambio!")
-            return redirect('/mascota/editFichaMedica/' + str(id))   
-        if formVacuna.is_valid() or formConsulta.is_valid() or formAntiparasitario.is_valid():                    
-            consulta = formConsulta.save(commit=False)
-            vacuna = formVacuna.save(commit=False)
-            antiparasitario = formAntiparasitario.save(commit=False)
-            fichaMedica = formFichaMedica.save(commit=False)
-            fichaMedica.save()
-            vacuna.save()
-            antiparasitario.save()
-            consulta.save()
-            historicoFichaMedica = create_historico_ficha_medica(id)
-
-            messages.success(request, 'Se ha editado correctamente!')
-            return redirect('/mascota/editFichaMedica/' + str(id))
+                messages.success(request, 'Se ha editado correctamente!')
+                return redirect('/mascota/editFichaMedica/' + str(id))
+    except Exception as e:
+        print(e)
 
     formFichaMedica = FichaMedicaForm(instance=fichaMedicaGet)
     formVacuna = VacunaForm(instance=vacunaGet)
@@ -292,6 +304,7 @@ def edit_ficha_medica(request,id):
         'formConsulta': formConsulta,
         'formAntiparasitario': formAntiparasitario,
         'fichaMedicaGet': fichaMedicaGet,
+        'vacunas': vacunas
     }
 
     return render(request, "ventas/mascota/ficha_medica/edit_ficha_medica.html", context)
@@ -308,24 +321,25 @@ def list_historial(request, id):
     return render(request, "ventas/mascota/ficha_medica/list_historico.html", context)
 
 
-def create_historico_ficha_medica(id):
+def create_historico_ficha_medica(id, proxima_vacunacion):
     historico = HistoricoFichaMedica()
-    try:
+    try:        
+        proxima_vacuna = TipoVacuna.objects.get(id=proxima_vacunacion)
         mascota = Mascota.objects.get(id=id)
         fichaMedicaGet = FichaMedica.objects.get(id_mascota=id)
         vacunaGet = Vacuna.objects.get(id_ficha_medica=fichaMedicaGet.id)
         consultaGet = Consulta.objects.get(id_ficha_medica=fichaMedicaGet.id)
         antiparasitarioGet = Antiparasitario.objects.get(id_ficha_medica=fichaMedicaGet.id)
         
-        historico.vacuna = vacunaGet.vacuna
-        historico.tipo_vacuna = vacunaGet.tipo_vacuna
-        historico.proxima_vacunacion = vacunaGet.proxima_vacunacion
+        historico.fecha_alta = date.strftime("%d/%m/%Y")
+        historico.vacuna = vacunaGet.id_vacuna
+        historico.proxima_vacunacion = proxima_vacuna.nombre_vacuna
         historico.diagnostico = consultaGet.diagnostico
         historico.tratamiento = consultaGet.proximo_tratamiento
         historico.proximo_tratamiento = consultaGet.proximo_tratamiento
         historico.medicamento = consultaGet.medicamento
-        historico.fecha_ultima_consulta = consultaGet.fecha_ultima_consulta
-        historico.fecha_proxima_consulta = consultaGet.fecha_proxima_consulta
+        historico.fecha_aplicacion = date.strftime("%d/%m/%Y")
+        historico.fecha_proxima_aplicacion = vacunaGet.fecha_proxima_aplicacion
         historico.antiparasitario = antiparasitarioGet.antiparasitario
         historico.proximo_antiparasitario = antiparasitarioGet.proximo_antiparasitario
         historico.peso = mascota.peso
@@ -333,15 +347,14 @@ def create_historico_ficha_medica(id):
         historico.id_ficha_medica = id
         historico.save()
 
-        vacunaGet.vacuna = "-"
-        vacunaGet.tipo_vacuna = "-"
-        vacunaGet.proxima_vacunacion = "-"
+        vacunaGet.id_vacuna = None
+        vacunaGet.proxima_vacuna = "-"
         consultaGet.diagnostico = "-"
         consultaGet.tratamiento = "-"
         consultaGet.proximo_tratamiento = "-"
         consultaGet.medicamento = "-"
-        consultaGet.fecha_ultima_consulta = None
-        consultaGet.fecha_proxima_consulta = None
+        vacunaGet.fecha_aplicacion = None
+        vacunaGet.fecha_proxima_aplicacion = None
         antiparasitarioGet.antiparasitario = "-"
         antiparasitarioGet.proximo_antiparasitario = "-"
         formVacuna = VacunaForm(instance=vacunaGet)
@@ -351,7 +364,9 @@ def create_historico_ficha_medica(id):
         consultaGet.save()
         antiparasitarioGet.save()
 
-    except:
+    except Exception as e:
+        print("historico")
+        print(e)
         pass
 
     return historico        

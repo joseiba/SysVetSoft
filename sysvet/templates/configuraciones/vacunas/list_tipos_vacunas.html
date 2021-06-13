@@ -111,7 +111,7 @@
                                             <tr class="" style="background-color: #2a3f54; font-size: medium;">
                                                 <th style="color: white;">Id</th>
                                                 <th style="color: white;">Nombre Vacuna</th>
-                                                <th style="color: white;">Periodo Aplicacion</th>
+                                                <th style="color: white;">Periodo Aplicacion en Meses</th>
                                                 <th style="color: white;">Acción</th>
                                             </tr>
                                         </thead>
@@ -193,11 +193,8 @@
                         data: 'nombre_vacuna',
                     },
                     {
-                        name: 'Periodo Aplicacion',
+                        name: 'Periodo Aplicacion en Meses',
                         data: 'periodo',
-                        render: function(data){
-                            return data + " meses"
-                        }
                     },                    
                     {
                         name: 'Acción',

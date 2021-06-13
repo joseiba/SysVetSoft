@@ -4,6 +4,7 @@
 
 {% block stylesheets %}
 {{ block.super }}
+<link href="/static/project_static/other/js/select2/select2.css" rel="stylesheet" />
 <link href="/static/project_static/vendors/datatables.net-bs/css/dataTables.bootstrap.min.css" rel="stylesheet">
 <link href="/static/project_static/vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css" rel="stylesheet">
 <link href="/static/project_static/vendors/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.min.css"
@@ -11,6 +12,8 @@
 <link href="/static/project_static/vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css"
     rel="stylesheet">
 <link href="/static/project_static/vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet"
+    href="/static/project_static/other/js/jquery-ui-themes-1.12.1/jquery-ui-themes-1.12.1/jquery-ui.min.css">
 <style>
     .text_align_center {
         text-align-last: center;
@@ -170,7 +173,7 @@
                                         <div class="col-lg-4 col-md-9 col-sm-9">
                                             <div class="mb-3 row">
                                                 <label for="" class="col-sm-12 col-form-label"
-                                                    style="font-size: 16px;">Peso(Kg)
+                                                    style="font-size: 16px;">Peso
                                                 </label>
                                                 <div class="col-sm-12">
                                                     <p class="m-0">{{ mascota.peso }}</p>
@@ -271,21 +274,10 @@
                                         <div class="col-lg-4 col-md-9 col-sm-9">
                                             <div class="mb-3 row">
                                                 <label for="" class="col-sm-12 col-form-label"
-                                                    style="font-size: 16px;">Tipo
-                                                    de Vacuna
+                                                    style="font-size: 16px;">Vacuna Aplicada
                                                 </label>
                                                 <div class="col-sm-12">
-                                                    <p class="m-0">{{ formVacuna.tipo_vacuna }}</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-4 col-md-9 col-sm-9">
-                                            <div class="mb-3 row">
-                                                <label for="" class="col-sm-12 col-form-label"
-                                                    style="font-size: 16px;">Vacuna
-                                                </label>
-                                                <div class="col-sm-12">
-                                                    <p class="m-0">{{ formVacuna.vacuna }}</p>
+                                                    <p class="m-0">{{ formVacuna.id_vacuna }}</p>
                                                 </div>
                                             </div>
                                         </div>
@@ -293,10 +285,17 @@
                                         <div class="col-lg-4 col-md-9 col-sm-9">
                                             <div class="mb-3 row">
                                                 <label for="" class="col-sm-12 col-form-label"
-                                                    style="font-size: 16px;">Próxima Vacuna
+                                                    style="font-size: 16px;">Próxima Vacuna a Aplicar
                                                 </label>
                                                 <div class="col-sm-12">
-                                                    <p class="m-0">{{ formVacuna.proxima_vacunacion }}</p>
+                                                    <p class="m-0">
+                                                        <select class="form-control" name="proxima_vacunacion" id="proxima_vacunacion">
+                                                            <option>Seleccione la proxima vacuna</option>
+                                                            {% for vacu in vacunas %}
+                                                                <option value="{{ vacu.id }}"> {{ vacu.nombre_vacuna }}</option>
+                                                            {% endfor %}
+                                                        </select>
+                                                    </p>
                                                 </div>
                                             </div> 
                                         </div>
@@ -304,11 +303,11 @@
                                         <div class="col-lg-4 col-md-9 col-sm-9">
                                             <div class="mb-3 row">
                                                 <label for="" class="col-sm-12 col-form-label"
-                                                    style="font-size: 16px;">Tratamiento
+                                                    style="font-size: 16px;">Fecha Aplicación
                                                 </label>
                                                 <div class="col-sm-12">
                                                     <p class="m-0">
-                                                        {{ formConsulta.tratamiento }}
+                                                        {{ formVacuna.fecha_aplicacion }}
                                                     </p>
                                                 </div>
                                             </div>
@@ -316,15 +315,16 @@
                                         <div class="col-lg-4 col-md-9 col-sm-9">
                                             <div class="mb-3 row">
                                                 <label for="" class="col-sm-12 col-form-label"
-                                                    style="font-size: 16px;">Próximo Tratamiento
+                                                    style="font-size: 16px;">Próxima Aplicación
                                                 </label>
                                                 <div class="col-sm-12">
                                                     <p class="m-0">
-                                                        {{ formConsulta.proximo_tratamiento }}
+                                                        {{ formVacuna.fecha_proxima_aplicacion }}
                                                     </p>
                                                 </div>
                                             </div>
                                         </div>
+                                        
                                     </div>
                                     <div class="container_antiparasitarios d-none" id="">
                                         <div class="p-2">
@@ -360,30 +360,6 @@
                                                 <div class="col-sm-12">
                                                     <p class="m-0">
                                                         {{ formConsulta.medicamento }}
-                                                    </p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-4 col-md-9 col-sm-9">
-                                            <div class="mb-3 row">
-                                                <label for="" class="col-sm-12 col-form-label"
-                                                    style="font-size: 16px;">Fecha Ultima Consulta
-                                                </label>
-                                                <div class="col-sm-12">
-                                                    <p class="m-0">
-                                                        {{ formConsulta.fecha_ultima_consulta }}
-                                                    </p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-4 col-md-9 col-sm-9">
-                                            <div class="mb-3 row">
-                                                <label for="" class="col-sm-12 col-form-label"
-                                                    style="font-size: 16px;">Fecha Próxima Consulta
-                                                </label>
-                                                <div class="col-sm-12">
-                                                    <p class="m-0">
-                                                        {{ formConsulta.fecha_proxima_consulta }}
                                                     </p>
                                                 </div>
                                             </div>
@@ -424,7 +400,31 @@
 <!-- validator -->
 <script src="/static/project_static/vendors/validator/multifield.js"></script>
 <script src="/static/project_static/vendors/validator/validator.js"></script>
+<script src="/static/project_static/other/js/jquery-ui-1.12.1/jquery-ui-1.12.1/jquery-ui.js"></script>
+<script src="/static/project_static/other/js/select2/select2.js"></script>
+<script src="/static/project_static/other/js/sweetalert.min.js"></script>
+
 <script>
+
+    $.datepicker.regional['es'] = {
+        closeText: 'Cerrar',
+        prevText: '< Ant',
+        nextText: 'Sig >',
+        currentText: 'Hoy',
+        monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+        monthNamesShort: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+        dayNames: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
+        dayNamesShort: ['Dom', 'Lun', 'Mar', 'Mié', 'Juv', 'Vie', 'Sáb'],
+        dayNamesMin: ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sá'],
+        weekHeader: 'Sm',
+        dateFormat: 'dd/mm/yy',
+        firstDay: 1,
+        isRTL: false,
+        showMonthAfterYear: false,
+        yearSuffix: ''
+    };
+    $.datepicker.setDefaults($.datepicker.regional['es']);
+
     $(function () {
 
         $('.rd_option_medical').find('.consultas').addClass('rd_background_consultas');
@@ -472,6 +472,50 @@
         $('form textarea').on("cut copy paste",function(e) {
             e.preventDefault();
         });
+
+        $('#datePick-aplicacion').datepicker({
+            format: "dd/mm/yyyy",
+            autoclose: true,
+        }).datepicker("setDate", new Date());;
+
+        $('#datePick-proxima-aplicacion').datepicker({
+                                format: "dd/mm/yyyy",
+                                autoclose: true,
+                }); 
+
+        $("#proxima_vacunacion").change(function(){
+            var tipo = $("#proxima_vacunacion").val()
+            if (tipo !== "Seleccione la proxima vacuna" && tipo != null) {
+                $.ajax({
+                    type: 'GET',
+                    url: '/configuracion/get_periodo_vacunacion/',
+                    data: { 'tipo': tipo },
+                    success: function (response) {
+                        if(response.mensaje === ""){
+                            var today = new Date()
+                            today.setMonth(today.getMonth() + parseInt(response.periodo))
+                            $('#datePick-proxima-aplicacion').datepicker({
+                                format: "dd/mm/yyyy",
+                                autoclose: true,
+                            }).datepicker("setDate", today);;
+
+                        }else{
+                            $('#datePick-proxima-aplicacion').datepicker({
+                                format: "dd/mm/yyyy",
+                                autoclose: true,
+                            }).datepicker("setDate",  new Date());;
+                        }
+                        
+                    }
+                })
+            }else{
+                $('#datePick-proxima-aplicacion').datepicker({
+                                format: "dd/mm/yyyy",
+                                autoclose: true,
+                }); 
+            }
+        })
+
     })
 
 

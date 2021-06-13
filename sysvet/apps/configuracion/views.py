@@ -375,3 +375,16 @@ def get_list_vacunas_ajax(request):
         'recordsFiltered': total,
     }
     return JsonResponse(response) 
+
+
+def get_periodo_vacunacion(request):
+    mensaje = ""
+    try:
+        vacuna = TipoVacuna.objects.get(id=request.GET.get("tipo"))
+        response = {'mensaje': mensaje, 'periodo': vacuna.periodo_aplicacion}
+        return JsonResponse(response) 
+    except Exception as e:
+        print(e)
+        mensaje = "error"
+        response = {'mensaje': mensaje}
+        return JsonResponse(response) 
