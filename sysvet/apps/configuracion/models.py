@@ -1,6 +1,7 @@
 from django.db import models
 from datetime import date, datetime, timedelta
 
+from apps.ventas.producto.models import Producto
 #Tupla dinamica para las horas
 HORAS_SER = []
 # Create your models here.
@@ -97,6 +98,7 @@ class Empleado(models.Model):
 
 
 class TipoVacuna(models.Model):
+    id_producto = models.ForeignKey(Producto, on_delete=models.CASCADE, null=False)
     nombre_vacuna =  models.CharField(max_length = 500, blank=True, null=True)
     periodo_aplicacion = models.CharField(max_length = 500, blank=True, null=True)
     class Meta:

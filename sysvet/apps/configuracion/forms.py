@@ -77,7 +77,8 @@ class TipoVacunaForm(forms.ModelForm):
         model = TipoVacuna
         fields = '__all__'        
         widgets = {
-            'nombre_vacuna' : forms.TextInput(attrs={'class':'form-control', 'name': 'nombre_vacuna', 'placeholder': 'Nombre Vacuna', 'required': 'required','autocomplete': 'off','onkeyup':'replaceCaratect(this)'}),
+            'id_producto' : forms.Select(attrs={'class':'form-control', 'id': 'id_producto' ,'name':'id_producto', 'readonly': 'readonly'}),
+            'nombre_vacuna' : forms.TextInput(attrs={'class':'form-control', 'name': 'nombre_vacuna', 'placeholder': 'Vacuna Dosis', 'required': 'required','autocomplete': 'off','onkeyup':'replaceCaratect(this)'}),
             'periodo_aplicacion' : forms.TextInput(attrs={'class':'form-control', 'name': 'periodo_aplicacion', 'placeholder': 'Periodo de Aplicacion', 
                 'required': 'required','autocomplete': 'off'  ,'onkeyup':'replaceABC(this)'})
 		}

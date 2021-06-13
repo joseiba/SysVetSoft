@@ -97,7 +97,7 @@
                 <li><a><i class="fas fa-box-open fa-lg" style="width: 26px;"></i> Inventario <span class="fa fa-chevron-down"></span></a>
                     <ul class="nav child_menu">                              
                         {% if perms.producto.view_producto %}
-                        <li><a href="{% url 'list_productos_general' %}">Producto</a></li>
+                        <li><a href="{% url 'list_productos_general' %}">Productos</a></li>
 
                         {% endif %}
 
@@ -141,13 +141,13 @@
                         <ul class="nav child_menu">
 
                             {% if perms.configuracion.view_confiempresa %}
-                            <li><a href="{% url 'list_tipo_producto' %}">Tipo Producto</a></li>
+                            <li><a href="{% url 'list_tipo_producto' %}">Tipo Productos</a></li>
     
                             {% endif %}
                                 
                             
                             {% if perms.configuracion.view_confiempresa %}
-                            <li><a href="{% url 'list_deposito' %}">Deposito</a></li>
+                            <li><a href="{% url 'list_deposito' %}">Depositos</a></li>
     
                             {% endif %}
                             

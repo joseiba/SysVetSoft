@@ -12,6 +12,7 @@ import math
 from .models import Mascota, Especie, Raza, Raza, FichaMedica, Vacuna, Consulta, Antiparasitario, HistoricoFichaMedica
 from .form import MascotaForm, EspecieForm, RazaForm, FichaMedicaForm, VacunaForm, ConsultaForm, AntiparasitarioForm
 from apps.configuracion.models import TipoVacuna
+from apps.ventas.producto.models import Producto
 
 date = datetime.now()
 
@@ -276,7 +277,6 @@ def edit_ficha_medica(request,id):
             if formVacuna.is_valid() or formConsulta.is_valid() or formAntiparasitario.is_valid():
                 proxima_vacuna = request.POST.get('proxima_vacunacion')   
                 fecha_proxima_vacuna = request.POST.get('fecha_proxima_aplicacion')
-                print(fecha_proxima_vacuna)                   
                 consulta = formConsulta.save(commit=False)
                 vacuna = formVacuna.save(commit=False)
                 antiparasitario = formAntiparasitario.save(commit=False)
@@ -323,14 +323,29 @@ def list_historial(request, id):
 
 def create_historico_ficha_medica(id, proxima_vacunacion):
     historico = HistoricoFichaMedica()
-    try:        
-        proxima_vacuna = TipoVacuna.objects.get(id=proxima_vacunacion)
+    try:
+        historico_anteriores = HistoricoFichaMedica.objects.all()
+        if historico_anteriores is not None:
+            for hist in historico_anteriores:
+                print("clear")
+                hist.fecha_proxima_aplicacion = None
+                hist.save()
+        try:
+            proxima_vacuna = TipoVacuna.objects.get(id=proxima_vacunacion)
+        except Exception as e:
+            print(e)
         mascota = Mascota.objects.get(id=id)
         fichaMedicaGet = FichaMedica.objects.get(id_mascota=id)
         vacunaGet = Vacuna.objects.get(id_ficha_medica=fichaMedicaGet.id)
         consultaGet = Consulta.objects.get(id_ficha_medica=fichaMedicaGet.id)
         antiparasitarioGet = Antiparasitario.objects.get(id_ficha_medica=fichaMedicaGet.id)
-        
+
+        if vacunaGet.id_vacuna is not None:
+            producto = Producto.objects.get(id=vacunaGet.id_vacuna.id_producto.id)
+            producto.stock_total = producto.stock_total - 1
+            producto.stock = producto.stock - 1
+            producto.save()
+
         historico.fecha_alta = date.strftime("%d/%m/%Y")
         historico.vacuna = vacunaGet.id_vacuna
         historico.proxima_vacunacion = proxima_vacuna.nombre_vacuna

@@ -10,11 +10,18 @@
         <form action="{% url 'add_vacuna' %}" method="post">
             {% csrf_token %}
             <div class="field item form-group mt-3">
-                <label class="col-form-label col-md-4 col-sm-4" style="text-align: end;">Nombre Vacuna<span
+                <label class="col-form-label col-md-4 col-sm-4" style="text-align: end;">Grupo<span
+                        class="required">*</span></label>
+                <div class="col-md-6 col-sm-6">
+                    {{ form.id_producto}}
+                </div>        
+            </div>
+            <div class="field item form-group mt-3">
+                <label class="col-form-label col-md-4 col-sm-4" style="text-align: end;">Nombre Vacuna Dosis<span
                         class="required">*</span></label>
                 <div class="col-md-6 col-sm-6">
                     <input class="form-control" 
-                        name="nombre_vacuna" placeholder="Nombre de la vacuna" autocomplete="off" required="required" id="nombre_raza" onkeyup="replaceDirection(this)"/>
+                        name="nombre_vacuna" placeholder="Vacuna Dosis" autocomplete="off" required="required" id="nombre_vacuna" onkeyup="replaceDirection(this)"/>
                 </div>        
             </div>
             <div class="field item form-group mt-3">

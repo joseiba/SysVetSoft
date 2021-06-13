@@ -7,6 +7,7 @@ from io import StringIO, BytesIO
 
 from apps.ventas.cliente.models import Cliente
 from apps.configuracion.models import TipoVacuna
+from apps.ventas.producto.models import Producto
 
 import sys
 
