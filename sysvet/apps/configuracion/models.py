@@ -94,3 +94,17 @@ class Empleado(models.Model):
     def __str__(self):
         """Formato del empleado"""
         return '{0}'.format(self.nombre_emp)
+
+
+class TipoVacuna(models.Model):
+    nombre_vacuna =  models.CharField(max_length = 500, blank=True, null=True)
+    periodo_aplicacion = models.CharField(max_length = 500, blank=True, null=True)
+    class Meta:
+        verbose_name = "Vacunas"
+        verbose_name_plural = "Vacunas"
+        default_permissions =  ()
+        permissions = (
+            ('add_tipovacuna', 'Agregar Vacuna'),
+            ('change_tipovacuna', 'Editar Vacuna'),
+            ('delete_tipovacuna', 'Eliminar Vacuna'),
+            ('view_tipovacuna', 'Listar Vacunas')) 

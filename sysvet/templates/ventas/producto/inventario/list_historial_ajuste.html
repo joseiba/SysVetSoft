@@ -1,6 +1,6 @@
 {% extends "home/base_site.html" %}
 
-{% block title %} Apertura Caja {% endblock title %}
+{% block title %} Historial Ajuste Inventario {% endblock title %}
 
 {% block stylesheets %}
 {{ block.super }}
@@ -48,6 +48,10 @@
     .dataTables_info {
         width: 0 !important;
     }
+
+    .dataTables_length{
+        text-align: initial;
+    }
 </style>
 {% endblock stylesheets %}
 
@@ -58,7 +62,7 @@
             <div class="col-md-12 col-sm-12 ">
                 <div class="x_panel">
                     <div class="x_title">
-                        <h2>Apertura Caja</h2>
+                        <h2>Historial Ajuste Inventario</h2>
                         <ul class="nav navbar-right panel_toolbox">
                             <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
                             </li>
@@ -67,40 +71,24 @@
                         </ul>
                         <div class="clearfix"></div>
                     </div>
-                    <div class="clearfix"></div>
-                    <!--{% if messages %}
-                    <div class="alert alert-success alert-dismissible" role="alert">
-                        {% for message in messages %}
-                        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                        {{ message }}
-                        {% endfor %}
-                    </div>
-                    {% endif %}-->
                     <div>
 
-                        {% if perms.caja.view_caja %}
-                        <button type="submit" class="btn btn-success float-right">
-                            <a style="color: white;" href="{% url 'list_historico_caja' %}">Historial Cajas</a>
-                        </button>
-                        {% endif %}
-
-                        {% if perms.caja.add_caja %}
-                        <button type="submit" class="btn btn-primary float-right" id="add_caja">
-                            <a style="color: white;" href="{% url 'add_caja' %}">Abrir Caja</a>
+                        {% if perms.producto.add_inventario %}
+                        <button type="submit" class="btn btn-primary float-right">
+                            <a style="color: white;" href="{% url 'add_ajuste_inventario' %}">Agregar Nuevo Ajuste</a>
                         </button>
                         {% endif %}
 
                         <div class="float-left">
                             <div class="wrap">
                                 <div class="search">
-                                    <div class="d-inline-flex">
-                                        <input type="search" class="searchTerm" id="searchTerm" data-toggle="tooltip"
-                                            data-placement="top" title="Buscar por fecha de creacion"
-                                            placeholder="Buscar por fecha de creacion" onkeyup="replaceDirection(this)">
-                                        <button type="button" id="busqueda" class="searchButton">
-                                            <i class="fa fa-search"></i>
-                                        </button>
-                                    </div>
+                                    <input type="search" class="searchTerm" id="searchTerm" data-toggle="tooltip"
+                                        data-placement="top" title="Buscar por nombre de producto, codigo y tipo de producto"
+                                        placeholder="Busca por nombre de producto, codigo y tipo de producto"
+                                        onkeyup="replaceDirection(this)">
+                                    <button type="button" id="busqueda" class="searchButton">
+                                        <i class="fa fa-search"></i>
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -111,18 +99,17 @@
                         <div class="row">
                             <div class="col-sm-12 p-0">
                                 <div class="card-box table-responsive" style="text-align: center;">
-                                    <table id="list_cajas" class="table table-striped table-bordered"
+                                    <table id="list_producto" class="table table-striped table-bordered"
                                         style="width:100%">
                                         <thead>
                                             <tr class="" style="background-color: #2a3f54; font-size: medium;">
-                                                <th style="color: white;">Id</th>
-                                                <th style="color: white;">Fecha </br>Apertura</th>
-                                                <th style="color: white;">Fecha </br>Cierre</th>
-                                                <th style="color: white;">Saldo Inicial</th>
-                                                <th style="color: white;">Total Ingreso </br> del Dia</th>
-                                                <th style="color: white;">Saldo a Entregar</th>
-                                                <th style="color: white;">Estado</th>
-                                                <th style="color: white;">Acción</th>
+                                                <th style="color: white;">Codigo</th>
+                                                <th style="color: white;">Nombre Producto</th>
+                                                <th style="color: white;">Descripción</th>
+                                                <th style="color: white;">Stock En Sistema</th>
+                                                <th style="color: white;">Stock En Fisico</th>
+                                                <th style="color: white;">Diferencia</th>
+                                                <th style="color: white;">Fecha Ajuste</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -135,7 +122,6 @@
                     </div>
                     <div class="clearfix"></div>
                 </div>
-
             </div>
         </div>
     </div>
@@ -161,8 +147,6 @@
 <script src="/static/project_static/vendors/jszip/dist/jszip.min.js"></script>
 <script src="/static/project_static/vendors/pdfmake/build/pdfmake.min.js"></script>
 <script src="/static/project_static/vendors/pdfmake/build/vfs_fonts.js"></script>
-<script src="/static/project_static/other/js/sweetalert.min.js"></script>
-
 
 <script>
     $(function () {
@@ -172,14 +156,19 @@
         });
 
         var get_list = function (busqueda) {
-            $("#list_cajas").DataTable({
+            $("#list_producto").DataTable({
                 destroy: true,
+                buttons: [                
+                    {
+                        extend: 'pdfHtml5',
+                        text: 'Exportar PDF',
+                    },
+                ],
                 dom: 'Bfrtip',
-                buttons: [],
                 searching: false,
                 pageLength: 10,
                 ajax: {
-                    url: "/caja/get_list_caja/",
+                    url: "/producto/list_ajuste_inventario_historial_ajax/",
                     type: 'GET',
                     datatype: 'json',
                     data: { 'busqueda': busqueda },
@@ -190,74 +179,38 @@
                 },
                 columns: [
                     {
-                        name: 'Id',
+                        name: 'Codigo',
                         data: 'id',
                     },
                     {
-                        name: 'Fecha Apertura',
-                        data: 'fecha_alta',
+                        name: 'Nombre Producto',
+                        data: 'nombre',
                     },
                     {
-                        name: 'Fecha Cierre',
-                        data: 'fecha_cierre',                    
+                        name: 'Descripción',
+                        data: 'descripcion',
                     },
                     {
-                        name: 'Saldo Inicial',
-                        data: 'saldo_inicial',
-                        render: function (data) {
-                            return ' Gs.' + add_miles(data)
-
-                        }
+                        name: 'Stock En Sistema',
+                        data: 'stock_total',
                     },
                     {
-                        name: 'Total Ingreso del Dia',
-                        data: 'total_ingreso',
-                        render: function (data) {
-                            return ' Gs.' + add_miles(data)
-
-                        }
+                        name: 'Stock En Fisico',
+                        data: 'stock_fisico',
+                        
                     },
                     {
-                        name: 'Saldo a Entregar',
-                        data: 'saldo_entregar',
-                        render: function (data) {
-                            return ' Gs.' + add_miles(data)
-
-                        }
+                        name: 'Diferencia',
+                        data: 'diferencia',
+                        
                     },
                     {
-                        name: 'Estado',
-                        data: 'estado',
-                        render: function (data) {
-                            if( data == "A"){
-                                return "Abierto"
-                            }
-                            else{
-                                return "Cerrado"
-                            }
-
-                        }
+                        name: 'Fecha Ajuste',
+                        data: 'fecha_ajuste',
                     },
-                    {
-                        name: 'Acción',
-                        data: 'id',
-                        render: function (data) {
-
-                            {% if perms.caja.change_caja %}
-                            return '<button class="btn btn-warning">\
-                                                        <a href="/caja/cerrar_caja/' + data + '/" style="color: black">\
-                                                            Cerrar Caja\
-                                                        </a>\
-                                                    </button>';
-                            {% endif %}
-
-                            return "-";
-                        }
-                    }
-
                 ],
                 columnDefs: [{
-                    targets: [7], // column index (start from 0)
+                    targets: [], // column index (start from 0)
                     orderable: false, // set orderable false for selected columns
                 }],
                 serverSide: false,
@@ -269,8 +222,8 @@
                     infoFiltered: "(Filtrado de _MAX_ total entradas)",
                     infoPostFix: "",
                     thousands: ",",
-                    lengthMenu: "Mostrar _MENU_ Entradas",
                     loadingRecords: "Cargando...",
+                    lengthMenu: "Mostrar _MENU_ Entradas",
                     processing: "Procesando...",
                     search: "Buscar:",
                     zeroRecords: "Sin resultados encontrados",
@@ -304,25 +257,7 @@
                 get_list(busqueda)
             }
         })
-
-        {% if messages %}
-            {% for message in messages %}
-                swal({
-                        title: "Notificación",
-                        text:  "{{ message }}",
-                        icon: "warning",
-                        button: "Ok",
-                    })
-            {% endfor %}
-        {% endif %}
-
-    });
-
-    function add_miles(value) {
-        return value.toString().replace(/\D/g, "")
-            .replace(/([0-9])([0-9]{3})$/, '$1.$2')
-            .replace(/\B(?=(\d{3})+(?!\d)\.?)/g, ".");
-    }
+    })
 
 </script>
 

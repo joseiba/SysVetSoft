@@ -86,7 +86,6 @@ class Producto(models.Model):
     stock = models.IntegerField(help_text = 'Ingrese stock minimo')
     stock_total = models.IntegerField(null=True, blank=True)
     stock_movido = models.IntegerField(blank = True, null=True, default=0)
-    stock_fisico = models.IntegerField(blank = True, null=True, default=0)
     servicio_o_producto = models.CharField(max_length=2, default="P", blank=True, null=True)
     producto_vencido = models.CharField(max_length=2, default="N", blank=True, null=True)
     id_servicio = models.IntegerField(blank = True, null=True)
@@ -119,6 +118,7 @@ class Producto(models.Model):
         dict['nombre'] = self.nombre_producto
         dict['description'] = self.descripcion
         dict['precio'] = self.precio_venta
+        dict['stock_sistema'] = self.stock_total
         dict['tipo'] = self.servicio_o_producto
         return dict
 
@@ -141,3 +141,21 @@ class ProductoStock (models.Model):
     def get_absolute_url(self):
         """Retorna el URL para acceder a una instancia de un  en particular."""
         return reverse('deposito-detail', args=[str(self.id)])
+
+
+class Inventario(models.Model):
+    stock_viejo = models.IntegerField(blank = True, null=True, default=0)
+    stock_fisico = models.IntegerField(blank = True, null=True, default=0)
+    diferencia = models.IntegerField(blank = True, null=True, default=0)
+    id_producto = models.ForeignKey('Producto', on_delete=models.CASCADE, null=False)
+    fecha_alta = models.CharField(max_length=500, default = date.strftime("%d/%m/%Y %H:%M:%S hs"), null=True)
+
+    class Mwta:
+        verbose_name = "Inventario"
+        verbose_name_plural = "Inventarios"
+        default_permissions =  ()
+        permissions = (
+            ('add_inventario', 'Agregar Inventario'),
+            ('change_inventario', 'Editar Inventario'),
+            ('delete_inventario', 'Eliminar Inventario'),
+            ('view_inventario', 'Listar Inventarios')) 

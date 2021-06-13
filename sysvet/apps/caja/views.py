@@ -59,6 +59,41 @@ def list_caja_ajax(request):
     }
     return JsonResponse(response)
 
+@login_required()
+@permission_required('caja.view_caja')
+def list_historico_caja(request):
+    return render(request, 'caja/list_historial_caja.html')
+
+@login_required()
+def get_list_caja_historico(request):
+    query = request.GET.get('busqueda')
+    if query != "":
+        caja = Caja.objects.exclude(apertura_cierre="A").filter(Q(fecha_hora_alta__icontains=query))
+    else:
+        caja = Caja.objects.exclude(apertura_cierre="A").all()
+
+    total = caja.count()
+
+    _start = request.GET.get('start')
+    _length = request.GET.get('length')
+    if _start and _length:
+        start = int(_start)
+        length = int(_length)
+        page = math.ceil(start / length) + 1
+        per_page = length
+
+        caja = caja[start:start + length]
+
+    data = [{'id': ca.id, 'fecha_alta': ca.fecha_hora_alta, 'fecha_cierre': ca.fecha_cierre, 'saldo_inicial': ca.saldo_inicial, 
+    'total_ingreso': ca.total_ingreso, 'total_egreso' : ca.total_egreso, 'saldo_entregar': ca.saldo_a_entregar, 'estado': ca.apertura_cierre } for ca in caja]        
+
+    response = {
+        'data': data,
+        'recordsTotal': total,
+        'recordsFiltered': total,
+    }
+    return JsonResponse(response)
+
 
 @login_required()
 @permission_required('caja.add_caja')

@@ -1,6 +1,6 @@
 {% extends "home/base_site.html" %}
 
-{% block title %} Apertura Caja {% endblock title %}
+{% block title %} Historial Caja {% endblock title %}
 
 {% block stylesheets %}
 {{ block.super }}
@@ -58,7 +58,7 @@
             <div class="col-md-12 col-sm-12 ">
                 <div class="x_panel">
                     <div class="x_title">
-                        <h2>Apertura Caja</h2>
+                        <h2>Historial Caja</h2>
                         <ul class="nav navbar-right panel_toolbox">
                             <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
                             </li>
@@ -68,21 +68,7 @@
                         <div class="clearfix"></div>
                     </div>
                     <div class="clearfix"></div>
-                    <!--{% if messages %}
-                    <div class="alert alert-success alert-dismissible" role="alert">
-                        {% for message in messages %}
-                        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                        {{ message }}
-                        {% endfor %}
-                    </div>
-                    {% endif %}-->
                     <div>
-
-                        {% if perms.caja.view_caja %}
-                        <button type="submit" class="btn btn-success float-right">
-                            <a style="color: white;" href="{% url 'list_historico_caja' %}">Historial Cajas</a>
-                        </button>
-                        {% endif %}
 
                         {% if perms.caja.add_caja %}
                         <button type="submit" class="btn btn-primary float-right" id="add_caja">
@@ -121,8 +107,6 @@
                                                 <th style="color: white;">Saldo Inicial</th>
                                                 <th style="color: white;">Total Ingreso </br> del Dia</th>
                                                 <th style="color: white;">Saldo a Entregar</th>
-                                                <th style="color: white;">Estado</th>
-                                                <th style="color: white;">Acción</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -179,7 +163,7 @@
                 searching: false,
                 pageLength: 10,
                 ajax: {
-                    url: "/caja/get_list_caja/",
+                    url: "/caja/get_list_caja_historico/",
                     type: 'GET',
                     datatype: 'json',
                     data: { 'busqueda': busqueda },
@@ -225,39 +209,9 @@
 
                         }
                     },
-                    {
-                        name: 'Estado',
-                        data: 'estado',
-                        render: function (data) {
-                            if( data == "A"){
-                                return "Abierto"
-                            }
-                            else{
-                                return "Cerrado"
-                            }
-
-                        }
-                    },
-                    {
-                        name: 'Acción',
-                        data: 'id',
-                        render: function (data) {
-
-                            {% if perms.caja.change_caja %}
-                            return '<button class="btn btn-warning">\
-                                                        <a href="/caja/cerrar_caja/' + data + '/" style="color: black">\
-                                                            Cerrar Caja\
-                                                        </a>\
-                                                    </button>';
-                            {% endif %}
-
-                            return "-";
-                        }
-                    }
-
                 ],
                 columnDefs: [{
-                    targets: [7], // column index (start from 0)
+                    targets: [], // column index (start from 0)
                     orderable: false, // set orderable false for selected columns
                 }],
                 serverSide: false,
@@ -304,18 +258,6 @@
                 get_list(busqueda)
             }
         })
-
-        {% if messages %}
-            {% for message in messages %}
-                swal({
-                        title: "Notificación",
-                        text:  "{{ message }}",
-                        icon: "warning",
-                        button: "Ok",
-                    })
-            {% endfor %}
-        {% endif %}
-
     });
 
     function add_miles(value) {

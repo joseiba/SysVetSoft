@@ -22,13 +22,15 @@ from django.conf.urls.static import static
 
 from apps.usuario.views  import Login, logoutUser,home_user
 
-from apps.ventas.cliente.views import (add_cliente, list_clientes, edit_cliente, delete_cliente, search_cliente, ReporteClientesPDF,
-list_client_ajax, list_client_ajax)
+from apps.ventas.cliente.views import (add_cliente, list_clientes, edit_cliente, delete_cliente, search_cliente, 
+ReporteClientesPDF, list_client_ajax, list_client_ajax)
 
 from apps.ventas.producto.views import (add_tipo_producto, list_tipo_producto, edit_tipo_producto, search_tipo_producto, 
 baja_tipo_producto, alta_tipo_producto, vence_si_no, add_deposito, list_deposito, edit_deposito, search_deposito, 
 add_producto, edit_producto, list_producto, delete_producto, search_producto, mover_producto, mover_producto_detalle_general,
-list_productos_general, list_producto_general_ajax, get_list_deposito, get_list_tipo_producto, list_producto_vencido_ajax)
+list_productos_general, list_producto_general_ajax, get_list_deposito, get_list_tipo_producto, list_producto_vencido_ajax,
+list_ajuste_inventario_ajax, list_ajustar_inventario, add_ajuste_inventario, list_ajuste_inventario_historial_ajax,
+list_ajustar_historial_inventario)
 
 from apps.ventas.mascota.views import (list_mascotas, add_mascota, edit_mascota, list_especie, add_especie, 
 edit_especie,search_especie, list_raza, add_raza, edit_raza, search_raza,search_mascota, 
@@ -39,7 +41,8 @@ validar_fecha_hora, get_mascota_cliente, get_min_service, get_mascota_selected)
 
 from apps.configuracion.views import (add_servicio, edit_servicio, delete_servicio, list_servicio, search_servicio, 
 add_empleado, edit_empleado, list_empleado, delete_empleado, search_empleado, list_servicio_ajax, get_list_empleados_ajax,
-confi_inicial, list_historial_timbrado, get_historial_timbrado_ajax)
+confi_inicial, list_historial_timbrado, get_historial_timbrado_ajax, add_vacuna, edit_vacuna, list_vacunas, 
+get_list_vacunas_ajax)
 
 from apps.compras.views import (add_proveedor, edit_proveedor, list_proveedor_ajax, delete_proveedor, list_proveedor,
 list_pedido, list_pedido_ajax, edit_pedido, list_factura_compra, list_facturas_ajax, add_factura_compra, 
@@ -53,7 +56,7 @@ ver_factura_anulada_venta, validate_producto_stock)
 from apps.usuario.views import (list_usuarios, list_usuarios_ajax, add_usuario, edit_usuario, add_rol, get_group_list, 
 change_password, edit_rol, delete_rol, baja_usuario, list_usuarios_baja_ajax, alta_usuario)
 
-from apps.caja.views import (list_caja_ajax, list_cajas, add_caja, cerrar_caja)
+from apps.caja.views import (list_caja_ajax, list_cajas, add_caja, cerrar_caja, get_list_caja_historico, list_historico_caja)
 
 from apps.utiles.views import (poner_vencido_timbrado, validate_nro_timbrado)
 
@@ -98,9 +101,6 @@ urlpatterns = [
     path('tipoProducto/vence_si_no/', vence_si_no, name="vence_si_no"),
     path('tipoProducto/get_list_tipo_producto/', get_list_tipo_producto, name="get_list_tipo_producto"),
 
-
-    
-
     #Urls producto
     path('producto/add/', add_producto, name="add_producto"),
     path('producto/listDetalle/<int:id>/', list_producto, name="list_producto"),
@@ -112,8 +112,11 @@ urlpatterns = [
     path('producto/search/', search_producto, name="search_producto"),
     path('producto/darBaja/<int:id>', delete_producto, name="delete_producto"),
     path('producto/moverGeneral/<int:id>/', mover_producto_detalle_general, name="mover_producto_detalle_general"),
-
-
+    path('producto/list_ajuste_inventario_ajax/', list_ajuste_inventario_ajax, name="list_ajuste_inventario_ajax"),
+    path('producto/list_ajustar_inventario/', list_ajustar_inventario, name="list_ajustar_inventario"),
+    path('producto/addAjusteInventario/', add_ajuste_inventario, name="add_ajuste_inventario"),
+    path('producto/list_ajuste_inventario_historial_ajax/', list_ajuste_inventario_historial_ajax, name="list_ajuste_inventario_historial_ajax"),
+    path('producto/list_ajustar_historial_inventario/', list_ajustar_historial_inventario, name="list_ajustar_historial_inventario"),
 
     #Urls deposito
     path('deposito/add/',add_deposito , name="add_deposito"),
@@ -168,6 +171,10 @@ urlpatterns = [
     path('configuracion/confiInicial/', confi_inicial, name="confi_inicial"),
     path('configuracion/listHistorialTimbrado/', list_historial_timbrado , name="list_historial_timbrado"),
     path('configuracion/get_historial_timbrado_ajax/', get_historial_timbrado_ajax , name="get_historial_timbrado_ajax"),
+    path('configuracion/listVacunas/', list_vacunas , name="list_vacunas"),
+    path('configuracion/get_list_vacunas_ajax/', get_list_vacunas_ajax , name="get_list_vacunas_ajax"),
+    path('configuracion/addVacuna/',  add_vacuna, name="add_vacuna"),
+    path('configuracion/editVacuna/<int:id>/', edit_vacuna , name="edit_vacuna"),
 
     #Urls compras
     path('compra/addProveedor/', add_proveedor , name="add_proveedor"),
@@ -206,6 +213,8 @@ urlpatterns = [
     path('caja/get_list_caja/', list_caja_ajax, name="list_caja_ajax"),
     path('caja/add/',add_caja , name="add_caja"),
     path('caja/cerrar_caja/<int:id>/',cerrar_caja , name="cerrar_caja"),
+    path('caja/listHistoricoCajas/', list_historico_caja, name="list_historico_caja"),
+    path('caja/get_list_caja_historico/', get_list_caja_historico, name="get_list_caja_historico"),
 
     #Utiles
     path('utiles/poner_vencido_timbrado/', poner_vencido_timbrado, name="poner_vencido_timbrado"),

@@ -1,6 +1,6 @@
 {% extends "home/base_site.html" %}
 
-{% block title %} Apertura Caja {% endblock title %}
+{% block title %} Lista Vacunas {% endblock title %}
 
 {% block stylesheets %}
 {{ block.super }}
@@ -45,6 +45,7 @@
         font-size: 20px;
     }
 
+    
     .dataTables_info {
         width: 0 !important;
     }
@@ -58,7 +59,7 @@
             <div class="col-md-12 col-sm-12 ">
                 <div class="x_panel">
                     <div class="x_title">
-                        <h2>Apertura Caja</h2>
+                        <h2>Lista de Razas</h2>
                         <ul class="nav navbar-right panel_toolbox">
                             <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
                             </li>
@@ -68,35 +69,30 @@
                         <div class="clearfix"></div>
                     </div>
                     <div class="clearfix"></div>
-                    <!--{% if messages %}
+                    {% if messages %}
                     <div class="alert alert-success alert-dismissible" role="alert">
                         {% for message in messages %}
-                        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                        {{ message }}
+                            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                            {{ message }}
                         {% endfor %}
                     </div>
-                    {% endif %}-->
+                    {% endif %}
                     <div>
-
-                        {% if perms.caja.view_caja %}
-                        <button type="submit" class="btn btn-success float-right">
-                            <a style="color: white;" href="{% url 'list_historico_caja' %}">Historial Cajas</a>
-                        </button>
-                        {% endif %}
-
-                        {% if perms.caja.add_caja %}
-                        <button type="submit" class="btn btn-primary float-right" id="add_caja">
-                            <a style="color: white;" href="{% url 'add_caja' %}">Abrir Caja</a>
-                        </button>
-                        {% endif %}
+                        
+                        {% if perms.configuracion.add_tipovacuna %}
+                            <button type="submit" class="btn btn-primary float-right" onclick="abrir_modal_creacion('/configuracion/addVacuna/')">
+                                Agregar nueva Vacuna
+                            </button>
+                        {% endif %}        
 
                         <div class="float-left">
                             <div class="wrap">
                                 <div class="search">
                                     <div class="d-inline-flex">
-                                        <input type="search" class="searchTerm" id="searchTerm" data-toggle="tooltip"
-                                            data-placement="top" title="Buscar por fecha de creacion"
-                                            placeholder="Buscar por fecha de creacion" onkeyup="replaceDirection(this)">
+                                        <input type="search" class="searchTerm" id="searchTerm"
+                                        placeholder="Buscar por nombre vacuna"
+                                        data-toggle="tooltip" data-placement="top"
+                                        title="Buscar por nombre de vacuna" onkeyup="replaceCaratect(this)">
                                         <button type="button" id="busqueda" class="searchButton">
                                             <i class="fa fa-search"></i>
                                         </button>
@@ -104,24 +100,18 @@
                                 </div>
                             </div>
                         </div>
-
                     </div>
 
                     <div class="x_content">
                         <div class="row">
-                            <div class="col-sm-12 p-0">
+                            <div class="col-sm-12">
                                 <div class="card-box table-responsive" style="text-align: center;">
-                                    <table id="list_cajas" class="table table-striped table-bordered"
-                                        style="width:100%">
+                                    <table id="list_vacunas" class="table table-striped table-bordered" style="width:55%; margin: auto;">
                                         <thead>
                                             <tr class="" style="background-color: #2a3f54; font-size: medium;">
                                                 <th style="color: white;">Id</th>
-                                                <th style="color: white;">Fecha </br>Apertura</th>
-                                                <th style="color: white;">Fecha </br>Cierre</th>
-                                                <th style="color: white;">Saldo Inicial</th>
-                                                <th style="color: white;">Total Ingreso </br> del Dia</th>
-                                                <th style="color: white;">Saldo a Entregar</th>
-                                                <th style="color: white;">Estado</th>
+                                                <th style="color: white;">Nombre Vacuna</th>
+                                                <th style="color: white;">Periodo Aplicacion</th>
                                                 <th style="color: white;">Acción</th>
                                             </tr>
                                         </thead>
@@ -139,6 +129,14 @@
             </div>
         </div>
     </div>
+</div>
+
+<div class="modal fade" id="creacion"  role="dialog" >
+
+</div>
+
+<div class="modal fade" id="edicion" role="dialog">
+
 </div>
 
 {% endblock content %}
@@ -161,28 +159,25 @@
 <script src="/static/project_static/vendors/jszip/dist/jszip.min.js"></script>
 <script src="/static/project_static/vendors/pdfmake/build/pdfmake.min.js"></script>
 <script src="/static/project_static/vendors/pdfmake/build/vfs_fonts.js"></script>
-<script src="/static/project_static/other/js/sweetalert.min.js"></script>
-
 
 <script>
     $(function () {
-
-        $('form input').on("cut copy paste", function (e) {
+        $('form input').on("cut copy paste",function(e) {
             e.preventDefault();
         });
 
         var get_list = function (busqueda) {
-            $("#list_cajas").DataTable({
+            $("#list_vacunas").DataTable({
                 destroy: true,
                 dom: 'Bfrtip',
-                buttons: [],
+                buttons: ['pdf'],
                 searching: false,
                 pageLength: 10,
                 ajax: {
-                    url: "/caja/get_list_caja/",
+                    url: "/configuracion/get_list_vacunas_ajax/",
                     type: 'GET',
                     datatype: 'json',
-                    data: { 'busqueda': busqueda },
+                    data: {'busqueda': busqueda},
                     error: function (data) {
                         $.fn.DataTable.ext.errorMode = 'none'
 
@@ -194,76 +189,40 @@
                         data: 'id',
                     },
                     {
-                        name: 'Fecha Apertura',
-                        data: 'fecha_alta',
+                        name: 'Nombre Vacuna',
+                        data: 'nombre_vacuna',
                     },
                     {
-                        name: 'Fecha Cierre',
-                        data: 'fecha_cierre',                    
-                    },
-                    {
-                        name: 'Saldo Inicial',
-                        data: 'saldo_inicial',
-                        render: function (data) {
-                            return ' Gs.' + add_miles(data)
-
+                        name: 'Periodo Aplicacion',
+                        data: 'periodo',
+                        render: function(data){
+                            return data + " meses"
                         }
-                    },
-                    {
-                        name: 'Total Ingreso del Dia',
-                        data: 'total_ingreso',
-                        render: function (data) {
-                            return ' Gs.' + add_miles(data)
-
-                        }
-                    },
-                    {
-                        name: 'Saldo a Entregar',
-                        data: 'saldo_entregar',
-                        render: function (data) {
-                            return ' Gs.' + add_miles(data)
-
-                        }
-                    },
-                    {
-                        name: 'Estado',
-                        data: 'estado',
-                        render: function (data) {
-                            if( data == "A"){
-                                return "Abierto"
-                            }
-                            else{
-                                return "Cerrado"
-                            }
-
-                        }
-                    },
+                    },                    
                     {
                         name: 'Acción',
                         data: 'id',
                         render: function (data) {
-
-                            {% if perms.caja.change_caja %}
-                            return '<button class="btn btn-warning">\
-                                                        <a href="/caja/cerrar_caja/' + data + '/" style="color: black">\
-                                                            Cerrar Caja\
-                                                        </a>\
+                            {% if perms.configuracion.add_tipovacuna %}
+                                return '<button class="btn btn-warning" onclick="abrir_modal_edicion(\'/configuracion/editVacuna/' + data + '/\');">\
+                                                        Editar\
                                                     </button>';
                             {% endif %}
 
                             return "-";
+
                         }
                     }
 
                 ],
                 columnDefs: [{
-                    targets: [7], // column index (start from 0)
+                    targets: [3], // column index (start from 0)
                     orderable: false, // set orderable false for selected columns
                 }],
                 serverSide: false,
-                language: {
+                language: {                    
                     decimal: "",
-                    emptyTable: "No hay información",
+                    emptyTable: "Sin resultados encontrados",
                     info: "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
                     infoEmpty: "Mostrando 0 de 0 Entradas",
                     infoFiltered: "(Filtrado de _MAX_ total entradas)",
@@ -286,44 +245,26 @@
         }
 
         var query = ""
-
+        
         get_list(query);
 
-        $("#searchTerm").change(function () {
+        $("#searchTerm").change(function(){
             var busqueda = $("#searchTerm").val()
             sessionStorage.setItem("busqueda", busqueda)
         })
 
-        $("#busqueda").click(function () {
+        $("#busqueda").click(function(){
             var busqueda = sessionStorage.getItem("busqueda")
-            if (busqueda == "" || busqueda == undefined || busqueda == null) {
+            console.log
+            if(busqueda == "" || busqueda == undefined || busqueda == null){
                 busqueda = "";
                 get_list(busqueda)
             }
-            else {
+            else{
                 get_list(busqueda)
             }
-        })
-
-        {% if messages %}
-            {% for message in messages %}
-                swal({
-                        title: "Notificación",
-                        text:  "{{ message }}",
-                        icon: "warning",
-                        button: "Ok",
-                    })
-            {% endfor %}
-        {% endif %}
-
-    });
-
-    function add_miles(value) {
-        return value.toString().replace(/\D/g, "")
-            .replace(/([0-9])([0-9]{3})$/, '$1.$2')
-            .replace(/\B(?=(\d{3})+(?!\d)\.?)/g, ".");
-    }
-
+        }) 
+    })
 </script>
 
 

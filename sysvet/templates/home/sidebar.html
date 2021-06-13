@@ -93,24 +93,16 @@
                     </ul>
                 </li>
                 {% endif %}
-                {% if perms.producto.view_producto%}
+                {% if perms.producto.view_producto or perms.producto.view_inventario %}
                 <li><a><i class="fas fa-box-open fa-lg" style="width: 26px;"></i> Inventario <span class="fa fa-chevron-down"></span></a>
-                    <ul class="nav child_menu">                                         
-                        
-                        {% if perms.configuracion.view_confiempresa %}
-                        <li><a href="{% url 'list_tipo_producto' %}">Tipo Producto</a></li>
-
-                        {% endif %}
-                            
-                        
-                        {% if perms.configuracion.view_confiempresa %}
-                        <li><a href="{% url 'list_deposito' %}">Deposito</a></li>
-
-                        {% endif %}
-                            
-                        
+                    <ul class="nav child_menu">                              
                         {% if perms.producto.view_producto %}
                         <li><a href="{% url 'list_productos_general' %}">Producto</a></li>
+
+                        {% endif %}
+
+                        {% if perms.producto.view_inventario %}
+                        <li><a href="{% url 'list_ajustar_inventario' %}">Ajustar Inventario</a></li>
 
                         {% endif %}
                     </ul>
@@ -144,9 +136,20 @@
                 {% endif %}
                 
                 
-                {% if perms.configuracion.add_confiempresa %}
+                {% if perms.configuracion.add_confiempresa or perms.configuracion.view_confiempresa or perms.configuracion.view_empleado or perms.configuracion.view_servicio %}
                     <li><a><i class="glyphicon glyphicon-cog fa-lg" style="color: white; width: 26px;"></i> Configuraciones <span class="fa fa-chevron-down"></span></a>
                         <ul class="nav child_menu">
+
+                            {% if perms.configuracion.view_confiempresa %}
+                            <li><a href="{% url 'list_tipo_producto' %}">Tipo Producto</a></li>
+    
+                            {% endif %}
+                                
+                            
+                            {% if perms.configuracion.view_confiempresa %}
+                            <li><a href="{% url 'list_deposito' %}">Deposito</a></li>
+    
+                            {% endif %}
                             
                             {% if perms.configuracion.view_servicio %}
                             <li><a href="{% url 'list_servicio' %}">Lista de Servicios</a></li>
@@ -155,6 +158,11 @@
                                                             
                             {% if perms.configuracion.view_empleado  %}
                             <li><a href="{% url 'list_empleado' %}">Lista de Empleados</a></li>
+
+                            {% endif %}
+
+                            {% if perms.configuracion.view_tipovacuna %}
+                            <li><a href="{% url 'list_vacunas' %}">Lista de Vacunas</a></li>
 
                             {% endif %}
                                                             
