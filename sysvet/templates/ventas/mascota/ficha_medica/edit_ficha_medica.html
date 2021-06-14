@@ -13,6 +13,8 @@
     rel="stylesheet">
 <link href="/static/project_static/vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css" rel="stylesheet">
 <link rel="stylesheet"
+    href="/static/project_static/other/js/bootstrap-touchspin-master/dist/jquery.bootstrap-touchspin.css">
+<link rel="stylesheet"
     href="/static/project_static/other/js/jquery-ui-themes-1.12.1/jquery-ui-themes-1.12.1/jquery-ui.min.css">
 <style>
     .text_align_center {
@@ -80,6 +82,10 @@
 
     .rd_icon {
         color: black;
+    }
+
+    .select2{
+        width: 100% !important;
     }
 </style>
 {% endblock stylesheets%}
@@ -193,20 +199,6 @@
                                                     </p>
                                                 </div>
                                             </div>
-                                            <div class="mb-3 row">
-                                                <label for="" class="col-sm-12 col-form-label"
-                                                    style="font-size: 16px;">Tatuaje
-                                                </label>
-                                                <div class="col-sm-12">
-                                                    <p class="m-0">
-                                                        {% if  mascota.tatuaje == None %}
-                                                            -
-                                                        {% else %}
-                                                            {{ mascota.tatuaje }}
-                                                        {% endif %}
-                                                    </p>
-                                                </div>
-                                            </div>
                                         </div>
                                         <div class="col-lg-4 col-md-9 col-sm-9">
                                             <div class="mb-3 row">
@@ -237,30 +229,34 @@
                                                     </p>
                                                 </div>
                                             </div>
+                                        </div>
+
+                                        <div class="col-lg-4 col-md-9 col-sm-9">
                                             <div class="mb-3 row">
                                                 <label for="" class="col-sm-12 col-form-label"
                                                     style="font-size: 16px;">Color Pelaje
                                                 </label>
                                                 <div class="col-sm-12">
                                                     <p class="m-0">
-                                                        {% if  mascota.color_pelaje == '#000000' %}
-                                                            -
-                                                        {% else %}
-                                                        <input type="color" value="{{ mascota.color_pelaje }}" readonly="readonly" disabled="disabled"/>                                                            
-                                                        {% endif %}
+                                                    {% if  mascota.color_pelaje == '#000000' %}
+                                                        -
+                                                    {% else %}
+                                                    <input type="color" value="{{ mascota.color_pelaje }}" readonly="readonly" disabled="disabled"/>                                                            
+                                                    {% endif %}
                                                     </p>
                                                 </div>
                                             </div>
-                                        </div>
-
-                                        <div class="col-lg-4 col-md-9 col-sm-9">
                                             <div class="mb-3 row">
                                                 <label for="" class="col-sm-12 col-form-label"
-                                                    style="font-size: 16px;">Diagnóstico
+                                                    style="font-size: 16px;">Tatuaje
                                                 </label>
                                                 <div class="col-sm-12">
                                                     <p class="m-0">
-                                                        {{ formConsulta.diagnostico }}
+                                                        {% if  mascota.tatuaje == None %}
+                                                            -
+                                                        {% else %}
+                                                            {{ mascota.tatuaje }}
+                                                        {% endif %}
                                                     </p>
                                                 </div>
                                             </div>
@@ -332,25 +328,29 @@
                                         </div>
 
                                         <div class="col-lg-4 col-md-9 col-sm-9">
-                                            <div class="mb-3 row">
+                                            <div class="form-group">
                                                 <label for="" class="col-sm-12 col-form-label"
                                                     style="font-size: 16px;">Antiparasitario
                                                 </label>
                                                 <div class="col-sm-12">
-                                                    <p class="m-0">{{ formAntiparasitario.antiparasitario }}</p>
+                                                        <select class="form-control" name="antipara" id="antipara">
+                                                            <option>Buscar</option>
+                                                        </select>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="col-lg-4 col-md-9 col-sm-9">
-                                            <div class="mb-3 row">
+                                            <div class="form-group">
                                                 <label for="" class="col-sm-12 col-form-label"
                                                     style="font-size: 16px;">Próximo Antiparasitario
                                                 </label>
                                                 <div class="col-sm-12">
-                                                    <p class="m-0">{{ formAntiparasitario.proximo_antiparasitario }}
-                                                    </p>
+                                                        <select class="form-control" name="proximo_antipara" id="proximo_antipara">
+                                                            <option>Buscar</option>
+                                                        </select>
                                                 </div>
                                             </div>
+
                                         </div>  
                                     </div>
                                 </div>
@@ -501,6 +501,66 @@
                                 format: "dd/mm/yyyy",
                                 autoclose: true,
                 }); 
+            }
+        })
+
+        $('#proximo_antipara').select2({
+            ajax: {
+                type: 'POST',
+                url: '/producto/get_producto_antiparasitario/',
+                delay: 250,
+                data: function (params) {
+                    return {
+                        term: params.term,
+                        action: 'search_products'
+                    };
+                },
+                processResults: function (data) {
+                    return {
+                        results: data
+                    }
+                },
+            },
+            language: {
+                inputTooShort: function () {
+                    return '';
+                },
+                searching: function () {
+                    return 'Buscando...'
+                },
+                noResults: function () {
+                    return 'No se ha encontrado ningún resultado'
+                }
+            }
+        })
+
+        $('#antipara').select2({
+            ajax: {
+                type: 'POST',
+                url: '/producto/get_producto_antiparasitario/',
+                delay: 250,
+                data: function (params) {
+                    return {
+                        term: params.term,
+                        action: 'search_products'
+                    };
+                },
+                processResults: function (data) {
+                    return {
+                        results: data
+                    }
+                },
+            },
+            language: {
+                inputTooShort: function () {
+                    return '';
+                },
+                searching: function () {
+                    return 'Buscando...'
+                },
+                noResults: function () {
+                    return 'No se ha encontrado ningún resultado'
+                }
             }
         })
 

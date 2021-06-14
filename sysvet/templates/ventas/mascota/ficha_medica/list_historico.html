@@ -112,13 +112,21 @@
                                             </thead>
                                             <tbody>
                                                 {% for historico in page_obj %}
-                                                <tr style="font-size: medium;">
-                                                    <td>{{ historico.fecha_alta }}</td>
-                                                    <td>{{ historico.vacuna }}</td>
-                                                    <td>{{ historico.antiparasitario }}</td>
-                                                    <td>{{ historico.peso }}</td>
-                                                </tr>
-                                                {% endfor %}
+                                                    <tr style="font-size: medium;">
+                                                        <td>{{ historico.fecha_alta }}</td>
+                                                        <td>
+                                                            
+                                                            {% if historico.vacuna != None %}
+                                                                {{ historico.vacuna }}  
+                                                            {% else %}
+                                                                -
+                                                            {% endif %}
+                                                                
+                                                        </td>
+                                                        <td>{{ historico.antiparasitario }}</td>
+                                                        <td>{{ historico.peso }}</td>
+                                                    </tr> 
+                                                {% endfor %}                                                
                                             </tbody>
                                         </table>
                                     </div>
@@ -155,13 +163,13 @@
                                             </thead>
                                             <tbody>
                                                 {% for historico in page_obj %}
-                                                {% if  historico.fecha_proxima_aplicacion != None %}
-                                                <tr style="font-size: medium;">
-                                                    <td>{{ historico.proxima_vacunacion   }}</td>
-                                                    <td>{{ historico.proximo_antiparasitario }}</td>
-                                                    <td>{{ historico.fecha_proxima_aplicacion }}</td>
-                                                </tr>
-                                                {% endif %}
+                                                    {% if  historico.fecha_proxima_aplicacion != None %}
+                                                        <tr style="font-size: medium;">
+                                                            <td>{{ historico.proxima_vacunacion   }}</td>
+                                                            <td>{{ historico.proximo_antiparasitario }}</td>
+                                                            <td>{{ historico.fecha_proxima_aplicacion }}</td>
+                                                        </tr>                                                
+                                                    {% endif %}
                                                 {% endfor %}
                                             </tbody>
                                         </table>

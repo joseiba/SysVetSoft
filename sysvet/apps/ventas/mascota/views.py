@@ -277,6 +277,8 @@ def edit_ficha_medica(request,id):
             if formVacuna.is_valid() or formConsulta.is_valid() or formAntiparasitario.is_valid():
                 proxima_vacuna = request.POST.get('proxima_vacunacion')   
                 fecha_proxima_vacuna = request.POST.get('fecha_proxima_aplicacion')
+                antiparasitario_aplicado = request.POST.get('antipara')
+                proximo_antiparasitario_aplicado = request.POST.get('proximo_antipara')
                 consulta = formConsulta.save(commit=False)
                 vacuna = formVacuna.save(commit=False)
                 antiparasitario = formAntiparasitario.save(commit=False)
@@ -285,7 +287,7 @@ def edit_ficha_medica(request,id):
                 vacuna.save()
                 antiparasitario.save()
                 consulta.save()
-                historicoFichaMedica = create_historico_ficha_medica(id, proxima_vacuna)
+                historicoFichaMedica = create_historico_ficha_medica(id, proxima_vacuna, antiparasitario_aplicado, proximo_antiparasitario_aplicado)
 
                 messages.success(request, 'Se ha editado correctamente!')
                 return redirect('/mascota/editFichaMedica/' + str(id))
@@ -320,20 +322,19 @@ def list_historial(request, id):
 
     return render(request, "ventas/mascota/ficha_medica/list_historico.html", context)
 
-
-def create_historico_ficha_medica(id, proxima_vacunacion):
+def create_historico_ficha_medica(id, proxima_vacunacion, antiparasitario_aplicado, proximo_antiparasitario_aplicado):
     historico = HistoricoFichaMedica()
     try:
         historico_anteriores = HistoricoFichaMedica.objects.all()
         if historico_anteriores is not None:
             for hist in historico_anteriores:
-                print("clear")
                 hist.fecha_proxima_aplicacion = None
                 hist.save()
-        try:
-            proxima_vacuna = TipoVacuna.objects.get(id=proxima_vacunacion)
-        except Exception as e:
-            print(e)
+        if proxima_vacunacion != 'Seleccione la proxima vacuna':
+            try:
+                proxima_vacuna = TipoVacuna.objects.get(id=proxima_vacunacion)
+            except Exception as e:
+                print(e)
         mascota = Mascota.objects.get(id=id)
         fichaMedicaGet = FichaMedica.objects.get(id_mascota=id)
         vacunaGet = Vacuna.objects.get(id_ficha_medica=fichaMedicaGet.id)
@@ -348,15 +349,45 @@ def create_historico_ficha_medica(id, proxima_vacunacion):
 
         historico.fecha_alta = date.strftime("%d/%m/%Y")
         historico.vacuna = vacunaGet.id_vacuna
-        historico.proxima_vacunacion = proxima_vacuna.nombre_vacuna
+        if proxima_vacunacion != 'Seleccione la proxima vacuna':
+            historico.proxima_vacunacion = proxima_vacuna.nombre_vacuna
+        else:
+            historico.proxima_vacunacion = "-"
+
+        if antiparasitario_aplicado != "Buscar":
+            try:
+                producto_anti = Producto.objects.get(id=antiparasitario_aplicado)
+                producto_anti.stock_total = producto_anti.stock_total - 1
+                producto_anti.stock = producto_anti.stock - 1
+                producto_anti.save()
+                anti_aplicado = producto_anti.nombre_producto
+            except Exception as e:
+                anti_aplicado = "-"
+                print(e)
+        else:
+            anti_aplicado = "-"
+
+        if proximo_antiparasitario_aplicado != "Buscar":
+            try:
+                producto_anti_proximo = Producto.objects.get(id=proximo_antiparasitario_aplicado)
+                producto_anti_proximo.stock_total = producto_anti_proximo.stock_total - 1
+                producto_anti_proximo.stock = producto_anti_proximo.stock - 1
+                producto_anti_proximo.save()
+                anti_proximo_aplicado = producto_anti_proximo.nombre_producto
+            except Exception as e:
+                anti_proximo_aplicado = "-"
+                print(e)
+        else:
+            anti_proximo_aplicado = "-"
+
         historico.diagnostico = consultaGet.diagnostico
         historico.tratamiento = consultaGet.proximo_tratamiento
         historico.proximo_tratamiento = consultaGet.proximo_tratamiento
         historico.medicamento = consultaGet.medicamento
         historico.fecha_aplicacion = date.strftime("%d/%m/%Y")
         historico.fecha_proxima_aplicacion = vacunaGet.fecha_proxima_aplicacion
-        historico.antiparasitario = antiparasitarioGet.antiparasitario
-        historico.proximo_antiparasitario = antiparasitarioGet.proximo_antiparasitario
+        historico.antiparasitario = anti_aplicado
+        historico.proximo_antiparasitario = anti_proximo_aplicado
         historico.peso = mascota.peso
         historico.last_modified = fichaMedicaGet.fecha_create
         historico.id_ficha_medica = id

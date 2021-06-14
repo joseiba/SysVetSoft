@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib import messages
 from django.db.models import Q
 from django.core.paginator import Paginator
+from django.views.decorators.csrf import csrf_exempt
 from datetime import datetime
 
 import json
@@ -376,7 +377,6 @@ def rest_factura_venta_to_producto():
                             
                             prod.save()
                     except Exception as e:
-                        print(e)
                         pass
 
 
@@ -539,13 +539,14 @@ def poner_vencido_producto():
     if produc is not None:
         try:
             for p in produc:
-                fecha_vencimiento_split = p.fecha_vencimiento.split("/")
-                fecha_vencimiento_compare = datetime(int(fecha_vencimiento_split[2]), int(fecha_vencimiento_split[1]), int(fecha_vencimiento_split[0]))
-                if fechaDate > fecha_vencimiento_compare:
-                    p.producto_vencido = "S"
-                    p.save()
+                if p.fecha_vencimiento is not None:
+                    fecha_vencimiento_split = p.fecha_vencimiento.split('/')
+                    fecha_vencimiento_compare = datetime(int(fecha_vencimiento_split[2]), int(fecha_vencimiento_split[1]), int(fecha_vencimiento_split[0]))
+                    if fechaDate > fecha_vencimiento_compare:
+                        p.producto_vencido = "S"
+                        p.is_active = "N"
+                        p.save()
         except Exception as e:
-            print(e)
             pass
 
 
@@ -635,7 +636,6 @@ def list_ajustar_historial_inventario(request):
 
 def list_ajuste_inventario_historial_ajax(request):
     query = request.GET.get('busqueda')
-    print(query)
     if query != "":
         inve = Inventario.objects.filter(Q(id_producto__id__icontains=query) | Q(id_producto__nombre_producto__icontains=query) | Q(id_producto__tipo_producto__nombre_tipo__icontains=query))
     else:
@@ -661,3 +661,22 @@ def list_ajuste_inventario_historial_ajax(request):
         'recordsFiltered': total,
     }
     return JsonResponse(response)
+
+
+@csrf_exempt
+def get_producto_antiparasitario(request):
+    data = {}
+    try:
+        term = request.POST['term']
+        if (request.POST['action'] == 'search_products'):
+            data = []
+            prods = Producto.objects.exclude(is_active='N').filter(nombre_producto__icontains=term)[0:10]
+            for p in prods:
+                item = p.obtener_dict()
+                item['id'] = p.id
+                producto_desc = '%s' % (p.nombre_producto)
+                item['text'] = producto_desc
+                data.append(item)    
+    except Exception as e:
+        data['error'] = str(e)
+    return JsonResponse(data, safe=False)
