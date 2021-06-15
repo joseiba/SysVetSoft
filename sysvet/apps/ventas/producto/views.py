@@ -3,13 +3,14 @@ from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib import messages
 from django.db.models import Q
 from django.core.paginator import Paginator
+from django.views.decorators.csrf import csrf_exempt
 from datetime import datetime
 
 import json
 from django.http import JsonResponse
 
 from apps.ventas.producto.forms import TipoProductoForm, DepositoForm, ProductoForm
-from apps.ventas.producto.models import TipoProducto, Deposito, Producto, ProductoStock
+from apps.ventas.producto.models import TipoProducto, Deposito, Producto, ProductoStock, Inventario
 from apps.compras.models import FacturaCompra, FacturaDet
 from apps.ventas.factura.models import FacturaCabeceraVenta, FacturaDetalleVenta
 from apps.configuracion.models import ConfiEmpresa
@@ -329,7 +330,7 @@ def delete_producto(request, id):
     producto = Producto.objects.get(id=id)
     producto.is_active = "N"
     producto.save()
-    return redirect('/producto/list/')
+    return redirect('/producto/listGeneral/')
 
 #Metodo para listar todos los productos
 def add_factura_to_producto():
@@ -348,9 +349,7 @@ def add_factura_to_producto():
                         prod.stock = prod.stock + factDet.cantidad
                         prod.stock_total = prod.stock_total + factDet.cantidad
                         prod.save()
-                        print("entro")
                     except Exception as e:
-                        print(e)
                         pass
 
 def rest_factura_venta_to_producto():
@@ -378,7 +377,6 @@ def rest_factura_venta_to_producto():
                             
                             prod.save()
                     except Exception as e:
-                        print(e)
                         pass
 
 
@@ -461,6 +459,7 @@ def list_productos_general(request):
     add_factura_to_producto()
     rest_factura_venta_to_producto()
     sum_anular_factura_venta_to_producto()
+    poner_vencido_producto()
     return render(request, "ventas/producto/list_producto_general.html")
 
 
@@ -468,11 +467,14 @@ def list_productos_general(request):
 def list_producto_general_ajax(request):
     query = request.GET.get('busqueda')
     if query != "":
-        productos = Producto.objects.exclude(is_active="N").filter(Q(nombre_producto__icontains=query) | Q(codigo_producto__icontains=query)).order_by('-last_modified')        
+        productos = Producto.objects.exclude(is_active="N").filter(Q(id__icontains=query) |Q(nombre_producto__icontains=query)).order_by('-last_modified')        
         productos = productos.exclude(servicio_o_producto="S")
+        productos = productos.exclude(producto_vencido="S")
     else:
         productos = Producto.objects.exclude(is_active="N").order_by('-last_modified')
         productos = productos.exclude(servicio_o_producto="S")
+        productos = productos.exclude(producto_vencido="S")
+
 
     total = productos.count()
 
@@ -494,3 +496,187 @@ def list_producto_general_ajax(request):
         'recordsFiltered': total,
     }
     return JsonResponse(response)
+
+def list_producto_vencido_ajax(request):
+    query = request.GET.get('busqueda')
+    if query != "":
+        productos = Producto.objects.exclude(is_active="N").filter(Q(nombre_producto__icontains=query) | Q(id__icontains=query)).order_by('-last_modified')        
+        productos = productos.exclude(servicio_o_producto="S")
+        productos = productos.exclude(producto_vencido="N")
+    else:
+        productos = Producto.objects.exclude(is_active="N").order_by('-last_modified')
+        productos = productos.exclude(servicio_o_producto="S")
+        productos = productos.exclude(producto_vencido="N")
+
+
+    total = productos.count()
+
+    _start = request.GET.get('start')
+    _length = request.GET.get('length')
+    if _start and _length:
+        start = int(_start)
+        length = int(_length)
+        page = math.ceil(start / length) + 1
+        per_page = length
+
+        productos = productos[start:start + length]
+
+    data =[{'id': p.id, 'nombre': p.nombre_producto, 'descripcion': p.descripcion, 'stock_vencido': p.stock_total, 
+    'fecha_vencimiento': p.fecha_vencimiento} for p in productos]        
+        
+    response = {
+        'data': data,
+        'recordsTotal': total,
+        'recordsFiltered': total,
+    }
+    return JsonResponse(response)
+
+def poner_vencido_producto():
+    produc = Producto.objects.exclude(is_active="N").all()
+    produc = produc.exclude(producto_vencido="S").all()
+    today = datetime.now()
+    fechaDate = datetime(today.year, today.month, today.day)
+    if produc is not None:
+        try:
+            for p in produc:
+                if p.fecha_vencimiento is not None:
+                    fecha_vencimiento_split = p.fecha_vencimiento.split('/')
+                    fecha_vencimiento_compare = datetime(int(fecha_vencimiento_split[2]), int(fecha_vencimiento_split[1]), int(fecha_vencimiento_split[0]))
+                    if fechaDate > fecha_vencimiento_compare:
+                        p.producto_vencido = "S"
+                        p.is_active = "N"
+                        p.save()
+        except Exception as e:
+            pass
+
+
+
+# Ajuste de Inventario
+@login_required()
+@permission_required('producto.view_inventario')
+def list_ajustar_inventario(request):
+    add_factura_to_producto()
+    rest_factura_venta_to_producto()
+    sum_anular_factura_venta_to_producto()
+    poner_vencido_producto()
+    return render(request, "ventas/producto/inventario/list_ajuste_inventario.html")
+
+
+def list_ajuste_inventario_ajax(request):
+    query = request.GET.get('busqueda')
+    if query != "":
+        productos = Producto.objects.exclude(is_active="N").filter(Q(id__icontains=query) |Q(nombre_producto__icontains=query) |Q(tipo_producto__nombre_tipo__icontains=query)).order_by('-last_modified')        
+        productos = productos.exclude(servicio_o_producto="S")
+        productos = productos.exclude(producto_vencido="S")
+    else:
+        productos = Producto.objects.exclude(is_active="N").order_by('-last_modified')
+        productos = productos.exclude(servicio_o_producto="S")
+        productos = productos.exclude(producto_vencido="S")
+
+
+    total = productos.count()
+
+    _start = request.GET.get('start')
+    _length = request.GET.get('length')
+    if _start and _length:
+        start = int(_start)
+        length = int(_length)
+        page = math.ceil(start / length) + 1
+        per_page = length
+
+        productos = productos[start:start + length]
+
+    data =[{'id': p.id, 'nombre': p.nombre_producto, 'descripcion': p.descripcion, 'stock_total': p.stock_total,
+            'stock_fisico': 0} for p in productos]        
+        
+    response = {
+        'data': data,
+        'recordsTotal': total,
+        'recordsFiltered': total,
+    }
+    return JsonResponse(response)
+
+@login_required()
+@permission_required('producto.add_inventario')
+def add_ajuste_inventario(request):
+    mensaje = ""
+    if request.method == 'POST' and request.is_ajax():
+        try:
+            ajustes_dict = json.loads(request.POST['ajuste'])
+            try:
+                for i in ajustes_dict['products']:
+                    inve = Inventario()
+                    producto_id = Producto.objects.get(id=i['codigo_producto'])
+                    inve.id_producto = producto_id
+                    inve.stock_fisico = int(i['cantidad'])
+                    inve.stock_viejo = producto_id.stock_total
+                    inve.diferencia = int(i['cantidad']) - producto_id.stock_total 
+                    producto_id.stock_total = int(i['cantidad'])
+                    producto_id.stock = int(i['cantidad'])
+                    inve.save()
+                    producto_id.save()
+                response = {'mensaje':mensaje }
+                return JsonResponse(response)
+            except Exception as e:
+                mensaje = 'error'
+                response = {'mensaje':mensaje }
+                return JsonResponse(response)
+        except Exception as e:
+            mensaje = 'error'
+            response = {'mensaje':mensaje }
+            return JsonResponse(response)
+    return render(request, 'ventas/producto/inventario/add_ajuste_inventario.html')
+
+#Historico Inventario
+@login_required()
+@permission_required('producto.view_inventario')
+def list_ajustar_historial_inventario(request):
+    return render(request, "ventas/producto/inventario/list_historial_ajuste.html")
+
+
+def list_ajuste_inventario_historial_ajax(request):
+    query = request.GET.get('busqueda')
+    if query != "":
+        inve = Inventario.objects.filter(Q(id_producto__id__icontains=query) | Q(id_producto__nombre_producto__icontains=query) | Q(id_producto__tipo_producto__nombre_tipo__icontains=query))
+    else:
+        inve = Inventario.objects.all()
+
+    total = inve.count()
+
+    _start = request.GET.get('start')
+    _length = request.GET.get('length')
+    if _start and _length:
+        start = int(_start)
+        length = int(_length)
+        page = math.ceil(start / length) + 1
+        per_page = length
+
+        inve = inve[start:start + length]
+
+    data =[{'id': p.id_producto.id, 'nombre': p.id_producto.nombre_producto, 'descripcion': p.id_producto.descripcion, 'stock_total': p.stock_viejo,
+            'stock_fisico': p.stock_fisico, 'diferencia': p.diferencia ,'fecha_ajuste': p.fecha_alta} for p in inve]        
+    response = {
+        'data': data,
+        'recordsTotal': total,
+        'recordsFiltered': total,
+    }
+    return JsonResponse(response)
+
+
+@csrf_exempt
+def get_producto_antiparasitario(request):
+    data = {}
+    try:
+        term = request.POST['term']
+        if (request.POST['action'] == 'search_products'):
+            data = []
+            prods = Producto.objects.exclude(is_active='N').filter(nombre_producto__icontains=term)[0:10]
+            for p in prods:
+                item = p.obtener_dict()
+                item['id'] = p.id
+                producto_desc = '%s' % (p.nombre_producto)
+                item['text'] = producto_desc
+                data.append(item)    
+    except Exception as e:
+        data['error'] = str(e)
+    return JsonResponse(data, safe=False)

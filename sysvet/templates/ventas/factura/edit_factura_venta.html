@@ -37,7 +37,6 @@
             <div class="col-md-12 col-sm-12">
                 <div class="x_panel">
                     <div class="x_title">
-                        <h2>Realizar Factura</h2>
                         <ul class="nav navbar-right panel_toolbox">
                             <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
                             </li>
@@ -53,7 +52,6 @@
                                 <div class="row">
                                     <div class="col-lg-9">
                                         <div class="card">
-                                            <h6 class="card-header">Detalle Factura</h6>
                                             <div class="card-body">
                                                 <!--<div class="form-group">
                                                     <label> <strong> Buscar:</strong> </label>
@@ -91,7 +89,7 @@
                                             <h6 class="card-header">Factura</h6>
                                             <div class="card-body">
                                                 <div class="form-group">
-                                                    <label><strong>Timbrado:</strong></label>
+                                                    <label><strong>Timbrado</strong></label>
                                                     <div class="field item">
                                                         <input class="form-control" type="text"
                                                             value="{{confi.nro_timbrado}}" id="nro_timbrado"
@@ -100,7 +98,7 @@
 
                                                 </div>
                                                 <div class="form-group">
-                                                    <label><strong>Fecha Inicio Timbrado:</strong></label>
+                                                    <label><strong>Fecha Inicio Timbrado</strong></label>
                                                     <div class="field item">
                                                         <input class="form-control" type="text"
                                                             value="{{confi.fecha_inicio_timbrado}}"
@@ -110,7 +108,7 @@
 
                                                 </div>
                                                 <div class="form-group">
-                                                    <label><strong>Fecha Fin Timbrado:</strong></label>
+                                                    <label><strong>Fecha Fin Timbrado</strong></label>
                                                     <div class="field item">
                                                         <input class="form-control" type="text"
                                                             value="{{confi.fecha_fin_timbrado}}" id="fecha_fin_timbrado"
@@ -119,7 +117,7 @@
 
                                                 </div>
                                                 <div class="form-group">
-                                                    <label><strong>Ruc Empresa:</strong></label>
+                                                    <label><strong>Ruc Empresa</strong></label>
                                                     <div class="field item">
                                                         <input class="form-control" type="text"
                                                             value="{{confi.ruc_empresa}}" id="ruc_empresa"
@@ -127,7 +125,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
-                                                    <label><strong>Número Factura:</strong></label>
+                                                    <label><strong>Número Factura</strong></label>
 
                                                     <div class="field item">
                                                         {{ form.nro_factura }}
@@ -135,7 +133,9 @@
 
                                                 </div>
                                                 <div class="form-group">
-                                                    <label><strong>Cliente:</strong></label>
+                                                    <label><strong>Cliente<span
+                                                        class="required" style="color: red;" data-toggle="tooltip" data-placement="top"
+                                                        title="Campo Obligatorio">*</span></strong></label>
                                                     <div class="field item">
                                                         {{ form.id_cliente }}
                                                     </div>

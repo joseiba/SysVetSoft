@@ -21,11 +21,24 @@ from apps.configuracion.models import ConfiEmpresa, Servicio
 from apps.ventas.producto.views import Producto
 from apps.ventas.cliente.models import Cliente
 from apps.utiles.views import reset_nro_timbrado
+from apps.caja.models import Caja
+
+date = datetime.now()
+today = date.strftime("%d/%m/%Y")
+
 # Create your views here.
 @login_required()
 @permission_required('factura.view_facturacabeceraventa')
 def list_factura_ventas(request):
-    return render(request, 'ventas/factura/list_facturas_ventas.html')
+    caja_abierta = Caja.objects.exclude(apertura_cierre="C").filter(fecha_alta=today)
+    print(caja_abierta.count())
+    if caja_abierta.count() > 0:
+        abierto = "S"
+    else:
+        abierto = "N"
+    print(abierto)
+    context = {'caja_abierta' : abierto}
+    return render(request, 'ventas/factura/list_facturas_ventas.html', context)
 
 def list_facturas__ventas_ajax(request):
     query = request.GET.get('busqueda')
@@ -116,6 +129,7 @@ def add_factura_venta(request):
                 factura.nro_factura = factura_dict['nro_factura']
                 factura.nro_timbrado = confi.nro_timbrado
                 factura.ruc_empresa = confi.ruc_empresa
+                factura.contado_pos = factura_dict['contado_pos']
                 factura.fecha_inicio_timbrado = confi.fecha_inicio_timbrado
                 factura.fecha_fin_timbrado = confi.fecha_fin_timbrado
                 cliente_id = Cliente.objects.get(id=factura_dict['cliente'])
@@ -135,6 +149,7 @@ def add_factura_venta(request):
                 response = {'mensaje':mensaje }
                 return JsonResponse(response)
             except Exception as e:
+                print(e)
                 mensaje = 'error'
                 response = {'mensaje':mensaje }
                 return JsonResponse(response)

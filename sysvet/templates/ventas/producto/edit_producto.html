@@ -114,6 +114,7 @@
 
                                 </div>
                             </div>
+
                             <div class="form-group field item">
                                 <label class="col-form-label col-md-3 col-sm-3  label-align">Deposito
                                     <span class="required">*</span>
@@ -196,8 +197,56 @@
         }).prop('checked', false);
 
         $("#datepicker").datepicker({
-            minDate: "+0D",
+            minDate: "-1D",
         });
+
+        var tipo = $("#tipo_producto").val()
+            if (tipo !== "" && tipo != null) {
+                $.ajax({
+                    type: 'GET',
+                    url: '/tipoProducto/vence_si_no/',
+                    data: { 'tipo': tipo },
+                    success: function (response) {
+                        if (response.mensaje == 'S') {
+                            $(".fecha_vencimiento").prop("disabled", false)
+                            $("#lote_id").prop("disabled", false)
+
+                        } else {
+                            $(".fecha_vencimiento").prop("disabled", true)
+                            $("#lote_id").prop("disabled", true)
+                        }
+                    }
+                })
+            } else {
+                $(".fecha_vencimiento").prop("disabled", true)
+                $("#lote_id").prop("disabled", true)
+
+            }
+
+        $("#tipo_producto").change(function () {
+            var tipo = $("#tipo_producto").val()
+            if (tipo !== "" && tipo != null) {
+                $.ajax({
+                    type: 'GET',
+                    url: '/tipoProducto/vence_si_no/',
+                    data: { 'tipo': tipo },
+                    success: function (response) {
+                        if (response.mensaje == 'S') {
+                            $(".fecha_vencimiento").prop("disabled", false)
+                            $("#lote_id").prop("disabled", false)
+
+                        } else {
+                            $(".fecha_vencimiento").prop("disabled", true)
+                            $("#lote_id").prop("disabled", true)
+                        }
+                    }
+                })
+            } else {
+                $(".fecha_vencimiento").prop("disabled", true)
+                $("#lote_id").prop("disabled", true)
+
+            }
+        })
 
         $("input[name='precio_venta'], input[name='precio_compra']").change(function () {
             var precio_venta = $("input[name='precio_venta']").val()

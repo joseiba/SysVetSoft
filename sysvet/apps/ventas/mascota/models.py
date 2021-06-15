@@ -6,6 +6,8 @@ from django.core.files.uploadedfile import InMemoryUploadedFile
 from io import StringIO, BytesIO
 
 from apps.ventas.cliente.models import Cliente
+from apps.configuracion.models import TipoVacuna
+from apps.ventas.producto.models import Producto
 
 import sys
 
@@ -156,9 +158,10 @@ class Vacuna(models.Model):
     Args:
         models ([Vacuna]): [Contiene la informacion de la Vacuna]                
     """ 
-    vacuna = models.CharField(max_length = 200, default = '-', null = True, blank = True)
-    tipo_vacuna = models.CharField(max_length = 200, default = '-', null = True, blank = True)
-    proxima_vacunacion = models.CharField(max_length = 200, default = '-', null = True, blank = True)
+    proxima_vacuna = models.CharField(max_length=500,null = True, blank = True)
+    id_vacuna = models.ForeignKey(TipoVacuna, on_delete=models.CASCADE, null=True, blank=True)
+    fecha_aplicacion = models.CharField(max_length=500, null = True, blank = True)
+    fecha_proxima_aplicacion = models.CharField(max_length=500,null = True, blank = True)
     id_ficha_medica = models.ForeignKey('FichaMedica', on_delete=models.CASCADE, null=False)
 
     class Meta:
@@ -179,9 +182,7 @@ class Consulta(models.Model):
     tratamiento = models.CharField(max_length = 500, default = '-', null = True, blank = True)
     proximo_tratamiento = models.CharField(max_length = 500, default = '-', null = True, blank = True)
     medicamento = models.CharField(max_length = 500, default = '-', null = True, blank = True)
-    fecha_ultima_consulta = models.DateField(null = True, blank = True)
-    fecha_proxima_consulta = models.DateField(null = True, blank = True)
-    id_ficha_medica = models.ForeignKey('FichaMedica', on_delete=models.CASCADE, null=False)
+    id_ficha_medica = models.ForeignKey('FichaMedica', on_delete=models.CASCADE, null=True)
     
     class Meta:
         verbose_name = "Consulta"
@@ -199,7 +200,7 @@ class Antiparasitario(models.Model):
     """ 
     antiparasitario = models.CharField(max_length = 500, default = '-', null = True, blank = True)
     proximo_antiparasitario= models.CharField(max_length = 500, default = '-', null = True, blank = True)
-    id_ficha_medica = models.ForeignKey('FichaMedica', on_delete=models.CASCADE, null=False)
+    id_ficha_medica = models.ForeignKey('FichaMedica', on_delete=models.CASCADE, null=True)
     
     class Meta:
         verbose_name = "Antiparasitario"
@@ -215,18 +216,18 @@ class HistoricoFichaMedica(models.Model):
     Args:
         models ([HistoricoFichaMedica]): [Contiene la informacion del historico de la ficha medica]                        
     """
-    vacuna = models.CharField(max_length = 200, default = '-', null = True, blank = True)
-    tipo_vacuna = models.CharField(max_length = 200, default = '-', null = True, blank = True)
-    proxima_vacunacion = models.CharField(max_length = 200, default = '-', null = True, blank = True)
+    vacuna = models.ForeignKey(TipoVacuna, on_delete=models.CASCADE, null=True, blank=True)
+    proxima_vacunacion = models.CharField(max_length = 500, default = '-', null = True, blank = True)
     diagnostico = models.CharField(max_length = 500, default = '-', null = True, blank = True)
     tratamiento = models.CharField(max_length = 500, default = '-', null = True, blank = True)
     proximo_tratamiento = models.CharField(max_length = 500, default = '-', null = True, blank = True)
     medicamento = models.CharField(max_length = 500, default = '-', null = True, blank = True)
-    fecha_ultima_consulta = models.DateField(null = True, blank = True)
-    fecha_proxima_consulta = models.DateField(null = True, blank = True)
+    fecha_aplicacion = models.CharField(max_length=500,null = True, blank = True)
+    fecha_proxima_aplicacion = models.CharField(max_length=500,null = True, blank = True)
     antiparasitario = models.CharField(max_length = 500, default = '-', null = True, blank = True)
     proximo_antiparasitario = models.CharField(max_length = 500, default = '-', null = True, blank = True)
     peso = models.CharField(max_length = 200,default = '-', null = True, blank = True)
+    fecha_alta = models.CharField(max_length=500,null = True, blank = True)
     last_modified = models.DateTimeField(auto_now=True, blank=True)
     id_ficha_medica = models.IntegerField(null = True, blank = True)
 

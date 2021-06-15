@@ -84,16 +84,6 @@
                                 </div>
                             </div>
                         </div>-->
-
-                        <!-- <div>
-                            <div class="d-flex">
-                                <p>Ordenar por:</p>
-                                <select class="form-select form-select-lg mb-3" aria-label="Default select example">
-                                    <option selected value="">Nombre de cliente</option>
-                                    <option value="">Cédula del cliente</option>
-                                </select>
-                            </div>
-                        </div>-->
                     </div>
                     
                     <div class="x_panel">
@@ -116,21 +106,27 @@
                                                 <tr class="" style="background-color: #2a3f54; font-size: medium;">
                                                     <th style="color: white;">Fecha</th>
                                                     <th style="color: white;">Vacuna</th>
-                                                    <th style="color: white;">Tipo de Vacuna</th>
                                                     <th style="color: white;">Antiparasitario</th>
-                                                    <th style="color: white;">Peso(Kg)</th>
+                                                    <th style="color: white;">Peso</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 {% for historico in page_obj %}
-                                                <tr style="font-size: medium;">
-                                                    <td>{{ historico.fecha_ultima_consulta }}</td>
-                                                    <td>{{ historico.vacuna }}</td>
-                                                    <td>{{ historico.tipo_vacuna }}</td>
-                                                    <td>{{ historico.antiparasitario }}</td>
-                                                    <td>{{ historico.peso }}</td>
-                                                </tr>
-                                                {% endfor %}
+                                                    <tr style="font-size: medium;">
+                                                        <td>{{ historico.fecha_alta }}</td>
+                                                        <td>
+                                                            
+                                                            {% if historico.vacuna != None %}
+                                                                {{ historico.vacuna }}  
+                                                            {% else %}
+                                                                -
+                                                            {% endif %}
+                                                                
+                                                        </td>
+                                                        <td>{{ historico.antiparasitario }}</td>
+                                                        <td>{{ historico.peso }}</td>
+                                                    </tr> 
+                                                {% endfor %}                                                
                                             </tbody>
                                         </table>
                                     </div>
@@ -162,20 +158,18 @@
                                                 <tr class="" style="background-color: #2a3f54; font-size: medium;">
                                                     <th style="color: white;">Próxima Vacuna</th>
                                                     <th style="color: white;">Próximo Antiparasitario</th>
-                                                    <th style="color: white;">Próximo Tratamiento</th>
                                                     <th style="color: white;">Fecha</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 {% for historico in page_obj %}
-                                                {% if  historico.fecha_proxima_consulta != None %}
-                                                <tr style="font-size: medium;">
-                                                    <td>{{ historico.proxima_vacunacion   }}</td>
-                                                    <td>{{ historico.proximo_antiparasitario }}</td>
-                                                    <td>{{ historico.proximo_tratamiento }}</td>
-                                                    <td>{{ historico.fecha_proxima_consulta }}</td>
-                                                </tr>
-                                                {% endif %}
+                                                    {% if  historico.fecha_proxima_aplicacion != None %}
+                                                        <tr style="font-size: medium;">
+                                                            <td>{{ historico.proxima_vacunacion   }}</td>
+                                                            <td>{{ historico.proximo_antiparasitario }}</td>
+                                                            <td>{{ historico.fecha_proxima_aplicacion }}</td>
+                                                        </tr>                                                
+                                                    {% endif %}
                                                 {% endfor %}
                                             </tbody>
                                         </table>

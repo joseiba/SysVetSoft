@@ -154,20 +154,12 @@
 
                     <div class="x_content">
                         <div class="row">
+                            
                             {% for mascota in page_obj %}
                             <div class="col-12 col-md-6 col-lg-4 col-xl-3 mb-4">
                                 <div class="card card-pets">
                                     <div class="card-img-div text_align_center">
-                                        <!--<div>
-                                            <i class="fas fa-ellipsis-v edit-property float-right" onclick="showHide()"></i>
-                                        </div>
-                                        <div class="card-list card-option float-right" id="option-pets"
-                                            style="display: none;">
 
-                                            <a class="dropdown-item py-2">Editar Mascota</a>
-                                            <a class="dropdown-item py-2">
-                                                Actualizar Ficha Médica</a>
-                                        </div>-->
                                         <div class="">
                                             <img class="card-img-top rd-card-img" src="{{ mascota.get_profile}} "
                                                 alt="pets profile image"
@@ -189,7 +181,7 @@
                                             <p class="text-uppercase text_align_center m-0">{{ mascota.id_raza.nombre_raza }}</p>
                                         </div>
                                         <div class="status">
-                                            <p class="text-uppercase text_align_center">{{ mascota.peso}}kg</p>
+                                            <p class="text-uppercase text_align_center">{{ mascota.peso}}</p>
                                         </div>
                                     </div>
 
@@ -212,7 +204,11 @@
                                     </div>
                                 </div>
                             </div>
+                            {% empty %}
+                            <h2 style="text-align: center;">No se ha a registrado ninguna mascota!</h2>
+
                             {% endfor %}
+
                         </div>
                     </div>
                     <div class="clearfix"></div>

@@ -19,8 +19,10 @@ from apps.compras.models import Proveedor, Pedido, FacturaCompra, FacturaDet, Pa
 from apps.compras.forms import ProveedorForm, PedidoForm, FacturaCompraForm, FacturaDetalleForm
 from apps.ventas.producto.models import Producto
 from apps.configuracion.models import ConfiEmpresa
+from apps.caja.models import Caja
 
-
+date = datetime.now()
+today = date.strftime("%d/%m/%Y")
 # Create your views here.
 @login_required()
 @permission_required('compras.add_proveedor')
@@ -125,8 +127,7 @@ def add_pedido():
 def list_pedido(request):
     add_pedido()
     pedi = Pedido.objects.exclude(pedido_cargado="S").all()
-    context = {'pedidos': pedi}
-    return render(request, "compras/pedidos/list_pedidos.html")
+    return render(request, "compras/pedidos/list_pedidos.html", context)
 
 @login_required()
 def list_pedido_ajax(request):
@@ -227,7 +228,13 @@ def add_factura_compra(request):
 @permission_required('compras.view_pedidocabecera')
 def list_pedido_compra(request):
     add_pedido()
-    return render(request, 'compras/pedidos/list_pedidos_compras.html')
+    caja_abierta = Caja.objects.exclude(apertura_cierre="C").filter(fecha_alta=today)
+    if caja_abierta.count() > 0:
+        abierto = "S"
+    else:
+        abierto = "N"
+    context = {'caja_abierta' : abierto}
+    return render(request, 'compras/pedidos/list_pedidos_compras.html', context)
 
 def list_pedido_compra_ajax(request):
     query = request.GET.get('busqueda')
@@ -260,7 +267,7 @@ def list_pedido_compra_ajax(request):
 @login_required()
 @permission_required('compras.add_pedidocabecera')
 def add_pedido_compra(request):
-    pedidos = Pedido.objects.exclude(pedido_cargado='S').all()    
+    pedidos = Pedido.objects.exclude(pedido_cargado='S').all()
     data = {}
     mensaje = ""
     if request.method == 'POST' and request.is_ajax():    
@@ -446,7 +453,6 @@ def get_detalle_factura(id):
         detalles = FacturaDet.objects.filter(id_factura=id)
         for i in detalles:
             item = i.id_pedido.obtener_dict()
-            print(i.id_pedido.id)
             item['description'] = i.descripcion
             item['cantidad'] = i.cantidad
             data.append(item)
@@ -458,11 +464,16 @@ def get_detalle_factura(id):
 @permission_required('compras.view_facturacompra')
 def list_factura_compra(request):
     add_factura_compra()
-    return render(request, 'compras/factura/list_facturas.html')
+    caja_abierta = Caja.objects.exclude(apertura_cierre="C").filter(fecha_alta=today)
+    if caja_abierta.count() > 0:
+        abierto = "S"
+    else:
+        abierto = "N"
+    context = {'caja_abierta' : abierto}
+    return render(request, 'compras/factura/list_facturas.html', context)
 
 def list_facturas_ajax(request):
     query = request.GET.get('busqueda')
-    print(query)
     if query != "":
         factCompra = FacturaCompra.objects.exclude(is_active="N").filter(Q(nro_factura__icontains=query) | Q(id_proveedor__ruc_proveedor__icontains=query) | Q(id_proveedor__nombre_proveedor__icontains=query)).order_by('last_modified')
     else:
@@ -505,12 +516,13 @@ def search_pediddos_factura(request):
         term = request.POST['term']
         if (request.method == 'POST') and (request.POST['action'] == 'search_products'):
             data = []
-            prods = Pedido.objects.exclude(pedido_cargado='S').filter(id_producto__nombre_producto__icontains=term)[0:10]
+            prods = Producto.objects.exclude(is_active='N').all()
+            prods = prods.exclude(servicio_o_producto="S").filter(nombre_producto__icontains=term)[0:10]
             for p in prods:
                 item = p.obtener_dict()
                 item['id'] = p.id
-                producto_desc = '%s %s' % ('Producto: ' + p.id_producto.nombre_producto, 
-                                        'Descripción: ' + p.id_producto.descripcion)
+                producto_desc = '%s %s' % ('Producto: ' + p.nombre_producto ,
+                                        'Descripción: ' + p.descripcion)
                 item['text'] = producto_desc
                 data.append(item)
     except Exception as e:
@@ -577,7 +589,6 @@ def tabla_report(pdf, y, id):
     ))
 
     position = int(((pedido_detalle.count() + count_detalle) * 50 ) / (2))
-    print(position)
     pdf.setFont("Helvetica", 12)
     pdf.drawString(480, ((680 - position)) , u"Total: ",)
     #Establecemos el tamaño de la hoja que ocupará la tabla 

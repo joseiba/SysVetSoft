@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import Servicio, Empleado, ConfiEmpresa
+from apps.configuracion.models import Servicio, Empleado, ConfiEmpresa, TipoVacuna
 
 class ConfiEmpresaForm(forms.ModelForm):
     class Meta:
@@ -65,3 +65,23 @@ class EmpleadoForm(forms.ModelForm):
 			'disponible' : forms.CheckboxInput(attrs={'class':'form-control', 'type': 'checkbox','name': 'disponible'}),
             'id_servicio' : forms.Select(attrs={'class':'form-control', 'id': 'id_servicio','required':'required' ,'name':'id_servicio'}),        
 		}
+
+
+class TipoVacunaForm(forms.ModelForm):
+    """[summary]
+
+    Args:
+        forms ([TipoVacunaForm]): [Formulario de vacunas]
+    """    
+    class Meta:
+        model = TipoVacuna
+        fields = '__all__'        
+        widgets = {
+            'id_producto' : forms.Select(attrs={'class':'form-control', 'id': 'id_producto' ,'name':'id_producto', 'readonly': 'readonly'}),
+            'nombre_vacuna' : forms.TextInput(attrs={'class':'form-control', 'name': 'nombre_vacuna', 'placeholder': 'Vacuna Dosis', 'required': 'required','autocomplete': 'off','onkeyup':'replaceCaratect(this)'}),
+            'periodo_aplicacion' : forms.TextInput(attrs={'class':'form-control', 'name': 'periodo_aplicacion', 'placeholder': 'Periodo de Aplicacion', 
+                'required': 'required','autocomplete': 'off'  ,'onkeyup':'replaceABC(this)'})
+		}
+
+
+

@@ -120,7 +120,9 @@ queryset = ["user",
 "facturacompra",
 "proveedor",
 "pedidocabecera",
-"facturacabeceraventa"]
+"facturacabeceraventa",
+"inventario",
+"tipovacuna"]
 
 class GroupForm(ModelForm):
     def __init__(self, *args, **kwargs):
