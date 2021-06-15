@@ -2,8 +2,9 @@ import json
 from django.shortcuts import render
 from django.http import JsonResponse
 
-from apps.utiles.models import Timbrado
-from apps.ventas.factura.models import FacturaCabeceraVenta
+from apps.utiles.models import Timbrado, ProductoVendido
+from apps.ventas.factura.models import FacturaCabeceraVenta, FacturaDetalleVenta
+from apps.ventas.producto.models import Producto
 
 # Create your views here.
 
@@ -46,3 +47,29 @@ def validate_nro_timbrado(request):
     except Exception as e:
         response = {"mensaje": mensaje}
         return JsonResponse(response)
+
+
+def cargar_productos_vendidos():
+    facturaVenta = FacturaCabeceraVenta.exclude(factura_anulada="S").all()
+    try:
+        if facturaVenta is not None:
+            for fv in facturaVenta:
+                facturaDetalle = FacturaDetalleVenta.objects.filter(id_factura_venta=fv.id)
+                for factDet in facturaDetalle:
+                    if factDet.tipo != 'S':
+                        try:
+                            produc = ProductoVendido.objects.get(id_producto=factDet.id_producto.id)
+                            produc.cantidad_vendida_total += factDet.cantidad
+                            produc.save()
+                        except Exception as e:
+                            produc = ProductoVendido()
+                            pro_id = Producto.objects.get(id=factDet.id_producto.id)
+                            produc.id_producto = pro_id
+                            produc.cantidad_vendida_total = factDet.cantidad
+                            produc.save()
+                            print(e)
+    except Exception as e:
+        print(e)
+        pass
+    
+                
