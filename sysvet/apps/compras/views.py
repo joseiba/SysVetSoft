@@ -279,19 +279,21 @@ def add_pedido_compra(request):
                 pedido_cabecera_id = PedidoCabecera.objects.get(id=pedidoCabecera.id)
                 for i in pedido_dict['products']:
                     pedido_detalle = PedidoDetalle()
-                    pedido_detalle.id_pedido_cabecera = pedido_cabecera_id                   
-                    pedido_detalle_id = Pedido.objects.get(id=i['codigo_producto'])
-                    pedido_detalle.id_pedido =pedido_detalle_id
+                    pedido_detalle.id_pedido_cabecera = pedido_cabecera_id
+                    producto_id = Producto.objects.get(id=i['codigo_producto'])
+                    pedido_detalle.id_producto = producto_id
                     pedido_detalle.cantidad = int(i['cantidad'])
                     pedido_detalle.descripcion = i['description']
                     pedido_detalle.save()
                 response = {'mensaje':mensaje }
                 return JsonResponse(response)
             except Exception as e:
+                print(e)
                 mensaje = 'error'
                 response = {'mensaje':mensaje }
                 return JsonResponse(response)
         except Exception as e:
+            print(e)
             mensaje = 'error'
             response = {'mensaje':mensaje }
         return JsonResponse(response)
@@ -313,8 +315,8 @@ def edit_pedido_compra(request, id):
                 for i in pedido_dict['products']:
                     pedido_detalle = PedidoDetalle()
                     pedido_detalle.id_pedido_cabecera = pedidoCabecera                   
-                    pedido_detalle_id = Pedido.objects.get(id=i['codigo_producto'])
-                    pedido_detalle.id_pedido =pedido_detalle_id
+                    producto_id = Producto.objects.get(id=i['codigo_producto'])
+                    pedido_detalle.id_producto = producto_id
                     pedido_detalle.cantidad = int(i['cantidad'])
                     pedido_detalle.descripcion = i['description']
                     pedido_detalle.save()
@@ -333,13 +335,13 @@ def edit_pedido_compra(request, id):
     
 def get_pedido_list():
     data = []
-    pedidos = Pedido.objects.exclude(pedido_cargado='S').all()
-    pedidos = pedidos.exclude(is_active="N")
-    for i in pedidos:
+    produc = Producto.objects.exclude(is_active="N").all()
+
+    for i in produc:
         item = i.obtener_dict()
         item['id'] = i.id
-        producto_desc = '%s %s' % ('Producto: ' + i.id_producto.nombre_producto, 
-                                'Descripción: ' + i.id_producto.descripcion)
+        producto_desc = '%s %s' % ('Producto: ' + i.nombre_producto, 
+                                'Descripción: ' + i.descripcion)
         item['text'] = producto_desc
 
         data.append(item) 
@@ -351,7 +353,7 @@ def get_detalle_pedido_compra(id):
     try:
         detalles = PedidoDetalle.objects.filter(id_pedido_cabecera=id)
         for i in detalles:
-            item = i.id_pedido.obtener_dict()
+            item = i.id_producto.obtener_dict()
             item['description'] = i.descripcion
             item['cantidad'] = i.cantidad
             data.append(item)
@@ -366,20 +368,23 @@ def add_factura_compra():
     if pedido_cabecera is not None:
         for pediCabecera in pedido_cabecera:
             try: 
-                factura = FacturaCompra.objects.get(id_pedido_cabecera=pediCabecera.id)
-                factura_id = FacturaCompra.objects.get(id=factura.id)
-                if factura.factura_cargada_pedido == 'N':
-                    factDetalle = FacturaDet.objects.filter(id_factura=factura.id)
-                    factDetalle.delete()
-                    pedido_detalle = PedidoDetalle.objects.filter(id_pedido_cabecera=pediCabecera.id)
-                    for i in pedido_detalle:
-                        detalle = FacturaDet()
-                        detalle.id_factura = factura_id                  
-                        pedido_id = Pedido.objects.get(id=i.id_pedido.id)           
-                        detalle.id_pedido =pedido_id
-                        detalle.cantidad = i.cantidad
-                        detalle.descripcion = i.descripcion
-                        detalle.save()
+                if pediCabecera.pedido_cargado == 'N':
+                    pediCabecera.pedido_cargado = 'S'
+                    pediCabecera.save()
+                    factura = FacturaCompra.objects.get(id_pedido_cabecera=pediCabecera.id)
+                    factura_id = FacturaCompra.objects.get(id=factura.id)
+                    if factura.factura_cargada_pedido == 'N':
+                        factDetalle = FacturaDet.objects.filter(id_factura=factura.id)
+                        factDetalle.delete()
+                        pedido_detalle = PedidoDetalle.objects.filter(id_pedido_cabecera=pediCabecera.id)
+                        for i in pedido_detalle:
+                            detalle = FacturaDet()
+                            detalle.id_factura = factura_id                  
+                            producto_id = Producto.objects.get(id=i.id_producto.id)
+                            detalle.id_producto = producto_id
+                            detalle.cantidad = i.cantidad
+                            detalle.descripcion = i.descripcion
+                            detalle.save()
             except Exception as e:
                 try:        
                     factura = FacturaCompra()
@@ -390,8 +395,8 @@ def add_factura_compra():
                     for i in pedido_detalle:
                         detalle = FacturaDet()
                         detalle.id_factura = factura_id                  
-                        pedido_id = Pedido.objects.get(id=i.id_pedido.id)           
-                        detalle.id_pedido =pedido_id
+                        producto_id = Producto.objects.get(id=i.id_producto.id)
+                        detalle.id_producto = producto_id
                         detalle.cantidad = i.cantidad
                         detalle.descripcion = i.descripcion
                         detalle.save()
@@ -429,18 +434,20 @@ def edit_factura_compra(request, id):
                 for i in factura_dict['products']:
                     detalle = FacturaDet()
                     detalle.id_factura = factura
-                    pedido_id = Pedido.objects.get(id=i['codigo_producto'])
-                    detalle.id_pedido =pedido_id
+                    producto_id = Producto.objects.get(id=i['codigo_producto'])
+                    detalle.id_producto = producto_id
                     detalle.cantidad = int(i['cantidad'])
                     detalle.descripcion = i['description']
                     detalle.save()
                 response = {'mensaje':mensaje }
                 return JsonResponse(response)
             except Exception as e:
+                print(e)
                 mensaje = 'error'
                 response = {'mensaje':mensaje }
                 return JsonResponse(response)
         except Exception as e:
+            print(e)
             mensaje = 'error'
             response = {'mensaje':mensaje }
         return JsonResponse(response)
@@ -452,7 +459,7 @@ def get_detalle_factura(id):
     try:
         detalles = FacturaDet.objects.filter(id_factura=id)
         for i in detalles:
-            item = i.id_pedido.obtener_dict()
+            item = i.id_producto.obtener_dict()
             item['description'] = i.descripcion
             item['cantidad'] = i.cantidad
             data.append(item)

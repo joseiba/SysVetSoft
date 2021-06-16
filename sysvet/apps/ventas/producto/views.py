@@ -343,13 +343,14 @@ def add_factura_to_producto():
                 facDe = FacturaDet.objects.filter(id_factura=factCom.id)
                 for factDet in facDe:
                     try:                        
-                        prod = Producto.objects.get(id=factDet.id_pedido.id_producto.id)
+                        prod = Producto.objects.get(id=factDet.id_producto.id)
                         prod.fecha_compra = date.strftime("%d/%m/%Y")
-                        prod.precio_compra = factDet.id_pedido.id_producto.precio_compra
+                        prod.precio_compra = factDet.id_producto.precio_compra
                         prod.stock = prod.stock + factDet.cantidad
                         prod.stock_total = prod.stock_total + factDet.cantidad
                         prod.save()
                     except Exception as e:
+                        print(e)
                         pass
 
 def rest_factura_venta_to_producto():

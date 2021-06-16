@@ -45,7 +45,7 @@ class Pedido(models.Model):
     pedido_cargado = models.CharField(max_length=2, default="N", blank=True, null=True)
     last_modified = models.DateTimeField(auto_now=True, blank=True)
     is_active = models.CharField(max_length=2, default="S", blank=True, null=True)
-    id_producto = models.ForeignKey(Producto, on_delete=models.PROTECT, null=False)
+    id_producto = models.ForeignKey(Producto, on_delete=models.PROTECT, null=True)
 
     class Meta:
         verbose_name = "Proveedor"
@@ -94,9 +94,10 @@ class PedidoCabecera(models.Model):
 class PedidoDetalle(models.Model):
     """Model definition for Pedido Detalle."""
     id_pedido_cabecera = models.ForeignKey('PedidoCabecera', on_delete=models.CASCADE)
-    id_pedido = models.ForeignKey('Pedido', on_delete=models.CASCADE)
+    id_pedido = models.ForeignKey('Pedido', on_delete=models.CASCADE, null=True)
     cantidad = models.IntegerField()
     descripcion = models.CharField(max_length=800, blank=True)
+    id_producto = models.ForeignKey(Producto, on_delete=models.PROTECT, null=True)
     last_modified = models.DateTimeField(auto_now=True, blank=True)
     class Meta:
         """Meta definition for Pedido Detalle"""
@@ -147,6 +148,7 @@ class FacturaCompra(models.Model):
     total = models.FloatField(default=0)
     factura_cargada_producto = models.CharField(max_length=2, default="N", blank=True, null=True)
     factura_cargada_pedido = models.CharField(max_length=2, default="N", blank=True, null=True)
+    pedidod_to_factura = models.CharField(max_length=2, default="N", blank=True, null=True)
     factura_caja = models.CharField(max_length=2, default="N", blank=True, null=True)
     last_modified = models.DateTimeField(auto_now=True, blank=True)
     is_active = models.CharField(max_length=2, default="S", blank=True, null=True)
@@ -168,11 +170,11 @@ class FacturaCompra(models.Model):
 
 class FacturaDet(models.Model):
     id_factura = models.ForeignKey('FacturaCompra', on_delete=models.CASCADE)
-    id_pedido = models.ForeignKey('Pedido', on_delete=models.CASCADE)
+    id_pedido = models.ForeignKey('Pedido', on_delete=models.CASCADE, null=True)
     cantidad = models.IntegerField()
+    detalle_cargado_reporte = models.CharField(max_length=2, default="N", blank=True, null=True)
     descripcion = models.CharField(max_length=800, blank=True)
-
-    
+    id_producto = models.ForeignKey(Producto, on_delete=models.PROTECT, null=True)
 
     class Meta:
         ordering = ['id']

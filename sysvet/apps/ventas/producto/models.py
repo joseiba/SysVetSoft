@@ -118,6 +118,7 @@ class Producto(models.Model):
         dict['nombre'] = self.nombre_producto
         dict['description'] = self.descripcion
         dict['precio'] = self.precio_venta
+        dict['precio_compra'] = self.precio_compra
         dict['stock_sistema'] = self.stock_total
         dict['tipo'] = self.servicio_o_producto
         return dict

@@ -15,7 +15,7 @@ var factura = {
     calc_invoice: function () {
         var subtotal = 0
         $.each(this.items.products, function (pos, dict) {
-            var dic_precio_format = dict.precio.split('.')
+            var dic_precio_format = dict.precio_compra.split('.')
             var dic_sum = "";
 
             for (let index = 0; index < dic_precio_format.length; index++) {
@@ -43,10 +43,10 @@ var factura = {
             data: this.items.products,
             ordering: false,
             columns: [
-                {"data": "codigo_real"},
+                {"data": "codigo_producto"},
                 {"data": "nombre"},
                 {"data": "description"},
-                {"data": "precio"},
+                {"data": "precio_compra"},
                 {"data": "cantidad"},
                 {"data": "subtotal"},
             ],

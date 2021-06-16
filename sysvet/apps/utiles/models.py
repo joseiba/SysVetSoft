@@ -21,3 +21,8 @@ class Timbrado(models.Model):
 class ProductoVendido(models.Model):
     id_producto = models.ForeignKey(Producto, on_delete=models.CASCADE, null=True)
     cantidad_vendida_total = models.FloatField(null=True, blank=True, default=0)
+
+
+class ProductoComprados(models.Model):
+    id_producto = models.ForeignKey(Producto, on_delete=models.CASCADE, null=True)
+    cantidad_comprada_total = models.FloatField(null=True, blank=True, default=0)

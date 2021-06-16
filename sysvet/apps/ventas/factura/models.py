@@ -82,6 +82,7 @@ class FacturaDetalleVenta(models.Model):
     id_producto = models.ForeignKey(Producto, on_delete=models.CASCADE, null=True)
     tipo = models.CharField(max_length=100, blank=True, null=True)
     cantidad = models.IntegerField()
+    detalle_cargado_reporte = models.CharField(max_length=2, default="N", blank=True, null=True)
     descripcion = models.CharField(max_length=800, blank=True)
     
 

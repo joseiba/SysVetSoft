@@ -120,7 +120,7 @@
                 <li><a><i class="fas fa-money-check-alt fa-lg" style="width: 26px;"></i> Reportes <span class="fa fa-chevron-down"></span></a>
                     <ul class="nav child_menu">                        
                         {% if perms.cliente.view_cliente %}
-                            <li><a href="{% url 'list_cliente' %}">Productos mas vendidos</a></li>
+                            <li><a href="{% url 'reporte_producto' %}">Productos mas vendidos</a></li>
                         {% endif %}
                     </ul>
                 </li>

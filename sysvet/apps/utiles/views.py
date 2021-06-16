@@ -2,8 +2,9 @@ import json
 from django.shortcuts import render
 from django.http import JsonResponse
 
-from apps.utiles.models import Timbrado, ProductoVendido
+from apps.utiles.models import Timbrado, ProductoVendido, ProductoComprados
 from apps.ventas.factura.models import FacturaCabeceraVenta, FacturaDetalleVenta
+from apps.compras.models import FacturaCompra, FacturaDet
 from apps.ventas.producto.models import Producto
 
 # Create your views here.
@@ -50,26 +51,50 @@ def validate_nro_timbrado(request):
 
 
 def cargar_productos_vendidos():
-    facturaVenta = FacturaCabeceraVenta.exclude(factura_anulada="S").all()
+    facturaVenta = FacturaCabeceraVenta.objects.exclude(factura_anulada='S')
     try:
         if facturaVenta is not None:
             for fv in facturaVenta:
                 facturaDetalle = FacturaDetalleVenta.objects.filter(id_factura_venta=fv.id)
                 for factDet in facturaDetalle:
                     if factDet.tipo != 'S':
-                        try:
-                            produc = ProductoVendido.objects.get(id_producto=factDet.id_producto.id)
-                            produc.cantidad_vendida_total += factDet.cantidad
-                            produc.save()
-                        except Exception as e:
-                            produc = ProductoVendido()
-                            pro_id = Producto.objects.get(id=factDet.id_producto.id)
-                            produc.id_producto = pro_id
-                            produc.cantidad_vendida_total = factDet.cantidad
-                            produc.save()
-                            print(e)
+                        if factDet.detalle_cargado_reporte == 'N':
+                            factDet.detalle_cargado_reporte = "S"
+                            factDet.save()
+                            try:
+                                produc = ProductoVendido.objects.get(id_producto=factDet.id_producto.id)
+                                produc.cantidad_vendida_total += factDet.cantidad
+                                produc.save()
+                            except Exception as e:
+                                produc = ProductoVendido()
+                                pro_id = Producto.objects.get(id=factDet.id_producto.id)
+                                produc.id_producto = pro_id
+                                produc.cantidad_vendida_total = factDet.cantidad
+                                produc.save()
+                                print(e)
     except Exception as e:
         print(e)
         pass
-    
-                
+
+def cargar_productos_comprados():
+    facturaCompra = FacturaCompra.objects.all()
+    try:
+        if facturaCompra is not None:
+            for fc in facturaCompra:
+                facturaDetalle = FacturaDet.objects.filter(id_factura=fc.id)
+                for factDet in facturaDetalle:
+                    if factDet.detalle_cargado_reporte == 'N':
+                        factDet.detalle_cargado_reporte = "S"
+                        factDet.save()
+                        try:
+                            produc = ProductoComprados.objects.get(id_producto=factDet.id_producto.id)
+                            produc.cantidad_comprada_total += factDet.cantidad
+                            produc.save()
+                        except Exception as e:
+                            produc = ProductoComprados()
+                            pro_id = Producto.objects.get(id=factDet.id_producto.id)
+                            produc.id_producto = pro_id
+                            produc.cantidad_comprada_total = factDet.cantidad
+                            produc.save()
+    except Exception as e:
+        pass

@@ -58,6 +58,8 @@ change_password, edit_rol, delete_rol, baja_usuario, list_usuarios_baja_ajax, al
 
 from apps.caja.views import (list_caja_ajax, list_cajas, add_caja, cerrar_caja, get_list_caja_historico, list_historico_caja)
 
+from apps.reporte.views import (reporte_producto)
+
 from apps.utiles.views import (poner_vencido_timbrado, validate_nro_timbrado)
 
 urlpatterns = [
@@ -220,6 +222,9 @@ urlpatterns = [
     path('caja/cerrar_caja/<int:id>/',cerrar_caja , name="cerrar_caja"),
     path('caja/listHistoricoCajas/', list_historico_caja, name="list_historico_caja"),
     path('caja/get_list_caja_historico/', get_list_caja_historico, name="get_list_caja_historico"),
+
+    #Caja
+    path('reporte/listReporteProducto/', reporte_producto, name="reporte_producto"),
 
     #Utiles
     path('utiles/poner_vencido_timbrado/', poner_vencido_timbrado, name="poner_vencido_timbrado"),
