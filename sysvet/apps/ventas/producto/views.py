@@ -569,10 +569,12 @@ def list_ajuste_inventario_ajax(request):
         productos = Producto.objects.exclude(is_active="N").filter(Q(id__icontains=query) |Q(nombre_producto__icontains=query) |Q(tipo_producto__nombre_tipo__icontains=query)).order_by('-last_modified')        
         productos = productos.exclude(servicio_o_producto="S")
         productos = productos.exclude(producto_vencido="S")
+        productos = productos.exclude(stock_total=0)
     else:
-        productos = Producto.objects.exclude(is_active="N").order_by('-last_modified')
+        productos = Producto.objects.exclude(is_active= "N").order_by('-last_modified')
         productos = productos.exclude(servicio_o_producto="S")
         productos = productos.exclude(producto_vencido="S")
+        productos = productos.exclude(stock_total=0)
 
 
     total = productos.count()
@@ -627,6 +629,30 @@ def add_ajuste_inventario(request):
             response = {'mensaje':mensaje }
             return JsonResponse(response)
     return render(request, 'ventas/producto/inventario/add_ajuste_inventario.html')
+
+
+@login_required()
+@csrf_exempt
+def get_producto_inventario(request):
+    data = {}
+    try:
+        term = request.POST['term']
+        if (request.method == 'POST') and (request.POST['action'] == 'search_products'):
+            data = []
+            prods = Producto.objects.exclude(is_active='N').all()
+            prods = prods.exclude(stock_total=0).all()
+            prods = prods.exclude(servicio_o_producto="S").filter(nombre_producto__icontains=term)[0:10]
+            for p in prods:
+                item = p.obtener_dict()
+                item['id'] = p.id
+                producto_desc = '%s %s' % ('Producto: ' + p.nombre_producto ,
+                                        'Descripción: ' + p.descripcion)
+                item['text'] = producto_desc
+                data.append(item)
+    except Exception as e:
+        data['error'] = str(e)
+
+    return JsonResponse(data, safe=False)
 
 #Historico Inventario
 @login_required()

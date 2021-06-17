@@ -30,7 +30,7 @@ baja_tipo_producto, alta_tipo_producto, vence_si_no, add_deposito, list_deposito
 add_producto, edit_producto, list_producto, delete_producto, search_producto, mover_producto, mover_producto_detalle_general,
 list_productos_general, list_producto_general_ajax, get_list_deposito, get_list_tipo_producto, list_producto_vencido_ajax,
 list_ajuste_inventario_ajax, list_ajustar_inventario, add_ajuste_inventario, list_ajuste_inventario_historial_ajax,
-list_ajustar_historial_inventario, get_producto_antiparasitario)
+list_ajustar_historial_inventario, get_producto_antiparasitario, get_producto_inventario)
 
 from apps.ventas.mascota.views import (list_mascotas, add_mascota, edit_mascota, list_especie, add_especie, 
 edit_especie,search_especie, list_raza, add_raza, edit_raza, search_raza,search_mascota, 
@@ -120,6 +120,7 @@ urlpatterns = [
     path('producto/addAjusteInventario/', add_ajuste_inventario, name="add_ajuste_inventario"),
     path('producto/list_ajuste_inventario_historial_ajax/', list_ajuste_inventario_historial_ajax, name="list_ajuste_inventario_historial_ajax"),
     path('producto/list_ajustar_historial_inventario/', list_ajustar_historial_inventario, name="list_ajustar_historial_inventario"),
+    path('producto/get_producto_inventario/', get_producto_inventario, name="get_producto_inventario"),
     path('producto/get_producto_antiparasitario/', get_producto_antiparasitario, name="get_producto_antiparasitario"),
 
 
