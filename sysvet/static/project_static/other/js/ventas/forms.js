@@ -9,6 +9,7 @@ var factura = {
         contado_pos: '',
         total_iva: 0,
         total_factura: 0,
+        total_formated: '',
         products: []
     },
     calc_invoice: function () {
@@ -27,6 +28,7 @@ var factura = {
         var value_formated = add_miles(subtotal)
         this.items.total_factura = Math.round(subtotal);
         this.items.total_iva = Math.round(subtotal/11);
+        this.items.total_formated = 'Gs ' + value_formated;
         $('#totalIva').val(this.items.total_iva); // el iva en el template
         $('#total').val(value_formated); // para el total
     },
@@ -193,6 +195,7 @@ $(function () {
             factura.items.cliente = $('select[name="id_cliente"]').val();
             factura.items.nro_factura = $('input[name="nro_factura"]').val();
             factura.items.nro_timbrado = $('input[name="nro_timbrado"]').val();
+            factura.items.contado_pos = factura.items.contado_pos == '' ? 'C' : factura.items.contado_pos;
             var parameters = new FormData();
             console.log(factura.items.contado_pos)
             parameters.append('factura', JSON.stringify(factura.items));

@@ -12,5 +12,5 @@ class Reporte(models.Model):
             ('add_reporte', 'Agregar Reporte'),
             ('change_reporte', 'Editar Reporte'),
             ('delete_reporte', 'Eliminar Reporte'),
-            ('view_reporte', 'Listar Reportes')) 
+            ('view_reporte', 'Ver Reportes')) 
 

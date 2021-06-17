@@ -31,12 +31,10 @@ today = date.strftime("%d/%m/%Y")
 @permission_required('factura.view_facturacabeceraventa')
 def list_factura_ventas(request):
     caja_abierta = Caja.objects.exclude(apertura_cierre="C").filter(fecha_alta=today)
-    print(caja_abierta.count())
     if caja_abierta.count() > 0:
         abierto = "S"
     else:
         abierto = "N"
-    print(abierto)
     context = {'caja_abierta' : abierto}
     return render(request, 'ventas/factura/list_facturas_ventas.html', context)
 
@@ -136,6 +134,7 @@ def add_factura_venta(request):
                 factura.id_cliente = cliente_id
                 factura.total_iva = int(factura_dict['total_iva'])
                 factura.total = int(factura_dict['total_factura'])
+                factura.total_formateado = factura_dict['total_formated']
                 factura.save()
                 for i in factura_dict['products']:
                     detalle = FacturaDetalleVenta()
@@ -149,7 +148,6 @@ def add_factura_venta(request):
                 response = {'mensaje':mensaje }
                 return JsonResponse(response)
             except Exception as e:
-                print(e)
                 mensaje = 'error'
                 response = {'mensaje':mensaje }
                 return JsonResponse(response)
@@ -183,7 +181,8 @@ def edit_factura_venta(request, id):
                 factura.fecha_inicio_timbrado = confi.fecha_inicio_timbrado
                 factura.fecha_fin_timbrado = confi.fecha_fin_timbrado
                 factura.total_iva = int(factura_dict['total_iva'])
-                factura.total = int(factura_dict['total_factura'])                
+                factura.total = int(factura_dict['total_factura'])   
+                factura.total_formateado = factura_dict['total_formated']             
                 factura.save()
                 detailFact = FacturaDetalleVenta.objects.filter(id_factura_venta=id)
                 detailFact.delete()
@@ -289,7 +288,6 @@ def validate_producto_stock(request):
                     if producto_id.stock_total < int(i['cantidad']):
                         data.append(producto_id.nombre_producto)
             if len(data) > 0:
-                print("F")
                 mensaje = "F"
                 response = {'mensaje':mensaje, 'data': json.dumps(data)}
                 return JsonResponse(response)
@@ -298,7 +296,6 @@ def validate_producto_stock(request):
                 response = {'mensaje':mensaje}
                 return JsonResponse(response)
         except Exception as e:
-            print(e)
             mensaje = 'error'
             response = {'mensaje':mensaje }
             return JsonResponse(response)

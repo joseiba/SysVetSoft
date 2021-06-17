@@ -1,6 +1,7 @@
 from django.db import models
 
 from apps.ventas.producto.models import Producto
+from apps.ventas.factura.models import FacturaCabeceraVenta
 
 # Create your models here.
 class Timbrado(models.Model):
@@ -26,3 +27,11 @@ class ProductoVendido(models.Model):
 class ProductoComprados(models.Model):
     id_producto = models.ForeignKey(Producto, on_delete=models.CASCADE, null=True)
     cantidad_comprada_total = models.FloatField(null=True, blank=True, default=0)
+
+
+class GananciaPorMes(models.Model):
+    numero_mes =  models.IntegerField(null=True, blank=True)
+    label_mes = models.CharField(max_length=500, null=True, blank=True)
+    total_mes = models.FloatField(null=True, blank=True)
+    total_mes_formateado = models.CharField(max_length=600, null=True, blank=True)
+    id_factura_venta = models.ForeignKey(FacturaCabeceraVenta, on_delete=models.CASCADE, null=True)

@@ -107,6 +107,7 @@
                                                 <th style="color: white;">Saldo Inicial</th>
                                                 <th style="color: white;">Total Ingreso </br> del Dia</th>
                                                 <th style="color: white;">Saldo a Entregar</th>
+                                                <th style="color: white;">Accion</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -209,9 +210,28 @@
 
                         }
                     },
+                    {
+                        name: 'Accion',
+                        data: 'id',
+                        render: function (data) {
+                            {% if perms.caja.view_caja %}
+                            return '<button class="btn btn-primary">\
+                                        <a href="/caja/reporteCaja/' + data + '/" style="color: white" target="_blank">\
+                                            Ver Detalle PDF\
+                                        </a>\
+                                    </button>';
+                            {% endif %}
+
+                            return '-';                                                   
+                            /*<button class="btn btn-danger" onclick="abrir_modal_eliminacion();">\
+                                Baja\
+                            </button>*/
+                        }
+                    }
+
                 ],
                 columnDefs: [{
-                    targets: [], // column index (start from 0)
+                    targets: [6], // column index (start from 0)
                     orderable: false, // set orderable false for selected columns
                 }],
                 serverSide: false,

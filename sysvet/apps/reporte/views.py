@@ -9,8 +9,8 @@ from datetime import datetime
 import json
 from django.http import JsonResponse
 
-from apps.utiles.views import cargar_productos_vendidos, cargar_productos_comprados
-from apps.utiles.models import ProductoVendido, ProductoComprados
+from apps.utiles.views import cargar_productos_vendidos, cargar_productos_comprados, cargar_ganacias_por_mes
+from apps.utiles.models import ProductoVendido, ProductoComprados, GananciaPorMes
 from apps.ventas.producto.models import Producto
 
 # Create your views here.
@@ -41,4 +41,21 @@ def reporte_producto(request):
                 'label_producto_con': label_producto_con, 'data_producto_con': data_producto_con}
     return render(request, 'reporte/producto/reporte_producto.html', context)
 
+
+
+@login_required()
+@permission_required('reporte.view_reporte')
+def reporte_ganancias_mes(request):
+    cargar_ganacias_por_mes()
+    label = []
+    data = []
+
+    ganancias = GananciaPorMes.objects.all()
+
+    for ga in ganancias:
+        label.append(ga.label_mes)
+        data.append(ga.total_mes)
+
+    context = {'label': label, 'data': data}
+    return render(request, 'reporte/ganancias/reporte_ganancias_mes.html', context)
 
