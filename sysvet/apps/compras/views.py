@@ -577,8 +577,8 @@ def tabla_report(pdf, y, id):
 
     count_detalle = 2
     #Creamos una lista de tuplas que van a contener a las personas
-    detalles = [(pedi.id_pedido.id_producto.codigo_producto, pedi.id_pedido.id_producto.nombre_producto, 
-                pedi.id_pedido.id_producto.descripcion, pedi.cantidad, '', '') for pedi in pedido_detalle]
+    detalles = [(pedi.id_producto.id, pedi.id_producto.nombre_producto, 
+                pedi.id_producto.descripcion, pedi.cantidad, '', '') for pedi in pedido_detalle]
 
     detalles_extras = [('', '', '', '', '', '') for i in range(count_detalle)]
 
