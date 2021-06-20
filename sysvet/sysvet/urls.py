@@ -59,7 +59,10 @@ change_password, edit_rol, delete_rol, baja_usuario, list_usuarios_baja_ajax, al
 from apps.caja.views import (list_caja_ajax, list_cajas, add_caja, cerrar_caja, get_list_caja_historico, list_historico_caja, 
 reporte_caja_pdf)
 
-from apps.reporte.views import (reporte_producto, reporte_ganancias_mes)
+from apps.reporte.views import (reporte_producto,reporte_producto_comprados,reporte_ganancias_mes, reporte_prod_comprado, 
+reporte_prod_vendido, reporte_productos_vendido_mes, get_producto_vendido_mes, reporte_productos_comprado_mes,
+get_producto_comprado_mes, get_ganancias_mes, reporte_stock_minimo, get_producto_minimo, reporte_stock_a_vencer,
+get_producto_vencimiento)
 
 from apps.utiles.views import (poner_vencido_timbrado, validate_nro_timbrado)
 
@@ -227,8 +230,21 @@ urlpatterns = [
     path('caja/reporteCaja/<int:id>/', reporte_caja_pdf, name="reporte_caja_pdf"),
 
     #Caja
-    path('reporte/listReporteProducto/', reporte_producto, name="reporte_producto"),
+    path('reporte/listReporteProductoVendidos/', reporte_producto, name="reporte_producto"),
+    path('reporte/listReporteProductosComprados/', reporte_producto_comprados, name="reporte_producto_comprados"),
     path('reporte/listReporteGanancias/', reporte_ganancias_mes, name="reporte_ganancias_mes"),
+    path('reporte/get_productos_vendidos/', reporte_prod_vendido, name="reporte_prod_vendido"),
+    path('reporte/get_productos_comprados/', reporte_prod_comprado, name="reporte_prod_comprado"),
+    path('reporte/listProductosVendidoMes/', reporte_productos_vendido_mes, name="reporte_productos_vendido_mes"),
+    path('reporte/get_productos_vendido_mes/', get_producto_vendido_mes, name="get_producto_vendido_mes"),
+    path('reporte/listProductosCompradoMes/', reporte_productos_comprado_mes, name="reporte_productos_comprado_mes"),
+    path('reporte/get_productos_comprado_mes/', get_producto_comprado_mes, name="get_producto_comprado_mes"),
+    path('reporte/get_ganacias_mes/',get_ganancias_mes, name="get_ganancias_mes"),
+    path('reporte/listProductosMinimos/', reporte_stock_minimo, name="reporte_stock_minimo"),
+    path('reporte/get_producto_minimo/',get_producto_minimo, name="get_producto_minimo"),
+    path('reporte/listProductosVencimiento/', reporte_stock_a_vencer, name="reporte_stock_a_vencer"),
+    path('reporte/get_producto_vencimiento/',get_producto_vencimiento, name="get_producto_vencimiento"),
+
 
     #Utiles
     path('utiles/poner_vencido_timbrado/', poner_vencido_timbrado, name="poner_vencido_timbrado"),

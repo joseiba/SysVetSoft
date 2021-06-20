@@ -63,14 +63,13 @@
         <div class="clearfix"></div>
 
         <div class="row">
-            <div class="col-md-10 col-sm-10">
+            <div class="col-md-6 col-sm-6  ">
                 <div class="x_panel">
                     <div class="x_title">
-                        <h2>Recaudación Por Mes</h2>
+                        <h2>Productos más comprados</h2>
                         <ul class="nav navbar-right panel_toolbox">
                             <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
                             </li>
-
                             <li><a class="close-link"><i class="fa fa-close"></i></a>
                             </li>
                         </ul>
@@ -80,12 +79,12 @@
                         <div class="wrap">
                             <div class="search">
                                 <div class="d-inline-flex">
-                                    <input type="search" class="searchTerm" id="searchTerm"
+                                    <input type="search" class="searchTerm" id="searchTermComprados"
                                         data-toggle="tooltip" data-placement="top"
-                                        title="Bucar por mes"
-                                        placeholder="Bucar por mes"
+                                        title="Bucar por nombre de producto"
+                                        placeholder="Bucar por nombre de producto"
                                         onkeyup="replaceDirection(this)">
-                                    <button type="button" id="busqueda" class="searchButton">
+                                    <button type="button" id="busquedaComprado" class="searchButton">
                                         <i class="fa fa-search"></i>
                                     </button>
                                 </div>
@@ -93,8 +92,8 @@
                         </div>
                     </div>
                     <div class="clearfix"></div>
-                    <div class="x_content" id="divGanancias">
-                        <canvas id="ganancias"></canvas>
+                    <div class="x_content" id="comprados">
+                        <canvas id="produc-compra"></canvas>
                     </div>
                 </div>
             </div>
@@ -132,27 +131,28 @@
             e.preventDefault();
         });
 
-        var get_produc = function(busqueda){
+        //Productos mas comprados
+        var get_product_comprados = function(busqueda){
             $.ajax({
-                url: "/reporte/get_ganacias_mes/",
+                url: "/reporte/get_productos_comprados/",
                 type: 'GET',
                 datatype: 'json',
                 data: {'busqueda': busqueda},
                 success: function(response) {
                     if(response.mensaje != ""){
-                        $('#ganancias').remove(); // this is my <canvas> element
-                        $('#divGanancias').append('<canvas id="ganancias"><canvas>');
-                        var ctx = document.getElementById('ganancias').getContext('2d');
+                        $('#produc-compra').remove(); // this is my <canvas> element
+                        $('#comprados').append('<canvas id="produc-compra"><canvas>');
+                        var ctx = document.getElementById('produc-compra').getContext('2d');
 
                         new Chart(ctx, {
                             type: 'bar',
                             data: {
                                 datasets:[{
-                                    data: response.data,
+                                    data: response.data_producto_con,
                                     backgroundColor: "#73879c",
-                                    label: 'Recaudación(Gs.)',
+                                    label: 'Cantidad',
                                 }],
-                                labels: response.label,
+                                labels: response.label_producto_con,
                             },
                             options: {
                                 responsive: true
@@ -166,24 +166,27 @@
             })
         }
         var query = ""
-        get_produc(query);
+        get_product_comprados(query);
 
-        $("#searchTerm").change(function(){
-            var busqueda = $("#searchTerm").val()
-            sessionStorage.setItem("busqueda", busqueda)
+        $("#searchTermComprados").change(function(){
+            var busqueda = $("#searchTermComprados").val()
+            sessionStorage.setItem("busquedaComprados", busqueda)
         })
 
-        $("#busqueda").click(function(){
-            var busqueda = sessionStorage.getItem("busqueda")
+        $("#busquedaComprado").click(function(){
+            var busqueda = sessionStorage.getItem("busquedaComprados")
             if(busqueda == "" || busqueda == undefined || busqueda == null){
                 busqueda = "";
-                get_produc(busqueda)
+                get_product_comprados(busqueda)
             }
             else{
-                get_produc(busqueda)
+                get_product_comprados(busqueda)
             }
         }) 
-})
+
+        //End Productos mas comprados
+
+    })
 
 
 </script>

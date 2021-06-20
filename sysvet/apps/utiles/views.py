@@ -4,7 +4,9 @@ from django.http import JsonResponse
 from datetime import datetime
 
 
-from apps.utiles.models import Timbrado, ProductoVendido, ProductoComprados, GananciaPorMes
+from apps.utiles.models import (Timbrado, ProductoVendido, ProductoComprados,ProductoVendidoMes, 
+ProductoCompradoMes,GananciaPorMes)
+
 from apps.ventas.factura.models import FacturaCabeceraVenta, FacturaDetalleVenta
 from apps.compras.models import FacturaCompra, FacturaDet
 from apps.ventas.producto.models import Producto
@@ -76,9 +78,7 @@ def cargar_productos_vendidos():
                                 produc.id_producto = pro_id
                                 produc.cantidad_vendida_total = factDet.cantidad
                                 produc.save()
-                                print(e)
     except Exception as e:
-        print(e)
         pass
 
 def cargar_productos_comprados():
@@ -102,6 +102,62 @@ def cargar_productos_comprados():
                             produc.cantidad_comprada_total = factDet.cantidad
                             produc.save()
     except Exception as e:
+        pass
+
+def cargar_producto_vendido_mes():
+    facturaVenta = FacturaCabeceraVenta.objects.exclude(factura_anulada='S')
+    try:
+        if facturaVenta is not None:
+            for fv in facturaVenta:
+                fecha_split = fv.fecha_alta.split('/')
+                facturaDetalle = FacturaDetalleVenta.objects.filter(id_factura_venta=fv.id)
+                for factDet in facturaDetalle:
+                    if factDet.tipo != 'S':
+                        if factDet.detalle_cargado_mes == 'N':
+                            factDet.detalle_cargado_mes = "S"
+                            factDet.save()
+                            try:
+                                produc = ProductoVendidoMes.objects.get(numero_mes=int(fecha_split[1]))
+                                produc.cantidad_vendida_total += factDet.cantidad
+                                produc.save()
+                            except Exception as e:
+                                produc = ProductoVendidoMes()
+                                pro_id = Producto.objects.get(id=factDet.id_producto.id)
+                                produc.id_producto = pro_id
+                                produc.label_mes = label_mes[int(fecha_split[1]) - 1]
+                                produc.numero_mes = int(fecha_split[1])
+                                produc.cantidad_vendida_total = factDet.cantidad
+                                produc.save()
+                                print(e)
+    except Exception as e:
+        print(e)
+        pass
+
+def cargar_productos_comprado_mes():
+    facturaCompra = FacturaCompra.objects.all()
+    try:
+        if facturaCompra is not None:
+            for fc in facturaCompra:
+                fecha_split = fc.fecha_alta.split('/')
+                facturaDetalle = FacturaDet.objects.filter(id_factura=fc.id)
+                for factDet in facturaDetalle:
+                    if factDet.detalle_cargado_mes == 'N':
+                        factDet.detalle_cargado_mes = "S"
+                        factDet.save()
+                        try:
+                            produc = ProductoCompradoMes.objects.get(numero_mes=int(fecha_split[1]))
+                            produc.cantidad_comprada_total += factDet.cantidad
+                            produc.save()
+                        except Exception as e:
+                            produc = ProductoCompradoMes()
+                            pro_id = Producto.objects.get(id=factDet.id_producto.id)
+                            produc.id_producto = pro_id
+                            produc.label_mes = label_mes[int(fecha_split[1]) - 1]
+                            produc.numero_mes = int(fecha_split[1])
+                            produc.cantidad_comprada_total = factDet.cantidad
+                            produc.save()
+    except Exception as e:
+        print(e)
         pass
 
 

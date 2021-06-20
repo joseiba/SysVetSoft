@@ -76,26 +76,26 @@
                         </ul>
                         <div class="clearfix"></div>
                     </div>
-                    <div class="x_content">
-                        <canvas id="produc-vendi"></canvas>
+                    <div class="float-left">
+                        <div class="wrap">
+                            <div class="search">
+                                <div class="d-inline-flex">
+                                    <input type="search" class="searchTerm" id="searchTermVendidos"
+                                        data-toggle="tooltip" data-placement="top"
+                                        title="Bucar por nombre de producto"
+                                        placeholder="Bucar por nombre de producto"
+                                        onkeyup="replaceDirection(this)">
+                                    <button type="button" id="busquedaVendido" class="searchButton">
+                                        <i class="fa fa-search"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </div>
+                    <div class="clearfix"></div>
 
-            <div class="col-md-6 col-sm-6  ">
-                <div class="x_panel">
-                    <div class="x_title">
-                        <h2>Productos más comprados</h2>
-                        <ul class="nav navbar-right panel_toolbox">
-                            <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
-                            </li>
-                            <li><a class="close-link"><i class="fa fa-close"></i></a>
-                            </li>
-                        </ul>
-                        <div class="clearfix"></div>
-                    </div>
-                    <div class="x_content">
-                        <canvas id="produc-compra"></canvas>
+                    <div class="x_content" id="vendidos">
+                        <canvas id="produc-vendi"></canvas>
                     </div>
                 </div>
             </div>
@@ -128,49 +128,67 @@
 
 <script>
 
-    var config = {
-        type: 'bar',
-        data: {
-            datasets:[{
-                data: {{ data_producto_ven|safe }},
-                backgroundColor: "#73879c",
-                label: 'Cantidad',
-            }],
-            labels: {{ label_producto_ven|safe }},
-        },
-        options: {
-            responsive: true
-        }
-    };
-
-    var configCompra = {
-            type: 'bar',
-            data: {
-                datasets:[{
-                    data: {{ data_producto_con|safe}},
-                    backgroundColor: "#73879c",
-                    label: 'Cantidad',
-                }],
-                labels: {{ label_producto_con|safe }}
-            },
-            options: {
-                responsive: true
-            }
-        };
-
-
     $(function () {
         $('form input').on("cut copy paste", function (e) {
             e.preventDefault();
         });
 
-        window.onload = function() {
-            var ctx = document.getElementById('produc-vendi').getContext('2d');
-            window.bar = new Chart(ctx, config);
-            var ctxc = document.getElementById('produc-compra').getContext('2d');
-            window.bar = new Chart(ctxc, configCompra);
-        };
+        //Productos mas vendidos
+        var get_product_vendido = function(busqueda){
+            $.ajax({
+                url: "/reporte/get_productos_vendidos/",
+                type: 'GET',
+                datatype: 'json',
+                data: {'busqueda': busqueda},
+                success: function(response) {
+                    if(response.mensaje != ""){
+                        $('#produc-vendi').remove(); // this is my <canvas> element
+                        $('#vendidos').append('<canvas id="produc-vendi"><canvas>');
+                        var ctx = document.getElementById('produc-vendi').getContext('2d');
 
+                        new Chart(ctx, {
+                            type: 'bar',
+                            data: {
+                                datasets:[{
+                                    data: response.data_producto_ven,
+                                    backgroundColor: "#73879c",
+                                    label: 'Cantidad',
+                                }],
+                                labels: response.label_producto_ven,
+                            },
+                            options: {
+                                responsive: true
+                            }
+                        });
+                    }
+                },
+                error: function(error){
+
+                }
+            })
+        }
+
+        var query = ""
+
+        get_product_vendido(query);
+
+        $("#searchTermVendidos").change(function(){
+            var busqueda = $("#searchTermVendidos").val()
+            sessionStorage.setItem("busquedaVendido", busqueda)
+        })
+
+        $("#busquedaVendido").click(function(){
+            var busqueda = sessionStorage.getItem("busquedaVendido")
+            if(busqueda == "" || busqueda == undefined || busqueda == null){
+                busqueda = "";
+                get_product_vendido(busqueda)
+            }
+            else{
+                get_product_vendido(busqueda)
+            }
+        }) 
+
+        //End Productos mas vendidos
     })
 
 

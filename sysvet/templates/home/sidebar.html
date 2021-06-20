@@ -120,11 +120,20 @@
                 
                 {% if perms.reporte.view_reporte %}
                     <li><a><i class="fas fa-chart-bar fa-lg" style="width: 26px;"></i> Reportes <span class="fa fa-chevron-down"></span></a>
-                        <ul class="nav child_menu">                        
-                                <li><a href="{% url 'reporte_producto' %}">Productos</a></li>
-                                <li><a href="{% url 'reporte_ganancias_mes' %}">Ganancias por Mes</a></li>
+                        <ul class="nav child_menu">
+                            <li><a>Productos<span class="fa fa-chevron-down"></span></a>
+                                <ul class="nav child_menu">                                
+                                    <li><a href="{% url 'reporte_producto' %}">Productos Vendidos Total</a></li>
+                                    <li><a href="{% url 'reporte_producto_comprados' %}">Productos Comprados Total</a></li>
+                                    <li><a href="{% url 'reporte_productos_vendido_mes' %}">Productos Vendido Mes</a></li>
+                                    <li><a href="{% url 'reporte_productos_comprado_mes' %}">Productos Comprado Mes</a></li>
+                                    <li><a href="{% url 'reporte_stock_minimo' %}">Productos Stock Minimo</a></li>
+                                    <li><a href="{% url 'reporte_stock_a_vencer' %}">Productos a Vencer</a></li>
+                                </ul>
+                            </li>
 
-                        </ul>
+                            <li><a href="{% url 'reporte_ganancias_mes' %}">Recaudación por mes</a></li>
+                        </ul>                     
                     </li>
                 {% endif %}                
                 
