@@ -5,7 +5,7 @@ from datetime import datetime
 
 
 from apps.utiles.models import (Timbrado, ProductoVendido, ProductoComprados,ProductoVendidoMes, 
-ProductoCompradoMes,GananciaPorMes)
+ProductoCompradoMes,ServicioVendido,GananciaPorMes)
 
 from apps.ventas.factura.models import FacturaCabeceraVenta, FacturaDetalleVenta
 from apps.compras.models import FacturaCompra, FacturaDet
@@ -158,6 +158,30 @@ def cargar_productos_comprado_mes():
                             produc.save()
     except Exception as e:
         print(e)
+        pass
+
+def cargar_servicios_vendidos():
+    facturaVenta = FacturaCabeceraVenta.objects.exclude(factura_anulada='S')
+    try:
+        if facturaVenta is not None:
+            for fv in facturaVenta:
+                facturaDetalle = FacturaDetalleVenta.objects.filter(id_factura_venta=fv.id)
+                for factDet in facturaDetalle:
+                    if factDet.tipo != 'P':
+                        if factDet.detalle_cargado_servicio == 'N':
+                            factDet.detalle_cargado_servicio = "S"
+                            factDet.save()
+                            try:
+                                produc = ServicioVendido.objects.get(id_producto=factDet.id_producto.id)
+                                produc.cantidad_vendida_total += factDet.cantidad
+                                produc.save()
+                            except Exception as e:
+                                produc = ServicioVendido()
+                                pro_id = Producto.objects.get(id=factDet.id_producto.id)
+                                produc.id_producto = pro_id
+                                produc.cantidad_vendida_total = factDet.cantidad
+                                produc.save()
+    except Exception as e:
         pass
 
 

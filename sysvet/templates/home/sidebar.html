@@ -123,12 +123,17 @@
                         <ul class="nav child_menu">
                             <li><a>Productos<span class="fa fa-chevron-down"></span></a>
                                 <ul class="nav child_menu">                                
-                                    <li><a href="{% url 'reporte_producto' %}">Productos Vendidos Total</a></li>
-                                    <li><a href="{% url 'reporte_producto_comprados' %}">Productos Comprados Total</a></li>
-                                    <li><a href="{% url 'reporte_productos_vendido_mes' %}">Productos Vendido Mes</a></li>
-                                    <li><a href="{% url 'reporte_productos_comprado_mes' %}">Productos Comprado Mes</a></li>
-                                    <li><a href="{% url 'reporte_stock_minimo' %}">Productos Stock Minimo</a></li>
-                                    <li><a href="{% url 'reporte_stock_a_vencer' %}">Productos a Vencer</a></li>
+                                    <li><a href="{% url 'reporte_producto' %}">Total Vendidos</a></li>
+                                    <li><a href="{% url 'reporte_producto_comprados' %}">Total Comprados</a></li>
+                                    <li><a href="{% url 'reporte_productos_vendido_mes' %}">Vendido por Mes</a></li>
+                                    <li><a href="{% url 'reporte_productos_comprado_mes' %}">Comprado por Mes</a></li>
+                                    <li><a href="{% url 'reporte_stock_minimo' %}">Stock Minimo</a></li>
+                                    <li><a href="{% url 'reporte_stock_a_vencer' %}">A Vencer</a></li>
+                                </ul>
+                            </li>
+                            <li><a>Servicio<span class="fa fa-chevron-down"></span></a>
+                                <ul class="nav child_menu">                                
+                                    <li><a href="{% url 'reporte_servicio_vendido' %}">Mas Vendidos</a></li>
                                 </ul>
                             </li>
 

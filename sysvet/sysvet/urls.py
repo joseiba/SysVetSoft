@@ -62,7 +62,7 @@ reporte_caja_pdf)
 from apps.reporte.views import (reporte_producto,reporte_producto_comprados,reporte_ganancias_mes, reporte_prod_comprado, 
 reporte_prod_vendido, reporte_productos_vendido_mes, get_producto_vendido_mes, reporte_productos_comprado_mes,
 get_producto_comprado_mes, get_ganancias_mes, reporte_stock_minimo, get_producto_minimo, reporte_stock_a_vencer,
-get_producto_vencimiento)
+get_producto_vencimiento, reporte_servicio_vendido, get_servicio_vendido)
 
 from apps.utiles.views import (poner_vencido_timbrado, validate_nro_timbrado)
 
@@ -244,6 +244,8 @@ urlpatterns = [
     path('reporte/get_producto_minimo/',get_producto_minimo, name="get_producto_minimo"),
     path('reporte/listProductosVencimiento/', reporte_stock_a_vencer, name="reporte_stock_a_vencer"),
     path('reporte/get_producto_vencimiento/',get_producto_vencimiento, name="get_producto_vencimiento"),
+    path('reporte/listServiciosVendidos/', reporte_servicio_vendido, name="reporte_servicio_vendido"),
+    path('reporte/get_servicio_vendido/',get_servicio_vendido, name="get_servicio_vendido"),
 
 
     #Utiles

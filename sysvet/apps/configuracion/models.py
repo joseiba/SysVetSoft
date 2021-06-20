@@ -19,7 +19,7 @@ class ConfiEmpresa(models.Model):
     fecha_inicio_timbrado = models.CharField(max_length=500, blank=True, null=True)
     fecha_fin_timbrado = models.CharField(max_length=500, blank=True, null=True)
     ruc_empresa = models.CharField(max_length=500, blank=True, null=True)
-
+    dias_a_vencer = models.IntegerField(blank=True, null=True, default=30)
     class Meta:
         verbose_name = "Configuracion Empresa"
         verbose_name_plural = "Configuraciones Empresas"
@@ -98,9 +98,15 @@ class Empleado(models.Model):
 
 
 class TipoVacuna(models.Model):
+
+    opciones = (
+        ('S', 'Si'),
+        ('N', 'No'),
+    )
     id_producto = models.ForeignKey(Producto, on_delete=models.CASCADE, null=False)
     nombre_vacuna =  models.CharField(max_length = 500, blank=True, null=True)
     periodo_aplicacion = models.CharField(max_length = 500, blank=True, null=True)
+    multi_aplicaciones = models.CharField(max_length=2, choices=opciones, default="N", blank=True, null=True)
     class Meta:
         verbose_name = "Vacunas"
         verbose_name_plural = "Vacunas"

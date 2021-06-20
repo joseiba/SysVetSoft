@@ -26,7 +26,8 @@ class ConfiEmpresaForm(forms.ModelForm):
             'nro_timbrado': forms.TextInput(attrs={'class': 'form-control', 'name': 'nro_timbrado','id':'nro_timbrado','autocomplete': 'off','placeholder': 'Escriba el nro del timbrado','required':'required','onkeyup':'replaceABC(this)'}),
             'ruc_empresa': forms.TextInput(attrs={'class': 'form-control', 'name': 'ruc_empresa','autocomplete': 'off','placeholder': 'Escriba el RUC','required':'required','onkeyup':'replaceABC(this)'}),
             'apertura_caja_inicial' : forms.TextInput(attrs={'class':'form-control', 'autocomplete': 'off','name': 'apertura_caja_inicial', 'placeholder': 'Ingrese el monto inicial de la caja', 'required': 'required','onkeyup':'replaceABC(this)'}),
-			'ubicacion_deposito_inicial' : forms.TextInput(attrs={'class':'form-control', 'autocomplete': 'off','name': 'ubicacion_deposito_inicial', 'placeholder': 'Deposito inicial', 'required': 'required','onkeyup':'replaceDiretion(this)'}),			
+			'ubicacion_deposito_inicial' : forms.TextInput(attrs={'class':'form-control', 'autocomplete': 'off','name': 'ubicacion_deposito_inicial', 'placeholder': 'Deposito inicial', 'required': 'required','onkeyup':'replaceDiretion(this)'}),
+            'dias_a_vencer' : forms.TextInput(attrs={'class':'form-control', 'autocomplete': 'off','name': 'dias_a_vencer', 'placeholder': 'Dias Productos a Vencer', 'required': 'required','onkeyup':'replaceABC(this)'}),
 		}
 
 class ServicioForm(forms.ModelForm):
@@ -80,7 +81,8 @@ class TipoVacunaForm(forms.ModelForm):
             'id_producto' : forms.Select(attrs={'class':'form-control', 'id': 'id_producto' ,'name':'id_producto', 'readonly': 'readonly'}),
             'nombre_vacuna' : forms.TextInput(attrs={'class':'form-control', 'name': 'nombre_vacuna', 'placeholder': 'Vacuna Dosis', 'required': 'required','autocomplete': 'off','onkeyup':'replaceCaratect(this)'}),
             'periodo_aplicacion' : forms.TextInput(attrs={'class':'form-control', 'name': 'periodo_aplicacion', 'placeholder': 'Periodo de Aplicacion', 
-                'required': 'required','autocomplete': 'off'  ,'onkeyup':'replaceABC(this)'})
+                'required': 'required','autocomplete': 'off'  ,'onkeyup':'replaceABC(this)'}),
+            'multi_aplicaciones' : forms.Select(attrs={'class':'form-control', 'id': 'multi_aplicaciones','required':'required' ,'name':'multi_aplicaciones'}),
 		}
 
 

@@ -63,6 +63,7 @@ class FacturaCabeceraVenta(models.Model):
     factura_caja = models.CharField(max_length=2, default="N", blank=True, null=True) 
     factura_to_reporte = models.CharField(max_length=2, default="N", blank=True, null=True)
     factura_reporte_cantidad_mes = models.CharField(max_length=2, default="N", blank=True, null=True)
+    factura_servicio_reporte = models.CharField(max_length=2, default="N", blank=True, null=True)
     id_cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE, null=True)
     last_modified = models.DateTimeField(auto_now=True, blank=True)
     is_active = models.CharField(max_length=2, default="S", blank=True, null=True)
@@ -87,6 +88,7 @@ class FacturaDetalleVenta(models.Model):
     cantidad = models.IntegerField()
     detalle_cargado_reporte = models.CharField(max_length=2, default="N", blank=True, null=True)
     detalle_cargado_mes = models.CharField(max_length=2, default="N", blank=True, null=True)
+    detalle_cargado_servicio = models.CharField(max_length=2, default="N", blank=True, null=True)
     descripcion = models.CharField(max_length=800, blank=True)
     
 

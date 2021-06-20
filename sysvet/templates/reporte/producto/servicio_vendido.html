@@ -66,7 +66,7 @@
             <div class="col-md-9 col-sm-9">
                 <div class="x_panel">
                     <div class="x_title">
-                        <h2>Productos más comprados</h2>
+                        <h2>Total de servicios vendidos</h2>
                         <ul class="nav navbar-right panel_toolbox">
                             <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
                             </li>
@@ -79,12 +79,12 @@
                         <div class="wrap">
                             <div class="search">
                                 <div class="d-inline-flex">
-                                    <input type="search" class="searchTerm" id="searchTermComprados"
+                                    <input type="search" class="searchTerm" id="searchTerm"
                                         data-toggle="tooltip" data-placement="top"
-                                        title="Bucar por nombre de producto"
-                                        placeholder="Bucar por nombre de producto"
+                                        title="Bucar por servicio"
+                                        placeholder="Bucar por servicio"
                                         onkeyup="replaceDirection(this)">
-                                    <button type="button" id="busquedaComprado" class="searchButton">
+                                    <button type="button" id="busqueda" class="searchButton">
                                         <i class="fa fa-search"></i>
                                     </button>
                                 </div>
@@ -92,8 +92,8 @@
                         </div>
                     </div>
                     <div class="clearfix"></div>
-                    <div class="x_content" id="comprados">
-                        <canvas id="produc-compra"></canvas>
+                    <div class="x_content" id="productos">
+                        <canvas id="produc"></canvas>
                     </div>
                 </div>
             </div>
@@ -131,28 +131,27 @@
             e.preventDefault();
         });
 
-        //Productos mas comprados
-        var get_product_comprados = function(busqueda){
+        var get_produc = function(busqueda){
             $.ajax({
-                url: "/reporte/get_productos_comprados/",
+                url: "/reporte/get_servicio_vendido/",
                 type: 'GET',
                 datatype: 'json',
                 data: {'busqueda': busqueda},
                 success: function(response) {
                     if(response.mensaje != ""){
-                        $('#produc-compra').remove(); // this is my <canvas> element
-                        $('#comprados').append('<canvas id="produc-compra"><canvas>');
-                        var ctx = document.getElementById('produc-compra').getContext('2d');
+                        $('#produc').remove(); // this is my <canvas> element
+                        $('#productos').append('<canvas id="produc"><canvas>');
+                        var ctx = document.getElementById('produc').getContext('2d');
 
                         new Chart(ctx, {
                             type: 'bar',
                             data: {
                                 datasets:[{
-                                    data: response.data_producto_con,
+                                    data: response.data,
                                     backgroundColor: "#73879c",
                                     label: 'Cantidad',
                                 }],
-                                labels: response.label_producto_con,
+                                labels: response.label,
                             },
                             options: {
                                 responsive: true
@@ -166,26 +165,23 @@
             })
         }
         var query = ""
-        get_product_comprados(query);
+        get_produc(query);
 
-        $("#searchTermComprados").change(function(){
-            var busqueda = $("#searchTermComprados").val()
-            sessionStorage.setItem("busquedaComprados", busqueda)
+        $("#searchTerm").change(function(){
+            var busqueda = $("#searchTerm").val()
+            sessionStorage.setItem("busqueda", busqueda)
         })
 
-        $("#busquedaComprado").click(function(){
-            var busqueda = sessionStorage.getItem("busquedaComprados")
+        $("#busqueda").click(function(){
+            var busqueda = sessionStorage.getItem("busqueda")
             if(busqueda == "" || busqueda == undefined || busqueda == null){
                 busqueda = "";
-                get_product_comprados(busqueda)
+                get_produc(busqueda)
             }
             else{
-                get_product_comprados(busqueda)
+                get_produc(busqueda)
             }
         }) 
-
-        //End Productos mas comprados
-
     })
 
 

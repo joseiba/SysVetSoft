@@ -273,7 +273,14 @@
                                                     style="font-size: 16px;">Vacuna Aplicada
                                                 </label>
                                                 <div class="col-sm-12">
-                                                    <p class="m-0">{{ formVacuna.id_vacuna }}</p>
+                                                    <p class="m-0">
+                                                        <select class="form-control" name="id_vacuna" id="id_vacuna">
+                                                            <option>-------</option>
+                                                            {% for vacu in vacunas_aplicada %}
+                                                                <option value="{{ vacu.id }}"> {{ vacu.nombre_vacuna }}</option>
+                                                            {% endfor %}
+                                                        </select>
+                                                    </p>
                                                 </div>
                                             </div>
                                         </div>
@@ -286,8 +293,8 @@
                                                 <div class="col-sm-12">
                                                     <p class="m-0">
                                                         <select class="form-control" name="proxima_vacunacion" id="proxima_vacunacion">
-                                                            <option>Seleccione la proxima vacuna</option>
-                                                            {% for vacu in vacunas %}
+                                                            <option>-------</option>
+                                                            {% for vacu in vacunas_proxima %}
                                                                 <option value="{{ vacu.id }}"> {{ vacu.nombre_vacuna }}</option>
                                                             {% endfor %}
                                                         </select>

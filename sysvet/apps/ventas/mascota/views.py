@@ -9,7 +9,7 @@ import json
 import math
 
 
-from .models import Mascota, Especie, Raza, Raza, FichaMedica, Vacuna, Consulta, Antiparasitario, HistoricoFichaMedica
+from apps.ventas.mascota.models import Mascota, Especie, Raza, Raza, FichaMedica, Vacuna, Consulta, Antiparasitario, HistoricoFichaMedica
 from .form import MascotaForm, EspecieForm, RazaForm, FichaMedicaForm, VacunaForm, ConsultaForm, AntiparasitarioForm
 from apps.configuracion.models import TipoVacuna
 from apps.ventas.producto.models import Producto
@@ -264,6 +264,8 @@ def edit_ficha_medica(request,id):
     consultaGet = Consulta.objects.get(id_ficha_medica=fichaMedicaGet.id)
     antiparasitarioGet = Antiparasitario.objects.get(id_ficha_medica=fichaMedicaGet.id)
     historicoFichaMedica = HistoricoFichaMedica
+    vacuna_aplicado = []
+    vacuna_proxima = []
     vacunas = TipoVacuna.objects.all()
     try:    
         if request.method == 'POST':
@@ -293,6 +295,35 @@ def edit_ficha_medica(request,id):
                 return redirect('/mascota/editFichaMedica/' + str(id))
     except Exception as e:
         print(e)
+        pass
+
+    if vacunas.count() > 0:
+        list_historico = HistoricoFichaMedica.objects.filter(id_ficha_medica=id)
+        print(list_historico.count())
+        if list_historico.count() > 0:
+            for histo in list_historico:
+                for va in vacunas:
+                    print("vacunas")
+                    try:
+                        if histo.vacuna.nombre_vacuna == va.nombre_vacuna:
+                            if va.multi_aplicaciones == "S":
+                                print("entro")
+                                vacuna_aplicado.append(va)
+                                vacuna_proxima.append(va)
+                        else:
+                            vacuna_aplicado.append(va)
+                            vacuna_proxima.append(va)
+                    except Exception as e:
+                        print("entro 2")
+                        print(e)
+                        vacuna_aplicado.append(va)
+                        vacuna_proxima.append(va)
+        else:
+            print("else")
+            for va in vacunas:
+                print("else")
+                vacuna_aplicado.append(va)
+                vacuna_proxima.append(va)
 
     formFichaMedica = FichaMedicaForm(instance=fichaMedicaGet)
     formVacuna = VacunaForm(instance=vacunaGet)
@@ -306,7 +337,8 @@ def edit_ficha_medica(request,id):
         'formConsulta': formConsulta,
         'formAntiparasitario': formAntiparasitario,
         'fichaMedicaGet': fichaMedicaGet,
-        'vacunas': vacunas
+        'vacunas_proxima': vacuna_proxima,
+        'vacunas_aplicada': vacuna_aplicado
     }
 
     return render(request, "ventas/mascota/ficha_medica/edit_ficha_medica.html", context)
@@ -349,7 +381,7 @@ def create_historico_ficha_medica(id, proxima_vacunacion, antiparasitario_aplica
 
         historico.fecha_alta = date.strftime("%d/%m/%Y")
         historico.vacuna = vacunaGet.id_vacuna
-        if proxima_vacunacion != 'Seleccione la proxima vacuna':
+        if proxima_vacunacion != '-------':
             historico.proxima_vacunacion = proxima_vacuna.nombre_vacuna
         else:
             historico.proxima_vacunacion = "-"

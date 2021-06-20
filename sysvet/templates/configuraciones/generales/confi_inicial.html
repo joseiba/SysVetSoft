@@ -140,6 +140,14 @@
                                             {{form.ubicacion_deposito_inicial}}
                                         </div>
                                     </div>
+                                    <div class="field item form-group">
+                                        <label class="col-form-label col-md-3 col-sm-3  label-align">Dias a Vencer Productos
+                                            <span class="required">*</span>
+                                        </label>
+                                        <div class="col-md-9 col-sm-9">
+                                            {{form.dias_a_vencer}}
+                                        </div>
+                                    </div>
                                 </div>
 
                                 <div class="modal-footer">
@@ -166,7 +174,7 @@
 <script src="/static/project_static/vendors/mjolnic-bootstrap-colorpicker/dist/js/bootstrap-colorpicker.js"></script>
 <script src="/static/project_static/other/js/jquery-ui-1.12.1/jquery-ui-1.12.1/jquery-ui.js"></script>
 <script src="/static/project_static/other/js/sweetalert.min.js"></script>
-
+<script src="/static/project_static/other/js/bootstrap-touchspin-master/dist/jquery.bootstrap-touchspin.js"></script>
 
 <script>
     $.datepicker.regional['es'] = {
@@ -224,6 +232,16 @@
             format: "dd/mm/yyyy",
             autoclose: true,
             todayHighlight: true,
+        });
+
+        $('input[name="dias_a_vencer"]').TouchSpin({
+            min: 0,
+            max: 1000000000,
+            step: 1,
+            boostat: 5,
+            maxboostedstep: 10,
+        }).keypress(function (e) {
+            return validate_form_text('numbers', e, null);
         });
 
         $("input[name='apertura_caja_inicial']").on({
@@ -322,5 +340,32 @@
         }
         return false
     }
+
+    // validar entrada
+function validate_form_text(type, event, regex) {
+    var key = event.keyCode || event.which;
+    var numbers = (key > 47 && key < 58) || key === 8;
+    var numbers_spaceless = (key > 47 && key < 58);
+    var letters = !((key !== 32) && (key < 65) || (key > 90) && (key < 97) || (key > 122 && key !== 241 && key !== 209 && key !== 225 && key !== 233 && key !== 237 && key !== 243 && key !== 250 && key !== 193 && key !== 201 && key !== 205 && key !== 211 && key !== 218)) || key === 8;
+    var letters_spaceless = !((key < 65) || (key > 90) && (key < 97) || (key > 122 && key !== 241 && key !== 209 && key !== 225 && key !== 233 && key !== 237 && key !== 243 && key !== 250 && key !== 193 && key !== 201 && key !== 205 && key !== 211 && key !== 218)) || key === 8;
+    var decimals = ((key > 47 && key < 58) || key === 8 || key === 46);
+
+    if (type === 'numbers') {
+        return numbers;
+    } else if (type === 'letters') {
+        return letters;
+    } else if (type === 'numbers_letters') {
+        return numbers || letters;
+    } else if (type === 'letters_spaceless') {
+        return letters_spaceless;
+    } else if (type === 'letters_numbers_spaceless') {
+        return letters_spaceless || numbers_spaceless;
+    } else if (type === 'decimals') {
+        return decimals;
+    } else if (type === 'regex') {
+        return regex;
+    }
+    return true;
+}
 </script>
 {% endblock javascripts %}

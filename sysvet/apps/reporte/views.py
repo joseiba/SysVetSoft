@@ -10,10 +10,12 @@ import json
 from django.http import JsonResponse
 
 from apps.utiles.views import (cargar_productos_vendidos, cargar_productos_comprados, cargar_ganacias_por_mes,
-cargar_producto_vendido_mes, cargar_productos_comprado_mes)
+cargar_producto_vendido_mes, cargar_productos_comprado_mes, cargar_servicios_vendidos)
 
 from apps.utiles.models import (ProductoVendido, ProductoComprados,ProductoCompradoMes, ProductoVendidoMes,
-GananciaPorMes)
+GananciaPorMes, ServicioVendido)
+
+from apps.configuracion.models import ConfiEmpresa
 
 from apps.ventas.producto.models import Producto
 
@@ -43,8 +45,7 @@ def reporte_prod_vendido(request):
 
         mensaje = "OK"
     except Exception as e:
-        print(e)
-
+        pass
     response = {'label_producto_ven': label_producto_ven, 'data_producto_ven': data_producto_ven,'mensaje': mensaje}
     return JsonResponse(response)
 
@@ -71,7 +72,7 @@ def reporte_prod_comprado(request):
 
         mensaje = "OK"
     except Exception as e:
-        print(e)
+        pass
 
     response = {'label_producto_con': label_producto_con, 'data_producto_con': data_producto_con,'mensaje': mensaje}
     return JsonResponse(response)
@@ -100,7 +101,7 @@ def get_producto_vendido_mes(request):
 
         mensaje = "OK"
     except Exception as e:
-        print(e)
+        pass
 
     response = {'label': label, 'data': data,'mensaje': mensaje}
     return JsonResponse(response)
@@ -128,7 +129,7 @@ def get_producto_comprado_mes(request):
 
         mensaje = "OK"
     except Exception as e:
-        print(e)
+        pass
 
     response = {'label': label, 'data': data,'mensaje': mensaje}
     return JsonResponse(response)
@@ -158,7 +159,7 @@ def get_ganancias_mes(request):
             data.append(ga.total_mes)
         mensaje = "OK"
     except Exception as e:
-        print(e)
+        pass
 
     response = {'label': label, 'data': data,'mensaje': mensaje}
     return JsonResponse(response)
@@ -215,6 +216,14 @@ def reporte_stock_a_vencer(request):
 def get_producto_vencimiento(request):
     query = request.GET.get('busqueda')
     prod_vencimiento = []
+
+    try:
+        confi = ConfiEmpresa.objects.get(id=1)
+        dias_compare = confi.dias_a_vencer
+    except Exception as e:
+        print(e)
+        dias_compare = 30
+    
     if query != "":
         productos = Producto.objects.exclude(is_active="N").filter(Q(id__icontains=query) |Q(nombre_producto__icontains=query)).order_by('-last_modified')        
         productos = productos.exclude(servicio_o_producto="S")
@@ -224,7 +233,7 @@ def get_producto_vencimiento(request):
 
     for p in productos:
         if p.fecha_vencimiento is not None:
-            if rest_dates(p.fecha_vencimiento) <= 45:
+            if rest_dates(p.fecha_vencimiento) <= dias_compare:
                 prod_vencimiento.append(p)
 
     total =  len(prod_vencimiento)
@@ -250,6 +259,34 @@ def get_producto_vencimiento(request):
     return JsonResponse(response)
 
 
+@login_required()
+@permission_required('reporte.view_reporte')
+def reporte_servicio_vendido(request):
+    cargar_servicios_vendidos()
+    return render(request, 'reporte/producto/servicio_vendido.html')
+
+def get_servicio_vendido(request):
+    query = request.GET.get('busqueda')
+    label = []
+    data = []
+    mensaje = ""
+    try:    
+        if query != "":
+            produc_vendidos = ServicioVendido.objects.filter(Q(id_producto__nombre_producto__icontains=query))
+        else:
+            produc_vendidos = ServicioVendido.objects.all()
+
+        for pv in produc_vendidos:
+            label.append(pv.id_producto.nombre_producto)
+            data.append(pv.cantidad_vendida_total)
+
+        mensaje = "OK"
+    except Exception as e:
+        pass
+    response = {'label': label, 'data': data, 'mensaje': mensaje}
+    return JsonResponse(response)
+
+
 
 def rest_dates(fecha_vencimiento):
     try:
@@ -258,5 +295,4 @@ def rest_dates(fecha_vencimiento):
         fecha_vencimiento_compare = date(int(fecha_vencimiento_split[2]), int(fecha_vencimiento_split[1]), int(fecha_vencimiento_split[0]))
         return (fecha_vencimiento_compare - hoy).days if (fecha_vencimiento_compare - hoy).days >= 0 else 0
     except Exception as e:
-        print(e)
         return 0
