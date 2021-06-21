@@ -71,12 +71,14 @@ var factura = {
                     orderable: false,                
                 },
                 {
-                    targets: [3, 5],
+                    targets: [3],
                     class: "text-center my-0 ",
                     orderable: false,
                     render: function (data, type, row) {
-                        var amount_formated = add_miles(data)
-                        return 'Gs. ' + amount_formated
+                        if(precio_compra_action != 'S'){
+                            return 'Gs. ' + '<input type="text" name="precio_compra" id="precio_compra" class="form-control form-control-sm input-sm" autocomplete="off" value="' + row.precio_compra + '">';
+                        }
+                        return 'Gs. ' + row.precio_compra;
                     }
                 },
                 {
@@ -95,6 +97,15 @@ var factura = {
                             return '<input type="text" name="cantidad" class="form-control form-control-sm input-sm" autocomplete="off" value="' + row.cantidad + '">';
                         }                                            
                     }   */              
+                },
+                {
+                    targets: [5],
+                    class: "text-center my-0 ",
+                    orderable: false,
+                    render: function (data, type, row) {
+                        var amount_formated = add_miles(data)
+                        return 'Gs. ' + amount_formated
+                    }
                 },
                 /*{
                     targets: [5],
@@ -174,13 +185,25 @@ $(function () {
         var tr = tblFactura.cell($(this).closest('td, li')).index();
         factura.items.products[tr.row].cantidad = cant;
         factura.calc_invoice();
-        // el 4 es el lugar donde tiene que estar el subtotal
-        $('td:eq(4)', tblFactura.row(tr.row).node()).html('Gs.' + Math.round(factura.items.products[tr.row].subtotal));
+        // el 5 es el lugar donde tiene que estar el subtotal
+        $('td:eq(5)', tblFactura.row(tr.row).node()).html('Gs.' +  add_miles(factura.items.products[tr.row].subtotal));
     }).on('change', 'input[name="descripcion"]', function (){
         var descripcion = $(this).val();
         var tr = tblFactura.cell($(this).closest('td, li')).index();
         factura.items.products[tr.row].description = descripcion;
-    });
+    }).on('keyup', 'input[name="precio_compra"]', function(event) {
+        $(event.target).val(function (index, value ) {
+            var cant = $(this).val();
+            var tr = tblFactura.cell($(this).closest('td, li')).index();
+            factura.items.products[tr.row].precio_compra = cant;
+            factura.calc_invoice();
+            // el 5 es el lugar donde tiene que estar el subtotal
+            $('td:eq(5)', tblFactura.row(tr.row).node()).html('Gs.' +  add_miles(factura.items.products[tr.row].subtotal));
+            return value.replace(/\D/g, "")
+                        .replace(/([0-9])([0-9]{3})$/, '$1.$2')
+                        .replace(/\B(?=(\d{3})+(?!\d)\.?)/g, ".");
+        });
+    })
 
     $('form').on('submit', function (e) {
         e.preventDefault();

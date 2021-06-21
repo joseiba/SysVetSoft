@@ -451,7 +451,7 @@ def edit_factura_compra(request, id):
             mensaje = 'error'
             response = {'mensaje':mensaje }
         return JsonResponse(response)
-    context = {'form': form, 'det': json.dumps(get_detalle_factura(id)), 'accion': 'E'}
+    context = {'form': form, 'det': json.dumps(get_detalle_factura(id)), 'accion': 'E', 'factuCompra': factCompra}
     return render(request, 'compras/factura/edit_factura_compra.html', context)
 
 def get_detalle_factura(id):

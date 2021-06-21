@@ -218,6 +218,8 @@
 <script>
     var action = '{{ accion|safe }}';
 
+    var precio_compra_action = '{{ factuCompra.factura_cargada_pedido }}'
+    
     $.datepicker.regional['es'] = {
         closeText: 'Cerrar',
         prevText: '< Ant',
