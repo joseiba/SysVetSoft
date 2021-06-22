@@ -17,7 +17,7 @@ from reportlab.lib import colors
 
 from apps.compras.models import Proveedor, Pedido, FacturaCompra, FacturaDet, Pago, PedidoCabecera, PedidoDetalle
 from apps.compras.forms import ProveedorForm, PedidoForm, FacturaCompraForm, FacturaDetalleForm
-from apps.ventas.producto.models import Producto
+from apps.ventas.producto.models import Producto, HistoricoProductoPrecio
 from apps.configuracion.models import ConfiEmpresa
 from apps.caja.models import Caja
 
@@ -433,8 +433,16 @@ def edit_factura_compra(request, id):
                 detailFact.delete()
                 for i in factura_dict['products']:
                     detalle = FacturaDet()
+                    historico = HistoricoProductoPrecio()
                     detalle.id_factura = factura
                     producto_id = Producto.objects.get(id=i['codigo_producto'])
+                    historico.id_producto = producto_id
+                    historico.precio_compra = i['precio_compra']
+                    historico.fecha_alta = factura_dict['fecha_emision']
+                    print(i['precio_compra'])
+                    producto_id.precio_compra = i['precio_compra']
+                    producto_id.save()
+                    historico.save()
                     detalle.id_producto = producto_id
                     detalle.cantidad = int(i['cantidad'])
                     detalle.descripcion = i['description']

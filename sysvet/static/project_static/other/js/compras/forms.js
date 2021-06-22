@@ -76,9 +76,9 @@ var factura = {
                     orderable: false,
                     render: function (data, type, row) {
                         if(precio_compra_action != 'S'){
-                            return 'Gs. ' + '<input type="text" name="precio_compra" id="precio_compra" class="form-control form-control-sm input-sm" autocomplete="off" value="' + row.precio_compra + '">';
+                            return '<input type="text" name="precio_compra" id="precio_compra" class="form-control form-control-sm input-sm" autocomplete="off" value="' + row.precio_compra + '">';
                         }
-                        return 'Gs. ' + row.precio_compra;
+                        return row.precio_compra;
                     }
                 },
                 {
@@ -193,7 +193,7 @@ $(function () {
         factura.items.products[tr.row].description = descripcion;
     }).on('keyup', 'input[name="precio_compra"]', function(event) {
         $(event.target).val(function (index, value ) {
-            var cant = $(this).val();
+            var cant = add_miles($(this).val());
             var tr = tblFactura.cell($(this).closest('td, li')).index();
             factura.items.products[tr.row].precio_compra = cant;
             factura.calc_invoice();

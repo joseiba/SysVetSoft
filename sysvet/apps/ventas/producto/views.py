@@ -10,7 +10,7 @@ import json
 from django.http import JsonResponse
 
 from apps.ventas.producto.forms import TipoProductoForm, DepositoForm, ProductoForm
-from apps.ventas.producto.models import TipoProducto, Deposito, Producto, ProductoStock, Inventario
+from apps.ventas.producto.models import TipoProducto, Deposito, Producto, ProductoStock, Inventario, HistoricoProductoPrecio
 from apps.compras.models import FacturaCompra, FacturaDet
 from apps.ventas.factura.models import FacturaCabeceraVenta, FacturaDetalleVenta
 from apps.configuracion.models import ConfiEmpresa
@@ -422,7 +422,7 @@ def list_producto(request,id):
     except Exception as e:
         pass   
 
-    context = {'producto_detalle': data, 'producto_movido': data_detalle}
+    context = {'producto_detalle': data, 'producto_movido': data_detalle, 'id_producto': id}
     return render(request, "ventas/producto/list_producto.html", context)
 
 #Metodo para la busqueda de productos
@@ -689,6 +689,45 @@ def list_ajuste_inventario_historial_ajax(request):
     }
     return JsonResponse(response)
 
+
+#Historico Producto
+@login_required()
+@permission_required('producto.view_inventario')
+def list_historico_producto(request, id):
+    context = {'id_producto': id}
+    return render(request, "ventas/producto/list_historial_producto_precio.html", context)
+
+
+def get_historico_producto(request, id):
+    query = request.GET.get('busqueda')
+    if query != "":
+        productos = HistoricoProductoPrecio.objects.filter(id_producto=id)
+        productos = productos.filter(Q(id_producto__nombre_producto__icontains=query) | Q(fecha_alta__icontains=query))
+    else:
+        productos = HistoricoProductoPrecio.objects.filter(id_producto=id)
+
+
+    total = productos.count()
+
+    _start = request.GET.get('start')
+    _length = request.GET.get('length')
+    if _start and _length:
+        start = int(_start)
+        length = int(_length)
+        page = math.ceil(start / length) + 1
+        per_page = length
+
+        productos = productos[start:start + length]
+
+    data =[{'nombre': p.id_producto.nombre_producto, 'descripcion': p.id_producto.descripcion, 
+            'precio_compra': p.precio_compra, 'fecha_compra': p.fecha_alta} for p in productos]        
+        
+    response = {
+        'data': data,
+        'recordsTotal': total,
+        'recordsFiltered': total,
+    }
+    return JsonResponse(response)
 
 @csrf_exempt
 def get_producto_antiparasitario(request):

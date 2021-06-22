@@ -58,7 +58,7 @@ class ProductoForm(forms.ModelForm):
                 'name': 'fecha_movimiento', 'placeholder': 'Fecha de Movimiento'}),
             'fecha_compra' : forms.TextInput(attrs={'class':'form-control','type':'text', 'name': 'fecha_compra', 'autocomplete': 'off' ,
                 'placeholder': 'Fecha de Compra', 'readonly': 'readonly'}),
-			'precio_compra': forms.TextInput(attrs={'class':'form-control', 'required':'required','name': 'precio_compra', 'autocomplete': 'off' ,'placeholder': 'Precio de compra', 'onkeyup':'replaceABC(this)'}),
+			'precio_compra': forms.TextInput(attrs={'class':'form-control','name': 'precio_compra', 'autocomplete': 'off' ,'placeholder': 'Precio de compra', 'onkeyup':'replaceABC(this)', 'disabled': 'disabled'}),
             'precio_venta': forms.TextInput(attrs={'class':'form-control', 'required':'required','name': 'precio_venta','autocomplete': 'off' , 'placeholder': 'Precio de Venta', 'onkeyup':'replaceABC(this)'}),
             'stock_minimo': forms.TextInput(attrs={'class':'form-control', 'required':'required','name': 'stock_minimo','autocomplete': 'off' , 'placeholder': 'Stock Minimo', 'onkeyup':'replaceABC(this)'}),
             'stock_fisico': forms.TextInput(attrs={'class':'form-control','name': 'stock_fisico','autocomplete': 'off' , 'placeholder': 'Stock Fisico', 'onkeyup':'replaceABC(this)'}),
