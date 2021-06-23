@@ -285,19 +285,14 @@
                                             </div>
                                         </div>
 
-                                        <div class="col-lg-4 col-md-9 col-sm-9">
+                                        <div class="col-lg-4 col-md-9 col-sm-9 d-none" id="proxima_vacuna">
                                             <div class="mb-3 row">
                                                 <label for="" class="col-sm-12 col-form-label"
                                                     style="font-size: 16px;">Próxima Vacuna a Aplicar
                                                 </label>
                                                 <div class="col-sm-12">
-                                                    <p class="m-0">
-                                                        <select class="form-control" name="proxima_vacunacion" id="proxima_vacunacion">
-                                                            <option>-------</option>
-                                                            {% for vacu in vacunas_proxima %}
-                                                                <option value="{{ vacu.id }}"> {{ vacu.nombre_vacuna }}</option>
-                                                            {% endfor %}
-                                                        </select>
+                                                    <p class="m-0" id="list_vacunas_proximas">
+                                                    
                                                     </p>
                                                 </div>
                                             </div> 
@@ -368,8 +363,8 @@
                                                 value="{{ mascota.id }}">
                                             <input type="hidden" name="id_ficha_medica" id="id_ficha_medica"
                                                 value="{{ fichaMedicaGet.id }}">
-                                            <button type='submit' class="btn btn-primary">Actualizar</button>
-                                            <button' class="btn btn-success">
+                                            <button type='submit' class="btn btn-primary" id="btn_actualizar">Actualizar</button>
+                                            <button class="btn btn-success">
                                                 <a style="color: white; cursor: pointer;"
                                                     href="{% url  'list_mascotas'%}">
                                                     Volver
@@ -478,9 +473,9 @@
                                 autoclose: true,
                 }); 
 
-        $("#proxima_vacunacion").change(function(){
-            var tipo = $("#proxima_vacunacion").val()
-            if (tipo !== "Seleccione la proxima vacuna" && tipo != null) {
+        $(document).on('change', "#proxima_vacunacion", function(){
+            var tipo = $("#proxima_vacunacion").val() == "-------" ? "" : $("#proxima_vacunacion").val();
+            if (tipo !== "") {
                 $.ajax({
                     type: 'GET',
                     url: '/configuracion/get_periodo_vacunacion/',
@@ -568,6 +563,37 @@
                 noResults: function () {
                     return 'No se ha encontrado ningún resultado'
                 }
+            }
+        })
+
+        $("#id_vacuna").change(function(){
+            var id_vacuna = $(this).val() == "-------" ? "" : $(this).val();
+            if (id_vacuna !== ""){
+                var ficha_id = "{{ fichaMedicaGet.id }}";
+                $.ajax({
+                    url: "/mascota/get_prox_vacuna/",
+                    type: "GET",
+                    data: {"id_vacuna": id_vacuna, 'ficha_id': ficha_id},
+                    success: function(response){
+                        console.log(response)
+                        var prox_vacunas = JSON.parse(response.proximas_vacunas);
+                        var selectVac = '<select class="form-control" name="proxima_vacunacion" id="proxima_vacunacion">\
+                                                <option>-------</option>';
+                        $.each(prox_vacunas, function (i, data) {
+                            selectVac += "<option value='" + data.id + "'>" + data.nombre_vacuna + "</option>";
+                        });
+
+                        selectVac += '</select>';
+                        $("form").find("#proxima_vacuna").removeClass("d-none");
+                        $("#list_vacunas_proximas").html(selectVac)
+                    },
+                    error: function(error){
+
+                    },
+                })
+            }
+            else{
+                $("form").find("#proxima_vacuna").addClass("d-none");
             }
         })
 

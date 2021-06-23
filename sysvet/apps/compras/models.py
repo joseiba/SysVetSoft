@@ -172,6 +172,7 @@ class FacturaDet(models.Model):
     id_factura = models.ForeignKey('FacturaCompra', on_delete=models.CASCADE)
     id_pedido = models.ForeignKey('Pedido', on_delete=models.CASCADE, null=True)
     cantidad = models.IntegerField()
+    precio_compra = models.CharField(max_length=800, blank=True, null=True)
     detalle_cargado_reporte = models.CharField(max_length=2, default="N", blank=True, null=True)
     detalle_cargado_mes = models.CharField(max_length=2, default="N", blank=True, null=True)
     descripcion = models.CharField(max_length=800, blank=True)

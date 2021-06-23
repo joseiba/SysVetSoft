@@ -35,7 +35,7 @@ get_historico_producto)
 
 from apps.ventas.mascota.views import (list_mascotas, add_mascota, edit_mascota, list_especie, add_especie, 
 edit_especie,search_especie, list_raza, add_raza, edit_raza, search_raza,search_mascota, 
-edit_ficha_medica, list_historial, list_especie_ajax, get_list_raza_ajax)
+edit_ficha_medica, list_historial, list_especie_ajax, get_list_raza_ajax, get_prox_vacuna)
 
 from apps.reserva.views import (add_reserva, edit_reserva, list_reserva, delete_reserva, search_reserva, 
 validar_fecha_hora, get_mascota_cliente, get_min_service, get_mascota_selected)
@@ -153,7 +153,8 @@ urlpatterns = [
     path('mascota/editRaza/<int:id>/',  edit_raza, name="edit_raza"),
     path('mascota/searchRaza/', search_raza, name="search_raza"),
     path('mascota/editFichaMedica/<int:id>/', edit_ficha_medica, name="edit_ficha_medica"),
-    path('mascota/historial/<int:id>/', list_historial , name="list_historial"),    
+    path('mascota/historial/<int:id>/', list_historial , name="list_historial"),
+    path('mascota/get_prox_vacuna/', get_prox_vacuna, name="get_prox_vacuna"),    
     #End Urls Mascotas
 
     #Urls reservas 

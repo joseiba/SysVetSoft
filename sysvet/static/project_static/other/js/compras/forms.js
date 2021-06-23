@@ -15,7 +15,13 @@ var factura = {
     calc_invoice: function () {
         var subtotal = 0
         $.each(this.items.products, function (pos, dict) {
-            var dic_precio_format = dict.precio_compra.split('.')
+            var dic_precio_format ;
+            if(precio_compra_action != 'S'){
+                dic_precio_format = dict.precio_compra.split('.')
+            }
+            else{
+                dic_precio_format = dict.precio_compra_viejo.split('.')
+            }
             var dic_sum = "";
 
             for (let index = 0; index < dic_precio_format.length; index++) {
@@ -78,7 +84,7 @@ var factura = {
                         if(precio_compra_action != 'S'){
                             return '<input type="text" name="precio_compra" id="precio_compra" class="form-control form-control-sm input-sm" autocomplete="off" value="' + row.precio_compra + '">';
                         }
-                        return row.precio_compra;
+                        return "Gs. " + row.precio_compra_viejo;
                     }
                 },
                 {

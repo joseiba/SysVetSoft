@@ -127,7 +127,7 @@ def cerrar_caja(request, id):
             caja_cierre.total_pos = sum_pos_factura_venta()
             caja_cierre.total_pos_formateado = "Gs. " + "{:,}".format(int(caja_cierre.total_pos)).replace(",",".")
             sum_total_venta = sum_factura_venta()
-            saldo_entregrar = sum_total_venta 
+            saldo_entregrar = sum_total_venta - caja_cierre.saldo_inicial
             caja_cierre.total_ingreso = sum_total_venta
             caja_cierre.total_ingreso_formateado = "Gs. " + "{:,}".format(int(sum_total_venta)).replace(",",".")
             caja_cierre.total_egreso = sum_total_compras
@@ -250,7 +250,7 @@ def reporte_caja_pdf(request, id):
     pdf.drawString(50, 580, u"Total a Ingreso del Dia: ")
     pdf.drawString(200, 580, u"" + caja.saldo_a_entregar_formateado)
 
-    pdf.drawString(50, 550, u"Total a entregar: ")
+    pdf.drawString(50, 550, u"Saldo a entregar: ")
     pdf.drawString(200, 550, u"" + caja.saldo_a_entregar_formateado)
 
     #tabla_report(pdf, y, caja)

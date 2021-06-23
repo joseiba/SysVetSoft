@@ -302,7 +302,7 @@ def edit_ficha_medica(request,id):
         if list_historico.count() > 0:
             for vacu in vacunas:
                 try:
-                    test = list_historico.get(vacuna=vacu)
+                    vacu_historico = list_historico.get(vacuna=vacu)
                     if vacu.multi_aplicaciones == 'S':
                         vacuna_aplicado.append(vacu)
                         vacuna_proxima.append(vacu)
@@ -331,6 +331,51 @@ def edit_ficha_medica(request,id):
     }
 
     return render(request, "ventas/mascota/ficha_medica/edit_ficha_medica.html", context)
+
+def get_prox_vacuna(request):
+    vacuna_aplicada = TipoVacuna.objects.get(id=request.GET.get('id_vacuna'))
+    list_vacunas = TipoVacuna.objects.filter(id_producto=vacuna_aplicada.id_producto)
+    vacuna_proxima = []
+    data = []
+    list_historico = HistoricoFichaMedica.objects.filter(id_ficha_medica=request.GET.get('ficha_id'))
+    if list_historico.count() > 0:
+        try:
+            if vacuna_aplicada.multi_aplicaciones == 'N':
+                vacunas = list_vacunas.exclude(nombre_vacuna=vacuna_aplicada.nombre_vacuna)
+            else:
+                vacunas = list_vacunas
+            for vacu in vacunas:
+                try:
+                    vacu_historico = list_historico.get(vacuna=vacu)
+                    if vacu.multi_aplicaciones == 'S':
+                        vacuna_proxima.append(vacu)
+                except Exception as e:
+                    print(e)
+                    vacuna_proxima.append(vacu)
+        except Exception as e:
+            print(e)
+            for va in list_vacunas:
+                vacuna_proxima.append(va)
+    else:
+        if vacuna_aplicada.multi_aplicaciones == 'N':
+                vacunas = list_vacunas.exclude(nombre_vacuna=vacuna_aplicada.nombre_vacuna)
+        else:
+                vacunas = list_vacunas
+        for va in vacunas:
+            vacuna_proxima.append(va)
+
+        for priodad_vacuna in list_vacunas:
+            if int(priodad_vacuna.periodo_aplicacion) <= int(vacuna_aplicada.periodo_aplicacion):
+                if priodad_vacuna.multi_aplicaciones == 'N':
+                    try:
+                        vacuna_proxima.remove(priodad_vacuna)
+                    except:
+                        pass
+
+    data = [{'id': v.id, 'nombre_vacuna': v.nombre_vacuna } for v in vacuna_proxima]
+    list_vacunas_proximas = json.dumps(data)
+    response = {'proximas_vacunas': list_vacunas_proximas}
+    return JsonResponse(response)
 
 #Historico de Ficha Medica
 def list_historial(request, id):

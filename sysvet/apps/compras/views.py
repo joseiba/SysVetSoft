@@ -439,10 +439,10 @@ def edit_factura_compra(request, id):
                     historico.id_producto = producto_id
                     historico.precio_compra = i['precio_compra']
                     historico.fecha_alta = factura_dict['fecha_emision']
-                    print(i['precio_compra'])
                     producto_id.precio_compra = i['precio_compra']
                     producto_id.save()
                     historico.save()
+                    detalle.precio_compra = i['precio_compra']
                     detalle.id_producto = producto_id
                     detalle.cantidad = int(i['cantidad'])
                     detalle.descripcion = i['description']
@@ -470,6 +470,7 @@ def get_detalle_factura(id):
             item = i.id_producto.obtener_dict()
             item['description'] = i.descripcion
             item['cantidad'] = i.cantidad
+            item['precio_compra_viejo'] = i.precio_compra
             data.append(item)
     except:
         pass
