@@ -148,6 +148,13 @@
                                             {{form.dias_a_vencer}}
                                         </div>
                                     </div>
+                                    <div class="field item form-group">
+                                        <label class="col-form-label col-md-3 col-sm-3  label-align">Dias Aviso Proximas Vacunaciones*
+                                        </label>
+                                        <div class="col-md-9 col-sm-9">
+                                            {{form.dias_alert_vacunas}}
+                                        </div>
+                                    </div>
                                 </div>
 
                                 <div class="modal-footer">
@@ -234,7 +241,7 @@
             todayHighlight: true,
         });
 
-        $('input[name="dias_a_vencer"]').TouchSpin({
+        $('input[name="dias_a_vencer"],  input[name="dias_alert_vacunas"]').TouchSpin({
             min: 0,
             max: 1000000000,
             step: 1,

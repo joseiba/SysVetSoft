@@ -20,6 +20,7 @@ class ConfiEmpresa(models.Model):
     fecha_fin_timbrado = models.CharField(max_length=500, blank=True, null=True)
     ruc_empresa = models.CharField(max_length=500, blank=True, null=True)
     dias_a_vencer = models.IntegerField(blank=True, null=True, default=30)
+    dias_alert_vacunas = models.IntegerField(blank=True, null=True, default=30)
     class Meta:
         verbose_name = "Configuracion Empresa"
         verbose_name_plural = "Configuraciones Empresas"

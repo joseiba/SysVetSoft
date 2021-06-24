@@ -5,7 +5,7 @@ from datetime import datetime
 
 
 from apps.utiles.models import (Timbrado, ProductoVendido, ProductoComprados,ProductoVendidoMes, 
-ProductoCompradoMes,ServicioVendido,GananciaPorMes)
+ProductoCompradoMes,ServicioVendido,GananciaPorMes, Cedula, Ruc)
 
 from apps.ventas.factura.models import FacturaCabeceraVenta, FacturaDetalleVenta
 from apps.compras.models import FacturaCompra, FacturaDet
@@ -128,9 +128,7 @@ def cargar_producto_vendido_mes():
                                 produc.numero_mes = int(fecha_split[1])
                                 produc.cantidad_vendida_total = factDet.cantidad
                                 produc.save()
-                                print(e)
     except Exception as e:
-        print(e)
         pass
 
 def cargar_productos_comprado_mes():
@@ -157,7 +155,6 @@ def cargar_productos_comprado_mes():
                             produc.cantidad_comprada_total = factDet.cantidad
                             produc.save()
     except Exception as e:
-        print(e)
         pass
 
 def cargar_servicios_vendidos():
@@ -200,7 +197,6 @@ def cargar_ganacias_por_mes():
                     reporte_ga.total_mes_formateado = "Gs. " + '{0:,}'.format(reporte_ga.total_mes)
                     reporte_ga.save()
                 except Exception as e:
-                    print(e)
                     reporte_ga = GananciaPorMes()
                     reporte_ga.id_factura_venta = fv
                     reporte_ga.label_mes = label_mes[int(fecha_split[1]) - 1]
@@ -209,5 +205,43 @@ def cargar_ganacias_por_mes():
                     reporte_ga.total_mes_formateado = "Gs. " + '{0:,}'.format(reporte_ga.total_mes)
                     reporte_ga.save()
     except Exception as e:
-        print(e)
         pass
+
+
+def validar_cedula(request):
+    cedula = request.GET.get('cedula')
+    mensaje = ""
+    try:
+        list_cedula = Cedula.objects.filter(nro_cedula=cedula)
+        if list_cedula.count() > 0:
+            mensaje = 'EX'
+            response = {'mensaje': mensaje}
+            return JsonResponse(response)
+        else:
+            mensaje = 'OK'
+            response = {'mensaje': mensaje}
+            return JsonResponse(response)
+    except Exception as e:
+        print(e)
+        mensaje = 'ER'
+        response = {'mensaje': mensaje}
+        return JsonResponse(response)
+
+def validar_ruc(request):
+    obj_validar = request.GET.get('ruc')
+    mensaje = ""
+    try:
+        list_validaciones = Ruc.objects.filter(nro_ruc=obj_validar)
+        if list_validaciones.count() > 0:
+            mensaje = 'EX'
+            response = {'mensaje': mensaje}
+            return JsonResponse(response)
+        else:
+            mensaje = 'OK'
+            response = {'mensaje': mensaje}
+            return JsonResponse(response)
+    except Exception as e:
+        print(e)
+        mensaje = 'ER'
+        response = {'mensaje': mensaje}
+        return JsonResponse(response)

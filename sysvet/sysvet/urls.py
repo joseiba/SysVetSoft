@@ -63,9 +63,9 @@ reporte_caja_pdf)
 from apps.reporte.views import (reporte_producto,reporte_producto_comprados,reporte_ganancias_mes, reporte_prod_comprado, 
 reporte_prod_vendido, reporte_productos_vendido_mes, get_producto_vendido_mes, reporte_productos_comprado_mes,
 get_producto_comprado_mes, get_ganancias_mes, reporte_stock_minimo, get_producto_minimo, reporte_stock_a_vencer,
-get_producto_vencimiento, reporte_servicio_vendido, get_servicio_vendido)
+get_producto_vencimiento, reporte_servicio_vendido, get_servicio_vendido, list_proximas_vacunas, get_proximas_vacunas)
 
-from apps.utiles.views import (poner_vencido_timbrado, validate_nro_timbrado)
+from apps.utiles.views import (poner_vencido_timbrado, validate_nro_timbrado, validar_cedula, validar_ruc)
 
 urlpatterns = [
     # Login and logout   
@@ -250,11 +250,16 @@ urlpatterns = [
     path('reporte/get_producto_vencimiento/',get_producto_vencimiento, name="get_producto_vencimiento"),
     path('reporte/listServiciosVendidos/', reporte_servicio_vendido, name="reporte_servicio_vendido"),
     path('reporte/get_servicio_vendido/',get_servicio_vendido, name="get_servicio_vendido"),
+    path('reporte/listProximasVacunaciones/', list_proximas_vacunas, name="list_proximas_vacunas"),
+    path('reporte/get_proximas_vacunas/',get_proximas_vacunas, name="get_proximas_vacunas"),
 
 
     #Utiles
     path('utiles/poner_vencido_timbrado/', poner_vencido_timbrado, name="poner_vencido_timbrado"),
     path('utiles/validate_nro_timbrado/', validate_nro_timbrado, name="validate_nro_timbrado"),
+    path('utiles/validar_cedula/', validar_cedula, name="validar_cedula"),
+    path('utiles/validar_ruc/', validar_ruc, name="validar_ruc"),
+
 
 ]
 

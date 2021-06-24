@@ -16,6 +16,7 @@ from django.http import JsonResponse
 
 from .forms import ClienteForm
 from .models import Cliente, Ciudad
+from apps.utiles.models import Cedula, Ruc
 from sysvet.settings import STATIC_URL, MEDIA_URL
 
 
@@ -28,6 +29,13 @@ def add_cliente(request):
     if request.method == 'POST':
         form = ClienteForm(request.POST or None)
         if form.is_valid():
+            cedula = Cedula()
+            ruc = Ruc()
+            if request.POST.get('ruc') != '':
+                ruc.nro_ruc = request.POST.get('ruc')
+                ruc.save()
+            cedula.nro_cedula = request.POST.get('cedula')
+            cedula.save()
             messages.success(request, 'Se ha agregado correctamente!')
             form.save()
             return redirect('/cliente/add')
@@ -49,6 +57,13 @@ def edit_cliente(request, id):
         if form.is_valid():
             cliente = form.save(commit=False)
             cliente.save()
+            cedula = Cedula()
+            ruc = Ruc()
+            if request.POST.get('ruc') != '':
+                ruc.nro_ruc = request.POST.get('ruc')
+                ruc.save()
+            cedula.nro_cedula = request.POST.get('cedula')
+            cedula.save()
             messages.success(request, 'Se ha editado correctamente!')
             return redirect('/cliente/edit/'+ str(id))
 

@@ -11,7 +11,7 @@ from apps.configuracion.models import Servicio, Empleado, ConfiEmpresa, TipoVacu
 from apps.configuracion.forms import ServicioForm, EmpleadoForm, ConfiEmpresaForm, TipoVacunaForm
 from apps.ventas.producto.models import Deposito
 from apps.ventas.producto.models import Producto
-from apps.utiles.models import Timbrado
+from apps.utiles.models import Timbrado, Ruc, Cedula
 
 # Create your views here.
 
@@ -183,6 +183,9 @@ def add_empleado(request):
         if form.is_valid():           
             form.save()
             messages.success(request, 'Se ha agregado correctamente!')
+            cedula = Cedula()
+            cedula.nro_cedula = request.POST.get('ci_empe')
+            cedula.save()
             return redirect('/configuracion/listEmpleado/')
     context = {'form' : form}
     return render(request, 'configuraciones/empleado/add_empleado_modal.html', context)
@@ -200,6 +203,9 @@ def edit_empleado(request, id):
         if form.is_valid():
             emp = form.save(commit=False)
             emp.save()
+            cedula = Cedula()
+            cedula.nro_cedula = request.POST.get('ci_empe')
+            cedula.save()
             messages.success(request, 'Se ha editado correctamente!')
             return redirect('/configuracion/listEmpleado/')
     context = {'form' : form, 'emp': emp}
@@ -384,7 +390,6 @@ def get_periodo_vacunacion(request):
         response = {'mensaje': mensaje, 'periodo': vacuna.periodo_aplicacion}
         return JsonResponse(response) 
     except Exception as e:
-        print(e)
         mensaje = "error"
         response = {'mensaje': mensaje}
         return JsonResponse(response) 

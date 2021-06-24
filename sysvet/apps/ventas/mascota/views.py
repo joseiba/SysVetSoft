@@ -350,10 +350,8 @@ def get_prox_vacuna(request):
                     if vacu.multi_aplicaciones == 'S':
                         vacuna_proxima.append(vacu)
                 except Exception as e:
-                    print(e)
                     vacuna_proxima.append(vacu)
         except Exception as e:
-            print(e)
             for va in list_vacunas:
                 vacuna_proxima.append(va)
     else:
@@ -391,7 +389,7 @@ def list_historial(request, id):
 def create_historico_ficha_medica(id, proxima_vacunacion, antiparasitario_aplicado, proximo_antiparasitario_aplicado):
     historico = HistoricoFichaMedica()
     try:
-        historico_anteriores = HistoricoFichaMedica.objects.all()
+        historico_anteriores = HistoricoFichaMedica.objects.filter(id_ficha_medica=id)
         if historico_anteriores is not None:
             for hist in historico_anteriores:
                 hist.fecha_proxima_aplicacion = None
@@ -457,6 +455,7 @@ def create_historico_ficha_medica(id, proxima_vacunacion, antiparasitario_aplica
         historico.peso = mascota.peso
         historico.last_modified = fichaMedicaGet.fecha_create
         historico.id_ficha_medica = id
+        historico.id_mascota = mascota
         historico.save()
 
         vacunaGet.id_vacuna = None

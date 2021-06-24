@@ -20,6 +20,7 @@ from apps.compras.forms import ProveedorForm, PedidoForm, FacturaCompraForm, Fac
 from apps.ventas.producto.models import Producto, HistoricoProductoPrecio
 from apps.configuracion.models import ConfiEmpresa
 from apps.caja.models import Caja
+from apps.utiles.models import Ruc
 
 date = datetime.now()
 today = date.strftime("%d/%m/%Y")
@@ -33,6 +34,9 @@ def add_proveedor(request):
         if form.is_valid():           
             form.save()
             messages.success(request, 'Se ha agregado correctamente!')
+            ruc = Ruc()
+            ruc.nro_ruc = request.POST.get('ruc_proveedor')
+            ruc.save()
             return redirect('/compra/listProveedor')
     context = {'form' : form}
     return render(request, 'compras/proveedor/add_proveedor_modal.html', context)
@@ -51,6 +55,9 @@ def edit_proveedor(request, id):
             proveedor = form.save(commit=False)
             proveedor.save()
             messages.success(request, 'Se ha editado correctamente!')
+            ruc = Ruc()
+            ruc.nro_ruc = request.POST.get('ruc_proveedor')
+            ruc.save()
             return redirect('/compra/listProveedor')
     context = {'form' : form, 'proveedor': proveedor}
     return render(request, 'compras/proveedor/edit_proveedor_modal.html', context)

@@ -11,13 +11,12 @@ from django.http import JsonResponse
 
 from apps.utiles.views import (cargar_productos_vendidos, cargar_productos_comprados, cargar_ganacias_por_mes,
 cargar_producto_vendido_mes, cargar_productos_comprado_mes, cargar_servicios_vendidos)
-
 from apps.utiles.models import (ProductoVendido, ProductoComprados,ProductoCompradoMes, ProductoVendidoMes,
 GananciaPorMes, ServicioVendido)
-
 from apps.configuracion.models import ConfiEmpresa
-
 from apps.ventas.producto.models import Producto
+from apps.ventas.mascota.models import Mascota, HistoricoFichaMedica
+from apps.ventas.cliente.models import Cliente
 
 today = datetime.now()
 hoy = date.today()
@@ -221,7 +220,6 @@ def get_producto_vencimiento(request):
         confi = ConfiEmpresa.objects.get(id=1)
         dias_compare = confi.dias_a_vencer
     except Exception as e:
-        print(e)
         dias_compare = 30
     
     if query != "":
@@ -287,6 +285,65 @@ def get_servicio_vendido(request):
     return JsonResponse(response)
 
 
+@login_required()
+@permission_required('reporte.view_reporte')
+def list_proximas_vacunas(request):
+    return render(request, 'reporte/mascota/list_proximas_vacunas.html')
+
+
+def get_proximas_vacunas(request):
+    query = request.GET.get('busqueda')
+    ficha = []
+
+    try:
+        confi = ConfiEmpresa.objects.get(id=1)
+        dias_compare = confi.dias_alert_vacunas
+    except Exception as e:
+        dias_compare = 30
+    
+    if query != "":
+        list_historico = HistoricoFichaMedica.objects.filter(Q(id_mascota__nombre_mascota__icontains=query) 
+                                                            |Q(id_mascota__id_cliente__nombre_cliente__icontains=query)
+                                                            |Q(id_mascota__id_cliente__apellido_cliente__icontains=query))
+    else:
+        list_historico = HistoricoFichaMedica.objects.all()
+    for f in list_historico:
+        if f.fecha_proxima_aplicacion is not None:
+            if rest_dates(f.fecha_proxima_aplicacion) <= dias_compare:
+                ficha.append(f)
+
+    total =  len(ficha)
+
+    _start = request.GET.get('start')
+    _length = request.GET.get('length')
+    if _start and _length:
+        start = int(_start)
+        length = int(_length)
+        page = math.ceil(start / length) + 1
+        per_page = length
+
+        ficha = ficha[start:start + length]
+
+    data =[{'id': f.id, 'cliente':try_exception_cliente(f.id_mascota.id_cliente), 'mascota': f.id_mascota.nombre_mascota,
+            'telefono': f.id_mascota.id_cliente.telefono, 'vacuna': f.proxima_vacunacion, 
+                'fecha': f.fecha_proxima_aplicacion} for f in ficha]         
+    response = {
+        'data': data,
+        'recordsTotal': total,
+        'recordsFiltered': total,
+    }
+    return JsonResponse(response)
+
+def try_exception_cliente(id):
+    try:
+        cli = Cliente.objects.get(id=id.id)
+        if cli.ruc is None:
+            ruc_cedula = cli.cedula
+        else:
+            ruc_cedula = cli.ruc
+        return 'Nombre: ' + cli.nombre_cliente + " " + cli.apellido_cliente  +'</br> ' + 'Ruc/Cédula: ' + ruc_cedula
+    except Exception as e:
+        return '-'
 
 def rest_dates(fecha_vencimiento):
     try:

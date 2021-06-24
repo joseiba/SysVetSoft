@@ -57,7 +57,7 @@
 
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                <button type="submit" class="btn btn-primary">Agregar</button>
+                <button type="submit" class="btn btn-primary" id="btn_confirmar">Agregar</button>
             </div>
         </form>
     </div>
@@ -70,6 +70,7 @@
 <script src="/static/project_static/vendors/validator/multifield.js"></script>
 <script src="/static/project_static/other/js/jquery-timepicker-1.3.5/jquery.timepicker.min.js"></script>
 <script src="/static/project_static/other/js/main.js"></script>
+<script src="/static/project_static/other/js/sweetalert.min.js"></script>
 
 <script>
 
@@ -99,5 +100,44 @@
         $('form input').on("cut copy paste",function(e) {
             e.preventDefault();
         });
+
+    $("input[name='ruc_proveedor']").keyup(function () {
+      var ruc = $(this).val();
+
+      if (ruc != "") {
+        $.ajax({
+          url: '/utiles/validar_ruc/',
+          type: 'GET',
+          data: { 'ruc': ruc },
+          success: function (response) {
+            if (response.mensaje != "ER") {
+              if (response.mensaje != "OK") {
+                swal({
+                  title: "Notificación",
+                  text: "El ruc ingresado ya existe!",
+                  icon: "warning",
+                  button: "Ok",
+                })
+                $('form').find('#btn_confirmar').addClass('d-none')
+              } else {
+                $('form').find('#btn_confirmar').removeClass('d-none')
+              }
+            }
+            else {
+              swal({
+                title: "Notificación",
+                text: "ha ocurrido un error, intenlo de nuevo",
+                icon: "error",
+                button: "Ok",
+              })
+              $('form').find('#btn_confirmar').addClass('d-none')
+            }
+          },
+          error: function (error) {
+
+          },
+        })
+      }
+    })
     })
 </script>
