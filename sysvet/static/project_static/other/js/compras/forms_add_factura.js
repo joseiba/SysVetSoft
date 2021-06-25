@@ -16,12 +16,7 @@ var factura = {
         var subtotal = 0
         $.each(this.items.products, function (pos, dict) {
             var dic_precio_format ;
-            if(precio_compra_action != 'S'){
-                dic_precio_format = dict.precio_compra.split('.')
-            }
-            else{
-                dic_precio_format = dict.precio_compra_viejo.split('.')
-            }
+            dic_precio_format = dict.precio_compra.split('.')
             var dic_sum = "";
 
             for (let index = 0; index < dic_precio_format.length; index++) {
@@ -81,10 +76,7 @@ var factura = {
                     class: "text-center my-0 ",
                     orderable: false,
                     render: function (data, type, row) {
-                        if(precio_compra_action != 'S'){
                             return '<input type="text" name="precio_compra" id="precio_compra" class="form-control form-control-sm input-sm" autocomplete="off" value="' + row.precio_compra + '">';
-                        }
-                        return "Gs. " + row.precio_compra_viejo;
                     }
                 },
                 {
@@ -92,17 +84,9 @@ var factura = {
                     width: "10%",
                     class: "text-center",
                     orderable: false,  
-                    /*render: function (data, type, row) {
-                        if(action == "A"){
-                            if(row.cantidad_pedido === "-"){
-                                return '<input type="text" name="cantidad" class="form-control form-control-sm input-sm" autocomplete="off" value="' + row.cantidad + '">';
-                            }else{
-                                return '<input type="text" name="cantidad" class="form-control form-control-sm input-sm" autocomplete="off" value="' + row.cantidad + '">';
-                            }    
-                        }else{  
-                            return '<input type="text" name="cantidad" class="form-control form-control-sm input-sm" autocomplete="off" value="' + row.cantidad + '">';
-                        }                                            
-                    }   */              
+                    render: function (data, type, row) {
+                        return '<input type="text" name="cantidad" class="form-control form-control-sm input-sm" autocomplete="off" value="' + row.cantidad + '">'; 
+                    }
                 },
                 {
                     targets: [5],
@@ -113,15 +97,15 @@ var factura = {
                         return 'Gs. ' + amount_formated
                     }
                 },
-                /*{
-                    targets: [5],
+                {
+                    targets: [6],
                     class: "text-center",
                     width: "5%",
                     orderable: false,
                     render: function (data, type, row) {
                         return '<a rel="remove" class="btn btn-danger m-0 p-0"><i class="fa fa-trash m-1" style="color: white" aria-hidden="true"></i>\n</i></a>'
                     }
-                },*/
+                },
             ],
             rowCallback(row, data, displayNum, displayIndex, dataIndex) {
                 $(row).find('input[name="cantidad"]').TouchSpin({
@@ -161,13 +145,7 @@ var factura = {
 $(function () {
     $('#search').on('select2:select', function (e) {
         var data = e.params.data;
-        if(data.cantidad_pedido === "-"){
-                data['cantidad'] = 1;
-        }else{
-                data['cantidad'] = parseInt(data.cantidad_pedido);
-            }
-        
-        //data['subtotal'] = 0;
+        data['subtotal'] = 0;
         //se agrega los datos a la estructura
         factura.add(data)
         // borra luego de la seleccion

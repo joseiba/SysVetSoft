@@ -370,6 +370,62 @@ def get_detalle_pedido_compra(id):
 
 
 #Facturas compras
+@login_required()
+@permission_required('compras.add_facturacompra')
+def agregar_factura_compra(request):
+    form = FacturaCompraForm()
+    data = {}
+    mensaje = ""
+    if request.method == 'POST' and request.is_ajax():
+        try:        
+            factura_dict = json.loads(request.POST['factura'])
+            try:
+                factura = FacturaCompra()
+                factura.nro_factura = factura_dict['nro_factura']
+                factura.nro_timbrado = factura_dict['nro_timbrado']
+                proveedor_id = Proveedor.objects.get(id=factura_dict['proveedor'])           
+                factura.id_proveedor = proveedor_id
+                factura.fecha_emision = factura_dict['fecha_emision']
+                factura.fecha_vencimiento = factura_dict['fecha_vencimiento']
+                factura.factura_cargada_pedido = 'S'
+                factura.estado = 'PENDIENTE'
+                factura.total_iva = int(factura_dict['total_iva'])
+                factura.total = int(factura_dict['total_factura'])                
+                factura.save()
+                factura_id = FacturaCompra.objects.get(id=factura.id)
+                for i in factura_dict['products']:
+                    detalle = FacturaDet()
+                    historico = HistoricoProductoPrecio()
+                    detalle.id_factura = factura_id    
+                    producto_id = Producto.objects.get(id=i['codigo_producto'])
+                    historico.id_producto = producto_id
+                    historico.precio_compra = i['precio_compra']
+                    historico.fecha_alta = factura_dict['fecha_emision']
+                    producto_id.precio_compra = i['precio_compra']
+                    producto_id.save()
+                    historico.save() 
+                    detalle.precio_compra = i['precio_compra']
+                    detalle.id_producto = producto_id
+                    detalle.cantidad = int(i['cantidad'])
+                    detalle.descripcion = i['description']
+                    detalle.save()
+                response = {'mensaje':mensaje }
+                return JsonResponse(response)
+            except Exception as e:
+                print(e)
+                mensaje = 'error'
+                response = {'mensaje':mensaje }
+                return JsonResponse(response)
+        except Exception as e:
+            print(e)
+            mensaje = 'error'
+            response = {'mensaje':mensaje }
+        return JsonResponse(response)
+    context = {'form': form, 'calc_iva': 5, 'accion': 'A'}
+    return render(request, 'compras/factura/add_factura_compra.html', context)
+
+
+
 def add_factura_compra():
     pedido_cabecera = PedidoCabecera.objects.exclude(is_active='N').all()
     if pedido_cabecera is not None:
@@ -514,7 +570,7 @@ def list_facturas_ajax(request):
 
         factCompra = factCompra[start:start + length]
     
-    data= [{'id_pedido': fc.id_pedido_cabecera.id,'id': fc.id,'nro_factura': fc.nro_factura, 'nro_timbrado': fc.nro_timbrado, 'fecha_emision': fc.fecha_emision, 'fecha_vencimiento': fc.fecha_vencimiento, 
+    data= [{'id': fc.id,'nro_factura': fc.nro_factura, 'nro_timbrado': fc.nro_timbrado, 'fecha_emision': fc.fecha_emision, 'fecha_vencimiento': fc.fecha_vencimiento, 
             'proveedor': try_exception(fc.id_proveedor), 'im_total': fc.total} for fc in factCompra]     
 
     response = {

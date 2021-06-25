@@ -361,15 +361,20 @@ def get_prox_vacuna(request):
                 vacunas = list_vacunas
         for va in vacunas:
             vacuna_proxima.append(va)
-
+    try:
         for priodad_vacuna in list_vacunas:
+            print("entro")
             if int(priodad_vacuna.periodo_aplicacion) <= int(vacuna_aplicada.periodo_aplicacion):
                 if priodad_vacuna.multi_aplicaciones == 'N':
                     try:
                         vacuna_proxima.remove(priodad_vacuna)
                     except:
                         pass
-
+    except Exception as e:
+        print(e)
+        pass
+        
+    print(vacuna_proxima)
     data = [{'id': v.id, 'nombre_vacuna': v.nombre_vacuna } for v in vacuna_proxima]
     list_vacunas_proximas = json.dumps(data)
     response = {'proximas_vacunas': list_vacunas_proximas}

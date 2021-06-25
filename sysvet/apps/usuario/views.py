@@ -97,8 +97,10 @@ def list_usuarios_ajax(request):
     query = request.GET.get('busqueda')
     if query != "":
         usuario = User.objects.exclude(is_active=False).filter(Q(first_name__icontains=query) | Q(last_name__icontains=query) | Q(username__icontains=query))
+        usuario = usuario.exclude(is_superuser=True)
     else:
         usuario = User.objects.exclude(is_active=False).all()
+        usuario = usuario.exclude(is_superuser=True)
 
     total = usuario.count()
 
@@ -127,8 +129,11 @@ def list_usuarios_baja_ajax(request):
     query = request.GET.get('busqueda')
     if query != "":
         usuario = User.objects.exclude(is_active=True).filter(Q(first_name__icontains=query) | Q(last_name__icontains=query) | Q(username__icontains=query))
+        usuario = usuario.exclude(is_superuser=True)
     else:
         usuario = User.objects.exclude(is_active=True).all()
+        usuario = usuario.exclude(is_superuser=True)
+
 
     total = usuario.count()
 
