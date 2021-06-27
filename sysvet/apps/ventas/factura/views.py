@@ -68,6 +68,11 @@ def list_facturas__ventas_ajax(request):
     }
     return JsonResponse(response)
 
+@login_required()
+@permission_required('factura.view_facturacabeceraventa')
+def list_facturas_ventas_anuladas(request):    
+    return render(request, 'ventas/factura/list_facturas_anuladas.html')
+
 
 def list_facturas_anuladas_ventas_ajax(request):
     query = request.GET.get('busqueda')

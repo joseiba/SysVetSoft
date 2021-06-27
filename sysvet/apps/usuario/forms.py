@@ -106,9 +106,9 @@ class UserFormChange(UserChangeForm):
             return user
 
 
-queryset = ["user",
+queryset = [
+"user",
 "producto",
-"ciudad",
 "especie",
 "raza",
 "cliente",
@@ -135,7 +135,7 @@ class GroupForm(ModelForm):
         fields = ('name', 'permissions')
         widgets = {
             'name': forms.TextInput(attrs={
-                'class':'form-control'
+                'class':'form-control', 'autocomplete': 'off',
             }),
             'permissions': forms.CheckboxSelectMultiple(),
         }
@@ -151,7 +151,7 @@ class GroupChangeForm(ModelForm):
         fields = ('name', 'permissions')
         widgets = {
             'name': forms.TextInput(attrs={
-                'class':'form-control'
+                'class':'form-control', 'autocomplete': 'off',
             }),
             'permissions': forms.CheckboxSelectMultiple(),
         }

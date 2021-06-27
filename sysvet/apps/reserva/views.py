@@ -4,7 +4,7 @@ from django.contrib import messages
 from django.db.models import Q
 from django.core.paginator import Paginator
 from django.http import JsonResponse
-from datetime import time, datetime
+from datetime import time, datetime, date
 import json
 
 from apps.reserva.models import Reserva
@@ -17,7 +17,7 @@ from apps.ventas.mascota.models import Mascota
 hora_entrada = "08:00"
 hora_salida_lun_vie = "18:00"
 hora_salida_sab = "15:00"
-
+today = date.today()
 #Reservas
 @login_required()
 @permission_required('reserva.add_reserva')
@@ -57,7 +57,17 @@ def edit_reserva(request, id):
 @login_required()
 @permission_required('reserva.view_reserva')
 def list_reserva(request):
+    data = []
     reserva = Reserva.objects.all()
+    fechaDate = date(today.year, today.month, today.day)
+    for r in reserva:
+        if r.fecha_reserva is not None:
+            if fechaDate > r.fecha_reserva:
+                if r.estado_re == 'PEN':
+                    r.estado_re = 'FIN'
+                    r.disponible_emp = "S"
+                    r.color_estado = "green"
+                    r.save()                                                     
     paginator = Paginator(reserva, 10)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)

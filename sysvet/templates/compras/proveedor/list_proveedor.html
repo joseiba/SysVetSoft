@@ -93,6 +93,7 @@
                                             data-toggle="tooltip" data-placement="top"
                                             title="Buscar por nombre y ruc del proveedor"
                                             placeholder="Buscár por nombre y ruc del proveedor"
+                                            autocomplete="off"
                                             onkeyup="replaceDirection(this)">
                                         <button type="button" id="busqueda" class="searchButton">
                                             <i class="fa fa-search"></i>
@@ -170,7 +171,7 @@
 <script>
     $(function () {
 
-        $('form input').on("cut copy paste", function (e) {
+        $('input').on("cut copy paste", function (e) {
             e.preventDefault();
         });        
 

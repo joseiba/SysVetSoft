@@ -42,13 +42,14 @@ class ServicioForm(forms.ModelForm):
         model = Servicio
         exclude = ['is_active']
         widgets = {
-            'cod_serv' : forms.TextInput(attrs={'class':'form-control', 'name': 'cod_serv', 'placeholder': 'Nombre del Servicio', 'required': 'required','onkeyup':'replaceCaratect(this)'}),
-			'nombre_servicio' : forms.TextInput(attrs={'class':'form-control','data-validate-length-range':'20', 
-                'data-validate-words':'4', 'name': 'nombre_servicio', 'placeholder': 'Nombre del Servicio', 'required': 'required','onkeyup':'replaceCaratect(this)'}),
-			'precio_servicio' : forms.TextInput(attrs={'class':'form-control', 'name': 'precio_servicio', 'placeholder': 'Precio del Servicio', 
-                'required': 'required','onkeyup':'replaceABC(this)'}),
-            'min_serv' : forms.TextInput(attrs={'class':'form-control', 'name': 'min_serv', 'placeholder': 'Tiempo del servicio en minutos', 
-                'required': 'required','onkeyup':'replaceABC(this)'})
+            'cod_serv' : forms.TextInput(attrs={'class':'form-control', 'name': 'cod_serv', 'placeholder': 'Nombre del Servicio', 
+                'autocomplete': 'off','required': 'required','onkeyup':'replaceCaratect(this)'}),
+			'nombre_servicio' : forms.TextInput(attrs={'class':'form-control','autocomplete': 'off', 'name': 'nombre_servicio',
+                'placeholder': 'Nombre del Servicio', 'required': 'required','onkeyup':'replaceCaratect(this)'}),
+			'precio_servicio' : forms.TextInput(attrs={'class':'form-control', 'name': 'precio_servicio', 
+                'placeholder': 'Precio del Servicio', 'autocomplete': 'off','required': 'required','onkeyup':'replaceABC(this)'}),
+            'min_serv' : forms.TextInput(attrs={'class':'form-control', 'name': 'min_serv', 
+                'placeholder': 'Tiempo del servicio en minutos', 'autocomplete': 'off','required': 'required','onkeyup':'replaceABC(this)'})
 		}
 
 
@@ -62,9 +63,12 @@ class EmpleadoForm(forms.ModelForm):
         model = Empleado
         exclude = ['is_active']
         widgets = {
-            'nombre_emp' : forms.TextInput(attrs={'class':'form-control', 'name': 'nombre_emp', 'placeholder': 'Nombre del Empleado', 'required': 'required','onkeyup':'replaceCaratect(this)'}),
-            'apellido_emp' : forms.TextInput(attrs={'class':'form-control', 'name': 'apellida_emp', 'placeholder': 'Apellido del Empleado', 'required': 'required','onkeyup':'replaceCaratect(this)'}),
-            'ci_empe' : forms.TextInput(attrs={'class':'form-control', 'name':'apellido_emp', 'placeholder': 'Nro. Cédula', 'required':'required','onkeyup':'replaceABC(this)'}),
+            'nombre_emp' : forms.TextInput(attrs={'class':'form-control', 'name': 'nombre_emp', 
+                'placeholder': 'Nombre del Empleado', 'required': 'required','onkeyup':'replaceCaratect(this)', 'autocomplete': 'off'}),
+            'apellido_emp' : forms.TextInput(attrs={'class':'form-control', 'name': 'apellida_emp', 
+                'placeholder': 'Apellido del Empleado', 'required': 'required','onkeyup':'replaceCaratect(this)', 'autocomplete': 'off'}),
+            'ci_empe' : forms.TextInput(attrs={'class':'form-control', 'name':'apellido_emp', 
+                'placeholder': 'Nro. Cédula', 'required':'required','onkeyup':'replaceABC(this)', 'autocomplete': 'off'}),
 			'disponible' : forms.CheckboxInput(attrs={'class':'form-control', 'type': 'checkbox','name': 'disponible'}),
             'id_servicio' : forms.Select(attrs={'class':'form-control', 'id': 'id_servicio','required':'required' ,'name':'id_servicio'}),        
 		}

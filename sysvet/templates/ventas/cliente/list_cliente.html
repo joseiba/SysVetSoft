@@ -76,13 +76,19 @@
                         {% endfor %}
                     </div>
                     {% endif %}
-                    <div>
-                        
+                    <div>                     
+
                         {% if perms.cliente.add_cliente %}
                             <button type="submit" class="btn btn-primary float-right">
                                 <a style="color: white;" href="{% url 'add_cliente' %}">Agregar nuevo cliente</a>
                             </button>
-                        {% endif %}                        
+                        {% endif %}                                            
+
+                        {% if perms.cliente.view_cliente %}
+                            <button type="submit" class="btn btn-success float-right">
+                                <a style="color: white;" href="{% url 'list_clientes_baja' %}">Clientes dados de baja</a>
+                            </button>
+                        {% endif %}  
 
                         <div class="float-left">
                             <div class="wrap">
@@ -200,7 +206,7 @@
         })
 
 
-        $('form input').on("cut copy paste", function (e) {
+        $('input').on("cut copy paste", function (e) {
             e.preventDefault();
         });        
 

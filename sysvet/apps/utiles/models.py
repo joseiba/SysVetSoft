@@ -37,12 +37,14 @@ class ProductoVendidoMes(models.Model):
     id_producto = models.ForeignKey(Producto, on_delete=models.CASCADE, null=True)
     numero_mes =  models.IntegerField(null=True, blank=True)
     label_mes = models.CharField(max_length=500, null=True, blank=True)
+    anho =  models.CharField(max_length=500, null=True, blank=True)
     cantidad_vendida_total = models.FloatField(null=True, blank=True, default=0)
 
 class ProductoCompradoMes(models.Model):
     id_producto = models.ForeignKey(Producto, on_delete=models.CASCADE, null=True)
     numero_mes =  models.IntegerField(null=True, blank=True)
     label_mes = models.CharField(max_length=500, null=True, blank=True)
+    anho =  models.CharField(max_length=500, null=True, blank=True)
     cantidad_comprada_total = models.FloatField(null=True, blank=True, default=0)
 
 class ServicioVendido(models.Model):
@@ -52,6 +54,7 @@ class ServicioVendido(models.Model):
 class GananciaPorMes(models.Model):
     numero_mes =  models.IntegerField(null=True, blank=True)
     label_mes = models.CharField(max_length=500, null=True, blank=True)
+    anho = models.CharField(max_length=500, null=True, blank=True)
     total_mes = models.FloatField(null=True, blank=True)
     total_mes_formateado = models.CharField(max_length=600, null=True, blank=True)
     id_factura_venta = models.ForeignKey(FacturaCabeceraVenta, on_delete=models.CASCADE, null=True)

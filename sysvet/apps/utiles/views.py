@@ -117,7 +117,10 @@ def cargar_producto_vendido_mes():
                             factDet.detalle_cargado_mes = "S"
                             factDet.save()
                             try:
-                                produc = ProductoVendidoMes.objects.get(numero_mes=int(fecha_split[1]))
+                                produc = ProductoVendidoMes.objects.filter(anho=fecha_split[2])
+                                if produc.count() == 0:
+                                    produc = produc.get(anho=fecha_split[2])
+                                produc = produc.get(numero_mes=int(fecha_split[1]))
                                 produc.cantidad_vendida_total += factDet.cantidad
                                 produc.save()
                             except Exception as e:
@@ -126,6 +129,7 @@ def cargar_producto_vendido_mes():
                                 produc.id_producto = pro_id
                                 produc.label_mes = label_mes[int(fecha_split[1]) - 1]
                                 produc.numero_mes = int(fecha_split[1])
+                                produc.anho = fecha_split[2]
                                 produc.cantidad_vendida_total = factDet.cantidad
                                 produc.save()
     except Exception as e:
@@ -143,7 +147,10 @@ def cargar_productos_comprado_mes():
                         factDet.detalle_cargado_mes = "S"
                         factDet.save()
                         try:
-                            produc = ProductoCompradoMes.objects.get(numero_mes=int(fecha_split[1]))
+                            produc = ProductoCompradoMes.objects.filter(anho=fecha_split[2])
+                            if produc.count() == 0:
+                                produc = produc.get(anho=fecha_split[2])
+                            produc = produc.get(numero_mes=int(fecha_split[1]))
                             produc.cantidad_comprada_total += factDet.cantidad
                             produc.save()
                         except Exception as e:
@@ -152,6 +159,7 @@ def cargar_productos_comprado_mes():
                             produc.id_producto = pro_id
                             produc.label_mes = label_mes[int(fecha_split[1]) - 1]
                             produc.numero_mes = int(fecha_split[1])
+                            produc.anho = fecha_split[2]
                             produc.cantidad_comprada_total = factDet.cantidad
                             produc.save()
     except Exception as e:
@@ -192,7 +200,10 @@ def cargar_ganacias_por_mes():
                 fv.save()
                 fecha_split = fv.fecha_alta.split('/')
                 try:
-                    reporte_ga = GananciaPorMes.objects.get(numero_mes=int(fecha_split[1]))
+                    reporte_ga = GananciaPorMes.objects.filter(anho=fecha_split[2])
+                    if reporte_ga.count() == 0:
+                        reporte_ga = reporte_ga.get(anho=fecha_split[2])
+                    reporte_ga = reporte_ga.get(numero_mes=int(fecha_split[1]))
                     reporte_ga.total_mes += int(fv.total) 
                     reporte_ga.total_mes_formateado = "Gs. " + '{0:,}'.format(reporte_ga.total_mes)
                     reporte_ga.save()
@@ -201,6 +212,7 @@ def cargar_ganacias_por_mes():
                     reporte_ga.id_factura_venta = fv
                     reporte_ga.label_mes = label_mes[int(fecha_split[1]) - 1]
                     reporte_ga.numero_mes = int(fecha_split[1])
+                    reporte_ga.anho = fecha_split[2]
                     reporte_ga.total_mes = int(fv.total)
                     reporte_ga.total_mes_formateado = "Gs. " + '{0:,}'.format(reporte_ga.total_mes)
                     reporte_ga.save()
@@ -222,7 +234,6 @@ def validar_cedula(request):
             response = {'mensaje': mensaje}
             return JsonResponse(response)
     except Exception as e:
-        print(e)
         mensaje = 'ER'
         response = {'mensaje': mensaje}
         return JsonResponse(response)
@@ -241,7 +252,6 @@ def validar_ruc(request):
             response = {'mensaje': mensaje}
             return JsonResponse(response)
     except Exception as e:
-        print(e)
         mensaje = 'ER'
         response = {'mensaje': mensaje}
         return JsonResponse(response)

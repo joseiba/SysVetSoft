@@ -12,7 +12,8 @@ class ReservaForm(forms.ModelForm):
         model = Reserva
         exclude = ['is_active']
         widgets = {
-			'descripcion' : forms.TextInput(attrs={'class':'form-control', 'name': 'descripcion', 'placeholder': 'Descripción de la reserva','onkeyup':'replaceDirection(this)'}),
+			'descripcion' : forms.TextInput(attrs={'class':'form-control', 'name': 'descripcion', 'placeholder': 'Descripción de la reserva','onkeyup':'replaceDirection(this)',
+                'autocomplete': 'off'}),
             'fecha_reserva' :forms.HiddenInput(attrs={'id':'fecha_reserva'}),
             'hora_reserva' : forms.TextInput(attrs={'class':'form-control timepicker d-none', 'type': 'text','name':'hora_reserva','id':'hora_reserva' ,'required': 'required'}),
             'id_servicio' : forms.Select(attrs={'class':'form-control', 'id': 'id_servicio','required':'required' ,'name':'id_servicio'}),        

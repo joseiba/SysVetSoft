@@ -15,7 +15,8 @@
                 <label class="col-form-label col-md-3 col-sm-3  label-align">Nombre Proveedor<span
                         class="required">*</span></label>
                 <div class="col-md-7 col-sm-6">
-                    <input class="form-control"name="nombre_proveedor" placeholder="Nombre del Proveedor" required="required" onkeyup="replaceDirection(this)"/>
+                    <input class="form-control"name="nombre_proveedor" placeholder="Nombre del Proveedor" 
+                        autocomplete="off" required="required" onkeyup="replaceDirection(this)"/>
                 </div>
             </div>   
             <div class="field item form-group">
@@ -23,7 +24,8 @@
                     <span class="required">*</span>
                 </label>
                 <div class="col-md-7 col-sm-6">
-                    <input class="form-control" class='optional' name="direccion" placeholder="Dirección" type="text" required="required" onkeyup="replaceDirection(this)"/>
+                    <input class="form-control" class='optional' name="direccion" placeholder="Dirección" 
+                    autocomplete="off" type="text" required="required" onkeyup="replaceDirection(this)"/>
                 </div>
             </div> 
 
@@ -32,7 +34,7 @@
                         class="required">*</span></label>
                 <div class="col-md-7 col-sm-6">
                     <input class="form-control" name="ruc_proveedor" placeholder="Nro. RUC"
-                        type="text" onkeyup = "replaceABC(this)" required="required"/>
+                        type="text" onkeyup = "replaceABC(this)" required="required" autocomplete="off"/>
                 </div>
             </div>
             <div class="field item form-group mb-3">
@@ -40,7 +42,7 @@
                         class="required">*</span></label>
                 <div class="col-md-7 col-sm-6">
                     <input class="form-control" type="tel" class='tel' name="telefono"
-                        placeholder="Telefono" required='required' data-validate-length-range="9" onkeyup = "replaceABC(this)"/>
+                        placeholder="Telefono" required='required' autocomplete="off" onkeyup = "replaceABC(this)"/>
                 </div>
             </div> 
             
@@ -48,7 +50,7 @@
                 <label class="col-form-label col-md-3 col-sm-3  label-align">Email</label>
                 <div class="col-md-7 col-sm-6">
                     <input class="form-control" id="email" name="email" placeholder="Email"
-                        type="email"/>
+                        type="email" autocomplete="off"/>
                 </div>
                 <div id="alert_email">
 

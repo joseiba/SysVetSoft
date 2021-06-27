@@ -172,6 +172,11 @@
                         <ul class="nav child_menu">
 
                             {% if perms.configuracion.view_confiempresa %}
+                            <li><a href="{% url 'list_ciudades' %}">Lista de Ciudades</a></li>
+    
+                            {% endif %}
+
+                            {% if perms.configuracion.view_confiempresa %}
                             <li><a href="{% url 'list_tipo_producto' %}">Tipo Productos</a></li>
     
                             {% endif %}

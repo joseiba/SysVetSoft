@@ -23,7 +23,7 @@ from django.conf.urls.static import static
 from apps.usuario.views  import Login, logoutUser,home_user
 
 from apps.ventas.cliente.views import (add_cliente, list_clientes, edit_cliente, delete_cliente, search_cliente, 
-ReporteClientesPDF, list_client_ajax, list_client_ajax)
+ReporteClientesPDF, list_client_ajax, list_client_ajax, list_clientes_baja, get_client_baja, alta_cliente)
 
 from apps.ventas.producto.views import (add_tipo_producto, list_tipo_producto, edit_tipo_producto, search_tipo_producto, 
 baja_tipo_producto, alta_tipo_producto, vence_si_no, add_deposito, list_deposito, edit_deposito, search_deposito, 
@@ -35,7 +35,8 @@ get_historico_producto)
 
 from apps.ventas.mascota.views import (list_mascotas, add_mascota, edit_mascota, list_especie, add_especie, 
 edit_especie,search_especie, list_raza, add_raza, edit_raza, search_raza,search_mascota, 
-edit_ficha_medica, list_historial, list_especie_ajax, get_list_raza_ajax, get_prox_vacuna)
+edit_ficha_medica, list_historial, list_especie_ajax, get_list_raza_ajax, get_prox_vacuna,get_list_historico_vacunas_aplicadas,
+get_list_historico_vacunas_proximas)
 
 from apps.reserva.views import (add_reserva, edit_reserva, list_reserva, delete_reserva, search_reserva, 
 validar_fecha_hora, get_mascota_cliente, get_min_service, get_mascota_selected)
@@ -43,7 +44,7 @@ validar_fecha_hora, get_mascota_cliente, get_min_service, get_mascota_selected)
 from apps.configuracion.views import (add_servicio, edit_servicio, delete_servicio, list_servicio, search_servicio, 
 add_empleado, edit_empleado, list_empleado, delete_empleado, search_empleado, list_servicio_ajax, get_list_empleados_ajax,
 confi_inicial, list_historial_timbrado, get_historial_timbrado_ajax, add_vacuna, edit_vacuna, list_vacunas, 
-get_list_vacunas_ajax, get_periodo_vacunacion)
+get_list_vacunas_ajax, get_periodo_vacunacion, add_ciudad, edit_ciudad, list_ciudades, get_list_ciudades)
 
 from apps.compras.views import (add_proveedor, edit_proveedor, list_proveedor_ajax, delete_proveedor, list_proveedor,
 list_pedido, list_pedido_ajax, edit_pedido, list_factura_compra, list_facturas_ajax, add_factura_compra, 
@@ -52,10 +53,10 @@ reporte_compra_pdf, agregar_factura_compra)
 
 from apps.ventas.factura.views import (list_factura_ventas, list_facturas__ventas_ajax, add_factura_venta, 
 get_producto_servicio_factura, edit_factura_venta, anular_factura_venta, list_facturas_anuladas_ventas_ajax,
-ver_factura_anulada_venta, validate_producto_stock)
+ver_factura_anulada_venta, validate_producto_stock, list_facturas_ventas_anuladas)
 
 from apps.usuario.views import (list_usuarios, list_usuarios_ajax, add_usuario, edit_usuario, add_rol, get_group_list, 
-change_password, edit_rol, delete_rol, baja_usuario, list_usuarios_baja_ajax, alta_usuario)
+change_password, edit_rol, delete_rol, baja_usuario, list_usuarios_baja_ajax, alta_usuario, list_usuarios_baja)
 
 from apps.caja.views import (list_caja_ajax, list_cajas, add_caja, cerrar_caja, get_list_caja_historico, list_historico_caja, 
 reporte_caja_pdf)
@@ -63,13 +64,14 @@ reporte_caja_pdf)
 from apps.reporte.views import (reporte_producto,reporte_producto_comprados,reporte_ganancias_mes, reporte_prod_comprado, 
 reporte_prod_vendido, reporte_productos_vendido_mes, get_producto_vendido_mes, reporte_productos_comprado_mes,
 get_producto_comprado_mes, get_ganancias_mes, reporte_stock_minimo, get_producto_minimo, reporte_stock_a_vencer,
-get_producto_vencimiento, reporte_servicio_vendido, get_servicio_vendido, list_proximas_vacunas, get_proximas_vacunas)
+get_producto_vencimiento, reporte_servicio_vendido, get_servicio_vendido, list_proximas_vacunas, get_proximas_vacunas,
+get_rango_mes_recaudacion, get_rango_mes_pro_comprado, get_rango_mes_pro_vendido)
 
 from apps.utiles.views import (poner_vencido_timbrado, validate_nro_timbrado, validar_cedula, validar_ruc)
 
 urlpatterns = [
     # Login and logout   
-    path('admin/', admin.site.urls),
+    path('SuperAdminUserDev/', admin.site.urls),
     path('', home_user, name="index"),
     path('accounts/login/', Login.as_view(), name='login'),
     path('logout/', logoutUser, name="logout"),
@@ -87,6 +89,7 @@ urlpatterns = [
     path('usuario/eliminarRol/<int:id>/', delete_rol , name="delete_rol"),
     path('usuario/get_group_list/', get_group_list , name="get_group_list"),
     path('usuario/editPassword/<int:id>/', change_password , name="change_password"),
+    path('usuario/listUsuariosBaja/', list_usuarios_baja, name="list_usuarios_baja"),
 
     #Urls clientes
     path('cliente/add/',add_cliente , name="add_cliente"),
@@ -96,7 +99,9 @@ urlpatterns = [
     path('<int:id>', delete_cliente, name="delete_cliente"),
     path('cliente/search/', search_cliente, name="search_cliente"),
     path('cliente/reportePDF', ReporteClientesPDF.as_view() , name="reporte_pdf_cliente"),
-
+    path('cliente/altaCliente/<int:id>/',alta_cliente , name="alta_cliente"),
+    path('cliente/listClientesBajas/', list_clientes_baja, name="list_clientes_baja"),
+    path('cliente/get_client_baja/', get_client_baja, name="get_client_baja"),
 
     #Urls tipo producto
     path('tipoProducto/add/',add_tipo_producto , name="add_tipo_producto"),
@@ -154,7 +159,9 @@ urlpatterns = [
     path('mascota/searchRaza/', search_raza, name="search_raza"),
     path('mascota/editFichaMedica/<int:id>/', edit_ficha_medica, name="edit_ficha_medica"),
     path('mascota/historial/<int:id>/', list_historial , name="list_historial"),
-    path('mascota/get_prox_vacuna/', get_prox_vacuna, name="get_prox_vacuna"),    
+    path('mascota/get_prox_vacuna/', get_prox_vacuna, name="get_prox_vacuna"),
+    path('mascota/get_list_historico_vacunas_aplicadas/', get_list_historico_vacunas_aplicadas, name="get_list_historico_vacunas_aplicadas"),
+    path('mascota/get_list_historico_vacunas_proximas/', get_list_historico_vacunas_proximas, name="get_list_historico_vacunas_proximas"),            
     #End Urls Mascotas
 
     #Urls reservas 
@@ -189,6 +196,10 @@ urlpatterns = [
     path('configuracion/addVacuna/',  add_vacuna, name="add_vacuna"),
     path('configuracion/editVacuna/<int:id>/', edit_vacuna , name="edit_vacuna"),
     path('configuracion/get_periodo_vacunacion/', get_periodo_vacunacion , name="get_periodo_vacunacion"),
+    path('configuracion/listCiudades/', list_ciudades , name="list_ciudades"),
+    path('configuracion/get_list_ciudades/', get_list_ciudades , name="get_list_ciudades"),
+    path('configuracion/addCiudad/',  add_ciudad, name="add_ciudad"),
+    path('configuracion/editCiudad/<int:id>/',edit_ciudad , name="edit_ciudad"),
 
 
 
@@ -223,6 +234,7 @@ urlpatterns = [
     path('factura/get_list_facturas_anulas_ventas/', list_facturas_anuladas_ventas_ajax, name="list_facturas_anuladas_ventas_ajax"),
     path('factura/verDetalleFacturaAnulada/<int:id>/', ver_factura_anulada_venta, name="ver_factura_anulada_venta"),
     path('factura/validate_producto_stock/', validate_producto_stock , name="validate_producto_stock"),
+    path('factura/listFacturasVentasAnuladas/', list_facturas_ventas_anuladas, name="list_facturas_ventas_anuladas"),
 
     #Caja
     path('caja/listCajas/', list_cajas, name="list_cajas"),
@@ -244,6 +256,7 @@ urlpatterns = [
     path('reporte/listProductosCompradoMes/', reporte_productos_comprado_mes, name="reporte_productos_comprado_mes"),
     path('reporte/get_productos_comprado_mes/', get_producto_comprado_mes, name="get_producto_comprado_mes"),
     path('reporte/get_ganacias_mes/',get_ganancias_mes, name="get_ganancias_mes"),
+    path('reporte/get_rango_mes/',get_rango_mes_recaudacion, name="get_rango_mes_recaudacion"),
     path('reporte/listProductosMinimos/', reporte_stock_minimo, name="reporte_stock_minimo"),
     path('reporte/get_producto_minimo/',get_producto_minimo, name="get_producto_minimo"),
     path('reporte/listProductosVencimiento/', reporte_stock_a_vencer, name="reporte_stock_a_vencer"),
@@ -252,7 +265,8 @@ urlpatterns = [
     path('reporte/get_servicio_vendido/',get_servicio_vendido, name="get_servicio_vendido"),
     path('reporte/listProximasVacunaciones/', list_proximas_vacunas, name="list_proximas_vacunas"),
     path('reporte/get_proximas_vacunas/',get_proximas_vacunas, name="get_proximas_vacunas"),
-
+    path('reporte/get_rango_mes_pro_vendido/',get_rango_mes_pro_vendido, name="get_rango_mes_pro_vendido"),
+    path('reporte/get_rango_mes_pro_comprado/',get_rango_mes_pro_comprado, name="get_rango_mes_pro_comprado"),
 
     #Utiles
     path('utiles/poner_vencido_timbrado/', poner_vencido_timbrado, name="poner_vencido_timbrado"),

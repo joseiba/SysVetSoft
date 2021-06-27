@@ -15,7 +15,6 @@ from apps.configuracion.models import TipoVacuna
 from apps.ventas.producto.models import Producto
 
 date = datetime.now()
-
 # Create your views here.
 @login_required()
 @permission_required('mascota.add_mascota')
@@ -23,8 +22,6 @@ def add_mascota(request):
     form = MascotaForm    
     if request.method == 'POST':
         form = MascotaForm(request.POST, request.FILES)
-        print(form)
-        print(form.is_valid())
         if form.is_valid():           
             form.save()
             messages.success(request, 'Se ha agregado correctamente!')
@@ -294,7 +291,6 @@ def edit_ficha_medica(request,id):
                 messages.success(request, 'Se ha editado correctamente!')
                 return redirect('/mascota/editFichaMedica/' + str(id))
     except Exception as e:
-        print(e)
         pass
 
     if vacunas.count() > 0:
@@ -363,7 +359,6 @@ def get_prox_vacuna(request):
             vacuna_proxima.append(va)
     try:
         for priodad_vacuna in list_vacunas:
-            print("entro")
             if int(priodad_vacuna.periodo_aplicacion) <= int(vacuna_aplicada.periodo_aplicacion):
                 if priodad_vacuna.multi_aplicaciones == 'N':
                     try:
@@ -371,10 +366,8 @@ def get_prox_vacuna(request):
                     except:
                         pass
     except Exception as e:
-        print(e)
         pass
         
-    print(vacuna_proxima)
     data = [{'id': v.id, 'nombre_vacuna': v.nombre_vacuna } for v in vacuna_proxima]
     list_vacunas_proximas = json.dumps(data)
     response = {'proximas_vacunas': list_vacunas_proximas}
@@ -382,14 +375,68 @@ def get_prox_vacuna(request):
 
 #Historico de Ficha Medica
 def list_historial(request, id):
-    fichaMedicaGet = FichaMedica.objects.get(id_mascota=id)
-    historico = HistoricoFichaMedica.objects.filter(id_ficha_medica=fichaMedicaGet.id).order_by('-last_modified')
-    paginator = Paginator(historico, 10)
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
-    context = {'page_obj' : page_obj, 'historico': historico, 'id_mascota': id}
-
+    context = {'id_mascota': id}
     return render(request, "ventas/mascota/ficha_medica/list_historico.html", context)
+
+def get_list_historico_vacunas_aplicadas(request):
+    query = request.GET.get('busqueda')
+
+    vacunas_aplicadas = HistoricoFichaMedica.objects.filter(id_ficha_medica=query)
+    total = vacunas_aplicadas.count()
+
+    _start = request.GET.get('start')
+    _length = request.GET.get('length')
+    if _start and _length:
+        start = int(_start)
+        length = int(_length)
+        page = math.ceil(start / length) + 1
+        per_page = length
+
+        vacunas_aplicadas = vacunas_aplicadas[start:start + length]
+
+    data = [{'fecha_aplicada': va.fecha_aplicacion, 'vacuna_aplicada': va.vacuna.nombre_vacuna,
+            'peso': va.id_mascota.peso} for va in vacunas_aplicadas] 
+
+    response = {
+        'data': data,
+        'recordsTotal': total,
+        'recordsFiltered': total,
+    }
+    return JsonResponse(response) 
+
+
+def get_list_historico_vacunas_proximas(request):
+    query = request.GET.get('busqueda')
+
+    vacunas_object = []
+
+    vacunas_proximas = HistoricoFichaMedica.objects.filter(id_ficha_medica=query)
+
+    for vp in vacunas_proximas:
+        if vp.fecha_proxima_aplicacion is not None:
+            vacunas_object.append(vp)
+
+    total = len(vacunas_object)
+
+    _start = request.GET.get('start')
+    _length = request.GET.get('length')
+    if _start and _length:
+        start = int(_start)
+        length = int(_length)
+        page = math.ceil(start / length) + 1
+        per_page = length
+
+        vacunas_object = vacunas_object[start:start + length]
+
+    data = [{'id': va.id, 'fecha_proxima': va.fecha_proxima_aplicacion, 
+            'proxima_vacuna': va.proxima_vacunacion} for va in vacunas_object]        
+
+    response = {
+        'data': data,
+        'recordsTotal': total,
+        'recordsFiltered': total,
+    }
+    return JsonResponse(response) 
 
 def create_historico_ficha_medica(id, proxima_vacunacion, antiparasitario_aplicado, proximo_antiparasitario_aplicado):
     historico = HistoricoFichaMedica()
@@ -432,7 +479,6 @@ def create_historico_ficha_medica(id, proxima_vacunacion, antiparasitario_aplica
                 anti_aplicado = producto_anti.nombre_producto
             except Exception as e:
                 anti_aplicado = "-"
-                pass
         else:
             anti_aplicado = "-"
 
@@ -445,7 +491,6 @@ def create_historico_ficha_medica(id, proxima_vacunacion, antiparasitario_aplica
                 anti_proximo_aplicado = producto_anti_proximo.nombre_producto
             except Exception as e:
                 anti_proximo_aplicado = "-"
-                pass
         else:
             anti_proximo_aplicado = "-"
 
@@ -455,8 +500,8 @@ def create_historico_ficha_medica(id, proxima_vacunacion, antiparasitario_aplica
         historico.medicamento = consultaGet.medicamento
         historico.fecha_aplicacion = date.strftime("%d/%m/%Y")
         historico.fecha_proxima_aplicacion = vacunaGet.fecha_proxima_aplicacion
-        historico.antiparasitario = anti_aplicado
-        historico.proximo_antiparasitario = anti_proximo_aplicado
+        historico.antiparasitario = '-'
+        historico.proximo_antiparasitario = "-"
         historico.peso = mascota.peso
         historico.last_modified = fichaMedicaGet.fecha_create
         historico.id_ficha_medica = id

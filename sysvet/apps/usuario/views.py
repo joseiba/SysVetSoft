@@ -123,6 +123,11 @@ def list_usuarios_ajax(request):
     }
     return JsonResponse(response)
 
+@login_required()
+@permission_required('usuario.view_user')
+def list_usuarios_baja(request):    
+    return render(request, "usuario/list_usuarios_baja.html")
+
 
 @login_required()
 def list_usuarios_baja_ajax(request):
@@ -163,7 +168,6 @@ def add_usuario(request):
     group = Group.objects.all()
     if request.method == 'POST':
         form = UserForm(request.POST)
-        print(form)
         if form.is_valid():
             form.save()
             messages.success(request, "Se ha agregado correctamente!")
@@ -220,14 +224,12 @@ def alta_usuario(request, id):
     user = User.objects.get(id=id)
     if request.user == user:
         messages.error(request, "¡No puedes eliminar este usuario! intentelo mas tarde.")
-        return redirect('/usuario/listUsuarios/')
+        return redirect('/usuario/listUsuariosBaja/')
     else:
         user.is_active = True
         user.save()
         messages.error(request, "Se ha dado de alta correctamente!.")    
-        return redirect('/usuario/listUsuarios/')
-
-
+        return redirect('/usuario/listUsuariosBaja/')
 
 
 @login_required()

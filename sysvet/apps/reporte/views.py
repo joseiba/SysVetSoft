@@ -20,6 +20,10 @@ from apps.ventas.cliente.models import Cliente
 
 today = datetime.now()
 hoy = date.today()
+meses = [{'mes': 'Enero', 'numero': 1}, {'mes': 'Febrero', 'numero': 2}, {'mes': 'Marzo', 'numero': 3}, 
+        {'mes': 'Abril', 'numero': 4}, {'mes': 'Mayo', 'numero': 5}, {'mes': 'Junio', 'numero': 6}, 
+        {'mes': 'Julio', 'numero': 7}, {'mes': 'Agosto', 'numero': 8}, {'mes': 'Septiembre', 'numero': 9}, 
+        {'mes': 'Octubre', 'numero': 10}, {'mes': 'Noviembre', 'numero': 11}, {'mes': 'Diciembre', 'numero': 12}]
 # Create your views here.
 @login_required()
 @permission_required('reporte.view_reporte')
@@ -80,8 +84,9 @@ def reporte_prod_comprado(request):
 @login_required()
 @permission_required('reporte.view_reporte')
 def reporte_productos_vendido_mes(request):
+    context = {'meses': meses}
     cargar_producto_vendido_mes()
-    return render(request, 'reporte/producto/reporte_producto_vendido_mes.html')
+    return render(request, 'reporte/producto/reporte_producto_vendido_mes.html', context)
 
 def get_producto_vendido_mes(request):
     query = request.GET.get('busqueda')
@@ -90,15 +95,44 @@ def get_producto_vendido_mes(request):
     mensaje = ""
     try:    
         if query != "":
-            prod = ProductoVendidoMes.objects.filter(Q(label_mes__icontains=query))
+            prod = ProductoVendidoMes.objects.filter(anho__icontains=str(hoy.year))
+            prod = prod.filter(Q(label_mes__icontains=query))
         else:
-            prod = ProductoVendidoMes.objects.all()
+            prod = ProductoVendidoMes.objects.filter(anho=str(hoy.year))
 
         for p in prod:
             label.append(p.label_mes)
             data.append(p.cantidad_vendida_total)
 
-        mensaje = "OK"
+        if len(data) > 0:    
+            mensaje = "OK"
+        else:
+            mensaje = "NA"
+    except Exception as e:
+        pass
+
+    response = {'label': label, 'data': data,'mensaje': mensaje}
+    return JsonResponse(response)
+
+def get_rango_mes_pro_vendido(request):
+    anho = request.GET.get('anho')
+    desde = request.GET.get('desde')
+    hasta = request.GET.get('hasta')
+    label = []
+    data = []
+    mensaje = ""
+    try:    
+        pro = ProductoVendidoMes.objects.filter(anho=anho)
+        if pro.count() > 0:
+            for p in pro:
+                if int(desde) <= p.numero_mes and p.numero_mes <= int(hasta):
+                    label.append(p.label_mes)
+                    data.append(p.cantidad_vendida_total)
+            
+        if len(data) > 0:    
+            mensaje = "OK"
+        else:
+            mensaje = "NA"
     except Exception as e:
         pass
 
@@ -108,8 +142,9 @@ def get_producto_vendido_mes(request):
 @login_required()
 @permission_required('reporte.view_reporte')
 def reporte_productos_comprado_mes(request):
+    context = {'meses': meses}
     cargar_productos_comprado_mes()
-    return render(request, 'reporte/producto/reporte_producto_comprado_mes.html')
+    return render(request, 'reporte/producto/reporte_producto_comprado_mes.html', context)
 
 def get_producto_comprado_mes(request):
     query = request.GET.get('busqueda')
@@ -118,15 +153,44 @@ def get_producto_comprado_mes(request):
     mensaje = ""
     try:    
         if query != "":
-            prod = ProductoCompradoMes.objects.filter(Q(label_mes__icontains=query))
+            prod = ProductoCompradoMes.objects.filter(anho=str(hoy.year))
+            prod = prod.filter(Q(label_mes__icontains=query))
         else:
-            prod = ProductoCompradoMes.objects.all()
+            prod = ProductoCompradoMes.objects.filter(anho=str(hoy.year))
 
         for p in prod:
             label.append(p.label_mes)
             data.append(p.cantidad_comprada_total)
 
-        mensaje = "OK"
+        if len(data) > 0:    
+            mensaje = "OK"
+        else:
+            mensaje = "NA"    
+    except Exception as e:
+        pass
+
+    response = {'label': label, 'data': data,'mensaje': mensaje}
+    return JsonResponse(response)
+
+def get_rango_mes_pro_comprado(request):
+    anho = request.GET.get('anho')
+    desde = request.GET.get('desde')
+    hasta = request.GET.get('hasta')
+    label = []
+    data = []
+    mensaje = ""
+    try:    
+        prod = ProductoCompradoMes.objects.filter(anho=anho)
+        if prod.count() > 0:
+            for p in prod:
+                if int(desde) <= p.numero_mes and p.numero_mes <= int(hasta):
+                    label.append(p.label_mes)
+                    data.append(p.cantidad_comprada_total)
+            
+        if len(data) > 0:    
+            mensaje = "OK"
+        else:
+            mensaje = "NA"
     except Exception as e:
         pass
 
@@ -134,12 +198,12 @@ def get_producto_comprado_mes(request):
     return JsonResponse(response)
 
 
-
 @login_required()
 @permission_required('reporte.view_reporte')
 def reporte_ganancias_mes(request):
+    context = {'meses': meses}
     cargar_ganacias_por_mes()
-    return render(request, 'reporte/ganancias/reporte_ganancias_mes.html')
+    return render(request, 'reporte/ganancias/reporte_ganancias_mes.html', context)
 
 
 def get_ganancias_mes(request):
@@ -147,21 +211,54 @@ def get_ganancias_mes(request):
     label = []
     data = []
     mensaje = ""
+    print(str(hoy.year))
     try:    
         if query != "":
-            ganancias = GananciaPorMes.objects.filter(Q(label_mes__icontains=query))
+            ganancias = GananciaPorMes.objects.filter(anho=str(hoy.year))
+            ganancias = ganancias.filter(Q(label_mes__icontains=query))
         else:
-            ganancias = GananciaPorMes.objects.all()
+            ganancias = GananciaPorMes.objects.filter(anho=str(hoy.year))
 
-        for ga in ganancias:
-            label.append(ga.label_mes)
-            data.append(ga.total_mes)
-        mensaje = "OK"
+        if ganancias.count() > 0:
+            for ga in ganancias:
+                label.append(ga.label_mes)
+                data.append(ga.total_mes)
+        
+        if len(data) > 0:    
+            mensaje = "OK"
+        else:
+            mensaje = "NA"
     except Exception as e:
         pass
 
     response = {'label': label, 'data': data,'mensaje': mensaje}
     return JsonResponse(response)
+
+def get_rango_mes_recaudacion(request):
+    anho = request.GET.get('anho')
+    desde = request.GET.get('desde')
+    hasta = request.GET.get('hasta')
+    label = []
+    data = []
+    mensaje = ""
+    try:    
+        ganancias = GananciaPorMes.objects.filter(anho=anho)
+        if ganancias.count() > 0:
+            for ga in ganancias:
+                if int(desde) <= ga.numero_mes and ga.numero_mes <= int(hasta):
+                    label.append(ga.label_mes)
+                    data.append(ga.total_mes)
+            
+        if len(data) > 0:    
+            mensaje = "OK"
+        else:
+            mensaje = "NA"
+    except Exception as e:
+        pass
+
+    response = {'label': label, 'data': data,'mensaje': mensaje}
+    return JsonResponse(response)
+
 
 @login_required()
 @permission_required('reporte.view_reporte')

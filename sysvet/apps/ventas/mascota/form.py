@@ -12,17 +12,22 @@ class MascotaForm(forms.ModelForm):
         model = Mascota
         fields = '__all__'   
         widgets = {
-            'nombre_mascota': forms.TextInput(attrs={'class':'form-control','data-validate-length-range':'20', 
-                'data-validate-words':'1', 'name': 'nombre_mascota','onkeyup':'replaceCaratect(this)','placeholder': 'Nombre de la mascota', 'required': 'required'}),
-            'tatuaje': forms.TextInput(attrs={'class':'form-control optional', 'onkeyup':'replaceCaratect(this)','name': 'tatuaje', 'placeholder': 'Tatuaje'}),
-            'edad': forms.TextInput(attrs={'class':'form-control optional', 'name': 'edad', 'placeholder': 'Edad','onkeyup':'replaceDirection(this)'}),
-            'sexo' : forms.Select(attrs={'class':'form-control', 'id': 'sexo','required':'required' ,'name':'sexo'}),
-            'fecha_nacimiento' : forms.TextInput(attrs={'class':'form-control optional date', 'type': 'date','name':'fecha_nacimiento'}),
-            'peso': forms.TextInput(attrs={'class':'form-control','onkeyup':'replaceDirection(this)', 'name': 'peso', 'placeholder': 'Peso', 'required': 'required'}),
-            'color_pelaje' : forms.TextInput(attrs={'class':'form-control', 'type': 'color','name':'color_pelaje','placeholder': 'Color Pelaje'}),
+            'nombre_mascota': forms.TextInput(attrs={'class':'form-control', 'name': 'nombre_mascota',
+                'onkeyup':'replaceCaratect(this)','placeholder': 'Nombre de la mascota', 'required': 'required','autocomplete': 'off'}),
+            'tatuaje': forms.TextInput(attrs={'class':'form-control optional', 'onkeyup':'replaceCaratect(this)',
+                'name': 'tatuaje', 'placeholder': 'Tatuaje', 'autocomplete': 'off'}),
+            'edad': forms.TextInput(attrs={'class':'form-control optional', 'name': 'edad', 'placeholder': 'Edad',
+                'onkeyup':'replaceDirection(this)', 'autocomplete': 'off'}),
+            'sexo' : forms.Select(attrs={'class':'form-control', 'id': 'sexo','required':'required' ,'name':'sexo', 'autocomplete': 'off'}),
+            'fecha_nacimiento' : forms.TextInput(attrs={'class':'form-control optional date', 'type': 'date',
+                'name':'fecha_nacimiento','autocomplete': 'off'}),
+            'peso': forms.TextInput(attrs={'class':'form-control','onkeyup':'replaceDirection(this)', 'name': 'peso', 
+                'placeholder': 'Peso', 'required': 'required', 'autocomplete': 'off'}),
+            'color_pelaje' : forms.TextInput(attrs={'class':'form-control', 'type': 'color','name':'color_pelaje',
+                'placeholder': 'Color Pelaje', 'autocomplete': 'off'}),
             'imagen': forms.FileInput(attrs={'type': 'file', 'name':'imagen', 'id': 'imageInput', 'accept':'image/*'}),
-            'id_raza' : forms.Select(attrs={'class':'form-control', 'id': 'id_raza','required':'required' ,'name':'id_raza'}),
-            'id_cliente' : forms.Select(attrs={'class':'form-control', 'id': 'id_cliente','required':'required' ,'name':'id_cliente'})
+            'id_raza' : forms.Select(attrs={'class':'form-control', 'id': 'id_raza','required':'required' ,'name':'id_raza', 'autocomplete': 'off'}),
+            'id_cliente' : forms.Select(attrs={'class':'form-control', 'id': 'id_cliente','required':'required' ,'name':'id_cliente', 'autocomplete': 'off'})
 		}
 
 class EspecieForm(forms.ModelForm):
@@ -35,8 +40,8 @@ class EspecieForm(forms.ModelForm):
         model = Especie
         fields = '__all__'       
         widgets = {
-            'nombre_especie' : forms.TextInput(attrs={'class':'form-control','onkeyup':'replaceCaratect(this)' ,'id': 'nombre_especie','data-validate-length-range':'20', 
-                'data-validate-words':'1', 'name': 'nombre_especie', 'placeholder': 'Nombre de la Especie', 'required': 'required'}),
+            'nombre_especie' : forms.TextInput(attrs={'class':'form-control','onkeyup':'replaceCaratect(this)' ,'id': 'nombre_especie',
+                'name': 'nombre_especie', 'placeholder': 'Nombre de la Especie', 'required': 'required',  'autocomplete': 'off',}),
 		}
 
 
@@ -50,8 +55,8 @@ class RazaForm(forms.ModelForm):
         model = Raza
         fields = '__all__'       
         widgets = {
-            'nombre_raza' : forms.TextInput(attrs={'class':'form-control', 'id': 'nombre_raza','data-validate-length-range':'20', 
-                'data-validate-words':'1', 'name': 'nombre_raza','onkeyup':'replaceCaratect(this)','placeholder': 'Nombre de la Raza', 'required': 'required'}),
+            'nombre_raza' : forms.TextInput(attrs={'class':'form-control', 'id': 'nombre_raza','autocomplete': 'off',
+                'name': 'nombre_raza','onkeyup':'replaceCaratect(this)','placeholder': 'Nombre de la Raza', 'required': 'required'}),
             'id_especie' : forms.Select(attrs={'class':'form-control', 'id': 'id_especie','required':'required' ,'name':'id_especie'}),
 		}        
 
@@ -94,6 +99,7 @@ class VacunaForm(forms.ModelForm):
                                             'placeholder': 'Proxima Aplicacion',
                                             'name':'fecha_proxima_aplicacion',
                                             'readonly': "readonly",
+                                            'disabled': 'disabled',
                                             'autocomplete': 'off'}),
         'id_ficha_medica' : forms.HiddenInput(),        
         }
