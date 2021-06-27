@@ -4,13 +4,273 @@
 
 {% block stylesheets %}
 {{ block.super }}
+<style>
+  .text_align_center {
+    text-align-last: center;
+  }
+
+  .card-pets:hover {
+    box-shadow: 0px 0px 10px 5px #a6a6a6;
+    /* please set the shadow color conveniently */
+  }
+
+  .card-pets {
+    border-radius: 10px !important;
+  }
+
+  .card-img-div {
+    background-color: #278094eb;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+  }
+
+  .rd-card-img {
+    height: 8rem;
+    width: 8rem;
+    border-radius: 4rem;
+    margin-left: auto;
+    margin-right: auto;
+    border: 1px solid rgba(52, 73, 94, 0.44);
+    background: #fff;
+    padding: 4px;
+  }
+
+  .edit-property {
+    font-size: 18px;
+    margin-right: 7px;
+    position: relative;
+    margin-top: .5rem;
+    color: #ffff;
+  }
+
+  /*.dropdown-item {
+      padding: 0.25rem 0.5rem;
+      cursor: pointer;
+  }
+
+  a.dropdown-item {
+      color: #45474a;
+      padding: 0rem .5rem;
+  }
+
+  a.dropdown-item:hover {
+      background: rgba(0, 0, 0, .1);
+  }*/
+
+  .card-option {
+    background-color: #fff;
+    position: absolute;
+    right: 1rem;
+    top: 2.5rem;
+    width: 8.5rem;
+    height: auto;
+    background-color: #fff;
+    border-radius: 5px;
+    -webkit-box-shadow: -1px 3px 19px -2px rgba(0, 0, 0, 0.72);
+    -moz-box-shadow: -1px 3px 19px -2px rgba(0, 0, 0, 0.72);
+    box-shadow: -1px 3px 19px -2px rgba(0, 0, 0, 0.72);
+  }
+</style>
+
 {% endblock stylesheets %}
 
 {% block content %}
 <div class="right_col" role="main">
   <!-- top tiles -->
-  <div class="row" style="display: inline-block;">
-    <div class="tile_count">
+  <div class="row">
+    <div class="col-9">
+      <div class="col-12 col-md-6 col-lg-4 col-xl-4 mb-4">
+        <div class="card card-pets">
+          <div class="card-img-div text_align_center">
+
+            <div class="d-flex ml-5 mr-5">
+              <i class="fas fa-users mt-2 mb-3" style="font-size: 93px; color: white;"></i>
+              <h3 class="ml-3" style="align-self: center; color: white; font-size: 38px;">30</h3>
+            </div>
+
+          </div>
+
+          <div class="card-body card-body-pets p-0" style="margin-top: 6px;">
+          <h5 class="text_align_center" style="margin-top: .5rem;">Total Usuarios
+          </h5>
+          </div>
+
+          <div class="d-contents" style="display: contents;">
+
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-md-6 col-lg-4 col-xl-4 mb-4">
+        <div class="card card-pets">
+          <div class="card-img-div text_align_center">
+
+            <div class="d-flex ml-5 mr-5">
+              <i class="fas fa-restroom mt-2 mb-3" style="font-size: 93px; color: white;"></i>
+              <h3 class="ml-3" style="align-self: center; color: white; font-size: 38px;">30</h3>
+            </div>
+
+          </div>
+
+          <div class="card-body card-body-pets p-0" style="margin-top: 6px;">
+          <h5 class="text_align_center" style="margin-top: .5rem;">Total Clientes
+          </h5>
+          </div>
+
+          <div class="d-contents" style="display: contents;">
+
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-md-6 col-lg-4 col-xl-4 mb-4">
+        <div class="card card-pets">
+          <div class="card-img-div text_align_center">
+
+            <div class="d-flex ml-5 mr-5">
+              <i class="fas fa-paw  mt-2 mb-3" style="font-size: 93px; color: white;"></i>
+              <h3 class="ml-3" style="align-self: center; color: white; font-size: 38px;">30</h3>
+            </div>
+
+          </div>
+
+          <div class="card-body card-body-pets p-0" style="margin-top: 6px;">
+          <h5 class="text_align_center" style="margin-top: .5rem;">Total Mascotas
+          </h5>
+          </div>
+
+          <div class="d-contents" style="display: contents;">
+
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-md-6 col-lg-4 col-xl-4 mb-4">
+        <div class="card card-pets">
+          <div class="card-img-div text_align_center">
+
+            <div class="d-flex ml-5 mr-5">
+              <i class="fas fa-box-open mt-2 mb-3" style="font-size: 93px; color: white;"></i>
+              <h3 class="ml-3" style="align-self: center; color: white; font-size: 38px;">30</h3>
+            </div>
+
+          </div>
+
+          <div class="card-body card-body-pets p-0" style="margin-top: 6px;">
+          <h5 class="text_align_center" style="margin-top: .5rem;">Total Productos
+          </h5>
+          </div>
+
+          <div class="d-contents" style="display: contents;">
+
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-md-6 col-lg-4 col-xl-4 mb-4">
+        <div class="card card-pets">
+          <div class="card-img-div text_align_center">
+
+            <div class="d-flex ml-5 mr-5">
+              <i class="fas fa-cart-arrow-down mt-2 mb-3" style="font-size: 93px; color: white;"></i>
+              <h3 class="ml-3" style="align-self: center; color: white; font-size: 38px;">30</h3>
+            </div>
+
+          </div>
+
+          <div class="card-body card-body-pets p-0" style="margin-top: 6px;">
+          <h5 class="text_align_center" style="margin-top: .5rem;">Productos stock minimo
+          </h5>
+          </div>
+
+          <div class="d-contents" style="display: contents;">
+
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-md-6 col-lg-4 col-xl-4 mb-4">
+        <div class="card card-pets">
+          <div class="card-img-div text_align_center">
+
+            <div class="d-flex ml-5 mr-5">
+              <i class="fas fa-calendar-minus mt-2 mb-3" style="font-size: 93px; color: white;"></i>
+              <h3 class="ml-3" style="align-self: center; color: white; font-size: 38px;">30</h3>
+            </div>
+
+          </div>
+
+          <div class="card-body card-body-pets p-0" style="margin-top: 6px;">
+          <h5 class="text_align_center" style="margin-top: .5rem;">Productos a vencer
+          </h5>
+          </div>
+
+          <div class="d-contents" style="display: contents;">
+
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-md-6 col-lg-4 col-xl-4 mb-4">
+        <div class="card card-pets">
+          <div class="card-img-div text_align_center">
+
+            <div class="d-flex ml-5 mr-5">
+              <i class="fas fa-syringe mt-2 mb-3" style="font-size: 93px; color: white;"></i>
+              <h3 class="ml-3" style="align-self: center; color: white; font-size: 38px;">30</h3>
+            </div>
+
+          </div>
+
+          <div class="card-body card-body-pets p-0" style="margin-top: 6px;">
+          <h5 class="text_align_center" style="margin-top: .5rem;">Vacunas Aplicadas
+          </h5>
+          </div>
+
+          <div class="d-contents" style="display: contents;">
+
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-md-6 col-lg-4 col-xl-4 mb-4">
+        <div class="card card-pets">
+          <div class="card-img-div text_align_center">
+
+            <div class="d-flex ml-5 mr-5">
+              <i class="fas fa-calendar-check mt-2 mb-3" style="font-size: 93px; color: white;"></i>
+              <h3 class="ml-3" style="align-self: center; color: white; font-size: 38px;">30</h3>
+            </div>
+
+          </div>
+
+          <div class="card-body card-body-pets p-0" style="margin-top: 6px;">
+          <h5 class="text_align_center" style="margin-top: .5rem;">Reservas para hoy
+          </h5>
+          </div>
+
+          <div class="d-contents" style="display: contents;">
+
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-md-6 col-lg-4 col-xl-4 mb-4">
+        <div class="card card-pets">
+          <div class="card-img-div text_align_center">
+
+            <div class="d-flex ml-5 mr-5">
+              <i class="fas fa-hand-holding-usd mt-2 mb-3" style="font-size: 93px; color: white;"></i>
+              <h3 class="ml-3 content" style="align-self: center; color: white; font-size: 20px;">30.000.000 </br>GS.</h3>
+            </div>
+
+          </div>
+
+          <div class="card-body card-body-pets p-0" style="margin-top: 6px;">
+          <h5 class="text_align_center" style="margin-top: .5rem;">Recaudación del mes
+          </h5>
+          </div>
+
+          <div class="d-contents" style="display: contents;">
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!--<div class="tile_count">
       <div class="col-md-2 col-sm-4  tile_stats_count">
         <span class="count_top"><i class="fa fa-user"></i> Total Users</span>
         <div class="count">2500</div>
@@ -41,15 +301,15 @@
         <div class="count">7,325</div>
         <span class="count_bottom"><i class="green"><i class="fa fa-sort-asc"></i>34% </i> From last Week</span>
       </div>
-    </div>
+    </div>-->
   </div>
   <!-- /top tiles -->
 
   <div class="row">
     <div class="col-md-12 col-sm-12 ">
-      <!--<div class="dashboard_graph d-none">
+      <div class="dashboard_graph d-none">
 
-        <div class="row x_title ">
+        <!--<div class="row x_title ">
           <div class="col-md-6">
             <h3>Network Activities <small>Graph title sub-title</small></h3>
           </div>
@@ -110,12 +370,12 @@
 
         </div>-->
 
-        <div class="clearfix"></div>
-      </div>
+      <div class="clearfix"></div>
     </div>
-
   </div>
-  <br />
+
+</div>
+<br />
 </div>
 {% endblock content %}
 

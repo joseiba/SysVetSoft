@@ -243,8 +243,6 @@ def change_password(request, id):
             update_session_auth_hash(request, user)
             messages.add_message(request, messages.SUCCESS, 'Se ha editado correctamente!')
             return redirect('/usuario/editPassword/' + str(id))
-        else:
-            messages.error(request, form.errors)
     
     context = {'form': form, 'id': id}
     return render(request, 'usuario/edit_password.html', context)

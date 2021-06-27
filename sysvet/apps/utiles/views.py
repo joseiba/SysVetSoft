@@ -8,8 +8,10 @@ from apps.utiles.models import (Timbrado, ProductoVendido, ProductoComprados,Pro
 ProductoCompradoMes,ServicioVendido,GananciaPorMes, Cedula, Ruc)
 
 from apps.ventas.factura.models import FacturaCabeceraVenta, FacturaDetalleVenta
-from apps.compras.models import FacturaCompra, FacturaDet
+from apps.compras.models import FacturaCompra, FacturaDet, Proveedor
 from apps.ventas.producto.models import Producto
+from apps.ventas.cliente.models import Cliente
+from apps.configuracion.models import Empleado, ConfiEmpresa
 
 # Create your views here.
 label_mes = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto',
@@ -225,7 +227,12 @@ def validar_cedula(request):
     mensaje = ""
     try:
         list_cedula = Cedula.objects.filter(nro_cedula=cedula)
-        if list_cedula.count() > 0:
+        if Cliente.objects.filter(cedula=cedula).exists():
+            print('entro')
+            mensaje = 'EX'
+            response = {'mensaje': mensaje}
+            return JsonResponse(response)
+        elif Empleado.objects.filter(ci_empe=cedula).exists():
             mensaje = 'EX'
             response = {'mensaje': mensaje}
             return JsonResponse(response)
@@ -243,7 +250,15 @@ def validar_ruc(request):
     mensaje = ""
     try:
         list_validaciones = Ruc.objects.filter(nro_ruc=obj_validar)
-        if list_validaciones.count() > 0:
+        if Cliente.objects.filter(ruc=obj_validar).exists():
+            mensaje = 'EX'
+            response = {'mensaje': mensaje}
+            return JsonResponse(response)
+        elif Proveedor.objects.filter(ruc_proveedor=obj_validar).exists():
+            mensaje = 'EX'
+            response = {'mensaje': mensaje}
+            return JsonResponse(response)
+        elif ConfiEmpresa.objects.filter(ruc_empresa=obj_validar):
             mensaje = 'EX'
             response = {'mensaje': mensaje}
             return JsonResponse(response)

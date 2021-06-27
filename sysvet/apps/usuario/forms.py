@@ -175,5 +175,5 @@ class ContraseñaChangeForm(PasswordChangeForm):
         """
         old_password = self.cleaned_data["old_password"]
         if not self.user.check_password(old_password):
-            raise ValidationError("La contraseña actual no coinciden!", code="Contrasena Actual", params=[] )
+            raise ValidationError("La contraseña actual no coinciden!", code="old_password", params=[] )
         return old_password
