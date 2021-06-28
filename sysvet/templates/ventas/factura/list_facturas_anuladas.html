@@ -211,15 +211,24 @@
                         name: 'Acción',
                         data: 'id',
                         render: function (data) {
+                            var buttons = ""
                             {% if perms.factura.view_facturacabeceraventa %}
-                                return '<button class="btn btn-primary">\
+                                buttons += '<button class="btn btn-primary">\
                                                         <a href="/factura/verDetalleFacturaAnulada/' + data + '/" style="color: white">\
                                                             ver detalle\
                                                         </a>\
                                                     </button>'
                             {% endif %}
 
-                            return "-";                                                                                                   
+                            {% if perms.factura.view_facturacabeceraventa %}
+                                buttons += '<button class="btn btn-secondary">\
+                                                        <a target="_blank" href="/factura/reporteFactura/' + data + '/" style="color: white">\
+                                                            PDF\
+                                                        </a>\
+                                                    </button>';
+                            {% endif %}
+
+                            return buttons;                                                                                                   
                         }
                     }
 

@@ -405,12 +405,15 @@ def sum_anular_factura_venta_to_producto():
 def list_producto(request,id):
     data = []
     data_detalle = []
-
+    stock_movido_cero = 0
     try:
         product = Producto.objects.filter(id=id)
 
         data =[{'id': p.id, 'nombre': p.nombre_producto, 'descripcion': p.descripcion, 'stock_actual': p.stock, 
-            'deposito': p.id_deposito.descripcion} for p in product]        
+            'deposito': p.id_deposito.descripcion} for p in product]
+
+        pro = Producto.objects.get(id=id)
+        stock_movido_cero = pro.stock      
     except Exception as e:
         pass
 
@@ -421,7 +424,7 @@ def list_producto(request,id):
     except Exception as e:
         pass   
 
-    context = {'producto_detalle': data, 'producto_movido': data_detalle, 'id_producto': id}
+    context = {'producto_detalle': data, 'producto_movido': data_detalle, 'id_producto': id, 'stck_cero': stock_movido_cero}
     return render(request, "ventas/producto/list_producto.html", context)
 
 #Metodo para la busqueda de productos

@@ -172,7 +172,15 @@
             $("#list_empleados").DataTable({
                 destroy: true,
                 dom: 'Bfrtip',
-                buttons: ['pdf'],
+                buttons: [                
+                    {
+                        extend: 'pdfHtml5',
+                        text: 'Exportar PDF',
+                        exportOptions: {
+                            columns: [0,1,2,3,4]
+                        }
+                    },
+                ],
                 searching: false,
                 pageLength: 10,
                 ajax: {

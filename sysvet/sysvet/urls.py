@@ -53,7 +53,7 @@ reporte_compra_pdf, agregar_factura_compra)
 
 from apps.ventas.factura.views import (list_factura_ventas, list_facturas__ventas_ajax, add_factura_venta, 
 get_producto_servicio_factura, edit_factura_venta, anular_factura_venta, list_facturas_anuladas_ventas_ajax,
-ver_factura_anulada_venta, validate_producto_stock, list_facturas_ventas_anuladas)
+ver_factura_anulada_venta, validate_producto_stock, list_facturas_ventas_anuladas, reporte_factura_venta_pdf)
 
 from apps.usuario.views import (list_usuarios, list_usuarios_ajax, add_usuario, edit_usuario, add_rol, get_group_list, 
 change_password, edit_rol, delete_rol, baja_usuario, list_usuarios_baja_ajax, alta_usuario, list_usuarios_baja)
@@ -236,6 +236,7 @@ urlpatterns = [
     path('factura/verDetalleFacturaAnulada/<int:id>/', ver_factura_anulada_venta, name="ver_factura_anulada_venta"),
     path('factura/validate_producto_stock/', validate_producto_stock , name="validate_producto_stock"),
     path('factura/listFacturasVentasAnuladas/', list_facturas_ventas_anuladas, name="list_facturas_ventas_anuladas"),
+    path('factura/reporteFactura/<int:id>/', reporte_factura_venta_pdf, name="reporte_factura_venta_pdf"),
 
     #Caja
     path('caja/listCajas/', list_cajas, name="list_cajas"),

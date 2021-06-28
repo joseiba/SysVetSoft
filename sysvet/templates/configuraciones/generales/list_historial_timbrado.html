@@ -101,7 +101,7 @@
                                         style="width:100%">
                                         <thead>
                                             <tr class="" style="background-color: #2a3f54; font-size: medium;">
-                                                <th style="color: white;">Id</th>
+                                                <th style="color: white;">Nº</th>
                                                 <th style="color: white;">Nº Timbrado</th>
                                                 <th style="color: white;">Fecha Inicio Timbrado</th>
                                                 <th style="color: white;">Fecha Fin Timbrado</th>
@@ -154,7 +154,12 @@
             $("#list_timbrado").DataTable({
                 destroy: true,
                 dom: 'Bfrtip',
-                buttons: ['pdf'],
+                buttons: [                
+                    {
+                        extend: 'pdfHtml5',
+                        text: 'Exportar PDF',                        
+                    },
+                ],
                 searching: false,
                 pageLength: 10,
                 ajax: {
@@ -169,7 +174,7 @@
                 },
                 columns: [
                     {
-                        name: 'Id',
+                        name: 'Nº',
                         data: 'id',
                     },
                     {

@@ -292,8 +292,8 @@ def get_reserva_today(request):
 
             reservas = reservas[start:start + length]
 
-        data =[{'cliente': r.id_cliente.nombre_cliente + ' ' + r.id_cliente.apellido_cliente,
-                'mascota': r.id_mascota.nombre_mascota} for r in reservas]        
+        data =[{'cliente': r.id_cliente.nombre_cliente + '\n' + r.id_cliente.apellido_cliente,
+                'mascota': r.id_mascota.nombre_mascota,'evento': 'Servicio: ' + r.id_servicio.nombre_servicio + '\n' + 'Horario: ' + r.hora_reserva} for r in reservas]        
             
         response = {
             'data': data,
@@ -327,8 +327,8 @@ def get_vacunas_today(request):
 
             historico = historico[start:start + length]
 
-        data =[{'cliente': h.id_mascota.id_cliente.nombre_cliente + ' ' + h.id_mascota.id_cliente.apellido_cliente,
-                'mascota': r.id_mascota.nombre_mascota} for h in historico]        
+        data =[{'cliente': h.id_mascota.id_cliente.nombre_cliente + '\n' + h.id_mascota.id_cliente.apellido_cliente,
+                'mascota': r.id_mascota.nombre_mascota, 'evento': 'Vacuna: ' + h.proxima_vacunacion} for h in historico]        
             
         response = {
             'data': data,

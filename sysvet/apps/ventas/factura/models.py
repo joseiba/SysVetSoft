@@ -88,6 +88,7 @@ class FacturaDetalleVenta(models.Model):
     cantidad = models.IntegerField()
     detalle_cargado_reporte = models.CharField(max_length=2, default="N", blank=True, null=True)
     detalle_cargado_mes = models.CharField(max_length=2, default="N", blank=True, null=True)
+    subtotal = models.CharField(max_length=900, blank=True, null=True)
     detalle_cargado_servicio = models.CharField(max_length=2, default="N", blank=True, null=True)
     descripcion = models.CharField(max_length=800, blank=True)
     

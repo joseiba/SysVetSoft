@@ -182,6 +182,8 @@
 
 <script>
 $(function () {
+        var stock_cero = parseInt("{{stck_cero }}")
+        console.log(stock_cero)
         var list_producto = {
             detalle: []
         }
@@ -232,9 +234,11 @@ $(function () {
                 data: 'id',
                 render: function (data) {
                     {% if perms.producto.add_producto %}
-                        return '<button class="btn btn-warning" onclick="abrir_modal_edicion(\'/producto/mover/' + data + '/\');">\
+                        if(stock_cero != 0){
+                            return '<button class="btn btn-warning" onclick="abrir_modal_edicion(\'/producto/mover/' + data + '/\');">\
                             Mover\
                                 </button>';
+                        }
                     {% endif %}
 
                     return "-";

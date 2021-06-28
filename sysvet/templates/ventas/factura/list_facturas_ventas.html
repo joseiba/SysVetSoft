@@ -224,14 +224,22 @@
                                                         <a href="/factura/editFacturaVenta/' + data + '/" style="color: black">\
                                                             Editar\
                                                         </a>\
-                                                    </button>'
+                                                    </button>';
                             {% endif %}
 
                             {% if perms.factura.delete_facturacabeceraventa %}
                                 buttons += '<button class="btn btn-danger" style="color: white" onclick="abrir_modal_edicion(\'/factura/anularFacturaVenta/' + data + '/\');">Anular\
-                                                    </button>'
+                                                    </button>';
                             {% endif %}
                             
+                            {% if perms.factura.view_facturacabeceraventa %}
+                                buttons += '<button class="btn btn-primary">\
+                                                        <a target="_blank" href="/factura/reporteFactura/' + data + '/" style="color: white">\
+                                                            PDF\
+                                                        </a>\
+                                                    </button>';
+                            {% endif %}
+                                                    
                             return buttons;                                                                                                   
                         }
                     }
