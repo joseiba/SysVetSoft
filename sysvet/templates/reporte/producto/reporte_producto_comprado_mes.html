@@ -1,0 +1,455 @@
+{% extends "home/base_site.html" %}
+
+{% block title %} Reporte {% endblock title %}
+
+{% block stylesheets %}
+{{ block.super }}
+<link href="/static/project_static/other/js/select2/select2.css" rel="stylesheet" />
+<link href="/static/project_static/vendors/datatables.net-bs/css/dataTables.bootstrap.min.css" rel="stylesheet">
+<link href="/static/project_static/vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css" rel="stylesheet">
+<link href="/static/project_static/vendors/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.min.css"
+    rel="stylesheet">
+<link href="/static/project_static/vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css"
+    rel="stylesheet">
+<link href="/static/project_static/vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet"
+    href="/static/project_static/other/js/bootstrap-touchspin-master/dist/jquery.bootstrap-touchspin.css">
+<link rel="stylesheet"
+    href="/static/project_static/other/js/jquery-ui-themes-1.12.1/jquery-ui-themes-1.12.1/jquery-ui.min.css">
+<style>
+    .search {
+        width: 100%;
+        position: relative;
+        display: flex;
+    }
+
+    .searchTerm {
+        width: 100%;
+        border: 3px solid #00B4CC;
+        border-right: none;
+        padding: 5px;
+        height: 36px;
+        border-radius: 5px 0 0 5px;
+        outline: none;
+        color: #212529;
+    }
+
+    .searchTerm:focus {
+        color: #212529;
+    }
+
+    .searchButton {
+        width: 40px;
+        height: 36px;
+        border: 1px solid #00B4CC;
+        background: #00B4CC;
+        text-align: center;
+        color: #fff;
+        border-radius: 0 5px 5px 0;
+        cursor: pointer;
+        font-size: 20px;
+    }
+
+    .dataTables_info {
+        width: 0 !important;
+    }
+</style>
+{% endblock stylesheets %}
+
+{% block content %}
+<div class="right_col" role="main">
+    <div class="">
+        <div class="page-title">
+            <div class="title_left">
+                <h3>Reportes</h3>
+            </div>
+        </div>
+
+        <div class="clearfix"></div>
+
+        <div class="row" style="justify-content: center;">
+            <div class="col-md-9 col-sm-9">
+                <div class="x_panel">
+                    <div class="x_title">
+                        <h2>Total de productos comprados por mes</h2>
+                        <ul class="nav navbar-right panel_toolbox">
+                            <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                            </li>
+                            <li><a class="close-link"><i class="fa fa-close"></i></a>
+                            </li>
+                        </ul>
+                        <div class="clearfix"></div>
+                    </div>
+                <div class="d-flex">
+                    <div class="d-flex">
+                        <div class="d-flex">
+                            <label class="mr-2" style="align-self: flex-end;"><strong>Desde el mes: </strong></label>
+                            <div class="float-left">
+                                <div class="wrap">
+                                    <select class="form-control" id='fecha_desde'>
+                                        <option></option>
+
+                                        {% for me in meses %}
+                                            <option value="{{me.numero}}">{{me.mes}}</option>
+                                        {% endfor %}
+                                            
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+    
+                        <div class="d-flex ml-4">
+                            <label class="mr-2" style="align-self: flex-end;"><strong>Hasta el mes: </strong></label>
+                            <div class="">
+                                <div class="wrap">
+                                    <select class="form-control" id='fecha_hasta'>
+                                        <option></option>
+                                        {% for me in meses %}
+                                            <option value="{{me.numero}}">{{me.mes}}</option>
+                                        {% endfor %}
+                                            
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>                
+                    <div class="d-flex ml-4">
+                        <div class="d-flex">
+                            <label class="mr-2" style="align-self: flex-end;"><strong>Año: </strong></label>
+                            <div class="">
+                                <div class="wrap">
+                                    <select class="form-control" id='anho'>
+                                        <option></option>                                       
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="float-right" style="margin-left: 2rem;">
+                            <div class="wrap">
+                                <div class="search">
+                                    <div class="d-inline-flex">
+                                        <input type="search" class="searchTerm" id="searchTerm"
+                                            data-toggle="tooltip" data-placement="top"
+                                            title="Bucar por mes"
+                                            placeholder="Bucar por mes"
+                                            onkeyup="replaceDirection(this)">
+                                        <button type="button" id="busqueda" class="searchButton">
+                                            <i class="fa fa-search"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+                    <div class="x_content mt-4" id="productos">
+                        <canvas id="produc"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+</div>
+{% endblock content %}
+
+{% block javascripts %}
+{{ block.super }}
+<!-- Datatables -->
+<script src="/static/project_static/vendors/datatables.net/js/jquery.dataTables.min.js"></script>
+<script src="/static/project_static/vendors/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+<script src="/static/project_static/vendors/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
+<script src="/static/project_static/vendors/datatables.net-buttons-bs/js/buttons.bootstrap.min.js"></script>
+<script src="/static/project_static/vendors/datatables.net-buttons/js/buttons.flash.min.js"></script>
+<script src="/static/project_static/vendors/datatables.net-buttons/js/buttons.html5.min.js"></script>
+<script src="/static/project_static/vendors/datatables.net-buttons/js/buttons.print.min.js"></script>
+<script src="/static/project_static/vendors/datatables.net-fixedheader/js/dataTables.fixedHeader.min.js"></script>
+<script src="/static/project_static/vendors/datatables.net-keytable/js/dataTables.keyTable.min.js"></script>
+<script src="/static/project_static/vendors/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
+<script src="/static/project_static/vendors/datatables.net-responsive-bs/js/responsive.bootstrap.js"></script>
+<script src="/static/project_static/vendors/datatables.net-scroller/js/dataTables.scroller.min.js"></script>
+<script src="/static/project_static/vendors/jszip/dist/jszip.min.js"></script>
+<script src="/static/project_static/vendors/pdfmake/build/pdfmake.min.js"></script>
+<script src="/static/project_static/vendors/pdfmake/build/vfs_fonts.js"></script>
+<script src="/static/project_static/vendors/Chart.js/dist/Chart.min.js"></script>
+<script src="/static/project_static/other/js/reportes/productos_vendidos.js"></script>
+<script src="/static/project_static/other/js/select2/select2.js"></script>
+<script src="/static/project_static/other/js/sweetalert.min.js"></script>
+
+<script>
+
+    $(function () {
+        $('input').on("cut copy paste", function (e) {
+            e.preventDefault();
+        });
+
+        var d = new Date();
+        var n = d.getFullYear();
+        var select = document.getElementById("anho");
+        for(var i = n; i >= 2006; i--) {
+            var opc = document.createElement("option");
+            opc.text = i;
+            opc.value = i;
+            select.add(opc)
+        }
+
+        var get_produc = function(busqueda){
+            $.ajax({
+                url: "/reporte/get_productos_comprado_mes/",
+                type: 'GET',
+                datatype: 'json',
+                data: {'busqueda': busqueda},
+                success: function(response) {
+                    if(response.mensaje != ""){
+                        if(response.mensaje == "NA"){
+                                swal({
+                                    title: "Notificación",
+                                    text: "No hay ninguna información en esos rangos de meses y año!",
+                                    icon: "warning",
+                                    button: "Ok",
+                                })
+                        }  
+                        $('#produc').remove(); // this is my <canvas> element
+                        $('#productos').append('<canvas id="produc"><canvas>');
+                        var ctx = document.getElementById('produc').getContext('2d');
+
+                        new Chart(ctx, {
+                            type: 'bar',
+                            data: {
+                                datasets:[{
+                                    data: response.data,
+                                    backgroundColor: "#73879c",
+                                    label: 'Cantidad',
+                                }],
+                                labels: response.label,
+                            },
+                            options: {
+                                responsive: true
+                            }
+                        });
+                    }
+                    else{
+                        swal({
+                                title: "Notificación",
+                                text: "ha ocurrido un error, intentelo mas tarde!",
+                                icon: "error",
+                            })
+                    }
+                },
+                error: function(error){
+
+                }
+            })
+        }
+        var query = ""
+        get_produc(query);
+
+        $("#searchTerm").change(function(){
+            var busqueda = $("#searchTerm").val()
+            sessionStorage.setItem("busqueda", busqueda)
+        })
+
+        $("#busqueda").click(function(){
+            var busqueda = sessionStorage.getItem("busqueda")
+            if(busqueda == "" || busqueda == undefined || busqueda == null){
+                busqueda = "";
+                get_produc(busqueda)
+            }
+            else{
+                get_produc(busqueda)
+            }
+        }) 
+
+        //filtros fechas
+        $("#fecha_desde").select2({
+            placeholder: 'Mes',
+            language: "es",
+            language: {
+                inputTooShort: function () {
+                    return '';
+                },
+                searching: function () {
+                    return 'Buscando...'
+                },
+                noResults: function () {
+                    return 'No se ha encontrado ningún resultado'
+                }
+            }
+        });
+
+        $("#fecha_hasta").select2({
+            placeholder: 'Mes',
+            language: "es",
+            language: {
+                inputTooShort: function () {
+                    return '';
+                },
+                searching: function () {
+                    return 'Buscando...'
+                },
+                noResults: function () {
+                    return 'No se ha encontrado ningún resultado'
+                }
+            }
+        })
+
+        $("#anho").select2({
+            placeholder: 'Año',
+            language: "es",
+            language: {
+                inputTooShort: function () {
+                    return '';
+                },
+                searching: function () {
+                    return 'Buscando...'
+                },
+                noResults: function () {
+                    return 'No se ha encontrado ningún resultado'
+                }
+            }
+        })
+
+        sessionStorage.setItem("fecha_desde", "")
+        sessionStorage.setItem("fecha_hasta", "")
+        sessionStorage.setItem("anho", "")
+
+
+        //busquedas con fechas 
+        $("#fecha_desde").change(function(){
+            var fecha_desde = $(this).val()
+            var fecha_hasta = sessionStorage.getItem("fecha_hasta")
+            var anho = sessionStorage.getItem("anho")
+            sessionStorage.setItem("fecha_desde", fecha_desde)
+            if(fecha_desde != "" && fecha_hasta != "" && anho != ""){
+                if(parseInt(fecha_desde) > parseInt(fecha_hasta)){
+                    swal({
+                        title: "Notificación",
+                        text: "El mes desde no puede ser mayor al mes hasta!",
+                        icon: "warning",
+                        button: "Ok",
+                    })
+                }
+                else{
+                    send_form(anho, fecha_desde, fecha_hasta)
+                }                
+            }
+            //validar_campos(anho, fecha_desde, fecha_hasta)
+
+        })
+
+        $("#fecha_hasta").change(function(){
+            var fecha_hasta = $(this).val()
+            var fecha_desde = sessionStorage.getItem("fecha_desde")
+            var anho = sessionStorage.getItem("anho")
+            sessionStorage.setItem("fecha_hasta", fecha_hasta)
+            if(fecha_desde != "" && fecha_hasta != "" && anho != ""){
+                if(parseInt(fecha_desde) > parseInt(fecha_hasta)){
+                    swal({
+                        title: "Notificación",
+                        text: "El mes desde no puede ser mayor al mes hasta!",
+                        icon: "warning",
+                        button: "Ok",
+                    })
+                }
+                else{
+                    send_form(anho, fecha_desde, fecha_hasta)
+                }                
+            }        
+        })
+
+        $("#anho").change(function(){
+            var anho = $(this).val()
+            var fecha_desde = sessionStorage.getItem("fecha_desde")
+            var fecha_hasta = sessionStorage.getItem("fecha_hasta")
+            sessionStorage.setItem("anho",anho)
+            if(validar_campos(anho, fecha_desde, fecha_hasta)){
+                send_form(anho, fecha_desde, fecha_hasta)
+            }
+        })  
+
+        var validar_campos = function(anho, desde, hasta){
+            if( desde != "" && hasta != "" && anho != ""){
+                if(parseInt(desde) > parseInt(hasta)){
+                    swal({
+                        title: "Notificación",
+                        text: "El mes desde no puede ser mayor al mes hasta!",
+                        icon: "warning",
+                        button: "Ok",
+                    })
+                    return false;
+                }                
+            }
+            else{
+                swal({
+                        title: "Notificación",
+                        text: "Debe seleccionar los meses desde y hasta!",
+                        icon: "warning",
+                        button: "Ok",
+                    })
+                return false;
+            }
+
+            return true;
+        }
+
+        var send_form = function(anho, desde, hasta){
+            if(anho != "" && desde != "" && hasta != ""){
+                $.ajax({
+                    url: "/reporte/get_rango_mes_pro_comprado/",
+                    type: 'GET',
+                    data: {'anho': anho, 'desde': desde, 'hasta': hasta},
+                    success: function(response){
+                        if(response.mensaje != ""){
+                            if(response.mensaje == "NA"){
+                                swal({
+                                    title: "Notificación",
+                                    text: "No hay ninguna información en esos rangos de meses y año!",
+                                    icon: "warning",
+                                    button: "Ok",
+                                })
+                            }   
+                            $('#produc').remove(); // this is my <canvas> element
+                            $('#productos').append('<canvas id="produc"><canvas>');
+                            var ctx = document.getElementById('produc').getContext('2d');
+
+                            new Chart(ctx, {
+                                type: 'bar',
+                                data: {
+                                    datasets:[{
+                                        data: response.data,
+                                        backgroundColor: "#73879c",
+                                        label: 'Cantidad',
+                                    }],
+                                    labels: response.label,
+                                },
+                                options: {
+                                    responsive: true
+                                }
+                            });                                         
+                        }else{
+                            swal({
+                                title: "Notificación",
+                                text: "ha ocurrido un error, intentelo mas tarde!",
+                                icon: "error",
+                            })
+                        }
+
+                    },
+                    error: function(error){
+                            swal({
+                                title: "Notificación",
+                                text: "ha ocurrido un error, intentelo mas tarde!",
+                                icon: "error",
+                            })
+                    },
+                })
+            }
+        }
+    })
+
+
+</script>
+
+
+{% endblock javascripts %}

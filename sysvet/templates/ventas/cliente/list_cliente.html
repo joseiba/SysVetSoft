@@ -76,13 +76,19 @@
                         {% endfor %}
                     </div>
                     {% endif %}
-                    <div>
-                        
+                    <div>                     
+
                         {% if perms.cliente.add_cliente %}
                             <button type="submit" class="btn btn-primary float-right">
                                 <a style="color: white;" href="{% url 'add_cliente' %}">Agregar nuevo cliente</a>
                             </button>
-                        {% endif %}                        
+                        {% endif %}                                            
+
+                        {% if perms.cliente.view_cliente %}
+                            <button type="submit" class="btn btn-success float-right">
+                                <a style="color: white;" href="{% url 'list_clientes_baja' %}">Clientes dados de baja</a>
+                            </button>
+                        {% endif %}  
 
                         <div class="float-left">
                             <div class="wrap">
@@ -200,7 +206,7 @@
         })
 
 
-        $('form input').on("cut copy paste", function (e) {
+        $('input').on("cut copy paste", function (e) {
             e.preventDefault();
         });        
 
@@ -209,7 +215,15 @@
             $("#list_cliente").DataTable({
                 destroy: true,
                 dom: 'Bfrtip',
-                buttons: ['pdf'],
+                buttons: [                
+                    {
+                        extend: 'pdfHtml5',
+                        text: 'Exportar PDF',
+                        exportOptions: {
+                            columns: [0,1,2,3,4,5]
+                        }
+                    },
+                ],
                 searching: false,
                 pageLength: 10,
                 ajax: {
@@ -284,7 +298,7 @@
                     decimal: "",
                     emptyTable: "No hay información",
                     info: "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
-                    infoEmpty: "Mostrando 0 to 0 de 0 Entradas",
+                    infoEmpty: "Mostrando 0 de 0 Entradas",
                     infoFiltered: "(Filtrado de _MAX_ total entradas)",
                     infoPostFix: "",
                     thousands: ",",

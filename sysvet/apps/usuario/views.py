@@ -4,7 +4,7 @@ from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_protect
-from django.contrib.auth import login, logout, authenticate
+from django.contrib.auth import login, logout, authenticate, update_session_auth_hash
 from django.http import HttpResponseRedirect, JsonResponse
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib import messages
@@ -17,6 +17,7 @@ import json
 from apps.usuario.forms import FormLogin, UserForm, UserFormChange, GroupForm, GroupChangeForm, ContraseñaChangeForm
 from apps.usuario.models import User
 from apps.configuracion.models import ConfiEmpresa
+from apps.utiles.views import *
 
 
 # Create your views here.
@@ -83,8 +84,19 @@ def home_user(request):
             Se utiliza el metodo render, con los campos del request, y directorio
             de donde se encuentra el template            
         ]
-        """    
-    return render(request, "home/index.html")    
+        """  
+    context = {
+        'total_user': total_user(),
+        'total_cliente': total_cliente(),
+        'total_mascotas': total_mascotas(),
+        'total_productos': total_producto(),
+        'total_stock_minimo': total_stock_minimo(),
+        'total_pro_vencer': total_productos_a_vencer(),
+        'total_vacunas_aplicadas' : total_vacunas_aplicadas(),
+        'total_reservas_hoy': total_reservas_hoy(),
+        'total_proximas_vacunas': total_vacunas_proximas()
+    }
+    return render(request, "home/index.html", context)    
 
 
 @login_required()
@@ -97,8 +109,10 @@ def list_usuarios_ajax(request):
     query = request.GET.get('busqueda')
     if query != "":
         usuario = User.objects.exclude(is_active=False).filter(Q(first_name__icontains=query) | Q(last_name__icontains=query) | Q(username__icontains=query))
+        usuario = usuario.exclude(is_superuser=True)
     else:
         usuario = User.objects.exclude(is_active=False).all()
+        usuario = usuario.exclude(is_superuser=True)
 
     total = usuario.count()
 
@@ -121,14 +135,22 @@ def list_usuarios_ajax(request):
     }
     return JsonResponse(response)
 
+@login_required()
+@permission_required('usuario.view_user')
+def list_usuarios_baja(request):    
+    return render(request, "usuario/list_usuarios_baja.html")
+
 
 @login_required()
 def list_usuarios_baja_ajax(request):
     query = request.GET.get('busqueda')
     if query != "":
         usuario = User.objects.exclude(is_active=True).filter(Q(first_name__icontains=query) | Q(last_name__icontains=query) | Q(username__icontains=query))
+        usuario = usuario.exclude(is_superuser=True)
     else:
         usuario = User.objects.exclude(is_active=True).all()
+        usuario = usuario.exclude(is_superuser=True)
+
 
     total = usuario.count()
 
@@ -158,13 +180,10 @@ def add_usuario(request):
     group = Group.objects.all()
     if request.method == 'POST':
         form = UserForm(request.POST)
-        print(form)
         if form.is_valid():
             form.save()
             messages.success(request, "Se ha agregado correctamente!")
             return redirect('/usuario/add/')
-        else:
-            messages.error(request, form.errors)
     context = {'form': form}
     return render(request, 'usuario/add_usuario.html', context)
 
@@ -174,18 +193,15 @@ def edit_usuario(request, id):
     usuario = User.objects.get(id=id)
     form = UserFormChange(instance=usuario)
     if request.method == 'POST':
-        form = UserFormChange(request.POST, instance=usuario)        
+        form = UserFormChange(request.POST, instance=usuario)
         if not form.has_changed():
             messages.info(request, "No ha hecho ningun cambio")
             return redirect('/usuario/edit/' + str(id))
         if form.is_valid():
-            form.save()
+            user = form.save(commit=False)
+            user.save()
             messages.add_message(request, messages.SUCCESS, 'Se ha editado correctamente!')
             return redirect('/usuario/edit/' + str(id))
-        else:
-            print(form.errors)
-            print(request)
-            messages.error(request, form.errors)
 
     context = {'form': form, 'usuario': usuario}
     return render(request, 'usuario/edit_usuario.html', context)
@@ -215,14 +231,12 @@ def alta_usuario(request, id):
     user = User.objects.get(id=id)
     if request.user == user:
         messages.error(request, "¡No puedes eliminar este usuario! intentelo mas tarde.")
-        return redirect('/usuario/listUsuarios/')
+        return redirect('/usuario/listUsuariosBaja/')
     else:
         user.is_active = True
         user.save()
         messages.error(request, "Se ha dado de alta correctamente!.")    
-        return redirect('/usuario/listUsuarios/')
-
-
+        return redirect('/usuario/listUsuariosBaja/')
 
 
 @login_required()
@@ -232,12 +246,11 @@ def change_password(request, id):
     if request.method == 'POST':
         form = ContraseñaChangeForm(request.user, request.POST)
         if form.is_valid():
-            user = form.save()
+            user = form.save(commit=False)
+            user.save()
             update_session_auth_hash(request, user)
             messages.add_message(request, messages.SUCCESS, 'Se ha editado correctamente!')
             return redirect('/usuario/editPassword/' + str(id))
-        else:
-            messages.error(request, form.errors)
     
     context = {'form': form, 'id': id}
     return render(request, 'usuario/edit_password.html', context)

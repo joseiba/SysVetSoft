@@ -73,8 +73,6 @@ class Mascota(models.Model):
     id_raza = models.ForeignKey('Raza', on_delete=models.CASCADE, null=False)
     id_cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE, null=False)
 
-
-
     class Meta:
         verbose_name = "Mascota"
         verbose_name_plural = "Mascotas"
@@ -229,6 +227,7 @@ class HistoricoFichaMedica(models.Model):
     peso = models.CharField(max_length = 200,default = '-', null = True, blank = True)
     fecha_alta = models.CharField(max_length=500,null = True, blank = True)
     last_modified = models.DateTimeField(auto_now=True, blank=True)
+    id_mascota = models.ForeignKey('Mascota', on_delete=models.CASCADE, null=True, blank=True)
     id_ficha_medica = models.IntegerField(null = True, blank = True)
 
     class Meta:

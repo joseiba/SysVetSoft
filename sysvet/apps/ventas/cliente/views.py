@@ -16,9 +16,8 @@ from django.http import JsonResponse
 
 from .forms import ClienteForm
 from .models import Cliente, Ciudad
+from apps.utiles.models import Cedula, Ruc
 from sysvet.settings import STATIC_URL, MEDIA_URL
-
-
 
 #Metodo para agregar cliente
 @login_required()
@@ -28,6 +27,13 @@ def add_cliente(request):
     if request.method == 'POST':
         form = ClienteForm(request.POST or None)
         if form.is_valid():
+            cedula = Cedula()
+            ruc = Ruc()
+            if request.POST.get('ruc') != '':
+                ruc.nro_ruc = request.POST.get('ruc')
+                ruc.save()
+            cedula.nro_cedula = request.POST.get('cedula')
+            cedula.save()
             messages.success(request, 'Se ha agregado correctamente!')
             form.save()
             return redirect('/cliente/add')
@@ -49,6 +55,13 @@ def edit_cliente(request, id):
         if form.is_valid():
             cliente = form.save(commit=False)
             cliente.save()
+            cedula = Cedula()
+            ruc = Ruc()
+            if request.POST.get('ruc') != '':
+                ruc.nro_ruc = request.POST.get('ruc')
+                ruc.save()
+            cedula.nro_cedula = request.POST.get('cedula')
+            cedula.save()
             messages.success(request, 'Se ha editado correctamente!')
             return redirect('/cliente/edit/'+ str(id))
 
@@ -100,6 +113,50 @@ def list_client_ajax(request):
     }
     return JsonResponse(response)
     
+
+#Metodos para clientes en baja
+@login_required()
+@permission_required('cliente.add_cliente')
+def alta_cliente(request, id):
+    cliente = Cliente.objects.get(id=id)
+    cliente.is_active = "S"
+    cliente.save()
+    return redirect('/cliente/list/')
+
+@login_required()
+@permission_required('cliente.view_cliente')
+def list_clientes_baja(request):    
+    return render(request, "ventas/cliente/list_cliente_baja.html")
+
+@login_required()
+def get_client_baja(request):
+    query = request.GET.get('busqueda')
+    if query != "":
+        clientes = Cliente.objects.exclude(is_active="S").filter(Q(nombre_cliente__icontains=query) | Q(cedula__icontains=query) | Q(id_ciudad__nombre_ciudad__icontains=query)).order_by('last_modified')
+    else:
+        clientes = Cliente.objects.exclude(is_active="S").order_by('-last_modified')
+
+    total = clientes.count()
+
+    _start = request.GET.get('start')
+    _length = request.GET.get('length')
+    if _start and _length:
+        start = int(_start)
+        length = int(_length)
+        page = math.ceil(start / length) + 1
+        per_page = length
+
+        clientes = clientes[start:start + length]
+
+    data = [{'id': clie.id, 'nombre': clie.nombre_cliente, 'apellido': clie.apellido_cliente, 
+        'cedula': clie.cedula, 'telefono': clie.telefono, 'direccion': clie.direccion, 'ciudad': clie.id_ciudad.nombre_ciudad } for clie in clientes]        
+        
+    response = {
+        'data': data,
+        'recordsTotal': total,
+        'recordsFiltered': total,
+    }
+    return JsonResponse(response)
 #Metodo para la busqueda de clientes
 @login_required()
 def search_cliente(request):

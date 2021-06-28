@@ -42,7 +42,7 @@
                                 <label class="col-form-label col-md-3 col-sm-3  label-align">Nombre<span
                                         class="required">*</span></label>
                                 <div class="col-md-6 col-sm-6">
-                                    <input class="form-control" data-validate-length-range="6" data-validate-words="1"
+                                    <input class="form-control" autocomplete="off"
                                         name="nombre_cliente" placeholder="Nombre del Cliente" required="required"
                                         onkeyup="replaceCaratect(this)" />
                                 </div>
@@ -51,7 +51,7 @@
                                 <label class="col-form-label col-md-3 col-sm-3  label-align">Apellido<span
                                         class="required">*</span></label>
                                 <div class="col-md-6 col-sm-6">
-                                    <input class="form-control" data-validate-length-range="6" data-validate-words="1"
+                                    <input class="form-control" autocomplete="off"
                                         name="apellido_cliente" placeholder="Apellido" required="required"
                                         onkeyup="replaceCaratect(this)" />
                                 </div>
@@ -61,7 +61,7 @@
                                     <span class="required">*</span>
                                 </label>
                                 <div class="col-md-6 col-sm-6">
-                                    <input class="form-control" class='optional' name="direccion"
+                                    <input class="form-control" class='optional' name="direccion" autocomplete="off"
                                         placeholder="Dirección" type="text" required="required"
                                         onkeyup="replaceDirection(this)" />
                                 </div>
@@ -70,14 +70,14 @@
                                 <label class="col-form-label col-md-3 col-sm-3  label-align">Nro. Cédula<span
                                         class="required">*</span></label>
                                 <div class="col-md-6 col-sm-6">
-                                    <input class="form-control" name="cedula" placeholder="Nro. Cédula"
+                                    <input class="form-control" name="cedula" placeholder="Nro. Cédula" autocomplete="off"
                                         required="required" onkeyup="replaceABC(this)" />
                                 </div>
                             </div>
                             <div class="field item form-group">
                                 <label class="col-form-label col-md-3 col-sm-3  label-align">Nro. RUC</label>
                                 <div class="col-md-6 col-sm-6">
-                                    <input class="form-control" class='optional' name="ruc" placeholder="Nro. RUC"
+                                    <input class="form-control" class='optional' name="ruc" placeholder="Nro. RUC" autocomplete="off"
                                         type="text" onkeyup="replaceABC(this)" />
                                 </div>
                             </div>
@@ -86,14 +86,14 @@
                                         class="required">*</span></label>
                                 <div class="col-md-6 col-sm-6">
                                     <input class="form-control" type="tel" class='tel' name="telefono"
-                                        placeholder="Telefono" required='required' data-validate-length-range="9"
+                                        placeholder="Telefono" required='required' autocomplete="off"
                                         onkeyup="replaceABC(this)" />
                                 </div>
                             </div>
                             <div class="field item form-group">
                                 <label class="col-form-label col-md-3 col-sm-3  label-align">Email</label>
                                 <div class="col-md-6 col-sm-6">
-                                    <input class="form-control" id="email" name="email" placeholder="Email"
+                                    <input class="form-control" id="email" name="email" placeholder="Email" autocomplete="off"
                                         type="email" />
                                 </div>
                                 <div id="alert_email">
@@ -105,7 +105,7 @@
                                     <span class="required">*</span>
                                 </label>
                                 <div class="col-md-6 col-sm-6">
-                                    <select class="form-control" required='required' name="id_ciudad" id="id_cuidad">
+                                    <select class="form-control" required='required' name="id_ciudad" id="id_cuidad" autocomplete="off">
                                         <option required='required'>Seleccione una Cuidad</option>
                                         {% for cui in cuidad %}
                                         <option required="required" value={{ cui.id}}>{{ cui.nombre_ciudad }}</option>
@@ -119,8 +119,9 @@
                             <div class="ln_solid">
                                 <div class="form-group">
                                     <div class="col-md-6 offset-md-3" style="margin-top: 1rem;">
-                                        <button type='submit' id="test" class="btn btn-primary">Agregar</button>
+                                        <button type='submit' class="btn btn-primary" id="btn_confirmar">Agregar</button>
                                         <button type='reset' class="btn btn-success">Reset</button>
+                                        <a class="btn btn-secondary" href="{% url 'list_cliente' %}" style="color: white;">Volver</a>
                                     </div>
                                 </div>
                             </div>
@@ -138,6 +139,9 @@
 <!-- validator -->
 <script src="/static/project_static/vendors/validator/multifield.js"></script>
 <script src="/static/project_static/vendors/validator/validator.js"></script>
+<script src="/static/project_static/other/js/sweetalert.min.js"></script>
+<script src="/static/project_static/other/js/main.js"></script>
+
 <script>
     function hideshow() {
     }
@@ -199,6 +203,84 @@
         $('form input').on("cut copy paste", function (e) {
             e.preventDefault();
         });
+
+        $("input[name='cedula']").keyup(function(){
+            var cedula = $(this).val();
+
+            if(cedula != "" ){
+                $.ajax({
+                    url: '/utiles/validar_cedula/',
+                    type: 'GET',
+                    data: {'cedula': cedula},
+                    success: function(response){
+                        if(response.mensaje != "ER"){
+                            if(response.mensaje != "OK"){
+                                swal({
+                                    title: "Notificación",
+                                    text: "El número de cedula ingresado ya existe!",
+                                    icon: "warning",
+                                    button: "Ok",
+                                })
+                                $('form').find('#btn_confirmar').addClass('d-none')
+                            }else{
+                                $('form').find('#btn_confirmar').removeClass('d-none')
+                            }
+                        }
+                        else{
+                            swal({
+                                    title: "Notificación",
+                                    text: "ha ocurrido un error, intenlo de nuevo",
+                                    icon: "error",
+                                    button: "Ok",
+                                })
+                                $('form').find('#btn_confirmar').addClass('d-none')
+                        }
+                    },
+                    error: function(error){
+
+                    },
+                })
+            }
+        })
+
+        $("input[name='ruc']").keyup(function(){
+            var ruc = $(this).val();
+
+            if(ruc != "" ){
+                $.ajax({
+                    url: '/utiles/validar_ruc/',
+                    type: 'GET',
+                    data: {'ruc': ruc},
+                    success: function(response){
+                        if(response.mensaje != "ER"){
+                            if(response.mensaje != "OK"){
+                                swal({
+                                    title: "Notificación",
+                                    text: "El ruc ingresado ya existe!",
+                                    icon: "warning",
+                                    button: "Ok",
+                                })
+                                $('form').find('#btn_confirmar').addClass('d-none')
+                            }else{
+                                $('form').find('#btn_confirmar').removeClass('d-none')
+                            }
+                        }
+                        else{
+                            swal({
+                                    title: "Notificación",
+                                    text: "ha ocurrido un error, intenlo de nuevo",
+                                    icon: "error",
+                                    button: "Ok",
+                                })
+                                $('form').find('#btn_confirmar').addClass('d-none')
+                        }
+                    },
+                    error: function(error){
+
+                    },
+                })
+            }
+        })
 
     })
 

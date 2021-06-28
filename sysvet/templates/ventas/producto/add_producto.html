@@ -79,12 +79,11 @@
                             </div>
                             <div class="field item form-group">
                                 <label class="col-form-label col-md-3 col-sm-3  label-align">Precio compra
-                                    <span class="required">*</span>
                                 </label>
                                 <div class="col-md-6 col-sm-6">
-                                    <input class="form-control" name="precio_compra" id="test" autocomplete="off"
+                                    <input class="form-control" name="precio_compra" autocomplete="off"
                                         placeholder="Precio compra" type="text" onkeyup="replaceABC(this)"
-                                        required="required" />
+                                        required="required" value="0" disabled/>
                                 </div>
                             </div>
                             <div class="field item form-group">
@@ -136,6 +135,9 @@
                                     <div class="col-md-6 offset-md-3" style="margin-top: 1rem;">
                                         <button type='submit' class="btn btn-primary">Agregar</button>
                                         <button type='reset' class="btn btn-success">Reset</button>
+                                        <a class="btn btn-secondary" style="color: white; cursor: pointer;" href="{% url  'list_productos_general'%}">
+                                            Volver
+                                        </a>                                    
                                     </div>
                                 </div>
                             </div>
@@ -200,7 +202,7 @@
         }).prop('checked', false);
 
         $("#datepicker").datepicker({
-            minDate: "-1D",
+            minDate: "+0D",
         });
 
         $("#tipo_producto").change(function () {

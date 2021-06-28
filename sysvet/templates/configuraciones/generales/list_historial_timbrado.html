@@ -101,7 +101,7 @@
                                         style="width:100%">
                                         <thead>
                                             <tr class="" style="background-color: #2a3f54; font-size: medium;">
-                                                <th style="color: white;">Id</th>
+                                                <th style="color: white;">Nº</th>
                                                 <th style="color: white;">Nº Timbrado</th>
                                                 <th style="color: white;">Fecha Inicio Timbrado</th>
                                                 <th style="color: white;">Fecha Fin Timbrado</th>
@@ -146,7 +146,7 @@
 
 <script>
     $(function () {
-        $('form input').on("cut copy paste", function (e) {
+        $('input').on("cut copy paste", function (e) {
             e.preventDefault();
         });        
 
@@ -154,7 +154,12 @@
             $("#list_timbrado").DataTable({
                 destroy: true,
                 dom: 'Bfrtip',
-                buttons: ['pdf'],
+                buttons: [                
+                    {
+                        extend: 'pdfHtml5',
+                        text: 'Exportar PDF',                        
+                    },
+                ],
                 searching: false,
                 pageLength: 10,
                 ajax: {
@@ -169,7 +174,7 @@
                 },
                 columns: [
                     {
-                        name: 'Id',
+                        name: 'Nº',
                         data: 'id',
                     },
                     {
@@ -206,7 +211,7 @@
                     decimal: "",
                     emptyTable: "No hay información",
                     info: "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
-                    infoEmpty: "Mostrando 0 to 0 de 0 Entradas",
+                    infoEmpty: "Mostrando 0 de 0 Entradas",
                     infoFiltered: "(Filtrado de _MAX_ total entradas)",
                     infoPostFix: "",
                     thousands: ",",

@@ -29,12 +29,13 @@
                 <h3>Agregar Factura Compra</h3>
             </div>
         </div>
+
         <div class="clearfix"></div>
+
         <div class="row">
             <div class="col-md-12 col-sm-12">
                 <div class="x_panel">
                     <div class="x_title">
-                        <h2>Realizar Factura</h2>
                         <ul class="nav navbar-right panel_toolbox">
                             <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
                             </li>
@@ -55,8 +56,7 @@
                                                 <div class="form-group">
                                                     <label> <strong> Buscar Producto:</strong> </label>
                                                         <span class="input-group-append">
-                                                            <select class="form-control" id="search">                                                                                      
-                                                            </select>
+                                                            <select class="form-control" id="search"></select>
                                                         </span>                                                    
                                                 </div>
                                                 <div class="table-responsive">
@@ -70,6 +70,7 @@
                                                         <thead>
                                                             <tr>
                                                                 <td>Cod</td>
+                                                                <td>Nombre Producto</td>
                                                                 <td>Descripción</td>
                                                                 <td>Precio</td>
                                                                 <td>Cantidad</td>
@@ -87,14 +88,18 @@
                                             <h6 class="card-header">Factura</h6>
                                             <div class="card-body">
                                                 <div class="form-group">
-                                                    <label><strong>Timbrado:</strong></label>
+                                                    <label><strong>Timbrado<span
+                                                        class="required" style="color: red;" data-toggle="tooltip" data-placement="top"
+                                                        title="Campo Obligatorio">*</span></strong></label>
                                                     <div class="field item"> 
                                                         {{ form.nro_timbrado }}
                                                     </div>
                                                     
                                                 </div>
                                                 <div class="form-group">
-                                                    <label><strong>Número Factura:</strong></label>
+                                                    <label><strong>Número Factura<span
+                                                        class="required" style="color: red;" data-toggle="tooltip" data-placement="top"
+                                                        title="Campo Obligatorio">*</span></strong></label>
 
                                                     <div class="field item"> 
                                                         {{ form.nro_factura }}
@@ -102,29 +107,44 @@
                                                     
                                                 </div>
                                                 <div class="form-group">
-                                                    <label><strong>Proveedor:</strong></label>
+                                                    <label><strong>Proveedor<span
+                                                        class="required" style="color: red;" data-toggle="tooltip" data-placement="top"
+                                                        title="Campo Obligatorio">*</span></strong></label>
                                                     <div class="field item"> 
                                                         {{ form.id_proveedor }}
                                                     </div>
                                                     
                                                 </div>
                                                 <div class="form-group">
-                                                    <label><strong>Fecha Emision:</strong></label>
+                                                    <label><strong>Fecha Emisión<span
+                                                        class="required" style="color: red;" data-toggle="tooltip" data-placement="top"
+                                                        title="Campo Obligatorio">*</span></strong></label>
 
                                                     <div class="field item"> 
+                                                        {{ form.fecha_emision_factura }}
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label><strong>Fecha Inicio Timbrado<span
+                                                        class="required" style="color: red;" data-toggle="tooltip" data-placement="top"
+                                                        title="Campo Obligatorio">*</span></strong></label>
+
+                                                    <div class="field item" id="fecha_inicio"> 
                                                         {{ form.fecha_emision }}
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
-                                                    <label><strong>Fecha Vencimiento:</strong></label>
+                                                    <label><strong>Fecha Fin Timbrado<span
+                                                        class="required" style="color: red;" data-toggle="tooltip" data-placement="top"
+                                                        title="Campo Obligatorio">*</span></strong></label>
 
-                                                    <div class="field item"> 
+                                                    <div class="field item"  id="fecha_fin"> 
                                                         {{ form.fecha_vencimiento }}
                                                     </div>
                                                 </div>
                                                 <fieldset disabled>
                                                     <div class="form-group d-none">
-                                                        <label><strong>Total Iva: </strong></label>
+                                                        <label><strong>Total Iva </strong></label>
                                                         <div class="input-group mb-2 mr-sm-2">
                                                             <div class="input-group-prepend">
                                                                 <div class="input-group-text"
@@ -137,9 +157,8 @@
                                                 </fieldset>
                                                 <fieldset disabled>
                                                     <div class="form-group">
-                                                        <label><strong>Total a pagar: </strong></label>
-                                                        <!--<label><strong>Total a pagar IVA incluído: </strong></label>-->
-                                                        <div class="input-group mb-2 mr-sm-2">
+                                                        <label><strong>Total a pagar </strong></label>
+                                                        <!--<label><strong>Total a pagar IVA incluído: </strong></label>-->                                                        <div class="input-group mb-2 mr-sm-2">
                                                             <div class="input-group-prepend">
                                                                 <div class="input-group-text"
                                                                     style="font-weight: bold;">Gs.</div>
@@ -154,8 +173,8 @@
                                     </div>
                                 </div>
                                 <div class="tile-footer">
-                                    <button type="submit" class="btn btn-primary" style="color: white"><i
-                                            class="fa fa-fw fa-lg fa-check-circle"></i>Registrar Factura
+                                    <button type="submit" class="btn btn-primary" id="button_factura" style="color: white"><i
+                                            class="fa fa-fw fa-lg fa-check-circle"></i>Agregar Factura
                                     </button>&nbsp;&nbsp;&nbsp;
                                     <a class="btn btn-secondary" href="{% url 'list_factura_compra' %}">
                                         <i class="fa fa-fw fa-lg fa-times-circle"></i>Volver</a>
@@ -192,13 +211,13 @@
 <script src="/static/project_static/other/js/select2/select2.js"></script>
 <script src="/static/project_static/other/js/sweetalert.min.js"></script>
 <script src="/static/project_static/other/js/bootstrap-touchspin-master/dist/jquery.bootstrap-touchspin.js"></script>
-<script src="/static/project_static/other/js/compras/forms.js"></script>
+<script src="/static/project_static/other/js/compras/forms_add_factura.js"></script>
 <script src="/static/project_static/other/js/functions/functions.js"></script>
 <script src="/static/project_static/vendors/validator/multifield.js"></script>
 <script src="/static/project_static/vendors/validator/validator.js"></script>
 <script>
     var action = '{{ accion|safe }}';
-
+    
     $.datepicker.regional['es'] = {
         closeText: 'Cerrar',
         prevText: '< Ant',
@@ -219,7 +238,7 @@
     $.datepicker.setDefaults($.datepicker.regional['es']);
 
     $(function () {
-         // initialize a validator instance from the "FormValidator" constructor.
+                // initialize a validator instance from the "FormValidator" constructor.
         // A "<form>" element is optionally passed as an argument, but is not a must
         var validator = new FormValidator({
             "events": ['blur', 'input', 'change']
@@ -241,7 +260,7 @@
             if (this.checked)
                 $('form .alert').remove();
         }).prop('checked', false);
-
+        
         $('form input').on("cut copy paste", function (e) {
             e.preventDefault();
         });
@@ -271,6 +290,11 @@
                 },
             },
         });
+
+        $('#datePick-emision-factura').datepicker({
+            format: "dd/mm/yyyy",
+            autoclose: true,
+        }).datepicker("setDate", new Date());;
 
         $('#datePick-emision').datepicker({
             format: "dd/mm/yyyy",
@@ -328,6 +352,54 @@
                 }
             }
         })
+        $("input[name='fecha_emision'], input[name='fecha_vencimiento']").change(function () {
+            var fecha_emision = $("input[name='fecha_emision']").val()
+
+            var fecha_vencimiento = $("input[name='fecha_vencimiento']").val()
+            if (fecha_emision != "" && fecha_vencimiento != "") {
+                if(!compareDate(fecha_emision, fecha_vencimiento)){
+                    swal({
+                        title: "Notificación",
+                        text: "La fecha inicio y fin del timbrado ha caducado!",
+                        icon: "warning",
+                        button: "Ok",
+                    })
+                    $('form').find('#button_factura').addClass('d-none')
+                }else{
+                    $('form').find('#button_factura').removeClass('d-none')
+                }
+            }
+        })
+
+        $("input[name='fecha_emision'], input[name='fecha_vencimiento']").change(function () {
+            var fecha_emision = $("input[name='fecha_emision']").val()
+
+            var fecha_vencimiento = $("input[name='fecha_vencimiento']").val()
+
+            if(fecha_emision != ""){
+                $('form .alert').remove();
+                $('form').find("#fecha_inicio").removeClass('bad')
+            }
+
+            if(fecha_vencimiento != ""){
+                $('form .alert').remove();
+                $('form').find("#fecha_fin").removeClass('bad')
+            }
+        })
+
+        var compareDate = function(fecha_emision, fecha_vencimiento){
+            var d1 = fecha_emision.split("/");
+            var d2 = fecha_vencimiento.split("/");
+            var c = new Date();
+
+            var from = new Date(d1[2], parseInt(d1[1])-1, d1[0]);  // -1 because months are from 0 to 11
+            var to   = new Date(d2[2], parseInt(d2[1])-1, d2[0]);
+            var check = new Date(c.getFullYear(), c.getMonth(), c.getDate());
+            if(check >= from && check <= to){
+                return true
+            }
+            return false
+        }
     })
 
 </script>

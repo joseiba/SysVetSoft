@@ -15,7 +15,13 @@ var factura = {
     calc_invoice: function () {
         var subtotal = 0
         $.each(this.items.products, function (pos, dict) {
-            var dic_precio_format = dict.precio.split('.')
+            var dic_precio_format ;
+            if(precio_compra_action != 'S'){
+                dic_precio_format = dict.precio_compra.split('.')
+            }
+            else{
+                dic_precio_format = dict.precio_compra_viejo.split('.')
+            }
             var dic_sum = "";
 
             for (let index = 0; index < dic_precio_format.length; index++) {
@@ -43,10 +49,10 @@ var factura = {
             data: this.items.products,
             ordering: false,
             columns: [
-                {"data": "codigo_real"},
+                {"data": "codigo_producto"},
                 {"data": "nombre"},
                 {"data": "description"},
-                {"data": "precio"},
+                {"data": "precio_compra"},
                 {"data": "cantidad"},
                 {"data": "subtotal"},
             ],
@@ -71,12 +77,14 @@ var factura = {
                     orderable: false,                
                 },
                 {
-                    targets: [3, 5],
+                    targets: [3],
                     class: "text-center my-0 ",
                     orderable: false,
                     render: function (data, type, row) {
-                        var amount_formated = add_miles(data)
-                        return 'Gs. ' + amount_formated
+                        if(precio_compra_action != 'S'){
+                            return '<input type="text" name="precio_compra" id="precio_compra" class="form-control form-control-sm input-sm" autocomplete="off" value="' + row.precio_compra + '">';
+                        }
+                        return "Gs. " + row.precio_compra_viejo;
                     }
                 },
                 {
@@ -95,6 +103,15 @@ var factura = {
                             return '<input type="text" name="cantidad" class="form-control form-control-sm input-sm" autocomplete="off" value="' + row.cantidad + '">';
                         }                                            
                     }   */              
+                },
+                {
+                    targets: [5],
+                    class: "text-center my-0 ",
+                    orderable: false,
+                    render: function (data, type, row) {
+                        var amount_formated = add_miles(data)
+                        return 'Gs. ' + amount_formated
+                    }
                 },
                 /*{
                     targets: [5],
@@ -121,7 +138,7 @@ var factura = {
                 decimal: "",
                 emptyTable: "No hay información",
                 info: "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
-                infoEmpty: "Mostrando 0 to 0 de 0 Entradas",
+                infoEmpty: "Mostrando 0 de 0 Entradas",
                 infoFiltered: "(Filtrado de _MAX_ total entradas)",
                 infoPostFix: "",
                 thousands: ",",
@@ -174,13 +191,25 @@ $(function () {
         var tr = tblFactura.cell($(this).closest('td, li')).index();
         factura.items.products[tr.row].cantidad = cant;
         factura.calc_invoice();
-        // el 4 es el lugar donde tiene que estar el subtotal
-        $('td:eq(4)', tblFactura.row(tr.row).node()).html('Gs.' + Math.round(factura.items.products[tr.row].subtotal));
+        // el 5 es el lugar donde tiene que estar el subtotal
+        $('td:eq(5)', tblFactura.row(tr.row).node()).html('Gs.' +  add_miles(factura.items.products[tr.row].subtotal));
     }).on('change', 'input[name="descripcion"]', function (){
         var descripcion = $(this).val();
         var tr = tblFactura.cell($(this).closest('td, li')).index();
         factura.items.products[tr.row].description = descripcion;
-    });
+    }).on('keyup', 'input[name="precio_compra"]', function(event) {
+        $(event.target).val(function (index, value ) {
+            var cant = add_miles($(this).val());
+            var tr = tblFactura.cell($(this).closest('td, li')).index();
+            factura.items.products[tr.row].precio_compra = cant;
+            factura.calc_invoice();
+            // el 5 es el lugar donde tiene que estar el subtotal
+            $('td:eq(5)', tblFactura.row(tr.row).node()).html('Gs.' +  add_miles(factura.items.products[tr.row].subtotal));
+            return value.replace(/\D/g, "")
+                        .replace(/([0-9])([0-9]{3})$/, '$1.$2')
+                        .replace(/\B(?=(\d{3})+(?!\d)\.?)/g, ".");
+        });
+    })
 
     $('form').on('submit', function (e) {
         e.preventDefault();

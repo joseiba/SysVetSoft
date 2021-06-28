@@ -10,7 +10,7 @@
         </div>
         <form class="" action="{% url 'edit_empleado' emp.id %}" method="POST"  >
             {% csrf_token %}
-            <div class="field item form-group">
+            <div class="field item form-group mt-3">
                 <label class="col-form-label col-md-3 col-sm-3  label-align">Nombre<span
                         class="required">*</span></label>
                 <div class="col-md-6 col-sm-6">
@@ -50,7 +50,7 @@
                 <div class="form-group">
                     <div class="col-md-6 offset-md-3" style="margin-top: 1rem;">
                         <button type='button' class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                        <button type='submit' id="test" class="btn btn-primary">Agregar</button>
+                        <button type='submit' class="btn btn-primary"  id="btn_confirmar">Actualizar</button>
                     </div>
                 </div>
             </div>
@@ -62,7 +62,7 @@
 <script src="/static/project_static/vendors/validator/multifield.js"></script>
 <script src="/static/project_static/vendors/validator/validator.js"></script>
 <script src="/static/project_static/other/js/main.js"></script>
-
+<script src="/static/project_static/other/js/sweetalert.min.js"></script>
 <script>
     // initialize a validator instance from the "FormValidator" constructor.
     // A "<form>" element is optionally passed as an argument, but is not a must
@@ -90,4 +90,45 @@
     $('form input').on("cut copy paste", function (e) {
             e.preventDefault();
         });
+
+        $(function(){
+        $("input[name='ci_empe']").keyup(function(){
+            var cedula = $(this).val();
+
+            if(cedula != "" ){
+                $.ajax({
+                    url: '/utiles/validar_cedula/',
+                    type: 'GET',
+                    data: {'cedula': cedula},
+                    success: function(response){
+                        if(response.mensaje != "ER"){
+                            if(response.mensaje != "OK"){
+                                swal({
+                                    title: "Notificación",
+                                    text: "El número de cedula ingresado ya existe!",
+                                    icon: "warning",
+                                    button: "Ok",
+                                })
+                                $('form').find('#btn_confirmar').addClass('d-none')
+                            }else{
+                                $('form').find('#btn_confirmar').removeClass('d-none')
+                            }
+                        }
+                        else{
+                            swal({
+                                    title: "Notificación",
+                                    text: "ha ocurrido un error, intenlo de nuevo",
+                                    icon: "error",
+                                    button: "Ok",
+                                })
+                                $('form').find('#btn_confirmar').addClass('d-none')
+                        }
+                    },
+                    error: function(error){
+
+                    },
+                })
+            }
+        })
+    })
 </script>

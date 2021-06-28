@@ -6,8 +6,8 @@ class Ciudad(models.Model):
     Clase que define la estructura de una ciudad
     """
     nombre_ciudad = models.CharField(max_length = 200, help_text = "Ingrese nombre de la ciudad")
+    is_active = models.CharField(max_length=2, default="S", blank=True, null=True)
     last_modified = models.DateTimeField(auto_now=True, blank=True)
-
 
     class Meta:
         verbose_name = "Ciudad"

@@ -110,7 +110,6 @@
                                     <table id="list_servicios" class="table table-striped table-bordered" style="width:75%; margin: auto;">
                                         <thead>
                                             <tr class="" style="background-color: #2a3f54; font-size: medium;">                                                
-                                                <th style="color: white;">Código Servicio</th>
                                                 <th style="color: white;">Nombre del servicio</th>
                                                 <th style="color: white;">Precio del servicio</th>
                                                 <th style="color: white;">Acción</th>
@@ -166,7 +165,7 @@
 
 <script>
     $(function () {
-        $('form input').on("cut copy paste",function(e) {
+        $('input').on("cut copy paste",function(e) {
             e.preventDefault();
         });
 
@@ -174,7 +173,15 @@
             $("#list_servicios").DataTable({
                 destroy: true,
                 dom: 'Bfrtip',
-                buttons: ['pdf'],
+                buttons: [                
+                    {
+                        extend: 'pdfHtml5',
+                        text: 'Exportar PDF',
+                        exportOptions: {
+                            columns: [0,1]
+                        }
+                    },
+                ],
                 searching: false,
                 pageLength: 10,
                 ajax: {
@@ -187,11 +194,7 @@
 
                     }
                 },
-                columns: [
-                    {
-                        name: 'Código Servicio',
-                        data: 'id',
-                    },
+                columns: [                    
                     {
                         name: 'Nombre del servicio',
                         data: 'nombre',
@@ -227,7 +230,7 @@
 
                 ],
                 columnDefs: [{
-                    targets: [3], // column index (start from 0)
+                    targets: [2], // column index (start from 0)
                     orderable: false, // set orderable false for selected columns
                 }],
                 serverSide: false,
@@ -235,7 +238,7 @@
                     decimal: "",
                     emptyTable: "Sin resultados encontrados",
                     info: "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
-                    infoEmpty: "Mostrando 0 to 0 de 0 Entradas",
+                    infoEmpty: "Mostrando 0 de 0 Entradas",
                     infoFiltered: "(Filtrado de _MAX_ total entradas)",
                     infoPostFix: "",
                     thousands: ",",

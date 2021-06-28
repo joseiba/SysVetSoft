@@ -190,7 +190,7 @@
 <script src="/static/project_static/vendors/pdfmake/build/vfs_fonts.js"></script>
 <script>
     $(function () {
-        $('form input').on("cut copy paste", function (e) {
+        $('input').on("cut copy paste", function (e) {
             e.preventDefault();
         });
 
@@ -198,7 +198,15 @@
             $("#list_tipo").DataTable({
                 destroy: true,
                 dom: 'Bfrtip',
-                buttons: ['pdf'],
+                buttons: [                
+                    {
+                        extend: 'pdfHtml5',
+                        text: 'Exportar PDF',
+                        exportOptions: {
+                            columns: [0,1,2]
+                        }
+                    },
+                ],
                 searching: false,
                 pageLength: 10,
                 ajax: {

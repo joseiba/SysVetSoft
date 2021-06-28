@@ -1,4 +1,10 @@
 <link rel="stylesheet" href="/static/project_static/other/commons/shared.css">
+<link href="/static/project_static/other/js/select2/select2.css" rel="stylesheet" />
+<style>
+    .select2{
+        width: 100% !important;
+    }
+</style>
 <div class="modal-dialog" role="document">
     <div class="modal-content">
         <div class="modal-header no_borders" style="background-color:#ffc107;">
@@ -31,6 +37,14 @@
                 </div>               
             </div>
 
+            <div class="field item form-group mt-3">
+                <label class="col-form-label col-md-4 col-sm-4" style="text-align: end;">Multiple Aplicaciones<span
+                        class="required">*</span></label>
+                <div class="col-md-6 col-sm-6">
+                    {{ form.multi_aplicaciones}}
+                </div>        
+            </div>
+
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
                 <button type="submit" class="btn btn-primary">Editar</button>
@@ -46,6 +60,8 @@
 <script src="/static/project_static/other/js/jquery-ui-1.12.1/jquery-ui-1.12.1/jquery-ui.js"></script>
 <script src="/static/project_static/other/js/main.js"></script>
 <script src="/static/project_static/other/js/sweetalert.min.js"></script>
+<script src="/static/project_static/other/js/select2/select2.js"></script>
+
 <script>
  // initialize a validator instance from the "FormValidator" constructor.
     // A "<form>" element is optionally passed as an argument, but is not a must
@@ -72,4 +88,18 @@
     $('form input').on("cut copy paste",function(e) {
             e.preventDefault();
         });
+
+    $("#id_producto").select2({
+        language: {
+                inputTooShort: function () {
+                    return '';
+                },
+                searching: function () {
+                    return 'Buscando...'
+                },
+                noResults: function(){
+                    return 'No se ha encontrado ningún resultado'
+                }
+            }
+        })
 </script>

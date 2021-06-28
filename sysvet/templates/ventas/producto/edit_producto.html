@@ -127,11 +127,9 @@
                                 <div class="form-group">
                                     <div class="col-md-6 offset-md-3" style="margin-top: 1rem;">
                                         <button type='submit' class="btn btn-primary">Actualizar</button>
-                                        <button class="btn btn-success">
-                                            <a style="color: white; cursor: pointer;" href="{% url  'list_productos_general'%}">
+                                            <a class="btn btn-success" style="color: white; cursor: pointer;" href="{% url  'list_productos_general'%}">
                                                 Volver
                                             </a>
-                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -197,7 +195,7 @@
         }).prop('checked', false);
 
         $("#datepicker").datepicker({
-            minDate: "-1D",
+            minDate: "+0D",
         });
 
         var tipo = $("#tipo_producto").val()
@@ -266,7 +264,7 @@
                 if (parseFloat(p_c_concat) > parseFloat(p_v_concat)) {
                     swal({
                         title: "Notificacion",
-                        text: "El precio de venta no puede ser menor al de compra",
+                        text: "El precio de venta es menor al de compra!",
                         icon: "warning",
                         buttons: true,
                         dangerMode: true,

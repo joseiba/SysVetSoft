@@ -23,13 +23,17 @@
     <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
         <div class="menu_section">
             <h3>General</h3>
-            <ul class="nav side-menu">   
+            <ul class="nav side-menu"> 
+
+                <li><a href="{% url 'index' %}"><i class="fa fa-home fa-lg"  style="width: 26px;"></i> Inicio</a>
+                    
+                </li>
                 
                 {% if perms.cliente.view_cliente or perms.mascota.view_mascota or perms.factura.view_facturacabeceraventa %}
-                <li><a><i class="fas fa-money-check-alt fa-lg" style="width: 26px;"></i> Ventas <span class="fa fa-chevron-down"></span></a>
+                <li><a><i class="fas fa-money-check-alt fa-lg mr-1"></i> Ventas <span class="fa fa-chevron-down"></span></a>
                     <ul class="nav child_menu">                        
                         {% if perms.cliente.view_cliente %}
-                            <li><a href="{% url 'list_cliente' %}">Cliente</a></li>
+                            <li><a href="{% url 'list_cliente' %}">Clientes</a></li>
                         {% endif %}
                         
                         
@@ -116,9 +120,40 @@
                     </ul>
                 </li>
                 {% endif %}
+
+                
+                {% if perms.reporte.view_reporte %}
+                    <li><a><i class="fas fa-chart-bar fa-lg" style="width: 26px;"></i> Reportes <span class="fa fa-chevron-down"></span></a>
+                        <ul class="nav child_menu">
+                            <li><a>Productos<span class="fa fa-chevron-down"></span></a>
+                                <ul class="nav child_menu">                                
+                                    <li><a href="{% url 'reporte_producto' %}">Total Vendidos</a></li>
+                                    <li><a href="{% url 'reporte_producto_comprados' %}">Total Comprados</a></li>
+                                    <li><a href="{% url 'reporte_productos_vendido_mes' %}">Vendido por Mes</a></li>
+                                    <li><a href="{% url 'reporte_productos_comprado_mes' %}">Comprado por Mes</a></li>
+                                    <li><a href="{% url 'reporte_stock_minimo' %}">Stock Mínimo</a></li>
+                                    <li><a href="{% url 'reporte_stock_a_vencer' %}">A Vencer</a></li>
+                                </ul>
+                            </li>
+                            <li><a>Servicios<span class="fa fa-chevron-down"></span></a>
+                                <ul class="nav child_menu">                                
+                                    <li><a href="{% url 'reporte_servicio_vendido' %}">Más Vendidos</a></li>
+                                </ul>
+                            </li>
+
+                            <li><a>Mascotas<span class="fa fa-chevron-down"></span></a>
+                                <ul class="nav child_menu">                                
+                                    <li><a href="{% url 'list_proximas_vacunas' %}">Próximas Vacunaciones</a></li>
+                                </ul>
+                            </li>
+
+                            <li><a href="{% url 'reporte_ganancias_mes' %}">Recaudación por mes</a></li>
+                        </ul>                     
+                    </li>
+                {% endif %}                
                 
                 {% if perms.usuario.view_user %}
-                    <li><a><i class="fas fa-users-cog fa-lg" style="color: white; width: 30px;"></i> Usuarios <span class="fa fa-chevron-down"></span></a>
+                    <li><a><i class="fas fa-users-cog fa-lg" style="color: white; width: 26px;"></i> Usuarios <span class="fa fa-chevron-down"></span></a>
                         <ul class="nav child_menu">
                             
                             {% if perms.usuario.view_user %}
@@ -137,8 +172,13 @@
                 
                 
                 {% if perms.configuracion.add_confiempresa or perms.configuracion.view_confiempresa or perms.configuracion.view_empleado or perms.configuracion.view_servicio %}
-                    <li><a><i class="glyphicon glyphicon-cog fa-lg" style="color: white; width: 26px;"></i> Configuraciones <span class="fa fa-chevron-down"></span></a>
+                    <li><a><i class="glyphicon glyphicon-cog fa-lg" style="color: white; width: 26px;"></i> Ajustes <span class="fa fa-chevron-down"></span></a>
                         <ul class="nav child_menu">
+
+                            {% if perms.configuracion.view_confiempresa %}
+                            <li><a href="{% url 'list_ciudades' %}">Lista de Ciudades</a></li>
+    
+                            {% endif %}
 
                             {% if perms.configuracion.view_confiempresa %}
                             <li><a href="{% url 'list_tipo_producto' %}">Tipo Productos</a></li>
@@ -182,18 +222,18 @@
 
     <!-- /menu footer buttons -->
     <div class="sidebar-footer hidden-small">
-        <a data-toggle="tooltip" data-placement="top" title="Settings">
-            <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
-        </a>
-        <a data-toggle="tooltip" data-placement="top" title="FullScreen">
-            <span class="glyphicon glyphicon-fullscreen" aria-hidden="true"></span>
-        </a>
-        <a data-toggle="tooltip" data-placement="top" title="Lock">
-            <span class="glyphicon glyphicon-eye-close" aria-hidden="true"></span>
-        </a>
         <a data-toggle="tooltip" data-placement="top" title="Cerrar Sesión" href="{% url 'logout' %}">
             <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
         </a>
+        <a data-toggle="tooltip" data-placement="top" title="Cambiar Contraseña" href="{% url 'change_password' user.id %}">
+            <span class="fas fa-unlock-alt" aria-hidden="true"></span>
+        </a>
+        <a data-toggle="tooltip" data-placement="top" title="Editar Usuario" href="{% url 'edit_usuario' user.id %}">
+            <span class="fas fa-user" aria-hidden="true"></span>
+        </a>
+        <a data-toggle="tooltip" data-placement="top" title="Inicio" href="{% url 'index' %}">
+            <span class="fas fa-home" aria-hidden="true"></span>
+        </a>       
     </div>
     <!-- /menu footer buttons -->
 </div>

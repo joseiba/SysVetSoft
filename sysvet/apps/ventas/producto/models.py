@@ -79,7 +79,7 @@ class Producto(models.Model):
     fecha_movimiento = models.CharField(max_length = 200, null = True, blank = True)
     tipo_producto = models.ForeignKey('TipoProducto', on_delete=models.CASCADE, null=True)
     fecha_compra = models.CharField(max_length = 200, default = date.strftime("%d/%m/%Y"), editable = False)
-    precio_compra = models.CharField(max_length = 500,help_text = 'Ingrese precio de compra')
+    precio_compra = models.CharField(max_length = 500,help_text = 'Ingrese precio de compra', blank=True, null=True, default="0")
     precio_venta = models.CharField(max_length = 500, help_text = 'Ingrese precio de venta')
     stock_minimo = models.IntegerField(help_text = 'Ingrese stock minimo')
     lote = models.CharField(max_length = 200, null = True, blank = True)
@@ -118,6 +118,7 @@ class Producto(models.Model):
         dict['nombre'] = self.nombre_producto
         dict['description'] = self.descripcion
         dict['precio'] = self.precio_venta
+        dict['precio_compra'] = self.precio_compra
         dict['stock_sistema'] = self.stock_total
         dict['tipo'] = self.servicio_o_producto
         return dict
@@ -159,3 +160,12 @@ class Inventario(models.Model):
             ('change_inventario', 'Editar Inventario'),
             ('delete_inventario', 'Eliminar Inventario'),
             ('view_inventario', 'Listar Inventarios')) 
+
+
+class HistoricoProductoPrecio(models.Model):
+    id_producto = models.ForeignKey('Producto', on_delete=models.CASCADE, null=False)
+    fecha_alta = models.CharField(max_length=500, default = date.strftime("%d/%m/%Y"), null=True)
+    precio_compra = models.CharField(max_length=500, null=True, blank=True)
+    class Mwta:
+        verbose_name = "Historico Producto"
+        verbose_name_plural = "Historicos Productos"

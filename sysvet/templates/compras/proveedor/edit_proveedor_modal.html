@@ -52,7 +52,7 @@
 
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                <button type="submit" class="btn btn-primary">Editar</button>
+                <button type="submit" class="btn btn-primary" id="btn_confirmar">Editar</button>
             </div>
         </form>
     </div>
@@ -61,9 +61,8 @@
 <!-- validator -->
 <script src="/static/project_static/vendors/validator/validator.js"></script>
 <script src="/static/project_static/vendors/validator/multifield.js"></script>
-
 <script src="/static/project_static/other/js/main.js"></script>
-
+<script src="/static/project_static/other/js/sweetalert.min.js"></script>
 
 <script>
 
@@ -111,4 +110,45 @@
             
         }
     });
+
+    $(function(){
+    $("input[name='ruc_proveedor']").keyup(function () {
+      var ruc = $(this).val();
+
+      if (ruc != "") {
+        $.ajax({
+          url: '/utiles/validar_ruc/',
+          type: 'GET',
+          data: { 'ruc': ruc },
+          success: function (response) {
+            if (response.mensaje != "ER") {
+              if (response.mensaje != "OK") {
+                swal({
+                  title: "Notificación",
+                  text: "El ruc ingresado ya existe!",
+                  icon: "warning",
+                  button: "Ok",
+                })
+                $('form').find('#btn_confirmar').addClass('d-none')
+              } else {
+                $('form').find('#btn_confirmar').removeClass('d-none')
+              }
+            }
+            else {
+              swal({
+                title: "Notificación",
+                text: "ha ocurrido un error, intenlo de nuevo",
+                icon: "error",
+                button: "Ok",
+              })
+              $('form').find('#btn_confirmar').addClass('d-none')
+            }
+          },
+          error: function (error) {
+
+          },
+        })
+      }
+    })
+    })
 </script>

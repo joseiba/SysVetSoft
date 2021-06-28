@@ -2,23 +2,13 @@
 <div class="modal-dialog" role="document">
     <div class="modal-content">
         <div class="modal-header no_borders"style="background-color:#ffc107">
-            <h5 class="modal-title" id="exampleModalLabel" style="color: white;">Agregar Servicio</h5>
+            <h5 class="modal-title" id="exampleModalLabel" style="color: white;">Editar Servicio</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
         <form action="{% url 'edit_servicio' servicios.id %}" method="post">
             {% csrf_token %}
-            <div class="field item form-group mt-3">
-                <label class="col-form-label col-md-3 col-sm-3  label-align">Codigo Servicio<span
-                class="required">*</span></label>
-                <div class="col-md-7 col-sm-6">
-                    {{form.cod_serv}}
-                </div>
-                <div id="alert_nombre_servicio">
-
-                </div>              
-            </div>
             <div class="field item form-group mt-3">
                 <label class="col-form-label col-md-3 col-sm-3  label-align">Nombre Servicio<span
                         class="required">*</span></label>

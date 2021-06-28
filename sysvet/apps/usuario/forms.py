@@ -50,7 +50,15 @@ class UserForm(UserCreationForm):
                 }
             ),
         }
-        exclude = ['user_permissions', 'last_login', 'date_joined', 'is_superuser', 'is_active', 'is_staff', 'password']
+        exclude = ['user_permissions', 'last_login', 'date_joined', 'is_superuser', 'is_active', 'is_staff', 'password', 'profile']
+        help_texts = {
+					'username' : None,
+                    'email': None,
+                    'first_name': None,
+                    'last_name': None,
+                    'password1': None,
+                    'password2': None,
+					} 
 
     def save(self, commit=True):
         user = super().save(commit=False)
@@ -62,17 +70,21 @@ class UserForm(UserCreationForm):
 
 
 class UserFormChange(UserChangeForm):
-
     def __init__(self, *args, **kwargs):        
         super().__init__(*args, **kwargs)
         self.fields['groups'].widget.attrs['class'] = 'group_select'
         self.fields['groups'].widget.attrs['required'] = 'required'
         self.fields['groups'].widget.attrs['style'] = 'width: 100%'
-    
+
+        for fieldname in ['username']:
+            self.fields[fieldname].help_text = None
+        #for label in ['password']:
+            #self.fields[label].label = ''
+    password = None
 
     class Meta:
         model = User
-        fields = ("first_name", "last_name", "email", "username","groups")
+        fields = ("first_name", "last_name", "email", "username", "groups")
         widgets = {
             'first_name': forms.TextInput(
                 attrs={
@@ -95,6 +107,16 @@ class UserFormChange(UserChangeForm):
                 }
             ),
         }
+        exclude = ['user_permissions', 'last_login', 'date_joined', 'is_superuser', 'is_active', 'is_staff', 'password','profile']
+
+        help_texts = {
+					'username' : None,
+                    'email': None,
+                    'first_name': None,
+                    'last_name': None,
+                    'password': None,
+					} 
+
 
     def save(self, commit=True):
         form = super()
@@ -106,9 +128,9 @@ class UserFormChange(UserChangeForm):
             return user
 
 
-queryset = ["user",
+queryset = [
+"user",
 "producto",
-"ciudad",
 "especie",
 "raza",
 "cliente",
@@ -122,7 +144,8 @@ queryset = ["user",
 "pedidocabecera",
 "facturacabeceraventa",
 "inventario",
-"tipovacuna"]
+"tipovacuna",
+"reporte"]
 
 class GroupForm(ModelForm):
     def __init__(self, *args, **kwargs):
@@ -134,7 +157,7 @@ class GroupForm(ModelForm):
         fields = ('name', 'permissions')
         widgets = {
             'name': forms.TextInput(attrs={
-                'class':'form-control'
+                'class':'form-control', 'autocomplete': 'off',
             }),
             'permissions': forms.CheckboxSelectMultiple(),
         }
@@ -150,7 +173,7 @@ class GroupChangeForm(ModelForm):
         fields = ('name', 'permissions')
         widgets = {
             'name': forms.TextInput(attrs={
-                'class':'form-control'
+                'class':'form-control', 'autocomplete': 'off',
             }),
             'permissions': forms.CheckboxSelectMultiple(),
         }
@@ -174,5 +197,5 @@ class ContraseñaChangeForm(PasswordChangeForm):
         """
         old_password = self.cleaned_data["old_password"]
         if not self.user.check_password(old_password):
-            raise ValidationError("La contraseña actual no coinciden!", code="Contrasena Actual", params=[] )
+            raise ValidationError("La contraseña actual no coinciden!")
         return old_password

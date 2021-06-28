@@ -10,7 +10,7 @@ import json
 from django.http import JsonResponse
 
 from apps.ventas.producto.forms import TipoProductoForm, DepositoForm, ProductoForm
-from apps.ventas.producto.models import TipoProducto, Deposito, Producto, ProductoStock, Inventario
+from apps.ventas.producto.models import TipoProducto, Deposito, Producto, ProductoStock, Inventario, HistoricoProductoPrecio
 from apps.compras.models import FacturaCompra, FacturaDet
 from apps.ventas.factura.models import FacturaCabeceraVenta, FacturaDetalleVenta
 from apps.configuracion.models import ConfiEmpresa
@@ -343,9 +343,9 @@ def add_factura_to_producto():
                 facDe = FacturaDet.objects.filter(id_factura=factCom.id)
                 for factDet in facDe:
                     try:                        
-                        prod = Producto.objects.get(id=factDet.id_pedido.id_producto.id)
+                        prod = Producto.objects.get(id=factDet.id_producto.id)
                         prod.fecha_compra = date.strftime("%d/%m/%Y")
-                        prod.precio_compra = factDet.id_pedido.id_producto.precio_compra
+                        prod.precio_compra = factDet.id_producto.precio_compra
                         prod.stock = prod.stock + factDet.cantidad
                         prod.stock_total = prod.stock_total + factDet.cantidad
                         prod.save()
@@ -405,12 +405,15 @@ def sum_anular_factura_venta_to_producto():
 def list_producto(request,id):
     data = []
     data_detalle = []
-
+    stock_movido_cero = 0
     try:
         product = Producto.objects.filter(id=id)
 
         data =[{'id': p.id, 'nombre': p.nombre_producto, 'descripcion': p.descripcion, 'stock_actual': p.stock, 
-            'deposito': p.id_deposito.descripcion} for p in product]        
+            'deposito': p.id_deposito.descripcion} for p in product]
+
+        pro = Producto.objects.get(id=id)
+        stock_movido_cero = pro.stock      
     except Exception as e:
         pass
 
@@ -421,7 +424,7 @@ def list_producto(request,id):
     except Exception as e:
         pass   
 
-    context = {'producto_detalle': data, 'producto_movido': data_detalle}
+    context = {'producto_detalle': data, 'producto_movido': data_detalle, 'id_producto': id, 'stck_cero': stock_movido_cero}
     return render(request, "ventas/producto/list_producto.html", context)
 
 #Metodo para la busqueda de productos
@@ -568,10 +571,12 @@ def list_ajuste_inventario_ajax(request):
         productos = Producto.objects.exclude(is_active="N").filter(Q(id__icontains=query) |Q(nombre_producto__icontains=query) |Q(tipo_producto__nombre_tipo__icontains=query)).order_by('-last_modified')        
         productos = productos.exclude(servicio_o_producto="S")
         productos = productos.exclude(producto_vencido="S")
+        productos = productos.exclude(stock_total=0)
     else:
-        productos = Producto.objects.exclude(is_active="N").order_by('-last_modified')
+        productos = Producto.objects.exclude(is_active= "N").order_by('-last_modified')
         productos = productos.exclude(servicio_o_producto="S")
         productos = productos.exclude(producto_vencido="S")
+        productos = productos.exclude(stock_total=0)
 
 
     total = productos.count()
@@ -627,6 +632,30 @@ def add_ajuste_inventario(request):
             return JsonResponse(response)
     return render(request, 'ventas/producto/inventario/add_ajuste_inventario.html')
 
+
+@login_required()
+@csrf_exempt
+def get_producto_inventario(request):
+    data = {}
+    try:
+        term = request.POST['term']
+        if (request.method == 'POST') and (request.POST['action'] == 'search_products'):
+            data = []
+            prods = Producto.objects.exclude(is_active='N').all()
+            prods = prods.exclude(stock_total=0).all()
+            prods = prods.exclude(servicio_o_producto="S").filter(nombre_producto__icontains=term)[0:10]
+            for p in prods:
+                item = p.obtener_dict()
+                item['id'] = p.id
+                producto_desc = '%s %s' % ('Producto: ' + p.nombre_producto ,
+                                        'Descripción: ' + p.descripcion)
+                item['text'] = producto_desc
+                data.append(item)
+    except Exception as e:
+        data['error'] = str(e)
+
+    return JsonResponse(data, safe=False)
+
 #Historico Inventario
 @login_required()
 @permission_required('producto.view_inventario')
@@ -662,6 +691,45 @@ def list_ajuste_inventario_historial_ajax(request):
     }
     return JsonResponse(response)
 
+
+#Historico Producto
+@login_required()
+@permission_required('producto.view_inventario')
+def list_historico_producto(request, id):
+    context = {'id_producto': id}
+    return render(request, "ventas/producto/list_historial_producto_precio.html", context)
+
+
+def get_historico_producto(request, id):
+    query = request.GET.get('busqueda')
+    if query != "":
+        productos = HistoricoProductoPrecio.objects.filter(id_producto=id)
+        productos = productos.filter(Q(id_producto__nombre_producto__icontains=query) | Q(fecha_alta__icontains=query))
+    else:
+        productos = HistoricoProductoPrecio.objects.filter(id_producto=id)
+
+
+    total = productos.count()
+
+    _start = request.GET.get('start')
+    _length = request.GET.get('length')
+    if _start and _length:
+        start = int(_start)
+        length = int(_length)
+        page = math.ceil(start / length) + 1
+        per_page = length
+
+        productos = productos[start:start + length]
+
+    data =[{'nombre': p.id_producto.nombre_producto, 'descripcion': p.id_producto.descripcion, 
+            'precio_compra': p.precio_compra, 'fecha_compra': p.fecha_alta} for p in productos]        
+        
+    response = {
+        'data': data,
+        'recordsTotal': total,
+        'recordsFiltered': total,
+    }
+    return JsonResponse(response)
 
 @csrf_exempt
 def get_producto_antiparasitario(request):

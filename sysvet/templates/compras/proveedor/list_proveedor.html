@@ -93,6 +93,7 @@
                                             data-toggle="tooltip" data-placement="top"
                                             title="Buscar por nombre y ruc del proveedor"
                                             placeholder="Buscár por nombre y ruc del proveedor"
+                                            autocomplete="off"
                                             onkeyup="replaceDirection(this)">
                                         <button type="button" id="busqueda" class="searchButton">
                                             <i class="fa fa-search"></i>
@@ -170,7 +171,7 @@
 <script>
     $(function () {
 
-        $('form input').on("cut copy paste", function (e) {
+        $('input').on("cut copy paste", function (e) {
             e.preventDefault();
         });        
 
@@ -178,7 +179,15 @@
             $("#list_proveedores").DataTable({
                 destroy: true,
                 dom: 'Bfrtip',
-                buttons: ['pdf'],
+                buttons: [                
+                    {
+                        extend: 'pdfHtml5',
+                        text: 'Exportar PDF',
+                        exportOptions: {
+                            columns: [0,1,2,3,4]
+                        }
+                    },
+                ],
                 searching: false,
                 pageLength: 10,
                 ajax: {
@@ -243,7 +252,7 @@
                     decimal: "",
                     emptyTable: "No hay información",
                     info: "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
-                    infoEmpty: "Mostrando 0 to 0 de 0 Entradas",
+                    infoEmpty: "Mostrando 0 de 0 Entradas",
                     infoFiltered: "(Filtrado de _MAX_ total entradas)",
                     infoPostFix: "",
                     thousands: ",",

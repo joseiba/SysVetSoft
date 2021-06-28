@@ -107,6 +107,8 @@
                                                 </li>
                                                 {% endfor %}
                                             </ul>
+                                            <button type="button" class="btn btn-success btn-sm" id="select_all">Seleccionar todo</button>
+                                            <button type ="reset" class="btn btn-secondary btn-sm" id="">Deseleccionar todo</button>
                                         </div>
                                         <div class="tile-footer mt-4">
                                             <button class="btn btn-primary" type="submit">
@@ -211,8 +213,24 @@
                 $('form .alert').remove();
         }).prop('checked', false);
 
-        $('form input').on("cut copy paste", function (e) {
+        $('input').on("cut copy paste", function (e) {
             e.preventDefault();
+        });
+
+        $('#select_all').click(function() {
+            // Si esta seleccionado (si la propiedad checked es igual a true)
+            if (!$(this).prop('checked')) {
+                // Selecciona cada input que tenga la clase .checar
+                $('input[name="permissions"]').prop('checked', true);
+            }
+        });
+
+        $('#deselect_all').click(function() {
+            // Si esta seleccionado (si la propiedad checked es igual a true)
+            if ($('input[name="permissions"]').prop('checked')) {
+                // Selecciona cada input que tenga la clase .checar
+                $('input[name="permissions"]').prop('checked', false);
+            }
         });
 
 
@@ -269,7 +287,7 @@
                                                     </button>\
                                     <button class="btn btn-danger">\
                                         <a href="/usuario/eliminarRol/' + data + '/" style="color: white">\
-                                            Eliminar\
+                                            Dar de Baja\
                                         </a>\
                                     </button>';
                         }

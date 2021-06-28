@@ -31,12 +31,10 @@ today = date.strftime("%d/%m/%Y")
 @permission_required('factura.view_facturacabeceraventa')
 def list_factura_ventas(request):
     caja_abierta = Caja.objects.exclude(apertura_cierre="C").filter(fecha_alta=today)
-    print(caja_abierta.count())
     if caja_abierta.count() > 0:
         abierto = "S"
     else:
         abierto = "N"
-    print(abierto)
     context = {'caja_abierta' : abierto}
     return render(request, 'ventas/factura/list_facturas_ventas.html', context)
 
@@ -69,6 +67,11 @@ def list_facturas__ventas_ajax(request):
         'recordsFiltered': total,
     }
     return JsonResponse(response)
+
+@login_required()
+@permission_required('factura.view_facturacabeceraventa')
+def list_facturas_ventas_anuladas(request):    
+    return render(request, 'ventas/factura/list_facturas_anuladas.html')
 
 
 def list_facturas_anuladas_ventas_ajax(request):
@@ -136,6 +139,7 @@ def add_factura_venta(request):
                 factura.id_cliente = cliente_id
                 factura.total_iva = int(factura_dict['total_iva'])
                 factura.total = int(factura_dict['total_factura'])
+                factura.total_formateado = factura_dict['total_formated']
                 factura.save()
                 for i in factura_dict['products']:
                     detalle = FacturaDetalleVenta()
@@ -145,11 +149,11 @@ def add_factura_venta(request):
                     detalle.tipo = i['tipo']
                     detalle.cantidad = int(i['cantidad'])
                     detalle.descripcion = i['description']
+                    detalle.subtotal = "Gs. " + "{:,}".format(int(i['subtotal'])).replace(",",".")
                     detalle.save()
                 response = {'mensaje':mensaje }
                 return JsonResponse(response)
             except Exception as e:
-                print(e)
                 mensaje = 'error'
                 response = {'mensaje':mensaje }
                 return JsonResponse(response)
@@ -183,7 +187,8 @@ def edit_factura_venta(request, id):
                 factura.fecha_inicio_timbrado = confi.fecha_inicio_timbrado
                 factura.fecha_fin_timbrado = confi.fecha_fin_timbrado
                 factura.total_iva = int(factura_dict['total_iva'])
-                factura.total = int(factura_dict['total_factura'])                
+                factura.total = int(factura_dict['total_factura'])   
+                factura.total_formateado = factura_dict['total_formated']             
                 factura.save()
                 detailFact = FacturaDetalleVenta.objects.filter(id_factura_venta=id)
                 detailFact.delete()
@@ -289,7 +294,6 @@ def validate_producto_stock(request):
                     if producto_id.stock_total < int(i['cantidad']):
                         data.append(producto_id.nombre_producto)
             if len(data) > 0:
-                print("F")
                 mensaje = "F"
                 response = {'mensaje':mensaje, 'data': json.dumps(data)}
                 return JsonResponse(response)
@@ -298,9 +302,73 @@ def validate_producto_stock(request):
                 response = {'mensaje':mensaje}
                 return JsonResponse(response)
         except Exception as e:
-            print(e)
             mensaje = 'error'
             response = {'mensaje':mensaje }
             return JsonResponse(response)
 
 
+def reporte_factura_venta_pdf(request, id):
+    fact = FacturaCabeceraVenta.objects.get(id=id)
+    confi = ConfiEmpresa.objects.get(id=1)
+    #Indicamos el tipo de contenido a devolver, en este caso un pdf
+    response = HttpResponse(content_type='application/pdf')
+    #La clase io.BytesIO permite tratar un array de bytes como un fichero binario, se utiliza como almacenamiento temporal
+    buffer = BytesIO()
+    #Canvas nos permite hacer el reporte con coordenadas X y Y
+    pdf = canvas.Canvas(buffer)
+    #Llamo al método cabecera donde están definidos los datos que aparecen en la cabecera del reporte.
+    #self.cabecera(pdf)
+    #Con show page hacemos un corte de página para pasar a la siguiente
+    #Establecemos el tamaño de letra en 16 y el tipo de letra Helvetica
+    pdf.setFont("Helvetica", 18)
+    #Dibujamos una cadena en la ubicación X,Y especificada
+    pdf.drawString(210, 790, u"Factura Venta")
+    pdf.setFont("Helvetica", 12)
+    pdf.drawString(30, 760, u"Fecha Emisión: " + fact.fecha_emision)
+    pdf.drawString(30, 740, u"" + str(fact.id_cliente))
+    pdf.drawString(30, 720, u"Direccion: " + fact.id_cliente.id_ciudad.nombre_ciudad + "," + fact.id_cliente.direccion)
+    pdf.drawString(390, 760, u"Nro Factura: " + fact.nro_factura)
+    pdf.drawString(390, 740, u"Teléfono: " + fact.id_cliente.telefono)
+    y = 700
+    tabla_report(pdf, y, id, fact)
+
+    pdf.showPage()
+    pdf.save()
+    pdf = buffer.getvalue()
+    buffer.close()
+    response.write(pdf)
+    return response
+
+def tabla_report(pdf, y, id, fact):
+    #Creamos una tupla de encabezados para neustra tabla
+    encabezados = ('Codigo', 'Producto', 'Descripción', 'Cantidad', 'Precio \n Unitario', 'SubTotal')
+
+    detalle_fact = FacturaDetalleVenta.objects.filter(id_factura_venta=id)
+
+    count_detalle = 2
+    #Creamos una lista de tuplas que van a contener a las personas
+    detalles = [(deta.id_producto.id, deta.id_producto.nombre_producto, 
+                deta.id_producto.descripcion, deta.cantidad, "Gs. " + deta.id_producto.precio_venta, deta.subtotal) for deta in detalle_fact]
+
+    detalles_extras = [('', '', '', '', '', '') for i in range(count_detalle)]
+
+    detalle_orden =  Table([encabezados] + detalles + detalles_extras, colWidths=[2.5 * cm, 3 * cm, 7* cm, 2 * cm, 3 * cm, 3 * cm])
+        #Aplicamos estilos a las celdas de la tabla
+    detalle_orden.setStyle(TableStyle(
+        [
+            #La primera fila(encabezados) va a estar centrada
+            ('ALIGN',(0,0),(3,0),'CENTER'),
+            #Los bordes de todas las celdas serán de color negro y con un grosor de 1
+            ('GRID', (0, 0), (-1, -1), 1, colors.black), 
+            #El tamaño de las letras de cada una de las celdas será de 10
+            ('FONTSIZE', (0, 0), (-1, -1), 10),
+        ]
+    ))
+
+    position = int(((detalle_fact.count() + count_detalle) * 50 ) / (2))
+    pdf.setFont("Helvetica", 12)
+    pdf.drawString(480, ((680 - position)) , u"Total: " + fact.total_formateado,)
+    #Establecemos el tamaño de la hoja que ocupará la tabla 
+    detalle_orden.wrapOn(pdf, 800, 600)
+    #Definimos la coordenada donde se dibujará la tabla
+    detalle_orden.drawOn(pdf, 10, 700 - position)
