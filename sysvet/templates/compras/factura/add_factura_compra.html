@@ -129,7 +129,7 @@
                                                         class="required" style="color: red;" data-toggle="tooltip" data-placement="top"
                                                         title="Campo Obligatorio">*</span></strong></label>
 
-                                                    <div class="field item"> 
+                                                    <div class="field item" id="fecha_inicio"> 
                                                         {{ form.fecha_emision }}
                                                     </div>
                                                 </div>
@@ -138,7 +138,7 @@
                                                         class="required" style="color: red;" data-toggle="tooltip" data-placement="top"
                                                         title="Campo Obligatorio">*</span></strong></label>
 
-                                                    <div class="field item"> 
+                                                    <div class="field item"  id="fecha_fin"> 
                                                         {{ form.fecha_vencimiento }}
                                                     </div>
                                                 </div>
@@ -368,6 +368,22 @@
                 }else{
                     $('form').find('#button_factura').removeClass('d-none')
                 }
+            }
+        })
+
+        $("input[name='fecha_emision'], input[name='fecha_vencimiento']").change(function () {
+            var fecha_emision = $("input[name='fecha_emision']").val()
+
+            var fecha_vencimiento = $("input[name='fecha_vencimiento']").val()
+
+            if(fecha_emision != ""){
+                $('form .alert').remove();
+                $('form').find("#fecha_inicio").removeClass('bad')
+            }
+
+            if(fecha_vencimiento != ""){
+                $('form .alert').remove();
+                $('form').find("#fecha_fin").removeClass('bad')
             }
         })
 
