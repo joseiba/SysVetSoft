@@ -79,26 +79,37 @@
                 // leemos las fechas de inicio de evento y hoy
                 var check = moment(info.dateStr).format('YYYY-MM-DD');
                 var today = moment(new Date()).format('YYYY-MM-DD');
+                var d = info.date;
+                var dateValue = d.getDay();                 
                 {% if perms.reserva.add_reserva %}
-                    if (check >= today) {
-                        var url = '/reserva/addReserva/'
-                        var today = info.dateStr;
-                        sessionStorage.setItem('fecha_seleccionada', today)
-                        $('#creacion').load(url, today, function () {
-                            $(this).modal('show');
-                        });
-                        calendar.unselect()                   
-                    }
-                    // si no, mostramos una alerta de error
-                    else {
+                    if(dateValue  === 0 || dateValue === 6){
+                        swal({
+                            title: "Notificación",
+                            text: "No puedes agendar sabados y domingos!",
+                            icon: "warning",
+                            button: "Ok",
+                        })
+
+                    }else{                        
+                        if (check >= today) {
+                            var url = '/reserva/addReserva/'
+                            var today = info.dateStr;
+                            sessionStorage.setItem('fecha_seleccionada', today)
+                            $('#creacion').load(url, today, function () {
+                                $(this).modal('show');
+                            });
+                            calendar.unselect()                   
+                        }
+                        // si no, mostramos una alerta de error
+                        else {
                             swal({
                                     title: "Notificación",
                                     text: "No se pueden crear eventos en fechas pasadas!",
                                     icon: "warning",
                                     button: "Ok",
                                 })
-                
-                        }
+                            }
+                    }
                 {% else %}
                             swal({
                                     title: "Notificación",

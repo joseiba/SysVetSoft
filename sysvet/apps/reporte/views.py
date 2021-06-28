@@ -211,7 +211,6 @@ def get_ganancias_mes(request):
     label = []
     data = []
     mensaje = ""
-    print(str(hoy.year))
     try:    
         if query != "":
             ganancias = GananciaPorMes.objects.filter(anho=str(hoy.year))

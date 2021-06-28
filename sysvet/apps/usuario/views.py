@@ -4,7 +4,7 @@ from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_protect
-from django.contrib.auth import login, logout, authenticate
+from django.contrib.auth import login, logout, authenticate, update_session_auth_hash
 from django.http import HttpResponseRedirect, JsonResponse
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib import messages
@@ -184,8 +184,6 @@ def add_usuario(request):
             form.save()
             messages.success(request, "Se ha agregado correctamente!")
             return redirect('/usuario/add/')
-        else:
-            messages.error(request, form.errors)
     context = {'form': form}
     return render(request, 'usuario/add_usuario.html', context)
 
@@ -195,18 +193,15 @@ def edit_usuario(request, id):
     usuario = User.objects.get(id=id)
     form = UserFormChange(instance=usuario)
     if request.method == 'POST':
-        form = UserFormChange(request.POST, instance=usuario)        
+        form = UserFormChange(request.POST, instance=usuario)
         if not form.has_changed():
             messages.info(request, "No ha hecho ningun cambio")
             return redirect('/usuario/edit/' + str(id))
         if form.is_valid():
-            form.save()
+            user = form.save(commit=False)
+            user.save()
             messages.add_message(request, messages.SUCCESS, 'Se ha editado correctamente!')
             return redirect('/usuario/edit/' + str(id))
-        else:
-            print(form.errors)
-            print(request)
-            messages.error(request, form.errors)
 
     context = {'form': form, 'usuario': usuario}
     return render(request, 'usuario/edit_usuario.html', context)
@@ -251,7 +246,8 @@ def change_password(request, id):
     if request.method == 'POST':
         form = ContraseñaChangeForm(request.user, request.POST)
         if form.is_valid():
-            user = form.save()
+            user = form.save(commit=False)
+            user.save()
             update_session_auth_hash(request, user)
             messages.add_message(request, messages.SUCCESS, 'Se ha editado correctamente!')
             return redirect('/usuario/editPassword/' + str(id))

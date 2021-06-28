@@ -232,7 +232,6 @@ def validar_cedula(request):
     try:
         list_cedula = Cedula.objects.filter(nro_cedula=cedula)
         if Cliente.objects.filter(cedula=cedula).exists():
-            print('entro')
             mensaje = 'EX'
             response = {'mensaje': mensaje}
             return JsonResponse(response)
@@ -303,7 +302,6 @@ def get_reserva_today(request):
         }
         return JsonResponse(response)
     except Exception as e:
-        print(e)
         response = {
             'data': data,
             'recordsTotal': 0,
@@ -339,7 +337,6 @@ def get_vacunas_today(request):
         }
         return JsonResponse(response)
     except Exception as e:
-        print(e)
         response = {
             'data': data,
             'recordsTotal': 0,

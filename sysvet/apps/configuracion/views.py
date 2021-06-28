@@ -51,7 +51,6 @@ def confi_inicial(request):
                 messages.success(request, 'Se ha agregado correctamente!')
                 return redirect('/configuracion/confiInicial/')
     except Exception as e:
-        print(e)
         pass
     context = {'form' : form}
     return render(request, 'configuraciones/generales/confi_inicial.html', context)   

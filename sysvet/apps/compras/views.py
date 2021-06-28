@@ -295,12 +295,10 @@ def add_pedido_compra(request):
                 response = {'mensaje':mensaje }
                 return JsonResponse(response)
             except Exception as e:
-                print(e)
                 mensaje = 'error'
                 response = {'mensaje':mensaje }
                 return JsonResponse(response)
         except Exception as e:
-            print(e)
             mensaje = 'error'
             response = {'mensaje':mensaje }
         return JsonResponse(response)
@@ -412,12 +410,10 @@ def agregar_factura_compra(request):
                 response = {'mensaje':mensaje }
                 return JsonResponse(response)
             except Exception as e:
-                print(e)
                 mensaje = 'error'
                 response = {'mensaje':mensaje }
                 return JsonResponse(response)
         except Exception as e:
-            print(e)
             mensaje = 'error'
             response = {'mensaje':mensaje }
         return JsonResponse(response)
@@ -513,12 +509,10 @@ def edit_factura_compra(request, id):
                 response = {'mensaje':mensaje }
                 return JsonResponse(response)
             except Exception as e:
-                print(e)
                 mensaje = 'error'
                 response = {'mensaje':mensaje }
                 return JsonResponse(response)
         except Exception as e:
-            print(e)
             mensaje = 'error'
             response = {'mensaje':mensaje }
         return JsonResponse(response)

@@ -23,13 +23,17 @@
     <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
         <div class="menu_section">
             <h3>General</h3>
-            <ul class="nav side-menu">   
+            <ul class="nav side-menu"> 
+
+                <li><a href="{% url 'index' %}"><i class="fa fa-home fa-lg"  style="width: 26px;"></i> Inicio</a>
+                    
+                </li>
                 
                 {% if perms.cliente.view_cliente or perms.mascota.view_mascota or perms.factura.view_facturacabeceraventa %}
-                <li><a><i class="fas fa-money-check-alt fa-lg" style="width: 26px;"></i> Ventas <span class="fa fa-chevron-down"></span></a>
+                <li><a><i class="fas fa-money-check-alt fa-lg mr-1"></i> Ventas <span class="fa fa-chevron-down"></span></a>
                     <ul class="nav child_menu">                        
                         {% if perms.cliente.view_cliente %}
-                            <li><a href="{% url 'list_cliente' %}">Cliente</a></li>
+                            <li><a href="{% url 'list_cliente' %}">Clientes</a></li>
                         {% endif %}
                         
                         
@@ -127,13 +131,13 @@
                                     <li><a href="{% url 'reporte_producto_comprados' %}">Total Comprados</a></li>
                                     <li><a href="{% url 'reporte_productos_vendido_mes' %}">Vendido por Mes</a></li>
                                     <li><a href="{% url 'reporte_productos_comprado_mes' %}">Comprado por Mes</a></li>
-                                    <li><a href="{% url 'reporte_stock_minimo' %}">Stock Minimo</a></li>
+                                    <li><a href="{% url 'reporte_stock_minimo' %}">Stock Mínimo</a></li>
                                     <li><a href="{% url 'reporte_stock_a_vencer' %}">A Vencer</a></li>
                                 </ul>
                             </li>
-                            <li><a>Servicio<span class="fa fa-chevron-down"></span></a>
+                            <li><a>Servicios<span class="fa fa-chevron-down"></span></a>
                                 <ul class="nav child_menu">                                
-                                    <li><a href="{% url 'reporte_servicio_vendido' %}">Mas Vendidos</a></li>
+                                    <li><a href="{% url 'reporte_servicio_vendido' %}">Más Vendidos</a></li>
                                 </ul>
                             </li>
 
@@ -218,6 +222,9 @@
 
     <!-- /menu footer buttons -->
     <div class="sidebar-footer hidden-small">
+        <a data-toggle="tooltip" data-placement="top" title="Cerrar Sesión" href="{% url 'logout' %}">
+            <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
+        </a>
         <a data-toggle="tooltip" data-placement="top" title="Cambiar Contraseña" href="{% url 'change_password' user.id %}">
             <span class="fas fa-unlock-alt" aria-hidden="true"></span>
         </a>
@@ -226,10 +233,7 @@
         </a>
         <a data-toggle="tooltip" data-placement="top" title="Inicio" href="{% url 'index' %}">
             <span class="fas fa-home" aria-hidden="true"></span>
-        </a>
-        <a data-toggle="tooltip" data-placement="top" title="Cerrar Sesión" href="{% url 'logout' %}">
-            <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
-        </a>
+        </a>       
     </div>
     <!-- /menu footer buttons -->
 </div>

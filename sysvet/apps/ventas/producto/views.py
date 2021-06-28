@@ -350,7 +350,6 @@ def add_factura_to_producto():
                         prod.stock_total = prod.stock_total + factDet.cantidad
                         prod.save()
                     except Exception as e:
-                        print(e)
                         pass
 
 def rest_factura_venta_to_producto():
