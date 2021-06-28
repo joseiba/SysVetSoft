@@ -17,6 +17,7 @@ import json
 from apps.usuario.forms import FormLogin, UserForm, UserFormChange, GroupForm, GroupChangeForm, ContraseñaChangeForm
 from apps.usuario.models import User
 from apps.configuracion.models import ConfiEmpresa
+from apps.utiles.views import *
 
 
 # Create your views here.
@@ -83,8 +84,19 @@ def home_user(request):
             Se utiliza el metodo render, con los campos del request, y directorio
             de donde se encuentra el template            
         ]
-        """    
-    return render(request, "home/index.html")    
+        """  
+    context = {
+        'total_user': total_user(),
+        'total_cliente': total_cliente(),
+        'total_mascotas': total_mascotas(),
+        'total_productos': total_producto(),
+        'total_stock_minimo': total_stock_minimo(),
+        'total_pro_vencer': total_productos_a_vencer(),
+        'total_vacunas_aplicadas' : total_vacunas_aplicadas(),
+        'total_reservas_hoy': total_reservas_hoy(),
+        'total_proximas_vacunas': total_vacunas_proximas()
+    }
+    return render(request, "home/index.html", context)    
 
 
 @login_required()

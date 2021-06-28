@@ -1,8 +1,7 @@
 import json
 from django.shortcuts import render
 from django.http import JsonResponse
-from datetime import datetime
-
+from datetime import datetime, date
 
 from apps.utiles.models import (Timbrado, ProductoVendido, ProductoComprados,ProductoVendidoMes, 
 ProductoCompradoMes,ServicioVendido,GananciaPorMes, Cedula, Ruc)
@@ -11,8 +10,13 @@ from apps.ventas.factura.models import FacturaCabeceraVenta, FacturaDetalleVenta
 from apps.compras.models import FacturaCompra, FacturaDet, Proveedor
 from apps.ventas.producto.models import Producto
 from apps.ventas.cliente.models import Cliente
+from apps.ventas.mascota.models import Mascota
 from apps.configuracion.models import Empleado, ConfiEmpresa
+from apps.reserva.models import Reserva
+from apps.ventas.mascota.models import HistoricoFichaMedica
+from apps.usuario.models import User
 
+hoy = date.today()
 # Create your views here.
 label_mes = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto',
             'Septiembre', 'Octubre', 'Noviembre', 'Diciembre']
@@ -270,3 +274,189 @@ def validar_ruc(request):
         mensaje = 'ER'
         response = {'mensaje': mensaje}
         return JsonResponse(response)
+
+def get_reserva_today(request):
+    data = []
+    try:
+        fecha_hoy = date(hoy.year, hoy.month, hoy.day)
+        reservas = Reserva.objects.filter(fecha_reserva=fecha_hoy)
+        
+        total =  reservas.count()
+
+        _start = request.GET.get('start')
+        _length = request.GET.get('length')
+        if _start and _length:
+            start = int(_start)
+            length = int(_length)
+            page = math.ceil(start / length) + 1
+            per_page = length
+
+            reservas = reservas[start:start + length]
+
+        data =[{'cliente': r.id_cliente.nombre_cliente + ' ' + r.id_cliente.apellido_cliente,
+                'mascota': r.id_mascota.nombre_mascota} for r in reservas]        
+            
+        response = {
+            'data': data,
+            'recordsTotal': total,
+            'recordsFiltered': total,
+        }
+        return JsonResponse(response)
+    except Exception as e:
+        print(e)
+        response = {
+            'data': data,
+            'recordsTotal': 0,
+            'recordsFiltered': 0,
+        }
+        return JsonResponse(response)
+
+def get_vacunas_today(request):
+    data = []
+    try:
+        fecha_hoy = hoy.strftime("%d/%m/%Y")
+        historico = HistoricoFichaMedica.objects.filter(fecha_proxima_aplicacion=fecha_hoy)
+        
+        total =  historico.count()
+
+        _start = request.GET.get('start')
+        _length = request.GET.get('length')
+        if _start and _length:
+            start = int(_start)
+            length = int(_length)
+            page = math.ceil(start / length) + 1
+            per_page = length
+
+            historico = historico[start:start + length]
+
+        data =[{'cliente': h.id_mascota.id_cliente.nombre_cliente + ' ' + h.id_mascota.id_cliente.apellido_cliente,
+                'mascota': r.id_mascota.nombre_mascota} for h in historico]        
+            
+        response = {
+            'data': data,
+            'recordsTotal': total,
+            'recordsFiltered': total,
+        }
+        return JsonResponse(response)
+    except Exception as e:
+        print(e)
+        response = {
+            'data': data,
+            'recordsTotal': 0,
+            'recordsFiltered': 0,
+        }
+        return JsonResponse(response)
+
+def total_user():
+    try:
+        usuario = User.objects.exclude(is_active=False).all()
+        usuario = usuario.exclude(is_superuser=True)
+        return usuario.count()
+    except Exception as e:
+        return 0
+
+def total_cliente():
+    try:
+        cliente = Cliente.objects.exclude(is_active="N").all()
+        return cliente.count()
+    except Exception as e:
+        return 0
+
+def total_mascotas():
+    try:
+        mascotas = Mascota.objects.all()
+        return mascotas.count()
+    except Exception as e:
+        return 0
+
+def total_producto():
+    try:
+        productos = Producto.objects.exclude(is_active="N").all()        
+        productos = productos.exclude(servicio_o_producto="S")
+        productos = productos.exclude(producto_vencido="S")
+        return productos.count()
+    except Exception as e:
+        return 0
+
+def total_stock_minimo():
+    prod_minimo = []
+    try:
+        productos = Producto.objects.exclude(is_active="N").order_by('-last_modified')
+        productos = productos.exclude(servicio_o_producto="S")
+        productos = productos.exclude(producto_vencido="S")
+
+        for p in productos:
+            if p.stock_minimo >= p.stock_total:
+                prod_minimo.append(p)
+
+        total =  len(prod_minimo)
+        return total
+    except Exception as e:
+        return 0
+
+def total_productos_a_vencer():
+    prod_vencimiento = []
+    try:
+        confi = ConfiEmpresa.objects.get(id=1)
+        dias_compare = confi.dias_a_vencer
+    except Exception as e:
+        dias_compare = 30
+        
+    try:
+        productos = Producto.objects.exclude(is_active="N").order_by('-last_modified')
+        productos = productos.exclude(servicio_o_producto="S")
+
+        for p in productos:
+            if p.fecha_vencimiento is not None:
+                if rest_dates(p.fecha_vencimiento) <= dias_compare:
+                    prod_vencimiento.append(p)
+
+        total =  len(prod_vencimiento)
+        return total
+    except Exception as e:
+        return 0
+
+def total_vacunas_aplicadas():
+    try:
+        historico = HistoricoFichaMedica.objects.all()
+        total =  historico.count()
+        return total
+    except Exception as e:
+        return 0
+
+def total_reservas_hoy():
+    try:
+        fecha_hoy = date(hoy.year, hoy.month, hoy.day)
+        reservas = Reserva.objects.filter(fecha_reserva=fecha_hoy)
+        total =  reservas.count()
+        return total
+    except Exception as e:
+        return 0
+
+def total_vacunas_proximas():
+    try:
+        confi = ConfiEmpresa.objects.get(id=1)
+        dias_compare = confi.dias_alert_vacunas
+    except Exception as e:
+        dias_compare = 30
+    
+    try:
+        list_historico = HistoricoFichaMedica.objects.all()
+        for f in list_historico:
+            if f.fecha_proxima_aplicacion is not None:
+                if rest_dates(f.fecha_proxima_aplicacion) <= dias_compare:
+                    ficha.append(f)
+
+        total =  len(ficha)        
+    except Exception as e:
+        return 0
+
+
+def rest_dates(fecha_vencimiento):
+    try:
+        fechaDate = date(hoy.year, hoy.month, hoy.day)
+        fecha_vencimiento_split = fecha_vencimiento.split('/')          
+        fecha_vencimiento_compare = date(int(fecha_vencimiento_split[2]), int(fecha_vencimiento_split[1]), int(fecha_vencimiento_split[0]))
+        return (fecha_vencimiento_compare - hoy).days if (fecha_vencimiento_compare - hoy).days >= 0 else 0
+    except Exception as e:
+        return 0

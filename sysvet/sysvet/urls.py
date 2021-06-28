@@ -67,7 +67,8 @@ get_producto_comprado_mes, get_ganancias_mes, reporte_stock_minimo, get_producto
 get_producto_vencimiento, reporte_servicio_vendido, get_servicio_vendido, list_proximas_vacunas, get_proximas_vacunas,
 get_rango_mes_recaudacion, get_rango_mes_pro_comprado, get_rango_mes_pro_vendido)
 
-from apps.utiles.views import (poner_vencido_timbrado, validate_nro_timbrado, validar_cedula, validar_ruc)
+from apps.utiles.views import (poner_vencido_timbrado, validate_nro_timbrado, validar_cedula, validar_ruc,
+get_reserva_today, get_vacunas_today)
 
 urlpatterns = [
     # Login and logout   
@@ -161,7 +162,7 @@ urlpatterns = [
     path('mascota/historial/<int:id>/', list_historial , name="list_historial"),
     path('mascota/get_prox_vacuna/', get_prox_vacuna, name="get_prox_vacuna"),
     path('mascota/get_list_historico_vacunas_aplicadas/', get_list_historico_vacunas_aplicadas, name="get_list_historico_vacunas_aplicadas"),
-    path('mascota/get_list_historico_vacunas_proximas/', get_list_historico_vacunas_proximas, name="get_list_historico_vacunas_proximas"),            
+    path('mascota/get_list_historico_vacunas_proximas/', get_list_historico_vacunas_proximas, name="get_list_historico_vacunas_proximas"),
     #End Urls Mascotas
 
     #Urls reservas 
@@ -273,6 +274,8 @@ urlpatterns = [
     path('utiles/validate_nro_timbrado/', validate_nro_timbrado, name="validate_nro_timbrado"),
     path('utiles/validar_cedula/', validar_cedula, name="validar_cedula"),
     path('utiles/validar_ruc/', validar_ruc, name="validar_ruc"),
+    path('utiles/get_reserva_today/', get_reserva_today , name="get_reserva_today"),
+    path('utiles/get_vacunas_today/', get_vacunas_today , name="get_vacunas_today"),  
 
 
 ]
