@@ -99,6 +99,8 @@
                                             {{ form.name }}
                                         </div>
                                         <div class="overflow-auto" style="height: 200px">
+                                            <button type="button" class="btn btn-success btn-sm" id="select_all">Seleccionar todo</button>
+                                            <button type ="reset" class="btn btn-secondary btn-sm" id="">Deseleccionar todo</button>
                                             <ul class="list-unstyled">
                                                 {% for check in form.permissions %}
                                                 <li>
@@ -106,9 +108,7 @@
                                                     {{ check.choice_label }}
                                                 </li>
                                                 {% endfor %}
-                                            </ul>
-                                            <button type="button" class="btn btn-success btn-sm" id="select_all">Seleccionar todo</button>
-                                            <button type ="reset" class="btn btn-secondary btn-sm" id="">Deseleccionar todo</button>
+                                            </ul>                                            
                                         </div>
                                         <div class="tile-footer mt-4">
                                             <button class="btn btn-primary" type="submit">
