@@ -28,7 +28,9 @@ SECRET_KEY = 'k9*zk2jgo8*3#xg@tych$$=-dnc5$ikr6m_5r5#$(iuyrq3op5'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['sysvet.herokuapp.com']
+# ALLOWED_HOSTS = ['sysvet.herokuapp.com']
+ALLOWED_HOSTS = []
+
 
 
 # Application definition
@@ -89,28 +91,28 @@ AUTH_USER_MODEL = 'usuario.User'
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'sysvetdb',
-#         'USER': 'postgres',
-#         'PASSWORD': 'postgres',
-#         'HOST': 'localhost',
-#         'PORT': '5432',
-#     }
-# }
-
-# new Database
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'd7alprdai8lsvl',
-        'USER': 'qiavtltdexmqmh',
-        'PASSWORD': '6058b8e7aefb0da416c30d6ad39a1520e3028ddc44c16895014e51d2409e8ccb',
-        'HOST': 'ec2-52-86-2-228.compute-1.amazonaws.com',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'sysvetdb',
+        'USER': 'postgres',
+        'PASSWORD': 'postgres',
+        'HOST': 'localhost',
         'PORT': '5432',
     }
 }
+
+# new Database
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#         'NAME': 'd7alprdai8lsvl',
+#         'USER': 'qiavtltdexmqmh',
+#         'PASSWORD': '6058b8e7aefb0da416c30d6ad39a1520e3028ddc44c16895014e51d2409e8ccb',
+#         'HOST': 'ec2-52-86-2-228.compute-1.amazonaws.com',
+#         'PORT': '5432',
+#     }
+# }
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
 
@@ -156,5 +158,5 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 
 #new 
-django_heroku.settings(locals())
+#django_heroku.settings(locals())
 
