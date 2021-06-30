@@ -110,14 +110,14 @@
                                             {{form.nro_timbrado}}
                                         </div>
                                     </div>
-                                    <div class="field item form-group mt-3">
+                                    <div class="field item form-group mt-3" id="fecha_inicio">
                                         <label class="col-form-label col-md-3 col-sm-3  label-align">Fecha Inicio
                                             Timbrado<span class="required">*</span></label>
                                         <div class="col-md-9 col-sm-9">
                                             {{form.fecha_inicio_timbrado}}
                                         </div>
                                     </div>
-                                    <div class="field item form-group mt-3">
+                                    <div class="field item form-group mt-3" id="fecha_fin">
                                         <label class="col-form-label col-md-3 col-sm-3  label-align">Fecha Fin
                                             Timbrado<span class="required">*</span></label>
                                         <div class="col-md-9 col-sm-9">
@@ -266,6 +266,22 @@
                 });
             }
         });
+
+        $("input[name='fecha_inicio_timbrado'], input[name='fecha_fin_timbrado']").change(function () {
+            var fecha_emision = $("input[name='fecha_inicio_timbrado']").val()
+
+            var fecha_vencimiento = $("input[name='fecha_fin_timbrado']").val()
+
+            if(fecha_emision != ""){
+                $('form .alert').remove();
+                $('form').find("#fecha_inicio").removeClass('bad')
+            }
+
+            if(fecha_vencimiento != ""){
+                $('form .alert').remove();
+                $('form').find("#fecha_fin").removeClass('bad')
+            }
+        })
 
         var fecha_inicio = $("#datePick-emision").val()
         var fecha_fin = $("#datePick-vencimiento").val()
