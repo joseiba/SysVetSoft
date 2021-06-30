@@ -1,20 +1,17 @@
 {% extends "home/base_site.html" %}
+{% load static %}
 
 {% block title %} Editar Factura Compra{% endblock title %}
 {% block stylesheets %}
 {{ block.super }}
-<link href="/static/project_static/other/js/select2/select2.css" rel="stylesheet" />
-<link href="/static/project_static/vendors/datatables.net-bs/css/dataTables.bootstrap.min.css" rel="stylesheet">
-<link href="/static/project_static/vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css" rel="stylesheet">
-<link href="/static/project_static/vendors/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.min.css"
-    rel="stylesheet">
-<link href="/static/project_static/vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css"
-    rel="stylesheet">
-<link href="/static/project_static/vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css" rel="stylesheet">
-<link rel="stylesheet"
-    href="/static/project_static/other/js/bootstrap-touchspin-master/dist/jquery.bootstrap-touchspin.css">
-<link rel="stylesheet"
-    href="/static/project_static/other/js/jquery-ui-themes-1.12.1/jquery-ui-themes-1.12.1/jquery-ui.min.css">
+<link href="{% static 'project_static/other/js/select2/select2.css' %}" rel="stylesheet"/>
+<link rel="stylesheet" href="{% static 'project_static/other/js/bootstrap-touchspin-master/dist/jquery.bootstrap-touchspin.css' %}">
+<link rel="stylesheet" href="{% static 'project_static/other/js/jquery-ui-themes-1.12.1/jquery-ui-themes-1.12.1/jquery-ui.min.css' %}">
+<link href="{% static 'project_static/vendors/datatables.net-bs/css/dataTables.bootstrap.min.css' %} " rel="stylesheet">
+<link href="{% static 'project_static/vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css' %} " rel="stylesheet">
+<link href="{% static 'project_static/vendors/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.min.css' %}" rel="stylesheet">
+<link href="{% static 'project_static/vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css' %} " rel="stylesheet">
+<link href="{% static 'project_static/vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css' %} " rel="stylesheet">
 <style>
     .dataTables_info {
         width: 0 !important;
@@ -192,29 +189,29 @@
 {% block javascripts %}
 {{ block.super }}
 <!-- validator -->
-<script src="/static/project_static/other/js/jquery-ui-1.12.1/jquery-ui-1.12.1/jquery-ui.js"></script>
-<script src="/static/project_static/vendors/datatables.net/js/jquery.dataTables.min.js"></script>
-<script src="/static/project_static/vendors/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
-<script src="/static/project_static/vendors/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
-<script src="/static/project_static/vendors/datatables.net-buttons-bs/js/buttons.bootstrap.min.js"></script>
-<script src="/static/project_static/vendors/datatables.net-buttons/js/buttons.flash.min.js"></script>
-<script src="/static/project_static/vendors/datatables.net-buttons/js/buttons.html5.min.js"></script>
-<script src="/static/project_static/vendors/datatables.net-buttons/js/buttons.print.min.js"></script>
-<script src="/static/project_static/vendors/datatables.net-fixedheader/js/dataTables.fixedHeader.min.js"></script>
-<script src="/static/project_static/vendors/datatables.net-keytable/js/dataTables.keyTable.min.js"></script>
-<script src="/static/project_static/vendors/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
-<script src="/static/project_static/vendors/datatables.net-responsive-bs/js/responsive.bootstrap.js"></script>
-<script src="/static/project_static/vendors/datatables.net-scroller/js/dataTables.scroller.min.js"></script>
-<script src="/static/project_static/vendors/jszip/dist/jszip.min.js"></script>
-<script src="/static/project_static/vendors/pdfmake/build/pdfmake.min.js"></script>
-<script src="/static/project_static/vendors/pdfmake/build/vfs_fonts.js"></script>
-<script src="/static/project_static/other/js/select2/select2.js"></script>
-<script src="/static/project_static/other/js/sweetalert.min.js"></script>
-<script src="/static/project_static/other/js/bootstrap-touchspin-master/dist/jquery.bootstrap-touchspin.js"></script>
-<script src="/static/project_static/other/js/compras/forms.js"></script>
-<script src="/static/project_static/other/js/functions/functions.js"></script>
-<script src="/static/project_static/vendors/validator/multifield.js"></script>
-<script src="/static/project_static/vendors/validator/validator.js"></script>
+<script src="{% static 'project_static/other/js/jquery-ui-1.12.1/jquery-ui-1.12.1/jquery-ui.js' %}"></script>
+<script src="{% static 'project_static/vendors/datatables.net/js/jquery.dataTables.min.js' %}"></script>
+<script src="{% static 'project_static/vendors/datatables.net-bs/js/dataTables.bootstrap.min.js' %}"></script>
+<script src="{% static 'project_static/vendors/datatables.net-buttons/js/dataTables.buttons.min.js' %}"></script>
+<script src="{% static 'project_static/vendors/datatables.net-buttons-bs/js/buttons.bootstrap.min.js' %}"></script>
+<script src="{% static 'project_static/vendors/datatables.net-buttons/js/buttons.flash.min.js' %}"></script>
+<script src="{% static 'project_static/vendors/datatables.net-buttons/js/buttons.html5.min.js' %}"></script>
+<script src="{% static 'project_static/vendors/datatables.net-buttons/js/buttons.print.min.js' %}"></script>
+<script src="{% static 'project_static/vendors/datatables.net-fixedheader/js/dataTables.fixedHeader.min.js' %}"></script>
+<script src="{% static 'project_static/vendors/datatables.net-keytable/js/dataTables.keyTable.min.js' %}"></script>
+<script src="{% static 'project_static/vendors/datatables.net-responsive/js/dataTables.responsive.min.js' %}"></script>
+<script src="{% static 'project_static/vendors/datatables.net-responsive-bs/js/responsive.bootstrap.js' %}"></script>
+<script src="{% static 'project_static/vendors/datatables.net-scroller/js/dataTables.scroller.min.js' %}"></script>
+<script src="{% static 'project_static/vendors/jszip/dist/jszip.min.js' %}"></script>
+<script src="{% static 'project_static/vendors/pdfmake/build/pdfmake.min.js' %}"></script>
+<script src="{% static 'project_static/vendors/pdfmake/build/vfs_fonts.js' %}"></script>
+<script src="{% static 'project_static/other/js/select2/select2.js' %}"></script>
+<script src="{% static 'project_static/other/js/sweetalert.min.js' %}"></script>
+<script src="{% static 'project_static/other/js/bootstrap-touchspin-master/dist/jquery.bootstrap-touchspin.js' %}"></script>
+<script src="{% static 'project_static/other/js/compras/forms.js' %}"></script>
+<script src="{% static 'project_static/other/js/functions/functions.js' %}"></script>
+<script src="{% static 'project_static/vendors/validator/multifield.js' %}"></script>
+<script src="{% static 'project_static/vendors/validator/validator.js' %}"></script>
 <script>
     var action = '{{ accion|safe }}';
 
