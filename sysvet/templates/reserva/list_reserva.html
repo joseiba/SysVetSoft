@@ -1,10 +1,11 @@
 {% extends "home/base_site.html" %}
+{% load static %}
 
 {% block title %} Lista Reservas {% endblock title %}
 
 {% block stylesheets %}
 {{ block.super }}
-<link rel="stylesheet" href="/static/project_static/other/commons/lib/main.css">
+<link rel="stylesheet" href="{% static 'project_static/other/commons/lib/main.css' %}">
 <style>
     .fc-daygrid-event {
         cursor: pointer !important;
@@ -52,9 +53,9 @@
 {% block javascripts %}
 {{ block.super }}
 
-<script src="/static/project_static/other/commons/lib/main.js"></script>
-<script src="/static/project_static/other/commons/lib/locales-all.min.js"></script>
-<script src="/static/project_static/other/js/sweetalert.min.js"></script>
+<script src="{% static 'project_static/other/commons/lib/main.js' %}"></script>
+<script src="{% static 'project_static/other/commons/lib/locales-all.min.js' %}"></script>
+<script src="{% static 'project_static/other/js/sweetalert.min.js' %}"></script>
 
 
 <script>

@@ -1,7 +1,9 @@
-<link rel="stylesheet" href="/static/project_static/other/commons/shared.css">
+{% load static %}
+
+<link rel="stylesheet" href="{% static 'project_static/other/commons/shared.css'%}">
 <link rel="stylesheet"
-    href="/static/project_static/other/js/jquery-ui-themes-1.12.1/jquery-ui-themes-1.12.1/themes/base/jquery-ui.css">
-<link rel="stylesheet" href="/static/project_static/other/js/jquery-timepicker-1.3.5/jquery.timepicker.min.css"><div class="modal-dialog" role="document">
+    href="{% static 'project_static/other/js/jquery-ui-themes-1.12.1/jquery-ui-themes-1.12.1/themes/base/jquery-ui.css' %}">
+<link rel="stylesheet" href="{% static 'project_static/other/js/jquery-timepicker-1.3.5/jquery.timepicker.min.css' %}"><div class="modal-dialog" role="document">
     <div class="modal-content">
         <div class="modal-header no_borders" style="background-color:#2a3f54;">
             <h5 class="modal-title" id="exampleModalLabel" style="color: white;">Agregar Proveedor</h5>
@@ -67,12 +69,12 @@
 
 <!-- validator -->
 
-<script src="/static/project_static/other/js/jquery-ui-1.12.1/jquery-ui-1.12.1/jquery-ui.js"></script>
-<script src="/static/project_static/vendors/validator/validator.js"></script>
-<script src="/static/project_static/vendors/validator/multifield.js"></script>
-<script src="/static/project_static/other/js/jquery-timepicker-1.3.5/jquery.timepicker.min.js"></script>
-<script src="/static/project_static/other/js/main.js"></script>
-<script src="/static/project_static/other/js/sweetalert.min.js"></script>
+<script src="{% static 'project_static/other/js/jquery-ui-1.12.1/jquery-ui-1.12.1/jquery-ui.js' %}"></script>
+<script src="{% static 'project_static/vendors/validator/multifield.js' %}"></script>
+<script src="{% static 'project_static/vendors/validator/validator.js' %}"></script>
+<script src="{% static 'project_static/other/js/jquery-timepicker-1.3.5/jquery.timepicker.min.js' %}"></script>
+<script src="{% static 'project_static/other/js/main.js' %}"></script>
+<script src="{% static 'project_static/other/js/sweetalert.min.js' %}"></script>
 
 <script>
 

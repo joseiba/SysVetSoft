@@ -1,4 +1,6 @@
-<link rel="stylesheet" href="/static/project_static/other/commons/shared.css">
+{% load static %}
+
+<link rel="stylesheet" href="{% static 'project_static/other/commons/shared.css'%} ">
 
 <div class="modal-dialog" role="document">
     <div class="modal-content" style="box-shadow: 0 10px 20px 0 rgba(0,0,0,.05);">
@@ -66,10 +68,10 @@
 </div>
 
 <!-- validator -->
-<script src="/static/project_static/vendors/validator/multifield.js"></script>
-<script src="/static/project_static/vendors/validator/validator.js"></script>
-<script src="/static/project_static/other/js/main.js"></script>
-<script src="/static/project_static/other/js/sweetalert.min.js"></script>
+<script src="{% static 'project_static/vendors/validator/multifield.js' %}"></script>
+<script src="{% static 'project_static/vendors/validator/validator.js' %}"></script>
+<script src="{% static 'project_static/other/js/main.js' %}"></script>
+<script src="{% static 'project_static/other/js/sweetalert.min.js' %}"></script>
 
 
 <script>

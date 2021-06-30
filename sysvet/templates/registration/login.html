@@ -1,7 +1,14 @@
 {% extends 'registration/base_login.html' %}
+{% load static %}
 
 {% block login %}
-<div class="container-login100" style="background-image: url('/static/login_static/images/ohana_login.jpeg');">
+
+<style>
+    .image_login {
+        background-image: url( "{% static 'login_static/images/ohana_login.jpeg' %}");
+    }
+</style>
+<div class="container-login100 image_login">
     <div class="wrap-login100 p-t-30 p-b-50">
         <span class="login100-form-title p-b-41">
             Cuenta de Usuario
