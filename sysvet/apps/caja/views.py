@@ -248,7 +248,7 @@ def reporte_caja_pdf(request, id):
     pdf.drawString(200, 610, u"" + caja.total_efectivo_formateado)
 
     pdf.drawString(50, 580, u"Total a Ingreso del Dia: ")
-    pdf.drawString(200, 580, u"" + caja.saldo_a_entregar_formateado)
+    pdf.drawString(200, 580, u"" + caja.total_ingreso_formateado)
 
     pdf.drawString(50, 550, u"Saldo a entregar: ")
     pdf.drawString(200, 550, u"" + caja.saldo_a_entregar_formateado)

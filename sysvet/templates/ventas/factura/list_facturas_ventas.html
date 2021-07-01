@@ -163,6 +163,7 @@
         $('input').on("cut copy paste", function (e) {
             e.preventDefault();
         });        
+        var caja_abierta = '{{ caja_abierta|safe }}';
 
         var get_list = function (busqueda) {
             $("#list_factura_ventas").DataTable({
@@ -218,7 +219,7 @@
                         render: function (data) {
                             var buttons = ""
 
-                            {% if perms.factura.change_facturacabeceraventa %}
+                            {% if perms.factura.change_facturacabeceraventa and caja_abierta == "S" %}
                                 buttons += '<button class="btn btn-warning">\
                                                         <a href="/factura/editFacturaVenta/' + data + '/" style="color: black">\
                                                             Editar\
@@ -226,7 +227,7 @@
                                                     </button>';
                             {% endif %}
 
-                            {% if perms.factura.delete_facturacabeceraventa %}
+                            {% if perms.factura.delete_facturacabeceraventa and caja_abierta == "S" %}
                                 buttons += '<button class="btn btn-danger" style="color: white" onclick="abrir_modal_edicion(\'/factura/anularFacturaVenta/' + data + '/\');">Anular\
                                                     </button>';
                             {% endif %}

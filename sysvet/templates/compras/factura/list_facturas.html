@@ -164,8 +164,8 @@
             e.preventDefault();
         });
 
-        var caja_abierta = "{{ caja_abierta }}"
-        
+        var caja_abierta = '{{ caja_abierta|safe }}';
+
         var get_list = function (busqueda) {
             $("#list_factura").DataTable({
                 destroy: true,
