@@ -87,7 +87,6 @@ class Mascota(models.Model):
         # Opening the uploaded image
         img = Image.open(self.imagen)
         if :
-            print("entro")
             super().save(*args, **kwargs)
 
         if img.height > 200 or img.width > 200:

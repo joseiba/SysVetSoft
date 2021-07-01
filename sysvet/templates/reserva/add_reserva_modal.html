@@ -1,7 +1,9 @@
-<link rel="stylesheet" href="/static/project_static/other/commons/shared.css">
+{% load static %}
+
+<link rel="stylesheet" href="{% static 'project_static/other/commons/shared.css' %}">
 <link rel="stylesheet"
-    href="/static/project_static/other/js/jquery-ui-themes-1.12.1/jquery-ui-themes-1.12.1/themes/base/jquery-ui.css">
-<link rel="stylesheet" href="/static/project_static/other/js/jquery-timepicker-1.3.5/jquery.timepicker.min.css">
+    href="{% static 'project_static/other/js/jquery-ui-themes-1.12.1/jquery-ui-themes-1.12.1/themes/base/jquery-ui.css' %}">
+<link rel="stylesheet" href="{% static 'project_static/other/js/jquery-timepicker-1.3.5/jquery.timepicker.min.css' %}">
 <style>
     .alert {
         display: none;
@@ -74,13 +76,12 @@
 </div>
 
 <!-- validator -->
-<script src="/static/project_static/vendors/validator/multifield.js"></script>
-<script src="/static/project_static/vendors/validator/validator.js"></script>
-<script src="/static/project_static/other/js/jquery-timepicker-1.3.5/jquery.timepicker.min.js"></script>
-<script src="/static/project_static/other/js/jquery-ui-1.12.1/jquery-ui-1.12.1/jquery-ui.js"></script>
-<script src="/static/project_static/other/js/main.js"></script>
-<script src="/static/project_static/other/js/sweetalert.min.js"></script>
-
+<script src="{% static 'project_static/vendors/validator/validator.js' %}"></script>
+<script src="{% static 'project_static/vendors/validator/multifield.js' %}"></script>
+<script src="{% static 'project_static/other/js/main.js' %}"></script>
+<script src="{% static 'project_static/other/js/jquery-timepicker-1.3.5/jquery.timepicker.min.js' %}"></script>
+<script src="{% static 'project_static/other/js/jquery-ui-1.12.1/jquery-ui-1.12.1/jquery-ui.js' %}"></script>
+<script src="{% static 'project_static/other/js/sweetalert.min.js' %}"></script>
 
 <script>
     // initialize a validator instance from the "FormValidator" constructor.
@@ -274,7 +275,6 @@
                     data: { 'fecha': fecha, 'servicio': servicio, 'hora': hora, 'id_cliente': id_cliente, 'id_mascota': id_mascota, 'empleado': empleado, 'action': 'A' },
                     url: urlValidate,
                     success: function (response) {
-                        console.log(response)
                         if (response.mensaje != "") {
                             swal({
                                 title: "Notificación",

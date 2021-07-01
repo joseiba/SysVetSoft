@@ -1,7 +1,9 @@
-<link rel="stylesheet" href="/static/project_static/other/commons/shared.css">
+{% load static %}
+
+<link rel="stylesheet" href="{% static 'project_static/other/commons/shared.css' %}">
 <link rel="stylesheet"
-    href="/static/project_static/other/js/jquery-ui-themes-1.12.1/jquery-ui-themes-1.12.1/themes/base/jquery-ui.css">
-<link rel="stylesheet" href="/static/project_static/other/js/jquery-timepicker-1.3.5/jquery.timepicker.min.css">
+    href="{% static 'project_static/other/js/jquery-ui-themes-1.12.1/jquery-ui-themes-1.12.1/themes/base/jquery-ui.css' %}">
+<link rel="stylesheet" href="{% static 'project_static/other/js/jquery-timepicker-1.3.5/jquery.timepicker.min.css' %}">
 <style>
     .alert {
         display: none;
@@ -120,14 +122,12 @@
 </div>
 
 <!-- validator -->
-<script src="/static/project_static/vendors/validator/validator.js"></script>
-<script src="/static/project_static/vendors/validator/multifield.js"></script>
-<script src="/static/project_static/other/js/main.js"></script>
-<script src="/static/project_static/other/js/jquery-timepicker-1.3.5/jquery.timepicker.min.js"></script>
-<script src="/static/project_static/other/js/jquery-ui-1.12.1/jquery-ui-1.12.1/jquery-ui.js"></script>
-<script src="/static/project_static/other/js/sweetalert.min.js"></script>
-
-
+<script src="{% static 'project_static/vendors/validator/validator.js' %}"></script>
+<script src="{% static 'project_static/vendors/validator/multifield.js' %}"></script>
+<script src="{% static 'project_static/other/js/main.js' %}"></script>
+<script src="{% static 'project_static/other/js/jquery-timepicker-1.3.5/jquery.timepicker.min.js' %}"></script>
+<script src="{% static 'project_static/other/js/jquery-ui-1.12.1/jquery-ui-1.12.1/jquery-ui.js' %}"></script>
+<script src="{% static 'project_static/other/js/sweetalert.min.js' %}"></script>
 
 <script>   
     $(function () {
@@ -191,7 +191,6 @@
         var id_mascota_selected = $("#id_mascota_selected").val()
         sessionStorage.setItem("id_empleado", empleado)
         sessionStorage.setItem("id_mascota", id_mascota_selected)
-        console.log(id_mascota_selected)
 
         if (id_seleted_cliente !== "" && id_seleted_cliente != null) {
                 var urlValidate = "/reserva/getMascotaSelected"
@@ -410,7 +409,6 @@
         })
 
         $(document).on("change", "#id_mascota_new", function () {
-            console.log("este nuevo")
             var id_cliente = sessionStorage.getItem("id_cliente")
             var fecha = fecha_reserva;
             var servicio = sessionStorage.getItem("servicio")
@@ -440,7 +438,6 @@
         })
 
         $(document).on('change',"#id_emleado_new", function() {
-            console.log("4")
             var empleado = $("#id_emleado_new").val() == "Seleccione un empleado" ? "" : $("#id_emleado_new").val();
             var id_cliente = sessionStorage.getItem("id_cliente")
             var fecha = fecha_reserva;
@@ -471,14 +468,12 @@
         
 
         var validar_reserva = function (fecha, servicio, hora, id_cliente, id_mascota, empleado) {
-            console.log("entro")
             if ((fecha != "" && fecha != null && fecha != undefined) && (servicio != "" && servicio != null && servicio != undefined) && (hora != "" && hora != null && hora != undefined) && (id_cliente != "" && id_cliente != null && id_cliente != undefined) && (id_mascota != "" && id_mascota != null && id_mascota != undefined) && (empleado != "" && empleado != null && empleado != undefined)) {
                 var urlValidate = "/reserva/validarDatos/"
                 $.ajax({
                     data: { 'fecha': fecha, 'servicio': servicio, 'hora': hora, 'id_cliente': id_cliente, 'id_mascota': id_mascota, 'empleado': empleado, 'id_reserva': id_reserva,'action': 'E'},
                     url: urlValidate,
                     success: function (response) {
-                        console.log(response)
                         if (response.mensaje != "") {
                             swal({
                                 title: "Notificación",

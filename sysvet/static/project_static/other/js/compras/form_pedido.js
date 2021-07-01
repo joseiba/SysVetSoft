@@ -124,7 +124,6 @@ $(function () {
         pedido.items.products.splice(tr.row, 1);
         pedido.list();
     }).on('change', 'input[name="cantidad"]', function () {
-        console.clear();
         var cant = parseInt($(this).val());
         var tr = tblPedido.cell($(this).closest('td, li')).index();
         pedido.items.products[tr.row].cantidad = cant;
@@ -144,7 +143,6 @@ $(function () {
             parameters.append('pedido', JSON.stringify(pedido.items));
             var csrf = $('input[name="csrfmiddlewaretoken"]').val();
             parameters.append('csrfmiddlewaretoken', csrf);
-            console.log(parameters)
             submit_with_ajax(window.location.pathname, 'Noticicación', '¿Desea registrar este pedido?', parameters, function () {
                 location.href = "/compra/listPedidosCompra/"
             });
