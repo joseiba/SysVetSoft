@@ -246,7 +246,6 @@
         document.forms[0].onsubmit = function (e) {
             var submit = true,
                 validatorResult = validator.checkAll(this);
-            console.log(validatorResult);
             return !!validatorResult.valid;
         };
         // on form "reset" event

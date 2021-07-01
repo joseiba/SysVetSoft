@@ -68,12 +68,13 @@ var factura = {
                 {
                     targets: [2],
                     class: "",
-                    width: "30%",
+                    width: "20%",
                     orderable: false,                
                 },
                 {
                     targets: [3],
                     class: "text-center my-0 ",
+                    width: "20%",
                     orderable: false,
                     render: function (data, type, row) {
                             return '<input type="text" name="precio_compra" id="precio_compra" class="form-control form-control-sm input-sm" autocomplete="off" value="' + row.precio_compra + '">';
@@ -81,7 +82,7 @@ var factura = {
                 },
                 {
                     targets: [4],
-                    width: "10%",
+                    width: "19%",
                     class: "text-center",
                     orderable: false,  
                     render: function (data, type, row) {
@@ -145,7 +146,7 @@ var factura = {
 $(function () {
     $('#search').on('select2:select', function (e) {
         var data = e.params.data;
-        data['subtotal'] = 0;
+        data['cantidad'] = 0;
         //se agrega los datos a la estructura
         factura.add(data)
         // borra luego de la seleccion

@@ -1,9 +1,10 @@
 {% extends "home/base_site.html" %}
+{% load static %}
 
 {% block title %} Editar Usuario{% endblock title %}
 {% block stylesheets %}
 {{ block.super }}
-<link href="/static/project_static/other/js/select2/select2.css" rel="stylesheet" />
+<link href="{% static 'project_static/other/js/select2/select2.css' %}" rel="stylesheet"/>
 
 <style>
     .dataTables_info {
@@ -59,7 +60,7 @@
                     <div class="x_content">
                         <form class="" action="{% url 'edit_usuario' usuario.id %}" method="POST">
                             {% csrf_token %}
-                            <div style="padding-left: 22rem; padding-right: 22rem;">
+                            <div>
                                 {{ form.as_p }}
                             </div>
                             <!--<div class="field item form-group">
@@ -121,10 +122,10 @@
 {% block javascripts %}
 {{ block.super }}
 <!-- validator -->
-<script src="/static/project_static/vendors/validator/multifield.js"></script>
-<script src="/static/project_static/vendors/validator/validator.js"></script>
-<script src="/static/project_static/other/js/select2/select2.js"></script>
-<script src="/static/project_static/other/js/sweetalert.min.js"></script>
+<script src="{% static 'project_static/vendors/validator/multifield.js' %}"></script>
+<script src="{% static 'project_static/vendors/validator/validator.js' %}"></script>
+<script src="{% static 'project_static/other/js/select2/select2.js' %}"></script>
+<script src="{% static 'project_static/other/js/sweetalert.min.js' %}"></script>
 
 
 <script>  

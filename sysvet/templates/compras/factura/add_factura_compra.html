@@ -208,10 +208,11 @@
 <script src="{% static 'project_static/other/js/select2/select2.js' %}"></script>
 <script src="{% static 'project_static/other/js/sweetalert.min.js' %}"></script>
 <script src="{% static 'project_static/other/js/bootstrap-touchspin-master/dist/jquery.bootstrap-touchspin.js' %}"></script>
-<script src="{% static 'project_static/other/js/compras/forms_add_factura.js' %}"></script>
 <script src="{% static 'project_static/other/js/functions/functions.js' %}"></script>
 <script src="{% static 'project_static/vendors/validator/multifield.js' %}"></script>
 <script src="{% static 'project_static/vendors/validator/validator.js' %}"></script>
+<script src="{% static 'project_static/other/js/compras/forms_add_factura.js' %}"></script>
+
 
 <script>
     var action = '{{ accion|safe }}';
@@ -245,7 +246,6 @@
         document.forms[0].onsubmit = function (e) {
             var submit = true,
                 validatorResult = validator.checkAll(this);
-            console.log(validatorResult);
             return !!validatorResult.valid;
         };
         // on form "reset" event
@@ -271,7 +271,7 @@
                 decimal: "",
                 emptyTable: "No hay información",
                 info: "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
-                infoEmpty: "Mostrando 0 to 0 de 0 Entradas",
+                infoEmpty: "Mostrando 0 de 0 Entradas",
                 infoFiltered: "(Filtrado de _MAX_ total entradas)",
                 infoPostFix: "",
                 thousands: ",",
