@@ -1,5 +1,6 @@
-<link rel="stylesheet" href="/static/project_static/other/commons/shared.css">
+{% load static %}
 
+<link rel="stylesheet" href="{% static 'project_static/other/commons/shared.css' %}">
 <div class="modal-dialog" role="document">
     <div class="modal-content">
         <form action="{% url 'alta_tipo_producto' tipo_producto.id %}" method="post">

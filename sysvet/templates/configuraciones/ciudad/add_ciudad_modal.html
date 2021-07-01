@@ -1,6 +1,8 @@
-<link rel="stylesheet" href="/static/project_static/other/commons/shared.css">
+{% load static %}
+
+<link rel="stylesheet" href="{% static 'project_static/other/commons/shared.css'%} ">
 <link rel="stylesheet"
-    href="/static/project_static/other/js/jquery-ui-themes-1.12.1/jquery-ui-themes-1.12.1/themes/base/jquery-ui.css">
+    href="{% static 'project_static/other/js/jquery-ui-themes-1.12.1/jquery-ui-themes-1.12.1/themes/base/jquery-ui.css' %} ">
 
 <div></div>
 <div class="modal-dialog" role="document">
@@ -31,12 +33,12 @@
     </div>
 </div>
 
+<script src="{% static 'project_static/other/js/jquery-ui-1.12.1/jquery-ui-1.12.1/jquery-ui.js' %}"></script>
+<script src="{% static 'project_static/vendors/validator/multifield.js' %}"></script>
+<script src="{% static 'project_static/vendors/validator/validator.js' %}"></script>
+<script src="{% static 'project_static/other/js/main.js' %}"></script>
+<script src="{% static 'project_static/other/js/sweetalert.min.js' %}"></script>
 
-<script src="/static/project_static/vendors/validator/multifield.js"></script>
-<script src="/static/project_static/vendors/validator/validator.js"></script>
-<script src="/static/project_static/other/js/jquery-ui-1.12.1/jquery-ui-1.12.1/jquery-ui.js"></script>
-<script src="/static/project_static/other/js/main.js"></script>
-<script src="/static/project_static/other/js/sweetalert.min.js"></script>
 <script>
         // initialize a validator instance from the "FormValidator" constructor.
     // A "<form>" element is optionally passed as an argument, but is not a must

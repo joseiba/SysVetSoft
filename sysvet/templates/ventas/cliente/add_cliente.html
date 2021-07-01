@@ -1,4 +1,5 @@
 {% extends "home/base_site.html" %}
+{% load static %}
 
 {% block title %} Agregar Cliente{% endblock title %}
 
@@ -137,10 +138,10 @@
 {% block javascripts %}
 {{ block.super }}
 <!-- validator -->
-<script src="/static/project_static/vendors/validator/multifield.js"></script>
-<script src="/static/project_static/vendors/validator/validator.js"></script>
-<script src="/static/project_static/other/js/sweetalert.min.js"></script>
-<script src="/static/project_static/other/js/main.js"></script>
+<script src="{% static 'project_static/vendors/validator/multifield.js' %}"></script>
+<script src="{% static 'project_static/vendors/validator/validator.js' %}"></script>
+<script src="{% static 'project_static/other/js/sweetalert.min.js' %}"></script>
+<script src="{% static 'project_static/other/js/main.js'%} "></script>
 
 <script>
     function hideshow() {

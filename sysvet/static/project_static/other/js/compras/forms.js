@@ -60,14 +60,14 @@ var factura = {
                 {
                     targets: [0],
                     class: "text-center",
-                    width: "10%",
+                    width: "5%",
                     orderable: false,
                 },
                 
                 {
                     targets: [1],
                     class: "",
-                    width: "20%",
+                    width: "10%",
                     orderable: false,                
                 },
                 {
