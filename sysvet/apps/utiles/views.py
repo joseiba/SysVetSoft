@@ -278,7 +278,8 @@ def get_reserva_today(request):
     data = []
     try:
         fecha_hoy = date(hoy.year, hoy.month, hoy.day)
-        reservas = Reserva.objects.filter(fecha_reserva=fecha_hoy)
+        reservas = Reserva.objects.exclude(estado_re='FIN').filter(fecha_reserva=fecha_hoy)
+        reservas = reservas.exclude(estado_re='CAN').all()
         
         total =  reservas.count()
 

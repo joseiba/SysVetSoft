@@ -190,21 +190,25 @@ def add_usuario(request):
 @login_required()
 @permission_required('usuario.change_user')
 def edit_usuario(request, id):
-    usuario = User.objects.get(id=id)
-    form = UserFormChange(instance=usuario)
-    if request.method == 'POST':
-        form = UserFormChange(request.POST, instance=usuario)
-        if not form.has_changed():
-            messages.info(request, "No ha hecho ningun cambio")
-            return redirect('/usuario/edit/' + str(id))
-        if form.is_valid():
-            user = form.save(commit=False)
-            user.save()
-            messages.add_message(request, messages.SUCCESS, 'Se ha editado correctamente!')
-            return redirect('/usuario/edit/' + str(id))
+    try:
+        usuario = User.objects.get(id=id)
+        form = UserFormChange(request.user, instance=usuario)
+        if request.method == 'POST':
+            form = UserFormChange(request.user, request.POST, instance=usuario)
+            if not form.has_changed():
+                messages.info(request, "No ha hecho ningun cambio")
+                return redirect('/usuario/edit/' + str(id))
+            if form.is_valid():
+                user = form.save(commit=False)
+                user.save()
+                messages.add_message(request, messages.SUCCESS, 'Se ha editado correctamente!')
+                return redirect('/usuario/edit/' + str(id))
+        context = {'form': form, 'usuario': usuario}
+        return render(request, 'usuario/edit_usuario.html', context)
+    except Exception as e:
+            messages.add_message(request, messages.SUCCESS, 'ha ocurrido un error, intentelo mas tarde!')
+            return redirect('/usuario/listUsuarios/')
 
-    context = {'form': form, 'usuario': usuario}
-    return render(request, 'usuario/edit_usuario.html', context)
 
 @login_required()
 @permission_required('usuario.delete_user')
