@@ -70,7 +70,7 @@
 
     // initialize a validator instance from the "FormValidator" constructor.
     // A "<form>" element is optionally passed as an argument, but is not a must
-        var validator = new FormValidator({
+    var validator = new FormValidator({
         "events": ['blur', 'input', 'change']
     }, document.forms[0]);
     // on form "submit" event
@@ -94,7 +94,7 @@
         e.preventDefault();
     });
 
-    document.getElementById('email').addEventListener('input', function() {
+    /*document.getElementById('email').addEventListener('input', function() {
         campo = event.target;        
         emailRegex =/^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
         //Se muestra un texto a modo de ejemplo, luego va a ser un icono
@@ -111,7 +111,7 @@
             }
             
         }
-    });
+    });*/
 
     $(function(){
     $("input[name='ruc_proveedor']").keyup(function () {

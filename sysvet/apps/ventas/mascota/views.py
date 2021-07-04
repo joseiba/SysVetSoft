@@ -395,7 +395,7 @@ def get_list_historico_vacunas_aplicadas(request):
         vacunas_aplicadas = vacunas_aplicadas[start:start + length]
 
     data = [{'fecha_aplicada': va.fecha_aplicacion, 'vacuna_aplicada': va.vacuna.nombre_vacuna,
-            'peso': va.id_mascota.peso} for va in vacunas_aplicadas] 
+            'peso': va.peso} for va in vacunas_aplicadas] 
 
     response = {
         'data': data,

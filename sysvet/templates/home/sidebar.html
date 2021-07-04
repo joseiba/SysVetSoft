@@ -144,9 +144,10 @@
                             </li>
 
                             <li><a>Mascotas<span class="fa fa-chevron-down"></span></a>
-                                <ul class="nav child_menu">                                
-                                    <li><a href="{% url 'list_proximas_vacunas' %}">Próximas Vacunaciones</a></li>
-                                </ul>
+                                <ul class="nav child_menu">
+                                    <li><a href="{% url 'list_proximas_vacunas' %}">Próximas Vacunaciones</a></li>                                
+                                    <li><a href="{% url 'reporte_vacunas_aplicadas' %}">Vacunas Aplicadas</a></li>
+                                </ul>                            
                             </li>
 
                             <li><a href="{% url 'reporte_ganancias_mes' %}">Recaudación por mes</a></li>

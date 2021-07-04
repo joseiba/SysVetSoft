@@ -122,7 +122,12 @@ def add_factura_venta(request):
     confi = get_confi()
     data = {}
     mensaje = ""
-    confi_initial = ConfiEmpresa.objects.get(id=1) 
+    confi_initial = ConfiEmpresa.objects.get(id=1)
+    caja_abierta = Caja.objects.exclude(apertura_cierre="C").filter(fecha_alta=today)
+    if caja_abierta.count() > 0:
+        abierto = "S"
+    else:
+        abierto = "N" 
     if request.method == 'POST' and request.is_ajax():
         try:
             confi = ConfiEmpresa.objects.get(id=1) 
@@ -162,7 +167,7 @@ def add_factura_venta(request):
             response = {'mensaje':mensaje }
         return JsonResponse(response)
     nro_factura_initial = reset_nro_timbrado(confi_initial.nro_timbrado)
-    context = {'form': form,  'calc_iva': 5, 'accion': 'A', 'confi': confi, 'nro_factura': str(nro_factura_initial)}
+    context = {'form': form,  'calc_iva': 5, 'accion': 'A', 'confi': confi, 'nro_factura': str(nro_factura_initial), 'caja_abierta' : abierto}
     return render(request, 'ventas/factura/add_factura_ventas.html', context)
 
 @login_required()

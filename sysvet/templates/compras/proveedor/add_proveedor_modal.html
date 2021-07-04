@@ -69,10 +69,8 @@
 
 <!-- validator -->
 
-<script src="{% static 'project_static/other/js/jquery-ui-1.12.1/jquery-ui-1.12.1/jquery-ui.js' %}"></script>
 <script src="{% static 'project_static/vendors/validator/multifield.js' %}"></script>
 <script src="{% static 'project_static/vendors/validator/validator.js' %}"></script>
-<script src="{% static 'project_static/other/js/jquery-timepicker-1.3.5/jquery.timepicker.min.js' %}"></script>
 <script src="{% static 'project_static/other/js/main.js' %}"></script>
 <script src="{% static 'project_static/other/js/sweetalert.min.js' %}"></script>
 
@@ -99,6 +97,30 @@
         if (this.checked)
             $('form .alert').remove();
     }).prop('checked', false);
+
+    document.getElementById('email').addEventListener('input', function() {
+        campo = event.target;        
+        emailRegex =/^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+        //Se muestra un texto a modo de ejemplo, luego va a ser un icono
+        if (emailRegex.test(campo.value)) {
+            $('#alert_email').empty()
+            $('form').find('#btn_confirmar').removeClass('d-none')
+        } else {
+            if(campo.value === ""){
+                $('#alert_email').empty()
+                $('form').find('#btn_confirmar').removeClass('d-none')
+
+            }
+            else{
+                $("#alert_email").html('<div class="alert" style="opacity: 1; white-space: inherit; left: 0">\
+                                        email no valido\
+                                    </div>');
+                $('form').find('#btn_confirmar').addClass('d-none')
+
+            }
+            
+        }
+    });
 
     $(function(){
         $('form input').on("cut copy paste",function(e) {

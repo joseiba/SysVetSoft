@@ -104,197 +104,218 @@
     <div class="col-12">
       <div class="col-12 col-md-6 col-lg-6 col-xl-8">
         <div class="col-12 col-md-6 col-lg-6 col-xl-4 mb-4">
-          <div class="card card-pets card_align_center" style="background-color: #5f1e1eeb;">
-            <div class="">
-              <div class="d-flex">
-                <i class="fas fa-users mt-2 mb-3" style="font-size: 85px; color: white;"></i>
-                <h3 class="ml-2" style="align-self: center; color: white; font-size: 38px;">{{ total_user }}</h3>
+          <a href="{% url 'list_usuarios' %}">
+            <div class="card card-pets card_align_center" style="background-color: #5f1e1eeb;">
+              <div class="">
+                <div class="d-flex">
+                  <i class="fas fa-users mt-2 mb-3" style="font-size: 85px; color: white;"></i>
+                  <h3 class="ml-2" style="align-self: center; color: white; font-size: 38px;">{{ total_user }}</h3>
+                </div>
+  
               </div>
-
+  
+              <div class="card-body card-body-pets p-0">
+                <h5 class="" style="margin-top: 1.3rem; color: white;">Total Usuarios
+                </h5>
+              </div>
+  
+              <div class="d-contents" style="display: contents;">
+  
+              </div>
             </div>
-
-            <div class="card-body card-body-pets p-0">
-              <h5 class="" style="margin-top: 1.3rem; color: white;">Total Usuarios
-              </h5>
-            </div>
-
-            <div class="d-contents" style="display: contents;">
-
-            </div>
-          </div>
+          </a>
         </div>
         <div class="col-12 col-md-6 col-lg-6 col-xl-4 mb-4">
-          <div class="card card-pets card_align_center" style="background-color: #845e5eeb;">
-            <div class="">
-
-              <div class="d-flex">
-                <i class="fas fa-restroom mt-2 mb-3" style="font-size: 85px; color: white;"></i>
-                <h3 class="ml-3" style="align-self: center; color: white; font-size: 38px;">{{ total_cliente }}</h3>
+          <a href="{% url 'list_cliente' %}">
+            <div class="card card-pets card_align_center" style="background-color: #845e5eeb;">
+              <div class="">
+  
+                <div class="d-flex">
+                  <i class="fas fa-restroom mt-2 mb-3" style="font-size: 85px; color: white;"></i>
+                  <h3 class="ml-3" style="align-self: center; color: white; font-size: 38px;">{{ total_cliente }}</h3>
+                </div>
+  
               </div>
-
+  
+              <div class="card-body card-body-pets p-0">
+                <h5 class="" style="margin-top: 1.3rem; color: white;">Total Clientes
+                </h5>
+              </div>
+  
+              <div class="d-contents" style="display: contents;">
+  
+              </div>
             </div>
-
-            <div class="card-body card-body-pets p-0">
-              <h5 class="" style="margin-top: 1.3rem; color: white;">Total Clientes
-              </h5>
-            </div>
-
-            <div class="d-contents" style="display: contents;">
-
-            </div>
-          </div>
+          </a>
         </div>
         <div class="col-12 col-md-6 col-lg-6 col-xl-4 mb-4">
-          <div class="card card-pets card_align_center" style="background-color: #c0702ceb;">
-            <div>
-
-              <div class="d-flex">
-                <i class="fas fa-paw  mt-2 mb-3" style="font-size: 85px; color: white;"></i>
-                <h3 class="ml-3" style="align-self: center; color: white; font-size: 38px;">{{total_mascotas}}</h3>
+          <a href="{% url 'list_mascotas' %}">
+            <div class="card card-pets card_align_center" style="background-color: #c0702ceb;">
+              <div>
+  
+                <div class="d-flex">
+                  <i class="fas fa-paw  mt-2 mb-3" style="font-size: 85px; color: white;"></i>
+                  <h3 class="ml-3" style="align-self: center; color: white; font-size: 38px;">{{total_mascotas}}</h3>
+                </div>
+  
               </div>
-
+  
+              <div class="card-body card-body-pets p-0">
+                <h5 class="" style="margin-top: 1.3rem; color: white;">Total Mascotas
+                </h5>
+              </div>
+  
+              <div class="d-contents" style="display: contents;">
+  
+              </div>
             </div>
+          </a>
 
-            <div class="card-body card-body-pets p-0">
-              <h5 class="" style="margin-top: 1.3rem; color: white;">Total Mascotas
-              </h5>
-            </div>
-
-            <div class="d-contents" style="display: contents;">
-
-            </div>
-          </div>
         </div>
         <div class="col-12 col-md-6 col-lg-6 col-xl-4 mb-4">
-          <div class="card card-pets card_align_center" style="background-color: #a57a2beb;">
-            <div class="">
-
-              <div class="d-flex">
-                <i class="fas fa-box-open mt-2 mb-3" style="font-size: 85px; color: white;"></i>
-                <h3 class="ml-3" style="align-self: center; color: white; font-size: 38px;">{{total_productos}}</h3>
+          <a href="{% url 'list_productos_general' %}">
+            <div class="card card-pets card_align_center" style="background-color: #a57a2beb;">
+              <div class="">
+  
+                <div class="d-flex">
+                  <i class="fas fa-box-open mt-2 mb-3" style="font-size: 85px; color: white;"></i>
+                  <h3 class="ml-3" style="align-self: center; color: white; font-size: 38px;">{{total_productos}}</h3>
+                </div>
+  
               </div>
-
+  
+              <div class="card-body card-body-pets p-0">
+                <h5 class="" style="margin-top: 1.3rem; color: white;">Total Productos
+                </h5>
+              </div>
+  
+              <div class="d-contents" style="display: contents;">
+  
+              </div>
             </div>
-
-            <div class="card-body card-body-pets p-0">
-              <h5 class="" style="margin-top: 1.3rem; color: white;">Total Productos
-              </h5>
-            </div>
-
-            <div class="d-contents" style="display: contents;">
-
-            </div>
-          </div>
+          </a>
         </div>
         <div class="col-12 col-md-6 col-lg-6 col-xl-4 mb-4">
-          <div class="card card-pets card_align_center" style="background-color: #655935eb;">
-            <div class="">
-
-              <div class="d-flex">
-                <i class="fas fa-cart-arrow-down mt-2 mb-3" style="font-size: 85px; color: white;"></i>
-                <h3 class="ml-3" style="align-self: center; color: white; font-size: 38px;">{{ total_stock_minimo }}
-                </h3>
+          <a href="{% url 'reporte_stock_minimo' %}">
+            <div class="card card-pets card_align_center" style="background-color: #655935eb;">
+              <div class="">
+  
+                <div class="d-flex">
+                  <i class="fas fa-cart-arrow-down mt-2 mb-3" style="font-size: 85px; color: white;"></i>
+                  <h3 class="ml-3" style="align-self: center; color: white; font-size: 38px;">{{ total_stock_minimo }}
+                  </h3>
+                </div>
+  
               </div>
-
+  
+              <div class="card-body card-body-pets p-0">
+                <h5 class="" style="margin-top: 1.3rem; color: white;">Stock minimo
+                </h5>
+              </div>
+  
+              <div class="d-contents" style="display: contents;">
+  
+              </div>
             </div>
+          </a>
 
-            <div class="card-body card-body-pets p-0">
-              <h5 class="" style="margin-top: 1.3rem; color: white;">Stock minimo
-              </h5>
-            </div>
-
-            <div class="d-contents" style="display: contents;">
-
-            </div>
-          </div>
         </div>
         <div class="col-12 col-md-6 col-lg-6 col-xl-4 mb-4">
-          <div class="card card-pets card_align_center" style="background-color: #385323db;">
-            <div class="">
-
-              <div class="d-flex">
-                <i class="fas fa-calendar-minus mt-2 mb-3" style="font-size: 85px; color: white;"></i>
-                <h3 class="ml-3" style="align-self: center; color: white; font-size: 38px;">{{ total_pro_vencer }}</h3>
+          <a href="{% url 'reporte_stock_a_vencer' %}">
+            <div class="card card-pets card_align_center" style="background-color: #385323db;">
+              <div class="">
+  
+                <div class="d-flex">
+                  <i class="fas fa-calendar-minus mt-2 mb-3" style="font-size: 85px; color: white;"></i>
+                  <h3 class="ml-3" style="align-self: center; color: white; font-size: 38px;">{{ total_pro_vencer }}</h3>
+                </div>
+  
               </div>
-
+  
+              <div class="card-body card-body-pets p-0" style="text-align: center !important;">
+                <h5 class="" style="margin-top: 1.3rem; color: white;">Productos a vencer
+                </h5>
+              </div>
+  
+              <div class="d-contents" style="display: contents;">
+  
+              </div>
             </div>
-
-            <div class="card-body card-body-pets p-0" style="text-align: center !important;">
-              <h5 class="" style="margin-top: 1.3rem; color: white;">Productos a vencer
-              </h5>
-            </div>
-
-            <div class="d-contents" style="display: contents;">
-
-            </div>
-          </div>
+          </a>
         </div>
         <div class="col-12 col-md-6 col-lg-6 col-xl-4 mb-4">
-          <div class="card card-pets card_align_center" style="background-color: #656d61eb;">
-            <div class="">
-
-              <div class="d-flex">
-                <i class="fas fa-syringe mt-2 mb-3" style="font-size: 85px; color: white;"></i>
-                <h3 class="ml-3" style="align-self: center; color: white; font-size: 38px;">{{total_vacunas_aplicadas }}
-                </h3>
+          <a href="{% url 'reporte_vacunas_aplicadas' %}">
+            <div class="card card-pets card_align_center" style="background-color: #656d61eb;">
+              <div class="">
+  
+                <div class="d-flex">
+                  <i class="fas fa-syringe mt-2 mb-3" style="font-size: 85px; color: white;"></i>
+                  <h3 class="ml-3" style="align-self: center; color: white; font-size: 38px;">{{total_vacunas_aplicadas }}
+                  </h3>
+                </div>
+  
               </div>
-
+  
+              <div class="card-body card-body-pets p-0" style="text-align: center !important;">
+                <h5 class="" style="margin-top: 1.3rem; color: white;">Vacunas Aplicadas
+                </h5>
+              </div>
+  
+              <div class="d-contents" style="display: contents;">
+  
+              </div>
             </div>
-
-            <div class="card-body card-body-pets p-0" style="text-align: center !important;">
-              <h5 class="" style="margin-top: 1.3rem; color: white;">Vacunas Aplicadas
-              </h5>
-            </div>
-
-            <div class="d-contents" style="display: contents;">
-
-            </div>
-          </div>
+          </a>
         </div>
         <div class="col-12 col-md-6 col-lg-6 col-xl-4 mb-4">
-          <div class="card card-pets card_align_center" style="background-color: #232b4aeb;">
-            <div class="" >
-
-              <div class="d-flex">
-                <i class="fas fa-calendar-check mt-2 mb-3" style="font-size: 85px; color: white;"></i>
-                <h3 class="ml-3" style="align-self: center; color: white; font-size: 38px;">{{ total_reservas_hoy }}
-                </h3>
+          <a href="{% url 'list_reserva' %}">
+            <div class="card card-pets card_align_center" style="background-color: #232b4aeb;">
+              <div class="" >
+  
+                <div class="d-flex">
+                  <i class="fas fa-calendar-check mt-2 mb-3" style="font-size: 85px; color: white;"></i>
+                  <h3 class="ml-3" style="align-self: center; color: white; font-size: 38px;">{{ total_reservas_hoy }}
+                  </h3>
+                </div>
+  
               </div>
-
+  
+              <div class="card-body card-body-pets p-0" style="text-align: center !important;">
+                <h5 class="" style="margin-top: 1.3rem; color: white;">Reservas para hoy
+                </h5>
+              </div>
+  
+              <div class="d-contents" style="display: contents;">
+  
+              </div>
             </div>
-
-            <div class="card-body card-body-pets p-0" style="text-align: center !important;">
-              <h5 class="" style="margin-top: 1.3rem; color: white;">Reservas para hoy
-              </h5>
-            </div>
-
-            <div class="d-contents" style="display: contents;">
-
-            </div>
-          </div>
+          </a>
         </div>
         <div class="col-12 col-md-6 col-lg-6 col-xl-4 mb-4">
-          <div class="card card-pets card_align_center" style="background-color: #4b4667eb;">
-            <div class="">
-
-              <div class="d-flex">
-                <i class="fas fa-syringe mt-2 mb-3" style="font-size: 85px; color: white;"></i>
-                <h3 class="ml-3 content" style="align-self: center; color: white; font-size: 38px;">
-                  {{total_proximas_vacunas}}
-                </h3>
+          <a href="{% url 'list_proximas_vacunas' %}">
+            <div class="card card-pets card_align_center" style="background-color: #4b4667eb;">
+              <div class="">
+  
+                <div class="d-flex">
+                  <i class="fas fa-syringe mt-2 mb-3" style="font-size: 85px; color: white;"></i>
+                  <h3 class="ml-3 content" style="align-self: center; color: white; font-size: 38px;">
+                    {{total_proximas_vacunas}}
+                  </h3>
+                </div>
+  
               </div>
-
+  
+              <div class="card-body card-body-pets p-0" style="text-align: center !important;">
+                <h5 class="" style="margin-top: 1.3rem; color: white;">Próximas Vacunaciones
+                </h5>
+              </div>
+  
+              <div class="d-contents" style="display: contents;">
+  
+              </div>
             </div>
+          </a>
 
-            <div class="card-body card-body-pets p-0" style="text-align: center !important;">
-              <h5 class="" style="margin-top: 1.3rem; color: white;">Próximas Vacunaciones
-              </h5>
-            </div>
-
-            <div class="d-contents" style="display: contents;">
-
-            </div>
-          </div>
         </div>
       </div>
       <div class="col-12 col-md-6 col-lg-6 col-xl-4 ">

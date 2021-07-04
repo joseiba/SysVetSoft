@@ -260,7 +260,6 @@
 
         $("#busqueda").click(function(){
             var busqueda = sessionStorage.getItem("busqueda")
-            console.log
             if(busqueda == "" || busqueda == undefined || busqueda == null){
                 busqueda = "";
                 get_list(busqueda)
