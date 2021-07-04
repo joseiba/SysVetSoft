@@ -192,11 +192,20 @@
         sessionStorage.setItem("id_empleado", empleado)
         sessionStorage.setItem("id_mascota", id_mascota_selected)
 
+        var d1 = fecha_reserva.split("-");
+        var c = new Date();
+
+        var from = new Date(d1[0], parseInt(d1[1]) - 1, d1[2]);  // -1 because months are from 0 to 11
+        var check = new Date(c.getFullYear(), c.getMonth(), c.getDate());
+        if (check >= from) {
+            $("#form").find("#edit_button").addClass("d-none")  
+        }
+
         if (id_seleted_cliente !== "" && id_seleted_cliente != null) {
                 var urlValidate = "/reserva/getMascotaSelected"
                 sessionStorage.setItem("id_cliente", id_seleted_cliente)
                 $.ajax({
-                    data: { 'id_cliente': id_seleted_cliente, 'hora_reserva': hora_reserva, "fecha_reserva": fecha_reserva, 'servicio':servicio},
+                    data: { 'id_cliente': id_seleted_cliente, 'hora_reserva': hora_reserva, "fecha_reserva": fecha_reserva, 'servicio':servicio, 'id_reserva': id_reserva},
                     url: urlValidate,
                     success: function (response) {
                         var mascotas = JSON.parse(response.mascota);

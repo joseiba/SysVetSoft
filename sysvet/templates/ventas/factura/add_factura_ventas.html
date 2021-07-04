@@ -186,10 +186,14 @@
                                     </div>
                                 </div>
                                 <div class="tile-footer mt-3">
+                                    
+                                    {% if caja_abierta == "S" %}
                                     <button type="submit" class="btn btn-primary" id="button_registrar"
                                         style="color: white"><i class="fa fa-fw fa-lg fa-check-circle"></i>Registrar
                                         Factura
-                                    </button>&nbsp;&nbsp;&nbsp;
+                                    </button>
+                                    {% endif %}                                        
+                                    &nbsp;&nbsp;&nbsp;
                                     <a class="btn btn-secondary" href="{% url 'list_factura_ventas' %}">
                                         <i class="fa fa-fw fa-lg fa-times-circle"></i>Volver</a>
                                 </div>

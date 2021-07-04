@@ -65,7 +65,8 @@ from apps.reporte.views import (reporte_producto,reporte_producto_comprados,repo
 reporte_prod_vendido, reporte_productos_vendido_mes, get_producto_vendido_mes, reporte_productos_comprado_mes,
 get_producto_comprado_mes, get_ganancias_mes, reporte_stock_minimo, get_producto_minimo, reporte_stock_a_vencer,
 get_producto_vencimiento, reporte_servicio_vendido, get_servicio_vendido, list_proximas_vacunas, get_proximas_vacunas,
-get_rango_mes_recaudacion, get_rango_mes_pro_comprado, get_rango_mes_pro_vendido)
+get_rango_mes_recaudacion, get_rango_mes_pro_comprado, get_rango_mes_pro_vendido, reporte_get_vacunas_aplicada,
+reporte_vacunas_aplicadas)
 
 from apps.utiles.views import (poner_vencido_timbrado, validate_nro_timbrado, validar_cedula, validar_ruc,
 get_reserva_today, get_vacunas_today)
@@ -269,6 +270,8 @@ urlpatterns = [
     path('reporte/get_proximas_vacunas/',get_proximas_vacunas, name="get_proximas_vacunas"),
     path('reporte/get_rango_mes_pro_vendido/',get_rango_mes_pro_vendido, name="get_rango_mes_pro_vendido"),
     path('reporte/get_rango_mes_pro_comprado/',get_rango_mes_pro_comprado, name="get_rango_mes_pro_comprado"),
+    path('reporte/listVacunasAplicadas/', reporte_vacunas_aplicadas, name="reporte_vacunas_aplicadas"),
+    path('reporte/get_vacunas_aplicadas/', reporte_get_vacunas_aplicada, name="reporte_get_vacunas_aplicada"),
 
     #Utiles
     path('utiles/poner_vencido_timbrado/', poner_vencido_timbrado, name="poner_vencido_timbrado"),

@@ -374,6 +374,11 @@ def agregar_factura_compra(request):
     form = FacturaCompraForm()
     data = {}
     mensaje = ""
+    caja_abierta = Caja.objects.exclude(apertura_cierre="C").filter(fecha_alta=today)
+    if caja_abierta.count() > 0:
+        abierto = "S"
+    else:
+        abierto = "N"
     if request.method == 'POST' and request.is_ajax():
         try:        
             factura_dict = json.loads(request.POST['factura'])
@@ -417,7 +422,7 @@ def agregar_factura_compra(request):
             mensaje = 'error'
             response = {'mensaje':mensaje }
         return JsonResponse(response)
-    context = {'form': form, 'calc_iva': 5, 'accion': 'A'}
+    context = {'form': form, 'calc_iva': 5, 'accion': 'A', 'caja_abierta' : abierto}
     return render(request, 'compras/factura/add_factura_compra.html', context)
 
 

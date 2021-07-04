@@ -70,7 +70,8 @@ class UserForm(UserCreationForm):
 
 
 class UserFormChange(UserChangeForm):
-    def __init__(self, *args, **kwargs):        
+    def __init__(self, user, *args, **kwargs):
+        self.user = user        
         super().__init__(*args, **kwargs)
         self.fields['groups'].widget.attrs['class'] = 'group_select'
         self.fields['groups'].widget.attrs['required'] = 'required'
@@ -78,8 +79,16 @@ class UserFormChange(UserChangeForm):
 
         for fieldname in ['username']:
             self.fields[fieldname].help_text = None
-        #for label in ['password']:
-            #self.fields[label].label = ''
+
+        try:
+            if not self.user.has_perms(['usuario.add_user']):
+                for fieldname in ['groups']:
+                    self.fields[fieldname].widget.attrs['class'] = 'd-none'
+                    self.fields[fieldname].label = ''
+                    self.fields[fieldname].help_text = None
+        except:
+            pass
+
     password = None
 
     class Meta:

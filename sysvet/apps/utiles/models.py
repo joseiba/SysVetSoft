@@ -51,6 +51,11 @@ class ServicioVendido(models.Model):
     id_producto = models.ForeignKey(Producto, on_delete=models.CASCADE, null=True)
     cantidad_vendida_total = models.FloatField(null=True, blank=True, default=0)
 
+
+class VacunasAplicadas(models.Model):
+    id_producto = models.ForeignKey(Producto, on_delete=models.CASCADE, null=True)
+    cantidad_aplicadas = models.FloatField(null=True, blank=True, default=0)
+
 class GananciaPorMes(models.Model):
     numero_mes =  models.IntegerField(null=True, blank=True)
     label_mes = models.CharField(max_length=500, null=True, blank=True)
