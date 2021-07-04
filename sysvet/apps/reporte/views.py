@@ -10,9 +10,9 @@ import json
 from django.http import JsonResponse
 
 from apps.utiles.views import (cargar_productos_vendidos, cargar_productos_comprados, cargar_ganacias_por_mes,
-cargar_producto_vendido_mes, cargar_productos_comprado_mes, cargar_servicios_vendidos)
+cargar_producto_vendido_mes, cargar_productos_comprado_mes, cargar_servicios_vendidos, cargar_vacunas_aplicadas)
 from apps.utiles.models import (ProductoVendido, ProductoComprados,ProductoCompradoMes, ProductoVendidoMes,
-GananciaPorMes, ServicioVendido)
+GananciaPorMes, ServicioVendido, VacunasAplicadas)
 from apps.configuracion.models import ConfiEmpresa
 from apps.ventas.producto.models import Producto
 from apps.ventas.mascota.models import Mascota, HistoricoFichaMedica
@@ -428,6 +428,34 @@ def get_proximas_vacunas(request):
         'recordsTotal': total,
         'recordsFiltered': total,
     }
+    return JsonResponse(response)
+
+
+@login_required()
+@permission_required('reporte.view_reporte')
+def reporte_vacunas_aplicadas(request):
+    cargar_vacunas_aplicadas()
+    return render(request, 'reporte/mascota/vacunas_aplicadas.html')
+
+def reporte_get_vacunas_aplicada(request):
+    query = request.GET.get('busqueda')
+    label = []
+    data = []
+    mensaje = ""
+    try:    
+        if query != "":
+            vacunas = VacunasAplicadas.objects.filter(Q(id_producto__nombre_producto__icontains=query))
+        else:
+            vacunas = VacunasAplicadas.objects.all()
+
+        for va in vacunas:
+            label.append(va.id_producto.nombre_producto)
+            data.append(va.cantidad_aplicadas)
+
+        mensaje = "OK"
+    except Exception as e:
+        pass
+    response = {'label': label, 'data': data,'mensaje': mensaje}
     return JsonResponse(response)
 
 def try_exception_cliente(id):

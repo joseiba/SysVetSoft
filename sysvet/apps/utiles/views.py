@@ -4,7 +4,7 @@ from django.http import JsonResponse
 from datetime import datetime, date
 
 from apps.utiles.models import (Timbrado, ProductoVendido, ProductoComprados,ProductoVendidoMes, 
-ProductoCompradoMes,ServicioVendido,GananciaPorMes, Cedula, Ruc)
+ProductoCompradoMes,ServicioVendido,GananciaPorMes, Cedula, Ruc, VacunasAplicadas)
 
 from apps.ventas.factura.models import FacturaCabeceraVenta, FacturaDetalleVenta
 from apps.compras.models import FacturaCompra, FacturaDet, Proveedor
@@ -448,6 +448,26 @@ def total_vacunas_proximas():
         total =  len(ficha)        
     except Exception as e:
         return 0
+
+def cargar_vacunas_aplicadas():
+    vacunas_aplicadas = HistoricoFichaMedica.objects.all()
+    try:
+        for va in vacunas_aplicadas:
+            if va.historico_cargado_reporte == 'N':
+                va.historico_cargado_reporte = 'S'
+                va.save()
+                try:
+                    produc = VacunasAplicadas.objects.get(id_producto=va.vacuna.id_producto.id)
+                    produc.cantidad_aplicadas += 1
+                    produc.save()
+                except Exception as e:
+                    produc = VacunasAplicadas()
+                    pro_id = Producto.objects.get(id=va.vacuna.id_producto.id)
+                    produc.id_producto = pro_id
+                    produc.cantidad_aplicadas = 1
+                    produc.save()
+    except Exception as e:
+        pass
 
 
 def rest_dates(fecha_vencimiento):
