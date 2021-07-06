@@ -263,7 +263,7 @@ def add_producto(request):
                 messages.add_message(request, messages.SUCCESS, 'Producto agregado correctamente!')
                 return redirect('/producto/add')  
     except:
-        messages.add_message(request, messages.SUCCESS, 'Se debe agrega primeramente un deposito en configuraciones iniciales!')
+        messages.add_message(request, messages.SUCCESS, 'Se debe agregar primeramente un deposito en configuraciones iniciales!')
         context = {'form' : form}
         return render(request, 'ventas/producto/add_producto.html', context)
     context = {'form' : form, 'deposito_inicial': depo.id}

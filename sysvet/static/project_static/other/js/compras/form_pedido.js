@@ -62,7 +62,7 @@ var pedido = {
             ],
             rowCallback(row, data, displayNum, displayIndex, dataIndex) {
                 $(row).find('input[name="cantidad"]').TouchSpin({
-                    min: 0,
+                    min: 1,
                     max: 1000000000,
                     step: 1,
                     boostat: 5,
@@ -75,7 +75,7 @@ var pedido = {
                 decimal: "",
                 emptyTable: "No hay información",
                 info: "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
-                infoEmpty: "Mostrando 0 to 0 de 0 Entradas",
+                infoEmpty: "Mostrando 0 de 0 Entradas",
                 infoFiltered: "(Filtrado de _MAX_ total entradas)",
                 infoPostFix: "",
                 thousands: ",",
@@ -98,11 +98,7 @@ var pedido = {
 $(function () {
     $('#search').on('select2:select', function (e) {
         var data = e.params.data;
-        if(data.cantidad_pedido === "-"){
-                data['cantidad'] = 1;
-        }else{
-                data['cantidad'] = parseInt(data.cantidad_pedido);
-            }
+        data['cantidad'] = 1;
         
         //data['subtotal'] = 0;
         //se agrega los datos a la estructura
