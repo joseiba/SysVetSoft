@@ -110,7 +110,7 @@ var factura = {
             ],
             rowCallback(row, data, displayNum, displayIndex, dataIndex) {
                 $(row).find('input[name="cantidad"]').TouchSpin({
-                    min: 0,
+                    min: 1,
                     max: 1000000000,
                     step: 1,
                     boostat: 5,
@@ -146,7 +146,7 @@ var factura = {
 $(function () {
     $('#search').on('select2:select', function (e) {
         var data = e.params.data;
-        data['cantidad'] = 0;
+        data['cantidad'] = 1;
         //se agrega los datos a la estructura
         factura.add(data)
         // borra luego de la seleccion

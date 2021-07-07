@@ -125,7 +125,7 @@ var factura = {
             ],
             rowCallback(row, data, displayNum, displayIndex, dataIndex) {
                 $(row).find('input[name="cantidad"]').TouchSpin({
-                    min: 0,
+                    min: 1,
                     max: 1000000000,
                     step: 1,
                     boostat: 5,
@@ -161,11 +161,7 @@ var factura = {
 $(function () {
     $('#search').on('select2:select', function (e) {
         var data = e.params.data;
-        if(data.cantidad_pedido === "-"){
-                data['cantidad'] = 1;
-        }else{
-                data['cantidad'] = parseInt(data.cantidad_pedido);
-            }
+        data['cantidad'] = 1;
         
         //data['subtotal'] = 0;
         //se agrega los datos a la estructura

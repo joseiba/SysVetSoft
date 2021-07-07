@@ -112,7 +112,7 @@ var factura = {
             ],
             rowCallback(row, data, displayNum, displayIndex, dataIndex) {
                 $(row).find('input[name="cantidad"]').TouchSpin({
-                    min: 0,
+                    min: 1,
                     max: 1000000000,
                     step: 1,
                     boostat: 5,
@@ -125,7 +125,7 @@ var factura = {
                 decimal: "",
                 emptyTable: "No hay información",
                 info: "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
-                infoEmpty: "Mostrando 0 to 0 de 0 Entradas",
+                infoEmpty: "Mostrando 0 de 0 Entradas",
                 infoFiltered: "(Filtrado de _MAX_ total entradas)",
                 infoPostFix: "",
                 thousands: ",",
