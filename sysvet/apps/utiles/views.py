@@ -329,7 +329,7 @@ def get_vacunas_today(request):
             historico = historico[start:start + length]
 
         data =[{'cliente': h.id_mascota.id_cliente.nombre_cliente + '\n' + h.id_mascota.id_cliente.apellido_cliente,
-                'mascota': r.id_mascota.nombre_mascota, 'evento': 'Vacuna: ' + h.proxima_vacunacion} for h in historico]        
+                'mascota': h.id_mascota.nombre_mascota, 'evento': 'Vacuna: ' + h.proxima_vacunacion} for h in historico]        
             
         response = {
             'data': data,
