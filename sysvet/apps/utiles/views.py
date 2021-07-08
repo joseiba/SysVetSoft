@@ -432,6 +432,7 @@ def total_reservas_hoy():
         return 0
 
 def total_vacunas_proximas():
+    ficha = []
     try:
         confi = ConfiEmpresa.objects.get(id=1)
         dias_compare = confi.dias_alert_vacunas
@@ -445,7 +446,8 @@ def total_vacunas_proximas():
                 if rest_dates(f.fecha_proxima_aplicacion) <= dias_compare:
                     ficha.append(f)
 
-        total =  len(ficha)        
+        total =  len(ficha)
+        return total
     except Exception as e:
         return 0
 
