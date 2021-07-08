@@ -4,9 +4,15 @@
 <link rel="stylesheet"
     href="{% static 'project_static/other/js/jquery-ui-themes-1.12.1/jquery-ui-themes-1.12.1/themes/base/jquery-ui.css' %}">
 <link rel="stylesheet" href="{% static 'project_static/other/js/jquery-timepicker-1.3.5/jquery.timepicker.min.css' %}">
+<link href="{% static 'project_static/other/js/select2/select2.css' %}" rel="stylesheet"/>
+
 <style>
     .alert {
         display: none;
+    }
+
+    .select2{
+        width: 100% !important;
     }
 </style>
 
@@ -82,6 +88,8 @@
 <script src="{% static 'project_static/other/js/jquery-timepicker-1.3.5/jquery.timepicker.min.js' %}"></script>
 <script src="{% static 'project_static/other/js/jquery-ui-1.12.1/jquery-ui-1.12.1/jquery-ui.js' %}"></script>
 <script src="{% static 'project_static/other/js/sweetalert.min.js' %}"></script>
+<script src="{% static 'project_static/other/js/select2/select2.js' %}"></script>
+
 
 <script>
     // initialize a validator instance from the "FormValidator" constructor.
@@ -295,5 +303,21 @@
                 })
             }
         }
+
+        $('#id_cliente').select2({
+            placeholder: 'Seleccione un Cliente',
+            language: "es",
+            language: {
+                inputTooShort: function () {
+                    return '';
+                },
+                searching: function () {
+                    return 'Buscando...'
+                },
+                noResults: function () {
+                    return 'No se ha encontrado ningún resultado'
+                }
+            }
+        });
     })
 </script>

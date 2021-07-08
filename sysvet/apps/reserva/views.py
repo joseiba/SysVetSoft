@@ -35,6 +35,8 @@ def add_reserva(request):
                 emp.save()
                 masc = Mascota.objects.get(id=request.POST.get('id_mascota'))
                 masc.masc_reservado = 'N'
+                masc.fecha_reservada = request.POST.get('fecha_reserva')
+                masc.hora_reserva = request.POST.get('hora_reserva')
                 masc.save()
             except Exception as e:
                 pass
@@ -60,7 +62,9 @@ def edit_reserva(request, id):
             if estado == 'FIN' or estado == 'CAN':
                 reserva.disponible_emp = "S"
                 emp.emp_disponible_reserva = 'S' 
-                masc.masc_reservado = 'S'                                                    
+                masc.masc_reservado = 'S'
+                masc.fecha_reservada = ""
+                masc.hora_reserva = ""                                                    
             reserva.save()
             emp.save()
             masc.save()
@@ -82,6 +86,14 @@ def list_reserva(request):
                     r.estado_re = 'FIN'
                     r.disponible_emp = "S"
                     r.color_estado = "green"
+                    try:
+                        masc = Mascota.objects.get(id=r.id_mascota.id)
+                        masc.masc_reservado = "S"
+                        masc.fecha_reservada = ""
+                        masc.hora_reserva = ""
+                        masc.save()
+                    except:
+                        pass
                     r.save()                                                     
     paginator = Paginator(reserva, 10)
     page_number = request.GET.get('page')
@@ -327,11 +339,7 @@ def validar_fecha_hora(request):
                     reserva = Reserva.objects.get(fecha_reserva=fecha, hora_reserva=hora, id_mascota=mascota, id_cliente=cliente)
                     if mas_disponible.masc_reservado == 'S':
                             isFalseMascota = False
-                except:                    
-                    if mas_disponible.masc_reservado == 'S':
-                        isFalseMascota = False
-                    else:
-                        isFalseMascota = True
+                except Exception as e:                    
                     reserva = Reserva.objects.filter(fecha_reserva=fecha, hora_reserva=hora, id_mascota=mascota, id_cliente=cliente)
                     if reserva.count() > 0:
                         for r in reserva:
@@ -341,7 +349,10 @@ def validar_fecha_hora(request):
                         if mas_disponible.masc_reservado == 'S':
                             isFalseMascota = False
                         else:
-                            isFalseMascota = True
+                            if mas_disponible.fecha_reservada == fecha and mas_disponible.hora_reserva == hora:
+                                isFalseMascota = True
+                            else: 
+                                isFalseMascota = False
                 if isFalseMascota:
                     messageReponse = "Esta mascota ya tiene una reserva para este dia y hora"
                     response = { 'mensaje': messageReponse}
@@ -384,11 +395,7 @@ def validar_fecha_hora(request):
                         if mas_disponible.masc_reservado == 'S':
                                 isFalseMascota = False
                     except:                    
-                        if mas_disponible.masc_reservado == 'S':
-                            isFalseMascota = False
-                        else:
-                            isFalseMascota = True
-                        reserva = Reserva.objects.filter(fecha_reserva=fecha, hora_reserva=hora, id_mascota=mascota, id_cliente=cliente, id_servicio=servicio)
+                        reserva = Reserva.objects.filter(fecha_reserva=fecha, hora_reserva=hora, id_mascota=mascota, id_cliente=cliente)
                         if reserva.count() > 0:
                             for r in reserva:
                                 if r.estado_re == 'PEN':
@@ -397,7 +404,10 @@ def validar_fecha_hora(request):
                             if mas_disponible.masc_reservado == 'S':
                                 isFalseMascota = False
                             else:
-                                isFalseMascota = True                        
+                                if mas_disponible.fecha_reservada == fecha and mas_disponible.hora_reserva == hora:
+                                    isFalseMascota = True
+                                else: 
+                                    isFalseMascota = False                   
                     if isFalseMascota:
                         messageReponse = "Esta mascota ya tiene una reserva para este dia y hora"
                         response = { 'mensaje': messageReponse}
@@ -416,10 +426,6 @@ def validar_fecha_hora(request):
                     if mas_disponible.masc_reservado == 'S':
                             isFalseMascota = False
                 except:                    
-                    if mas_disponible.masc_reservado == 'S':
-                        isFalseMascota = False
-                    else:
-                        isFalseMascota = True
                     reserva = Reserva.objects.filter(fecha_reserva=fecha, hora_reserva=hora, id_mascota=mascota, id_cliente=cliente)
                     if reserva.count() > 0:
                         for r in reserva:
@@ -429,7 +435,10 @@ def validar_fecha_hora(request):
                         if mas_disponible.masc_reservado == 'S':
                             isFalseMascota = False
                         else:
-                            isFalseMascota = True
+                            if mas_disponible.fecha_reservada == fecha and mas_disponible.hora_reserva == hora:
+                                isFalseMascota = True
+                            else: 
+                                isFalseMascota = False
                     
                 if isFalseMascota:
                     messageReponse = "Esta mascota ya tiene una reserva para este dia y hora"

@@ -391,6 +391,7 @@ def agregar_factura_compra(request):
                 factura.fecha_emision = factura_dict['fecha_emision']
                 factura.fecha_vencimiento = factura_dict['fecha_vencimiento']
                 factura.factura_cargada_pedido = 'S'
+                factura.facturado = 'S'
                 factura.estado = 'PENDIENTE'
                 factura.total_iva = int(factura_dict['total_iva'])
                 factura.total = int(factura_dict['total_factura'])                
@@ -488,7 +489,8 @@ def edit_factura_compra(request, id):
                 factura.estado = 'PENDIENTE'
                 factura.total_iva = int(factura_dict['total_iva'])
                 factura.total = int(factura_dict['total_factura'])  
-                factura.factura_cargada_pedido = 'S'              
+                factura.factura_cargada_pedido = 'S'
+                factura.facturado = 'S'              
                 factura.save()
                 pedido_cabecera = PedidoCabecera.objects.get(id=factura.id_pedido_cabecera.id)
                 pedido_cabecera.is_active = 'N'
