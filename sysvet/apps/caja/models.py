@@ -10,8 +10,8 @@ class Caja(models.Model):
     Clase que define la estructura de caja
     """
 
-    fecha_hora_alta = models.CharField(max_length=500, default = date.strftime("%d/%m/%Y %H:%M:%S hs"), null=True)
-    fecha_alta = models.CharField(max_length=500, default = date.strftime("%d/%m/%Y"), null=True)
+    fecha_hora_alta = models.CharField(max_length=500, default = datetime.strftime(datetime.now(), "%d/%m/%Y %H:%M:%S hs"), null=True)
+    fecha_alta = models.CharField(max_length=500, default = datetime.strftime(datetime.now() , "%d/%m/%Y"), null=True)
     fecha_cierre = models.CharField(max_length=500, default = "-", null=True)
     total_pos = models.FloatField(max_length=1000, null=True, blank=True, default=0)
     total_pos_formateado = models.CharField(max_length=800, null=True)

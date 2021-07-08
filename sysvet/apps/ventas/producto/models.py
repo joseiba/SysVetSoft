@@ -13,7 +13,7 @@ class TipoProducto(models.Model):
     )
 
     nombre_tipo = models.CharField(max_length = 200, help_text = "Ingrese nombre del tipo de producto")
-    fecha_alta = models.CharField(max_length = 200, default = date.strftime("%d/%m/%Y %H:%M:%S hs"), editable = False)
+    fecha_alta = models.CharField(max_length = 200, default = datetime.strftime(datetime.now(), "%d/%m/%Y %H:%M:%S hs"), editable = False)
     fecha_baja = models.CharField(max_length = 200, default = '-', null = True, blank = True)
     vence = models.CharField(max_length=2, choices=opciones, default="S", blank=True, null=True, help_text='El producto vence?')
     last_modified = models.DateTimeField(auto_now=True, blank=True)
@@ -149,7 +149,7 @@ class Inventario(models.Model):
     stock_fisico = models.IntegerField(blank = True, null=True, default=0)
     diferencia = models.IntegerField(blank = True, null=True, default=0)
     id_producto = models.ForeignKey('Producto', on_delete=models.CASCADE, null=False)
-    fecha_alta = models.CharField(max_length=500, default = date.strftime("%d/%m/%Y %H:%M:%S hs"), null=True)
+    fecha_alta = models.CharField(max_length=500, default = datetime.strftime(datetime.now(), "%d/%m/%Y %H:%M:%S hs"), null=True)
 
     class Mwta:
         verbose_name = "Inventario"

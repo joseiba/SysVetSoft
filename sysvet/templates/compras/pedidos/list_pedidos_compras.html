@@ -96,13 +96,12 @@
                             <div class="col-sm-12 p-0">
                                 <div class="card-box table-responsive" style="text-align: center;">
                                     <table id="list_pedidos" class="table table-striped table-bordered"
-                                        style="width:100%">
+                                        style="width:60%; margin: auto;">
                                         <thead>
                                             <tr class="" style="background-color: #2a3f54; font-size: medium;">
                                                 <th style="color: white;">Nº Pedido</th>
                                                 <th style="color: white;">Fecha Pedido</th>
-                                                <th style="color: white;">Pedido Cargado Factura</th>
-                                                <th style="color: white;">Accion</th>
+                                                <th style="color: white;">Acciones</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -186,17 +185,7 @@
                         data: 'fecha_pedido',
                     },
                     {
-                        name: 'Pedido Cargado Factura',
-                        data: 'pedido_cargado',
-                        render: function(data){
-                            if(data == 'S'){
-                                return 'Si'
-                            }
-                            return 'No'
-                        }
-                    },
-                    {
-                        name: 'Accion',
+                        name: 'Acciones',
                         data: 'id',
                         render: function (data) {
                             {% if perms.compras.change_pedidocabecera and caja_abierta == "S" %}
@@ -225,7 +214,7 @@
 
                 ],
                 columnDefs: [{
-                    targets: [2, 3], // column index (start from 0)
+                    targets: [2], // column index (start from 0)
                     orderable: false, // set orderable false for selected columns
                 }],
                 serverSide: false,

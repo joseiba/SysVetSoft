@@ -149,6 +149,7 @@ class FacturaCompra(models.Model):
     factura_cargada_producto = models.CharField(max_length=2, default="N", blank=True, null=True)
     factura_cargada_pedido = models.CharField(max_length=2, default="N", blank=True, null=True)
     pedidod_to_factura = models.CharField(max_length=2, default="N", blank=True, null=True)
+    facturado = models.CharField(max_length=2, default="N", blank=True, null=True)
     factura_caja = models.CharField(max_length=2, default="N", blank=True, null=True)
     last_modified = models.DateTimeField(auto_now=True, blank=True)
     is_active = models.CharField(max_length=2, default="S", blank=True, null=True)
